@@ -2,13 +2,30 @@
 ![Mapyta logo](docs/_overrides/assets/images/mapyta-logo-light-mode.svg#only-light){ display: flex; justify-content: center; align-items: center; }
 ![Mapyta logo](docs/_overrides/assets/images/mapyta-logo-dark-mode.svg#only-dark){ display: flex; justify-content: center; align-items: center; }
 
+<p align="center">
+    <a href="https://egarciamendez.github.io/mapyta">
+    <img src="https://egarciamendez.github.io/mapyta/_overrides/assets/images/mapyta-logo-light-mode.svg" alt="Mapyta">
+    </a>
+</p>
+
+---
+
+**Documentation**: [https://egarciamendez.github.io/mapyta](https://egarciamendez.github.io/mapyta)
+
+**Source Code**: [https://github.com/egarciamendez/mapyta](https://github.com/egarciamendez/mapyta)
+
+---
 
 
 **One import. A few method calls. A full interactive map.**
 
-Build OpenStreetMap visualizations with hover tooltips, choropleths, heatmaps, and export to HTML, PNG, or SVG — all from Shapely geometries.
+Build OpenStreetMap visualizations with hover tooltips, choropleths, heatmaps, and export to HTML or PNG all from Shapely geometries.
 
 Perfect for geotechnical site plans, infrastructure overviews, or any spatial data visualization where you want more control than static images but don't need the full power of a GIS.
+
+*Mapyta is standing on the shoulders of giants like Folium and Leaflet, but it's designed to be more intuitive and 
+Pythonic for users who are already familiar with Shapely and GeoPandas. It's not trying to replace a full GIS, 
+but rather to provide a simple way to create interactive maps without needing to learn a whole new set of tools.*
 
 ---
 
@@ -22,7 +39,7 @@ Perfect for geotechnical site plans, infrastructure overviews, or any spatial da
 - 🌐 **Auto CRS detection** — RD New (EPSG:28992) coordinates transform automatically
 - 📤 **Export anywhere** — HTML, PNG, SVG, async variants, and `BytesIO` buffers
 - 🧩 **Feature groups** — toggleable layers with a built-in layer control
-- 🔌 **10 tile providers** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
+- 🔌 **Set of tile providers** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
 
 ---
 
@@ -104,6 +121,8 @@ Perfect for geotechnical site plans, infrastructure overviews, or any spatial da
 Install mapyta:
 
 ```bash
+uv add mapyta
+# or
 pip install mapyta
 ```
 
