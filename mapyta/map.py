@@ -445,15 +445,21 @@ class Map:
                 folium.Element("<script src=VIKTOR_JS_SDK></script>")
             )
 
-        # Submit button: IIFE in body polls for _leaflet_map (set after L.map init).
+        # Submit button: runs after DOMContentLoaded (after Folium's <script> block).
+        map_var = self._map.get_name()
         drawn_items_var = f"drawnItems_{draw_plugin.get_name()}"
         self._map.get_root().html.add_child(  # type: ignore[union-attr]
-            folium.Element(self._build_draw_script(drawn_items_var))
+            folium.Element(self._build_draw_script(map_var, drawn_items_var))
         )
         self._draw_injected = True
 
-    def _build_draw_script(self, drawn_items_var: str) -> str:
-        """Build the submit button ``<script>`` block (IIFE, polls for map init)."""
+    def _build_draw_script(self, map_var: str, drawn_items_var: str) -> str:
+        """Build the submit button ``<script>`` block.
+
+        Uses ``DOMContentLoaded`` so both Folium variables (``map_var`` and
+        ``drawn_items_var``) are guaranteed to be defined — Folium's ``<script>``
+        block runs synchronously before that event fires.
+        """
         cfg = self._draw_config
         assert cfg is not None
 
@@ -461,36 +467,31 @@ class Map:
 
         return (
             "<script>\n"
-            "(function() {\n"
-            "    var attempts = 0;\n"
-            "    var checkInterval = setInterval(function() {\n"
-            "        if (++attempts > 100) { clearInterval(checkInterval); return; }\n"
-            "        var mapContainer = document.querySelector('.folium-map');\n"
-            "        if (!mapContainer || !mapContainer._leaflet_map) return;\n"
-            "        clearInterval(checkInterval);\n"
-            "        var map = mapContainer._leaflet_map;\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{map_var}'];\n"
+            f"    var drawnItems = window['{drawn_items_var}'];\n"
+            "    if (!map || !drawnItems) return;\n"
             "\n"
-            "        var submitControl = L.control({position: 'bottomright'});\n"
-            "        submitControl.onAdd = function() {\n"
-            "            var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            "            var btn = L.DomUtil.create('a', '', div);\n"
-            "            btn.href = '#';\n"
-            f"            btn.innerHTML = '{cfg.submit_label}';\n"
-            "            btn.style.cssText = 'padding:8px 20px;background:#1e90ff;color:#fff;' +\n"
-            "                'text-decoration:none;font-weight:bold;border-radius:4px;' +\n"
-            "                'display:inline-block;font-size:14px;cursor:pointer;';\n"
-            "            btn.onclick = function(e) {\n"
-            "                e.preventDefault();\n"
-            "                e.stopPropagation();\n"
-            f"                var geojson = {drawn_items_var}.toGeoJSON();\n"
-            f"                {callback_js}\n"
-            "            };\n"
-            "            L.DomEvent.disableClickPropagation(div);\n"
-            "            return div;\n"
+            "    var submitControl = L.control({position: 'bottomright'});\n"
+            "    submitControl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        var btn = L.DomUtil.create('a', '', div);\n"
+            "        btn.href = '#';\n"
+            f"        btn.innerHTML = '{cfg.submit_label}';\n"
+            "        btn.style.cssText = 'display:block;padding:5px 12px;background:#1e90ff;color:#fff;' +\n"
+            "            'text-decoration:none;font-weight:bold;font-size:13px;cursor:pointer;' +\n"
+            "            'width:auto;height:auto;line-height:normal;white-space:nowrap;';\n"
+            "        btn.onclick = function(e) {\n"
+            "            e.preventDefault();\n"
+            "            e.stopPropagation();\n"
+            "            var geojson = drawnItems.toGeoJSON();\n"
+            f"            {callback_js}\n"
             "        };\n"
-            "        submitControl.addTo(map);\n"
-            "    }, 100);\n"
-            "})();\n"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        return div;\n"
+            "    };\n"
+            "    submitControl.addTo(map);\n"
+            "});\n"
             "</script>"
         )
 

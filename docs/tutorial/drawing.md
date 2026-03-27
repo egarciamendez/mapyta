@@ -52,11 +52,17 @@ This sends a `POST` request with the GeoJSON FeatureCollection as the body.
 
 For full control, pass a `RawJS` function expression:
 
-```python
+```python exec="true" html="true" source="tabbed-right"
+from mapyta import Map
 from mapyta import RawJS
 
+m = Map(title="Custom callback, check console (F12)")
 m.enable_draw(on_submit=RawJS("function(geojson) { console.log(geojson); }"))
+
+print(m.to_html()) # markdown-exec: hide
 ```
+
+Click **Submit** and check the browser console (F12) to see the GeoJSON output.
 
 Or call a named function already on the page:
 
@@ -66,11 +72,13 @@ m.enable_draw(on_submit="myGlobalHandler")
 
 This generates `window["myGlobalHandler"](geojson)`.
 
-## VIKTOR integration
+## VIKTOR integration (BETA)
 
 When building apps on [VIKTOR](https://viktor.ai), use `viktor_params` to send drawn geometries back to the Python controller via `viktorSdk.sendParams()`:
 
-```python
+```python exec="true" html="true" source="tabbed-right"
+from mapyta import Map
+
 m = Map(title="Draw a route")
 m.enable_draw(
     tools=["marker", "polyline", "polygon"],
@@ -81,6 +89,9 @@ m.enable_draw(
     },
     submit_label="Verzenden",
 )
+
+print(m.to_html()) # markdown-exec: hide
+
 ```
 
 Each key in `viktor_params` must match a tool in `tools`. The values are the VIKTOR parameter field names. Coordinates are automatically converted from GeoJSON `[lon, lat]` to VIKTOR's `{lat, lon}` format.
