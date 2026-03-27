@@ -43,7 +43,7 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
-from mapyta.config import CircleStyle, FillStyle, HeatmapStyle, MapConfig, PopupStyle, StrokeStyle, TooltipStyle
+from mapyta.config import CircleStyle, DrawConfig, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
 from mapyta.coordinates import transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
@@ -51,6 +51,10 @@ from mapyta.markdown import RawHTML, markdown_to_html
 from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker, css_to_style
 from mapyta.style import resolve_style
 from mapyta.tiles import TILE_PROVIDERS
+
+LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
+LEAFLET_DRAW_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
+VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "circle"})
 
 
 class Map:
@@ -92,6 +96,8 @@ class Map:
         self._colormaps: list[cm.LinearColormap] = []
         self._zoom_controlled_markers: list[dict[str, Any]] = []
         self._zoom_js_injected: bool = False
+        self._draw_config: DrawConfig | None = None
+        self._draw_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -321,6 +327,245 @@ class Map:
         """
         self._active_group = self._map
         return self
+
+    # ------------------------------------------------------------------
+    # Drawing
+    # ------------------------------------------------------------------
+
+    def enable_draw(
+        self,
+        tools: list[str] | None = None,
+        on_submit: str | RawJS | None = None,
+        viktor_params: dict[str, str] | None = None,
+        position: str = "topleft",
+        submit_label: str = "Submit",
+        draw_style: dict[str, Any] | None = None,
+        edit: bool = True,
+    ) -> Self:
+        """Enable drawing controls on the map.
+
+        Parameters
+        ----------
+        tools : list[str] | None
+            Active drawing tools.  Valid values: ``"marker"``,
+            ``"polyline"``, ``"polygon"``, ``"rectangle"``, ``"circle"``.
+            Defaults to ``["polyline", "polygon", "marker"]``.
+        on_submit : str | RawJS | None
+            Callback when the user clicks Submit.  ``None`` downloads a
+            GeoJSON file; a URL string sends a ``POST`` request; a plain
+            string calls ``window["name"](geojson)``; a :class:`RawJS`
+            instance is inlined verbatim.
+        viktor_params : dict[str, str] | None
+            VIKTOR field-name mapping.  Keys must be draw-tool names
+            present in *tools*; values are VIKTOR parameter field names.
+            When set, overrides *on_submit* and sends drawn geometries
+            via ``viktorSdk.sendParams()``.  ``"circle"`` is not
+            supported with VIKTOR.
+        position : str
+            Leaflet control position.
+        submit_label : str
+            Label for the submit button.
+        draw_style : dict[str, Any] | None
+            ``shapeOptions`` override for drawn shapes.
+        edit : bool
+            Whether edit/delete controls are active.
+
+        Returns
+        -------
+        Map
+
+        Raises
+        ------
+        ValueError
+            If *tools* contains an invalid tool name, if ``"circle"`` is
+            used with *viktor_params*, or if a *viktor_params* key is
+            not in *tools*.
+        """
+        if tools is None:
+            tools = ["polyline", "polygon", "marker"]
+
+        invalid = set(tools) - VALID_DRAW_TOOLS
+        if invalid:
+            msg = f"Invalid draw tool(s): {', '.join(sorted(invalid))}. Valid: {', '.join(sorted(VALID_DRAW_TOOLS))}"
+            raise ValueError(msg)
+
+        if viktor_params:
+            if "circle" in tools:
+                msg = "Circle tool is not supported with viktor_params (no VIKTOR geometry type for circles)"
+                raise ValueError(msg)
+            invalid_keys = set(viktor_params.keys()) - set(tools)
+            if invalid_keys:
+                msg = f"viktor_params key(s) {', '.join(sorted(invalid_keys))} not in tools {tools}"
+                raise ValueError(msg)
+
+        self._draw_config = DrawConfig(
+            tools=tools,
+            on_submit=on_submit,
+            viktor_params=viktor_params,
+            position=position,
+            submit_label=submit_label,
+            draw_style=draw_style,
+            edit=edit,
+        )
+        self._draw_injected = False
+        return self
+
+    def _inject_draw_plugin(self) -> None:
+        """Inject Leaflet.draw CSS, JS, and control script (idempotent)."""
+        if self._draw_injected:
+            return
+        cfg = self._draw_config
+        assert cfg is not None
+
+        # Build draw_options: disabled tools → False; active with style → shapeOptions dict.
+        all_tools = ["polyline", "polygon", "marker", "rectangle", "circle"]
+        draw_options: dict[str, Any] = {"circlemarker": False}
+        for tool in all_tools:
+            if tool not in cfg.tools:
+                draw_options[tool] = False
+            elif cfg.draw_style:
+                draw_options[tool] = {"shapeOptions": cfg.draw_style}
+
+        edit_options: dict[str, Any] = {"remove": cfg.edit}
+
+        # Folium's built-in Draw plugin loads leaflet.draw CSS/JS via JSCSSMixin
+        # (placed in <head>), guaranteeing correct load order in both standalone
+        # HTML and embeddable iframe / srcdoc rendering modes.
+        draw_plugin = folium.plugins.Draw(
+            export=False,
+            show_geometry_on_click=False,
+            position=cfg.position,
+            draw_options=draw_options,
+            edit_options=edit_options,
+        )
+        draw_plugin.add_to(self._map)
+
+        if cfg.viktor_params:
+            self._map.get_root().html.add_child(  # type: ignore[union-attr]
+                folium.Element("<script src=VIKTOR_JS_SDK></script>")
+            )
+
+        # Submit button: IIFE in body polls for _leaflet_map (set after L.map init).
+        drawn_items_var = f"drawnItems_{draw_plugin.get_name()}"
+        self._map.get_root().html.add_child(  # type: ignore[union-attr]
+            folium.Element(self._build_draw_script(drawn_items_var))
+        )
+        self._draw_injected = True
+
+    def _build_draw_script(self, drawn_items_var: str) -> str:
+        """Build the submit button ``<script>`` block (IIFE, polls for map init)."""
+        cfg = self._draw_config
+        assert cfg is not None
+
+        callback_js = self._build_draw_callback_js()
+
+        return (
+            "<script>\n"
+            "(function() {\n"
+            "    var attempts = 0;\n"
+            "    var checkInterval = setInterval(function() {\n"
+            "        if (++attempts > 100) { clearInterval(checkInterval); return; }\n"
+            "        var mapContainer = document.querySelector('.folium-map');\n"
+            "        if (!mapContainer || !mapContainer._leaflet_map) return;\n"
+            "        clearInterval(checkInterval);\n"
+            "        var map = mapContainer._leaflet_map;\n"
+            "\n"
+            "        var submitControl = L.control({position: 'bottomright'});\n"
+            "        submitControl.onAdd = function() {\n"
+            "            var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "            var btn = L.DomUtil.create('a', '', div);\n"
+            "            btn.href = '#';\n"
+            f"            btn.innerHTML = '{cfg.submit_label}';\n"
+            "            btn.style.cssText = 'padding:8px 20px;background:#1e90ff;color:#fff;' +\n"
+            "                'text-decoration:none;font-weight:bold;border-radius:4px;' +\n"
+            "                'display:inline-block;font-size:14px;cursor:pointer;';\n"
+            "            btn.onclick = function(e) {\n"
+            "                e.preventDefault();\n"
+            "                e.stopPropagation();\n"
+            f"                var geojson = {drawn_items_var}.toGeoJSON();\n"
+            f"                {callback_js}\n"
+            "            };\n"
+            "            L.DomEvent.disableClickPropagation(div);\n"
+            "            return div;\n"
+            "        };\n"
+            "        submitControl.addTo(map);\n"
+            "    }, 100);\n"
+            "})();\n"
+            "</script>"
+        )
+
+    def _build_draw_callback_js(self) -> str:
+        """Build the JavaScript callback for the submit button."""
+        cfg = self._draw_config
+        assert cfg is not None
+
+        # Priority 1: VIKTOR
+        if cfg.viktor_params:
+            return self._build_viktor_callback_js()
+
+        # Priority 2: RawJS
+        if isinstance(cfg.on_submit, RawJS):
+            return f"({cfg.on_submit.js})(geojson);"
+
+        # Priority 3: URL (fetch)
+        if isinstance(cfg.on_submit, str) and cfg.on_submit.startswith("http"):
+            return f"fetch(\"{cfg.on_submit}\", {{method: 'POST', headers: {{'Content-Type': 'application/json'}}, body: JSON.stringify(geojson)}});"
+
+        # Priority 4: Function name
+        if isinstance(cfg.on_submit, str):
+            return (
+                f'if (typeof window["{cfg.on_submit}"] === "function") {{ '
+                f'window["{cfg.on_submit}"](geojson); '
+                "} else { "
+                f'console.error("Function " + "{cfg.on_submit}" + " not found"); '
+                "}"
+            )
+
+        # Priority 5: Download
+        return (
+            "var blob = new Blob([JSON.stringify(geojson, null, 2)], {type: 'application/json'});\n"
+            "                var url = URL.createObjectURL(blob);\n"
+            "                var a = document.createElement('a');\n"
+            "                a.href = url; a.download = 'drawn_features.geojson';\n"
+            "                a.click(); URL.revokeObjectURL(url);"
+        )
+
+    def _build_viktor_callback_js(self) -> str:
+        """Build JavaScript for VIKTOR ``sendParams()`` with coordinate conversion."""
+        cfg = self._draw_config
+        assert cfg is not None
+        assert cfg.viktor_params is not None
+
+        lines = ["var params = {};"]
+        lines.append("geojson.features.forEach(function(feature) {")
+        lines.append("    var geom = feature.geometry;")
+
+        for tool, field_name in cfg.viktor_params.items():
+            if tool == "marker":
+                lines.append('    if (geom.type === "Point") {')
+                lines.append(f'        params["{field_name}"] = {{lat: geom.coordinates[1], lon: geom.coordinates[0]}};')
+                lines.append("    }")
+            elif tool == "polyline":
+                lines.append('    if (geom.type === "LineString") {')
+                lines.append(f'        params["{field_name}"] = geom.coordinates.map(function(c) {{')
+                lines.append("            return {lat: c[1], lon: c[0]};")
+                lines.append("        });")
+                lines.append("    }")
+            elif tool in ("polygon", "rectangle"):
+                lines.append('    if (geom.type === "Polygon") {')
+                lines.append(f'        params["{field_name}"] = geom.coordinates[0].map(function(c) {{')
+                lines.append("            return {lat: c[1], lon: c[0]};")
+                lines.append("        });")
+                lines.append("    }")
+
+        lines.append("});")
+        lines.append('if (typeof viktorSdk !== "undefined") {')
+        lines.append("    viktorSdk.sendParams(params, true);")
+        lines.append("} else {")
+        lines.append('    console.warn("viktorSdk not available. Params:", JSON.stringify(params, null, 2));')
+        lines.append("}")
+
+        return "\n                ".join(lines)
 
     # ------------------------------------------------------------------
     # Adding geometries
@@ -1317,12 +1562,14 @@ class Map:
         )
 
     def _ensure_rendered(self) -> None:
-        """Fit bounds and inject zoom JS (idempotent)."""
+        """Fit bounds and inject zoom JS / draw plugin (idempotent)."""
         if not self._center:
             self._fit_bounds()
         if self._zoom_controlled_markers and not self._zoom_js_injected:
             self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # type: ignore[union-attr]
             self._zoom_js_injected = True
+        if self._draw_config and not self._draw_injected:
+            self._inject_draw_plugin()
 
     def _get_html(self) -> str:
         """Render map to an embeddable HTML string (Jupyter/inline)."""
@@ -1457,9 +1704,15 @@ class Map:
         delay: float = 2.0,
         hide_controls: bool = True,
     ) -> str | Path:
-        """Export as SVG (raster-wrapped).
+        """Export as SVG with an embedded raster image.
 
-        Captures PNG then wraps in an SVG container.
+        This captures a PNG screenshot and wraps it in an SVG container.
+        The result is **not** a true vector SVG — text and shapes are
+        rasterized.  This approach is used because Leaflet renders to
+        an HTML canvas, which cannot be serialized to vector paths.
+
+        For a true vector workflow, export to HTML and use a dedicated
+        tool to convert the map to vector format.
 
         Parameters
         ----------
