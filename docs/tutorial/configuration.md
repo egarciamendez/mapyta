@@ -1,0 +1,87 @@
+# Map Configuration
+
+`MapConfig` controls the global look and feel: tile provider, zoom, dimensions, and optional plugins.
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+config = MapConfig(
+    tile_layer="cartodb_dark",
+    zoom_start=14,
+    fullscreen=True,
+    minimap=True,
+    measure_control=True,
+    mouse_position=True,
+)
+
+m = Map(title="Dark Mode", config=config)
+m.add_point(Point(4.9041, 52.3676), marker="🌃", tooltip="**Night Amsterdam**")
+
+m.to_html("dark_mode.html")
+
+print(m.to_html())
+```
+
+## MapConfig fields
+
+| Field | Default | Description |
+|-------|---------|-------------|
+| `tile_layer` | `"cartodb_positron"` | Tile provider key or list of keys |
+| `zoom_start` | `12` | Initial zoom level |
+| `min_zoom` | `0` | Prevent zooming out beyond this level |
+| `max_zoom` | `19` | Prevent zooming in beyond this level |
+| `attribution` | `None` | Custom tile attribution |
+| `width` | `"100%"` | Map width |
+| `height` | `"100%"` | Map height |
+| `control_scale` | `True` | Show scale bar |
+| `fullscreen` | `False` | Add fullscreen button |
+| `minimap` | `False` | Add inset minimap |
+| `measure_control` | `False` | Add distance/area measurement tool |
+| `mouse_position` | `True` | Show cursor coordinates |
+
+## Available tile providers
+
+| Key | Description |
+|-----|-------------|
+| `openstreetmap` | Default OpenStreetMap |
+| `cartodb_positron` | Light, minimal CartoDB (default) |
+| `cartodb_dark` | Dark CartoDB |
+| `esri_satellite` | Esri satellite imagery |
+| `esri_topo` | Esri topographic |
+| `stamen_terrain` | Stamen terrain with hillshading |
+| `stamen_toner` | Stamen high-contrast B&W |
+| `kadaster_brt` | Dutch Kadaster topographic |
+| `kadaster_luchtfoto` | Dutch Kadaster aerial photos |
+| `kadaster_grijs` | Dutch Kadaster greyscale |
+
+## Multiple tile layers
+
+Pass a list to `tile_layer` and add a layer control so users can switch between base maps:
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(
+    title="Multiple Tile Layers",
+    config=MapConfig(
+        tile_layer=["kartodb_positron", "cartodb_dark", "kadaster_brt"],
+    ),
+)
+m.add_point(Point(4.9041, 52.3676), marker="📍", tooltip="**Amsterdam**")
+m.add_layer_control(collapsed=False)
+
+print(m.to_html())
+```
+
+The first layer in the list is shown by default. You can also add layers after construction with `add_tile_layer()`:
+
+```python
+m = Map(title="Multiple Tile Layers")
+m.add_tile_layer(name="esri_satellite")
+m.add_tile_layer(name="cartodb_dark")
+m.add_layer_control(collapsed=False)
+```
+
+**Next:** [Text Annotations](text-annotations.md) — floating labels and site plan markers.

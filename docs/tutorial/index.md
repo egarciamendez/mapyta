@@ -1,0 +1,35 @@
+# Tutorial
+
+This tutorial walks you through mapyta from the absolute minimum to advanced features. Each page introduces exactly one concept on top of the previous one.
+
+## Prerequisites
+
+- Python 3.12 or later
+- mapyta installed:
+
+```bash
+pip install mapyta
+# or
+uv add mapyta
+```
+
+## What you'll learn
+
+| Page | Concept |
+|------|---------|
+| [Your First Map](first-map.md) | Create a map with a single point and export to HTML |
+| [Lines & Polygons](geometries.md) | Add linestrings, polygons, and multi-geometries |
+| [Markers](markers.md) | Emoji, Font Awesome, and circle markers |
+| [Tooltips & Popups](tooltips-popups.md) | Markdown tooltips, click popups, and raw HTML |
+| [Feature Groups](layers.md) | Toggleable layers with layer control |
+| [Choropleth Maps](choropleth.md) | Color-code areas by numeric value |
+| [Heatmaps](heatmaps.md) | Visualize point density |
+| [Marker Clusters](clusters.md) | Group hundreds of markers at low zoom |
+| [GeoPandas Integration](geodataframe.md) | Build a map directly from a GeoDataFrame |
+| [Coordinate Detection](coordinates.md) | Automatic RD New → WGS84 transformation |
+| [Map Configuration](configuration.md) | Tile providers, zoom, and optional plugins |
+| [Text Annotations](text-annotations.md) | Floating labels and site plan markers |
+| [Export](export.md) | HTML, PNG, SVG, async, and BytesIO |
+| [Advanced](advanced.md) | Merge maps, GeoJSON layers, escape hatch |
+
+**Start here:** [Your First Map](first-map.md)
