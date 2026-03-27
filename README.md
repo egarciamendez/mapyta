@@ -96,7 +96,7 @@ Perfect for geotechnical site plans, infrastructure overviews, or any spatial da
     m.add_layer_control(collapsed=False)
     m.set_bounds(padding=0.005)
 
-    print(m.to_html())
+    print(m.to_html()) # markdown-exec: hide
     ```
 
 ## Quickstart
@@ -122,7 +122,7 @@ m.add_point(
 )
 m.to_html("hello.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 Open `hello.html` in any browser and you're done.
