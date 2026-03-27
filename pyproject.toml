@@ -65,6 +65,9 @@ test = [
     "rich>=13.7.0",
 ]
 
+[tool.pytest.ini_options]
+addopts = "--cov=mapyta"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
