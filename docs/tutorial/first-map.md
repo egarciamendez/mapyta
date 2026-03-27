@@ -16,7 +16,7 @@ m.add_point(
 
 m.to_html("hello.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 Open `hello.html` and you'll see an interactive OpenStreetMap centered on Amsterdam. Hover over the marker and you get a bold "Amsterdam" tooltip. Click it and a popup appears.
@@ -42,7 +42,7 @@ Open `hello.html` and you'll see an interactive OpenStreetMap centered on Amster
     m = Map(title="Chained")
     m.add_point(Point(5.1218, 52.09334), marker="📍").add_point(Point(5.1, 52.09), marker="🏠").to_html("chained.html")
 
-    print(m.to_html())
+    print(m.to_html()) # markdown-exec: hide
     ```
 
 **Next:** [Lines & Polygons](geometries.md) — add routes and highlighted areas to your map.

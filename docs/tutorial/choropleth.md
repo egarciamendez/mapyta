@@ -47,7 +47,7 @@ m.add_choropleth(
 
 m.to_html("choropleth.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 ## How it works

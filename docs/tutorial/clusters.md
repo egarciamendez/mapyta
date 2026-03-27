@@ -17,7 +17,7 @@ m.add_marker_cluster(points=cafes, labels=labels, hovers=hovers, name="Cafés")
 
 m.to_html("clusters.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 At low zoom you'll see cluster bubbles with counts. Zoom in and they split into individual ☕ markers.

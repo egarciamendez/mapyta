@@ -21,7 +21,7 @@ m.add_heatmap(
 
 m.to_html("heatmap.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 ## How it works

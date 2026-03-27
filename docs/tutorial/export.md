@@ -52,9 +52,11 @@ m.to_svg("map.svg")
 svg_string = m.to_svg()
 ```
 
-!!! note
+!!! note "Raster, not vector"
 
-    Leaflet's SVG export is a raster capture embedded in an SVG wrapper, not a true vector graphic. It won't scale infinitely, but it's useful for some workflows.
+    `to_svg()` captures a PNG screenshot and wraps it in an SVG container. Text and shapes are **rasterized** — the output does not contain editable vector paths. This is a Leaflet limitation: it renders to an HTML canvas that cannot be serialized to vector geometry.
+
+    For high-resolution output, increase `width` and `height`. For a true vector workflow, export to HTML and use a dedicated conversion tool.
 
 ## Async variants
 

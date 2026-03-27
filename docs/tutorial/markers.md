@@ -36,7 +36,7 @@ m.add_circle(
 
 m.to_html("markers.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 ## How it works

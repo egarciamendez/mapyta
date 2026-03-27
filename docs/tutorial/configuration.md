@@ -20,7 +20,7 @@ m.add_point(Point(4.9041, 52.3676), marker="🌃", tooltip="**Night Amsterdam**"
 
 m.to_html("dark_mode.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 ## MapConfig fields
@@ -47,10 +47,18 @@ print(m.to_html())
 | `openstreetmap` | Default OpenStreetMap |
 | `cartodb_positron` | Light, minimal CartoDB (default) |
 | `cartodb_dark` | Dark CartoDB |
+| `cartodb_voyager` | CartoDB Voyager — colourful, detailed |
 | `esri_satellite` | Esri satellite imagery |
 | `esri_topo` | Esri topographic |
+| `esri_streets` | Esri street map |
+| `esri_gray` | Esri light gray canvas |
+| `esri_ocean` | Esri ocean basemap |
+| `opentopomap` | OpenTopoMap — topographic with contour lines |
 | `stamen_terrain` | Stamen terrain with hillshading |
 | `stamen_toner` | Stamen high-contrast B&W |
+| `stamen_watercolor` | Stamen watercolor — artistic style |
+| `stadia_alidade` | Stadia Alidade Smooth — clean, light |
+| `stadia_dark` | Stadia Alidade Dark — modern dark theme |
 | `kadaster_brt` | Dutch Kadaster topographic |
 | `kadaster_luchtfoto` | Dutch Kadaster aerial photos |
 | `kadaster_grijs` | Dutch Kadaster greyscale |
@@ -72,7 +80,7 @@ m = Map(
 m.add_point(Point(4.9041, 52.3676), marker="📍", tooltip="**Amsterdam**")
 m.add_layer_control(collapsed=False)
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 The first layer in the list is shown by default. You can also add layers after construction with `add_tile_layer()`:

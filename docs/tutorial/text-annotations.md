@@ -21,7 +21,7 @@ m.add_text(
     },
 )
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 **`add_text()`** accepts a Shapely `Point(lon, lat)` or a plain `(lat, lon)` tuple. The `style` parameter is a CSS dict — any CSS property works.
@@ -60,7 +60,7 @@ for s in surveys:
 
 m.to_html("site_plan.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 **`marker`** supports bare FontAwesome names (`"fa-location-dot"`) — the `"fa-solid"` prefix is added automatically. You can also use emoji (`"📍"`) or full CSS class strings.

@@ -18,7 +18,7 @@ m.add_point(
     popup_style=PopupStyle(width=300, height=150),
 )
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 **`popup_style`** controls popup size. `PopupStyle` has three fields: `width` (IFrame width in px), `height` (IFrame height in px), and `max_width`. You can also pass a plain dict: `popup_style={"width": 300, "height": 150}`.
@@ -53,7 +53,7 @@ m.add_point(
     popup_style=PopupStyle(width=320, height=160),
 )
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 **`RawHTML`** is a `str` subclass — it works anywhere a regular string does. The difference is that Map skips the Markdown-to-HTML conversion step, so your `<table>`, `<img>`, and `<style>` tags pass through untouched.

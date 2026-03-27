@@ -22,7 +22,7 @@ m.add_layer_control(collapsed=False)
 
 m.to_html("poi_layers.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 ## How it works

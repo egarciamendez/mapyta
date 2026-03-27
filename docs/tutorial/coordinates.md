@@ -16,7 +16,7 @@ m.add_point(
 
 m.to_html("rd_new.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 ## How it works

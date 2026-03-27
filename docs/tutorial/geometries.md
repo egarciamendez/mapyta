@@ -33,7 +33,7 @@ m.add_polygon(
 
 m.to_html("amsterdam_walk.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
 ```
 
 ## How it works
@@ -71,7 +71,7 @@ print(m.to_html())
         fill={"color": "red", "opacity": 0.15},
     )
 
-    print(m.to_html())
+    print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
     ```
 
     Use dataclass objects when you want IDE autocomplete or want to reuse a style across multiple geometries:
@@ -88,7 +88,7 @@ print(m.to_html())
     m.add_polygon(poly1, stroke=my_stroke)
     m.add_polygon(poly2, stroke=my_stroke)
 
-    print(m.to_html())
+    print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
     ```
 
 !!! tip "Polygons with holes"

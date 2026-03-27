@@ -56,7 +56,7 @@ m.add_geojson(
 
 m.to_html("geojson_layer.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 **`hover_fields`** picks properties to show on mouse-over. **`highlight`** defines the style change on hover. `data` can be a dict, a JSON string, or a file `Path`.
@@ -77,7 +77,7 @@ folium.CircleMarker([52.37, 4.90], radius=50, color="red").add_to(folium_map)
 
 m.to_html("custom.html")
 
-print(m.to_html())
+print(m.to_html()) # markdown-exec: hide
 ```
 
 This gives you full access to Folium's API for plugins, custom JavaScript, or anything else not yet exposed by mapyta.
