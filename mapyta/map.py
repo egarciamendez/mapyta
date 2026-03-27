@@ -510,7 +510,7 @@ class Map:
 
         # Priority 3: URL (fetch)
         if isinstance(cfg.on_submit, str) and cfg.on_submit.startswith("http"):
-            return f"fetch(\"{cfg.on_submit}\", {{method: 'POST', headers: {{'Content-Type': 'application/json'}}, body: JSON.stringify(geojson)}});"
+            return f"fetch(\"{cfg.on_submit}\", {{method: 'POST', body: JSON.stringify(geojson)}});"
 
         # Priority 4: Function name
         if isinstance(cfg.on_submit, str):
