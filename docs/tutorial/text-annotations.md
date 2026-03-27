@@ -73,5 +73,3 @@ print(m.to_html()) # markdown-exec: hide
     m.add_point(pt, marker="fa-location-dot", marker_style={"color": "red"}, caption="CPT-01")
     m.add_point(pt, marker="🏗️", caption="Site office")
     ```
-
-**Next:** [Export](export.md) — save your map as HTML, PNG, SVG, or BytesIO.

@@ -110,5 +110,3 @@ Each key in `viktor_params` must match a tool in `tools`. The values are the VIK
 | `submit_label` | `"Submit"` | Submit button text |
 | `draw_style` | `None` | `shapeOptions` override |
 | `edit` | `True` | Enable edit/delete controls |
-
-**Next:** Check the [API reference](../../reference/mapyta/map/) for the full `enable_draw()` signature.

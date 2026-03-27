@@ -63,5 +63,3 @@ If you don't pass `values` explicitly, Map reads them straight from the GeoJSON 
 !!! tip "Multiple ways to pass GeoJSON"
 
     `geojson_data` accepts a dict, a JSON string, or a `Path` to a `.geojson` file — Map handles all three.
-
-**Next:** [Heatmaps](heatmaps.md) — visualize point density across an area.

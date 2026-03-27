@@ -42,5 +42,3 @@ print(m.to_html()) # markdown-exec: hide
     ```python
     m.create_feature_group("🔵 Boreholes", show=False)
     ```
-
-**Next:** [Choropleth Maps](choropleth.md) — shade areas by numeric value.

@@ -34,5 +34,3 @@ m = Map(title="Explicit CRS", source_crs="EPSG:28992")
 !!! info "Mixing CRS systems"
 
     Auto-detection runs on the first coordinate of each geometry. This means you can't mix RD New and WGS84 geometries on the same map without setting `source_crs` explicitly on the constructor — doing so will force all geometries through the same transformation.
-
-**Next:** [Map Configuration](configuration.md) — change tile providers, zoom levels, and optional plugins.

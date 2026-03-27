@@ -41,5 +41,3 @@ print(m.to_html()) # markdown-exec: hide
 | `min_opacity` | 0.3 | Minimum heatmap opacity |
 | `max_zoom` | 18 | Zoom at which points reach full intensity |
 | `gradient` | None | Custom gradient `{0.4: "blue", 0.6: "lime", 1.0: "red"}` |
-
-**Next:** [Marker Clusters](clusters.md) — group hundreds of markers into zoom-responsive bubbles.

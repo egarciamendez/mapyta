@@ -58,5 +58,3 @@ m.to_html("cities.html")
 | `title` | Map title |
 | `config` | `MapConfig` for tile provider, zoom, etc. |
 | `legend_name` | Legend label when `color_column` is set |
-
-**Next:** [Coordinate Detection](coordinates.md) — pass Dutch RD New coordinates directly, no reprojection needed.

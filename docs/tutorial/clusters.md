@@ -36,5 +36,3 @@ At low zoom you'll see cluster bubbles with counts. Zoom in and they split into 
 | `name` | Cluster group name |
 | `min_zoom` | Zoom level at which markers appear individually |
 | `popup_style` | `PopupStyle` or dict for popup dimensions |
-
-**Next:** [GeoPandas Integration](geodataframe.md) — build a map directly from a GeoDataFrame.

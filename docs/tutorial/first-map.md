@@ -44,5 +44,3 @@ Open `hello.html` and you'll see an interactive OpenStreetMap centered on Amster
 
     print(m.to_html()) # markdown-exec: hide
     ```
-
-**Next:** [Lines & Polygons](geometries.md) — add routes and highlighted areas to your map.

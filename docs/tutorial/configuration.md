@@ -91,5 +91,3 @@ m.add_tile_layer(name="esri_satellite")
 m.add_tile_layer(name="cartodb_dark")
 m.add_layer_control(collapsed=False)
 ```
-
-**Next:** [Text Annotations](text-annotations.md) — floating labels and site plan markers.

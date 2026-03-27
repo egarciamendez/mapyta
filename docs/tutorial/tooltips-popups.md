@@ -61,5 +61,3 @@ print(m.to_html()) # markdown-exec: hide
 !!! tip
 
     `RawHTML` works on both `tooltip` and `popup` parameters across all `add_*` methods.
-
-**Next:** [Feature Groups](layers.md) — organize your data into toggleable layers.

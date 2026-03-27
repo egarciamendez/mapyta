@@ -62,5 +62,3 @@ print(m.to_html()) # markdown-exec: hide
     ```
 
     For marker and caption styling, pass a CSS dict — any CSS property is valid.
-
-**Next:** [Tooltips & Popups](tooltips-popups.md) — markdown content, custom popup sizes, and raw HTML.

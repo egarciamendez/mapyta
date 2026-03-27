@@ -102,5 +102,3 @@ print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
     )
     m.add_polygon(vondelpark, tooltip="**Vondelpark** — the hole is the pond!")
     ```
-
-**Next:** [Markers](markers.md) — swap the default arrow for emojis, icons, or circles.

@@ -8,9 +8,9 @@ This tutorial walks you through mapyta from the absolute minimum to advanced fea
 - mapyta installed:
 
 ```bash
-pip install mapyta
-# or
 uv add mapyta
+# or
+pip install mapyta
 ```
 
 ## What you'll learn
@@ -31,5 +31,3 @@ uv add mapyta
 | [Text Annotations](text-annotations.md) | Floating labels and site plan markers |
 | [Export](export.md) | HTML, PNG, SVG, async, and BytesIO |
 | [Advanced](advanced.md) | Merge maps, GeoJSON layers, escape hatch |
-
-**Start here:** [Your First Map](first-map.md)

@@ -68,5 +68,3 @@ svg_string = await m.to_svg_async()
 ```
 
 These run the Selenium capture in a thread executor so they don't block the event loop.
-
-**Next:** [Advanced](advanced.md) — merge maps, add raw GeoJSON layers, and access the underlying Folium object.
