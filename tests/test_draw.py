@@ -522,6 +522,47 @@ class TestEnableDraw:
 
     # --- 25. File output has draw ---
 
+    def test_rawjs_repr(self) -> None:
+        """
+        Scenario: RawJS __repr__ shows a truncated preview of the JS.
+
+        Given: A RawJS instance with a long JS string
+        When: repr() is called
+        Then: A string starting with RawJS( is returned, truncated at 50 chars
+        """
+        # Arrange - Given
+        short_js = "alert(1)"
+        long_js = "a" * 60
+
+        # Act - When
+        short_repr = repr(RawJS(short_js))
+        long_repr = repr(RawJS(long_js))
+
+        # Assert - Then
+        assert short_repr == f"RawJS({short_js!r})"
+        assert "..." in long_repr
+
+    def test_viktor_polygon_conversion(self) -> None:
+        """
+        Scenario: VIKTOR polygon generates Polygon coordinate conversion.
+
+        Given: A map with viktor_params mapping polygon to a field
+        When: HTML is rendered
+        Then: The script converts Polygon coordinates with the field name
+        """
+        # Arrange - Given
+        m = Map().enable_draw(
+            tools=["polygon"],
+            viktor_params={"polygon": "poly_field"},
+        )
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "geom.coordinates[0].map" in html
+        assert "poly_field" in html
+
     def test_file_output_contains_draw_control(self, tmp_path: Path) -> None:
         """
         Scenario: HTML saved to file includes the draw control.

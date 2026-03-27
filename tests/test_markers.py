@@ -7,17 +7,10 @@ docstring and Arrange/Act/Assert comments.
 
 from pathlib import Path
 
+from shapely import Point, Polygon
+
 from mapyta import CircleStyle, FillStyle, Map, StrokeStyle
 from mapyta.markers import classify_marker
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
-from shapely.geometry import (
-    Point,
-    Polygon,
-)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.

@@ -412,8 +412,6 @@ class Map:
 
     def _inject_draw_plugin(self) -> None:
         """Inject Leaflet.draw CSS, JS, and control script (idempotent)."""
-        if self._draw_injected:
-            return
         cfg = self._draw_config
         assert cfg is not None
 

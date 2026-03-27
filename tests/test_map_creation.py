@@ -6,17 +6,10 @@ docstring and Arrange/Act/Assert comments.
 # ruff: noqa: SLF001
 
 import folium
+from shapely import Point
 
 from mapyta import CircleStyle, FillStyle, HeatmapStyle, Map, MapConfig, StrokeStyle
 from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_ICON_CSS, DEFAULT_MARKER_CAPTION_CSS, DEFAULT_TEXT_CSS, css_to_style
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
-from shapely.geometry import (
-    Point,
-)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.

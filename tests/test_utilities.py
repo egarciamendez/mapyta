@@ -7,27 +7,13 @@ docstring and Arrange/Act/Assert comments.
 
 import folium
 import pytest
+from shapely import GeometryCollection, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 
 from mapyta import Map, MapConfig, PopupStyle, StrokeStyle
 from mapyta.coordinates import detect_and_transform_coords, transform_geometry
 from mapyta.markdown import RawHTML, markdown_to_html, sanitize_href
 from mapyta.style import resolve_style
 from mapyta.tiles import TILE_PROVIDERS
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
-from shapely import GeometryCollection
-from shapely.geometry import (
-    LinearRing,
-    LineString,
-    MultiLineString,
-    MultiPoint,
-    MultiPolygon,
-    Point,
-    Polygon,
-)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.

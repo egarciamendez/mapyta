@@ -6,16 +6,9 @@ docstring and Arrange/Act/Assert comments.
 # ruff: noqa: SLF001
 
 import pytest
+from shapely import Point
 
 from mapyta import HeatmapStyle, Map
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
-from shapely.geometry import (
-    Point,
-)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.

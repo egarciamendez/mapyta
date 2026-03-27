@@ -6,13 +6,6 @@ docstring and Arrange/Act/Assert comments.
 # ruff: noqa: SLF001
 
 import pytest
-
-from mapyta import FillStyle, Map, StrokeStyle
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
 from shapely.geometry import (
     LinearRing,
     LineString,
@@ -22,6 +15,8 @@ from shapely.geometry import (
     Point,
     Polygon,
 )
+
+from mapyta import FillStyle, Map, StrokeStyle
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.

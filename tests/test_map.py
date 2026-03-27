@@ -17,19 +17,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import folium
 import pytest
-
-from mapyta import CircleStyle, FillStyle, HeatmapStyle, Map, MapConfig, PopupStyle, StrokeStyle
-from mapyta.coordinates import detect_and_transform_coords, transform_geometry
-from mapyta.export import capture_screenshot, check_selenium
-from mapyta.markdown import RawHTML, markdown_to_html, sanitize_href
-from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_ICON_CSS, DEFAULT_MARKER_CAPTION_CSS, DEFAULT_TEXT_CSS, classify_marker, css_to_style
-from mapyta.style import resolve_style
-from mapyta.tiles import TILE_PROVIDERS
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
+from geopandas import GeoDataFrame
 from shapely import GeometryCollection
 from shapely.geometry import (
     LinearRing,
@@ -40,6 +28,14 @@ from shapely.geometry import (
     Point,
     Polygon,
 )
+
+from mapyta import CircleStyle, FillStyle, HeatmapStyle, Map, MapConfig, PopupStyle, StrokeStyle
+from mapyta.coordinates import detect_and_transform_coords, transform_geometry
+from mapyta.export import capture_screenshot, check_selenium
+from mapyta.markdown import RawHTML, markdown_to_html, sanitize_href
+from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_ICON_CSS, DEFAULT_MARKER_CAPTION_CSS, DEFAULT_TEXT_CSS, classify_marker, css_to_style
+from mapyta.style import resolve_style
+from mapyta.tiles import TILE_PROVIDERS
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.
@@ -3084,7 +3080,7 @@ class TestExport:
         """
         with (
             patch(target="shutil.which", return_value=None),
-            patch.dict("sys.modules", {"chromedriver_autoinstaller": None}),
+            patch.dict("sys.modules", {"selenium": MagicMock(), "selenium.webdriver": MagicMock(), "chromedriver_autoinstaller": None}),
             pytest.raises(RuntimeError, match="Chrome"),
         ):
             check_selenium()
@@ -3110,7 +3106,11 @@ class TestExport:
             return original_which(name)
 
         # Act & Assert - When/Then
-        with patch("shutil.which", side_effect=mock_which), pytest.raises(RuntimeError, match="chromedriver"):
+        with (
+            patch("shutil.which", side_effect=mock_which),
+            patch.dict("sys.modules", {"selenium": MagicMock(), "selenium.webdriver": MagicMock()}),
+            pytest.raises(RuntimeError, match="chromedriver"),
+        ):
             check_selenium()
 
     def test_missing_chrome_raises_runtime_error(self) -> None:
@@ -3123,7 +3123,11 @@ class TestExport:
 
         """
         # Act & Assert - When/Then
-        with patch(target="shutil.which", return_value=None), pytest.raises(RuntimeError, match="Chrome"):
+        with (
+            patch(target="shutil.which", return_value=None),
+            patch.dict("sys.modules", {"selenium": MagicMock(), "selenium.webdriver": MagicMock()}),
+            pytest.raises(RuntimeError, match="Chrome"),
+        ):
             check_selenium()
 
     def test_capture_screenshot_returns_png_bytes(self, tmp_path: Path) -> None:
@@ -3144,16 +3148,23 @@ class TestExport:
         mock_driver.get_screenshot_as_png.return_value = fake_png
 
         mock_options_instance = MagicMock()
-        mock_options_class = MagicMock(return_value=mock_options_instance)
 
-        mock_webdriver = MagicMock()
-        mock_webdriver.Chrome.return_value = mock_driver
+        mock_selenium = MagicMock()
+        mock_selenium.webdriver.Chrome.return_value = mock_driver
+        mock_selenium.webdriver.chrome.options.Options.return_value = mock_options_instance
 
         # Act - When: patch the lazy imports inside _capture_screenshot
         with (
             patch("mapyta.export.check_selenium"),
-            patch("selenium.webdriver.Chrome", mock_webdriver.Chrome),
-            patch("selenium.webdriver.chrome.options.Options", mock_options_class),
+            patch.dict(
+                "sys.modules",
+                {
+                    "selenium": mock_selenium,
+                    "selenium.webdriver": mock_selenium.webdriver,
+                    "selenium.webdriver.chrome": mock_selenium.webdriver.chrome,
+                    "selenium.webdriver.chrome.options": mock_selenium.webdriver.chrome.options,
+                },
+            ),
         ):
             result = capture_screenshot(str(html_file), 800, 600, 0.1)
 
@@ -3192,7 +3203,7 @@ class TestExport:
         fake_png = b"\x89PNG_fake"
 
         # Act - When
-        with patch("mapyta.export.capture_screenshot", return_value=fake_png):
+        with patch("mapyta.map.capture_screenshot", return_value=fake_png):
             result = map_with_point.to_image(path=None)
 
         # Assert - Then
@@ -3212,7 +3223,7 @@ class TestExport:
         out_path = tmp_path / "map.png"
 
         # Act - When
-        with patch("mapyta.export.capture_screenshot", return_value=fake_png):
+        with patch("mapyta.map.capture_screenshot", return_value=fake_png):
             result = map_with_point.to_image(path=out_path)
 
         # Assert - Then
@@ -3248,7 +3259,8 @@ class TestExport:
 
         """
         # Act - When
-        result = map_with_point.to_svg(path=None, width=800, height=600, delay=0.1)
+        with patch("mapyta.map.capture_screenshot", return_value=b"\x89PNG_fake"):
+            result = map_with_point.to_svg(path=None, width=800, height=600, delay=0.1)
 
         # Assert - Then
         assert isinstance(result, str)
@@ -3268,7 +3280,8 @@ class TestExport:
         out_path = tmp_path / "map.svg"
 
         # Act - When
-        result = map_with_point.to_svg(path=out_path, width=800, height=600, delay=0.1)
+        with patch("mapyta.map.capture_screenshot", return_value=b"\x89PNG_fake"):
+            result = map_with_point.to_svg(path=out_path, width=800, height=600, delay=0.1)
 
         # Assert - Then
         assert result == out_path
@@ -4098,7 +4111,7 @@ class TestHideControls:
         m.add_point(Point(4.9, 52.37))
 
         fake_png = b"\x89PNG_fake"
-        with patch("mapyta.export.capture_screenshot", return_value=fake_png) as mock_cap:
+        with patch("mapyta.map.capture_screenshot", return_value=fake_png) as mock_cap:
             m.to_image(path=None, hide_controls=True)
             assert mock_cap.called
 
@@ -4119,7 +4132,7 @@ class TestHideControls:
             captured_html["content"] = Path(html_path).read_text(encoding="utf-8")
             return b"\x89PNG_fake"
 
-        with patch("mapyta.export.capture_screenshot", side_effect=mock_screenshot):
+        with patch("mapyta.map.capture_screenshot", side_effect=mock_screenshot):
             m.to_image(path=None, hide_controls=False)
 
         assert ".leaflet-control{display:none" not in captured_html["content"]
@@ -4141,7 +4154,7 @@ class TestHideControls:
             captured_html["content"] = Path(html_path).read_text(encoding="utf-8")
             return b"\x89PNG_fake"
 
-        with patch("mapyta.export.capture_screenshot", side_effect=mock_screenshot):
+        with patch("mapyta.map.capture_screenshot", side_effect=mock_screenshot):
             m.to_image(path=None, hide_controls=True)
 
         assert ".leaflet-control{display:none !important;}" in captured_html["content"]

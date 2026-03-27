@@ -13,17 +13,10 @@ from unittest.mock import patch
 
 import folium
 import pytest
+from geopandas import GeoDataFrame
+from shapely import Point, Polygon
 
 from mapyta import FillStyle, Map, MapConfig, StrokeStyle
-
-try:
-    from geopandas import GeoDataFrame
-except ImportError:
-    GeoDataFrame = None  # type: ignore[assignment,misc]
-from shapely.geometry import (
-    Point,
-    Polygon,
-)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.
