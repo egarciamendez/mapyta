@@ -1,7 +1,3 @@
-
-![Mapyta logo](docs/_overrides/assets/images/mapyta-logo-light-mode.svg#only-light){ display: flex; justify-content: center; align-items: center; }
-![Mapyta logo](docs/_overrides/assets/images/mapyta-logo-dark-mode.svg#only-dark){ display: flex; justify-content: center; align-items: center; }
-
 <p align="center">
     <a href="https://egarciamendez.github.io/mapyta">
     <img src="https://egarciamendez.github.io/mapyta/_overrides/assets/images/mapyta-logo-light-mode.svg" alt="Mapyta">
