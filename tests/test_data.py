@@ -630,6 +630,7 @@ class TestChoropleth:
 # ===================================================================
 
 
+@pytest.mark.skipif(GeoDataFrame is None, reason="geopandas not installed")
 class TestGeoDataFrame:
     """Scenarios for creating maps from GeoPandas GeoDataFrames."""
 
