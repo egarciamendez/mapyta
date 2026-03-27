@@ -5,7 +5,6 @@ docstring and Arrange/Act/Assert comments.
 """
 # ruff: noqa: SLF001
 
-
 import folium
 import pytest
 

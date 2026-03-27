@@ -5,7 +5,6 @@ docstring and Arrange/Act/Assert comments.
 """
 # ruff: noqa: SLF001
 
-
 import folium
 
 from mapyta import CircleStyle, FillStyle, HeatmapStyle, Map, MapConfig, StrokeStyle

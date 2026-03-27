@@ -43,12 +43,12 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
-from mapyta.config import CircleStyle, FillStyle, MapConfig, PopupStyle, TooltipStyle
+from mapyta.config import CircleStyle, FillStyle, HeatmapStyle, MapConfig, PopupStyle, StrokeStyle, TooltipStyle
 from mapyta.coordinates import transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
 from mapyta.markdown import RawHTML, markdown_to_html
-from mapyta.markers import DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker
+from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker, css_to_style
 from mapyta.style import resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
@@ -472,7 +472,7 @@ class Map:
         line: LineString,
         tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
-        stroke: Any | dict[str, Any] | None = None,
+        stroke: StrokeStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a LineString.
@@ -494,8 +494,6 @@ class Map:
         -------
         Map
         """
-        from mapyta.config import StrokeStyle
-
         line = cast(LineString, self._transform(line))
         self._extend_bounds(line)
         s = resolve_style(stroke, StrokeStyle) or StrokeStyle()
@@ -516,8 +514,8 @@ class Map:
         polygon: Polygon,
         tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
-        stroke: Any | dict[str, Any] | None = None,
-        fill: Any | dict[str, Any] | None = None,
+        stroke: StrokeStyle | dict[str, Any] | None = None,
+        fill: FillStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a Polygon.
@@ -541,8 +539,6 @@ class Map:
         -------
         Map
         """
-        from mapyta.config import StrokeStyle
-
         polygon = cast(Polygon, self._transform(polygon))
         self._extend_bounds(polygon)
         s = resolve_style(stroke, StrokeStyle) or StrokeStyle()
@@ -568,8 +564,8 @@ class Map:
         mp: MultiPolygon,
         hover: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
-        stroke: Any | dict[str, Any] | None = None,
-        fill: Any | dict[str, Any] | None = None,
+        stroke: StrokeStyle | dict[str, Any] | None = None,
+        fill: FillStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a MultiPolygon.
@@ -594,7 +590,7 @@ class Map:
         ml: MultiLineString,
         hover: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
-        stroke: Any | dict[str, Any] | None = None,
+        stroke: StrokeStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a MultiLineString.
@@ -646,8 +642,8 @@ class Map:
         hover: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         label: str | None = None,
-        stroke: Any | dict[str, Any] | None = None,
-        fill: Any | dict[str, Any] | None = None,
+        stroke: StrokeStyle | dict[str, Any] | None = None,
+        fill: FillStyle | dict[str, Any] | None = None,
         marker_style: dict[str, str] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
     ) -> Self:
@@ -859,7 +855,7 @@ class Map:
     def add_heatmap(
         self,
         points: list[Point] | list[tuple[float, float]] | list[tuple[float, float, float]],
-        style: Any | dict[str, Any] | None = None,
+        style: HeatmapStyle | dict[str, Any] | None = None,
         name: str | None = None,
     ) -> Self:
         """Add a heatmap layer.
@@ -877,8 +873,6 @@ class Map:
         -------
         Map
         """
-        from mapyta.config import HeatmapStyle
-
         hs = resolve_style(style, HeatmapStyle) or HeatmapStyle()
         heat_data: list[list[float]] = []
         for p in points:
@@ -1027,8 +1021,6 @@ class Map:
         -------
         Map
         """
-        from mapyta.markers import DEFAULT_CAPTION_CSS, css_to_style
-
         merged = {**DEFAULT_CAPTION_CSS, "border-radius": "3px", "overflow-wrap": "break-word", **(style or {})}
         if isinstance(point, Point):
             loc = cast(Point, self._transform(point))
@@ -1079,8 +1071,8 @@ class Map:
         popup_columns: list[str] | None = None,
         label_column: str | None = None,
         color_column: str | None = None,
-        stroke: Any | None = None,
-        fill: Any | None = None,
+        stroke: StrokeStyle | dict[str, Any] | None = None,
+        fill: FillStyle | dict[str, Any] | None = None,
         marker_style: dict[str, str] | None = None,
         title: str | None = None,
         config: MapConfig | None = None,
@@ -1138,8 +1130,6 @@ class Map:
         if color_column and color_column in gdf.columns:
             vals = gdf[color_column].dropna()
             if len(vals) > 0:
-                from mapyta.config import StrokeStyle
-
                 vmin, vmax = float(vals.min()), float(vals.max())
                 colormap = cm.LinearColormap(
                     colors=["#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"],
@@ -1178,8 +1168,6 @@ class Map:
             if colormap and color_column and color_column in row.index:
                 val = row[color_column]
                 if val is not None and not (isinstance(val, float) and math.isnan(val)):
-                    from mapyta.config import StrokeStyle
-
                     c = colormap(float(val))
                     cur_fill = FillStyle(color=c, opacity=(fill or FillStyle()).opacity)
                     cur_stroke = StrokeStyle(

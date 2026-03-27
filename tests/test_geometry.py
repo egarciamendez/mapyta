@@ -5,7 +5,6 @@ docstring and Arrange/Act/Assert comments.
 """
 # ruff: noqa: SLF001
 
-
 import pytest
 
 from mapyta import FillStyle, Map, StrokeStyle
