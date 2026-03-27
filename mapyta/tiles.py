@@ -39,4 +39,45 @@ TILE_PROVIDERS: dict[str, dict[str, str]] = {
         "attr": "Kadaster BRT Grijs",
         "name": "Kadaster Grijs",
     },
+    # --- Additional providers ---
+    "cartodb_voyager": {
+        "tiles": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "attr": "&copy; OpenStreetMap contributors &copy; CARTO",
+        "name": "CartoDB Voyager",
+    },
+    "esri_streets": {
+        "tiles": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+        "attr": "Esri World Street Map",
+        "name": "Esri Streets",
+    },
+    "esri_gray": {
+        "tiles": "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        "attr": "Esri Light Gray Canvas",
+        "name": "Esri Gray",
+    },
+    "esri_ocean": {
+        "tiles": "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",
+        "attr": "Esri World Ocean Base",
+        "name": "Esri Ocean",
+    },
+    "opentopomap": {
+        "tiles": "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+        "attr": "&copy; OpenStreetMap contributors, SRTM | &copy; OpenTopoMap (CC-BY-SA)",
+        "name": "OpenTopoMap",
+    },
+    "stamen_watercolor": {
+        "tiles": "https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg",
+        "attr": "Stadia/Stamen Watercolor",
+        "name": "Stamen Watercolor",
+    },
+    "stadia_alidade": {
+        "tiles": "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
+        "attr": "&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors",
+        "name": "Stadia Alidade Smooth",
+    },
+    "stadia_dark": {
+        "tiles": "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
+        "attr": "&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors",
+        "name": "Stadia Alidade Dark",
+    },
 }

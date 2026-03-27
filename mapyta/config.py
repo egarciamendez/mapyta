@@ -1,6 +1,7 @@
 """Style configuration dataclasses for Mapyta."""
 
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -172,3 +173,53 @@ class MapConfig:
     minimap: bool = False
     measure_control: bool = False
     mouse_position: bool = True
+
+
+class RawJS:
+    """Marker for raw JavaScript that should not be escaped.
+
+    Parameters
+    ----------
+    js : str
+        JavaScript function expression that accepts one argument
+        (a GeoJSON FeatureCollection).
+    """
+
+    def __init__(self, js: str) -> None:
+        self.js = js
+
+    def __repr__(self) -> str:  # noqa: D105
+        return f"RawJS({self.js[:50]!r}{'...' if len(self.js) > 50 else ''})"
+
+
+@dataclass
+class DrawConfig:
+    """Configuration for Leaflet.draw drawing controls.
+
+    Parameters
+    ----------
+    tools : list[str]
+        Active drawing tools: ``"marker"``, ``"polyline"``, ``"polygon"``,
+        ``"rectangle"``, ``"circle"``.
+    on_submit : str | RawJS | None
+        Callback on submit. ``None`` = download, URL = fetch,
+        string = function name, ``RawJS`` = inline JS.
+    viktor_params : dict[str, str] | None
+        VIKTOR field-name mapping. Overrides *on_submit*.
+    position : str
+        Toolbar position.
+    submit_label : str
+        Submit button text.
+    draw_style : dict[str, Any] | None
+        ``shapeOptions`` override for drawn shapes.
+    edit : bool
+        Whether edit/delete controls are active.
+    """
+
+    tools: list[str] = field(default_factory=lambda: ["polyline", "polygon", "marker"])
+    on_submit: str | RawJS | None = None
+    viktor_params: dict[str, str] | None = None
+    position: str = "topleft"
+    submit_label: str = "Submit"
+    draw_style: dict[str, Any] | None = None
+    edit: bool = True
