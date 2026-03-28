@@ -198,7 +198,7 @@ class TestMapCreation:
 
         # Assert - Then
         assert m._map is not None, "Map should be created with custom tiles"
-        assert m._config.tile_layer.startswith("https://")
+        assert m._config.tile_layer.startswith("https://")  # ty: ignore[unresolved-attribute]
 
 
 # ===================================================================
@@ -712,7 +712,7 @@ class TestGeometryDispatch:
 
         # Act & Assert - When/Then
         with pytest.raises(TypeError, match="Unsupported"):
-            m.add_geometry("not a geometry")
+            m.add_geometry("not a geometry")  # ty: ignore[invalid-argument-type]
 
     def test_dispatch_linestring(self) -> None:
         """
@@ -1876,7 +1876,7 @@ class TestCoordinateTransformation:
         coords = [(4.9, 52.37), (5.1, 52.09)]
 
         # Act - When
-        result = detect_and_transform_coords(coords)
+        result = detect_and_transform_coords(coords)  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         assert result == coords, "WGS84 coords should pass through unchanged"
@@ -1893,7 +1893,7 @@ class TestCoordinateTransformation:
         coords_rd = [(121_000, 487_000)]
 
         # Act - When
-        result = detect_and_transform_coords(coords_rd)
+        result = detect_and_transform_coords(coords_rd)  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         lon, lat = result[0]
@@ -1912,7 +1912,7 @@ class TestCoordinateTransformation:
         coords = [(155_000, 463_000)]
 
         # Act - When
-        result = detect_and_transform_coords(coords, source_crs="EPSG:28992")
+        result = detect_and_transform_coords(coords, source_crs="EPSG:28992")  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         lon, lat = result[0]
@@ -2007,7 +2007,7 @@ class TestCoordinateTransformation:
         coords = [(4.9, 52.37)]
 
         # Act - When
-        result = detect_and_transform_coords(coords, source_crs="EPSG:4326")
+        result = detect_and_transform_coords(coords, source_crs="EPSG:4326")  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         assert result == coords, "EPSG:4326 should pass through unchanged"
@@ -3247,7 +3247,7 @@ class TestExport:
         assert isinstance(result, io.BytesIO)
         assert result.tell() == 0, "Buffer should be at position 0"
         content = result.read()
-        assert content == mock_to_image.fake_png
+        assert content == mock_to_image.fake_png  # ty: ignore[unresolved-attribute]
 
     def test_to_svg_returns_string(self, map_with_point: Map) -> None:
         """
@@ -3302,7 +3302,7 @@ class TestExport:
         result = asyncio.run(map_with_point.to_image_async(path=None, width=800, height=600, delay=0.1))
 
         # Assert - Then
-        assert result == mock_to_image.fake_png
+        assert result == mock_to_image.fake_png  # ty: ignore[unresolved-attribute]
 
     def test_to_svg_async(self, map_with_point: Map) -> None:
         """

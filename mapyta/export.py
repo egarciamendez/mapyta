@@ -15,7 +15,7 @@ def check_selenium() -> None:
         If Chrome/chromedriver is not found.
     """
     try:
-        from selenium import webdriver  # noqa: PLC0415, F401
+        from selenium import webdriver  # noqa: PLC0415, F401  # ty: ignore[unresolved-import]
     except ImportError:
         raise ImportError(
             "Image export requires selenium. Install it with:\n  "
@@ -37,7 +37,7 @@ def check_selenium() -> None:
     ]
     if not any(chrome_paths):
         try:
-            import chromedriver_autoinstaller  # noqa: PLC0415
+            import chromedriver_autoinstaller  # noqa: PLC0415  # ty: ignore[unresolved-import]
 
             chromedriver_autoinstaller.install()
         except (ImportError, ModuleNotFoundError, ValueError):
@@ -81,8 +81,8 @@ def capture_screenshot(
     """
     check_selenium()
 
-    from selenium import webdriver  # noqa: PLC0415
-    from selenium.webdriver.chrome.options import Options  # noqa: PLC0415
+    from selenium import webdriver  # noqa: PLC0415  # ty: ignore[unresolved-import]
+    from selenium.webdriver.chrome.options import Options  # noqa: PLC0415  # ty: ignore[unresolved-import]
 
     options = Options()
     options.add_argument("--headless")

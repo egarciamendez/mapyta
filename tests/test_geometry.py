@@ -225,7 +225,7 @@ class TestGeometryDispatch:
 
         # Act & Assert - When/Then
         with pytest.raises(TypeError, match="Unsupported"):
-            m.add_geometry("not a geometry")
+            m.add_geometry("not a geometry")  # ty: ignore[invalid-argument-type]
 
     def test_dispatch_linestring(self) -> None:
         """

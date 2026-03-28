@@ -35,7 +35,7 @@ class TestCoordinateTransformation:
         coords = [(4.9, 52.37), (5.1, 52.09)]
 
         # Act - When
-        result = detect_and_transform_coords(coords)
+        result = detect_and_transform_coords(coords)  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         assert result == coords, "WGS84 coords should pass through unchanged"
@@ -52,7 +52,7 @@ class TestCoordinateTransformation:
         coords_rd = [(121_000, 487_000)]
 
         # Act - When
-        result = detect_and_transform_coords(coords_rd)
+        result = detect_and_transform_coords(coords_rd)  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         lon, lat = result[0]
@@ -71,7 +71,7 @@ class TestCoordinateTransformation:
         coords = [(155_000, 463_000)]
 
         # Act - When
-        result = detect_and_transform_coords(coords, source_crs="EPSG:28992")
+        result = detect_and_transform_coords(coords, source_crs="EPSG:28992")  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         lon, lat = result[0]
@@ -166,7 +166,7 @@ class TestCoordinateTransformation:
         coords = [(4.9, 52.37)]
 
         # Act - When
-        result = detect_and_transform_coords(coords, source_crs="EPSG:4326")
+        result = detect_and_transform_coords(coords, source_crs="EPSG:4326")  # ty: ignore[invalid-argument-type]
 
         # Assert - Then
         assert result == coords, "EPSG:4326 should pass through unchanged"

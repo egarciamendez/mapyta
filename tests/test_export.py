@@ -459,7 +459,7 @@ class TestExport:
         assert isinstance(result, io.BytesIO)
         assert result.tell() == 0, "Buffer should be at position 0"
         content = result.read()
-        assert content == mock_to_image.fake_png
+        assert content == mock_to_image.fake_png  # ty: ignore[unresolved-attribute]
 
     def test_to_svg_returns_string(self, map_with_point: Map) -> None:
         """
@@ -514,7 +514,7 @@ class TestExport:
         result = asyncio.run(map_with_point.to_image_async(path=None, width=800, height=600, delay=0.1))
 
         # Assert - Then
-        assert result == mock_to_image.fake_png
+        assert result == mock_to_image.fake_png  # ty: ignore[unresolved-attribute]
 
     def test_to_svg_async(self, map_with_point: Map) -> None:
         """

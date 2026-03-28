@@ -26,7 +26,7 @@ import math
 import tempfile
 import webbrowser
 from pathlib import Path
-from typing import Any, Self, cast
+from typing import Any, Self, cast, overload
 
 import branca.colormap as cm
 import folium
@@ -1413,11 +1413,13 @@ class Map:
                 val = row[color_column]
                 if val is not None and not (isinstance(val, float) and math.isnan(val)):
                     c = colormap(float(val))
-                    cur_fill = FillStyle(color=c, opacity=(fill or FillStyle()).opacity)
+                    _fill_base = fill if isinstance(fill, FillStyle) else FillStyle()
+                    _stroke_base = stroke if isinstance(stroke, StrokeStyle) else StrokeStyle()
+                    cur_fill = FillStyle(color=c, opacity=_fill_base.opacity)
                     cur_stroke = StrokeStyle(
                         color=c,
-                        weight=(stroke or StrokeStyle()).weight,
-                        opacity=(stroke or StrokeStyle()).opacity,
+                        weight=_stroke_base.weight,
+                        opacity=_stroke_base.opacity,
                     )
 
             m.add_geometry(
@@ -1580,6 +1582,12 @@ class Map:
         self._ensure_rendered()
         return self._map.get_root().render()
 
+    @overload
+    def to_html(self, path: None = None, open_in_browser: bool = False) -> str: ...
+
+    @overload
+    def to_html(self, path: str | Path, open_in_browser: bool = False) -> Path: ...
+
     def to_html(self, path: str | Path | None = None, open_in_browser: bool = False) -> str | Path:
         """Export as standalone HTML.
 
@@ -1605,6 +1613,12 @@ class Map:
         if open_in_browser:
             webbrowser.open(out.resolve().as_uri())
         return out
+
+    @overload
+    def to_image(self, path: None = None, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True) -> bytes: ...
+
+    @overload
+    def to_image(self, path: str | Path, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True) -> Path: ...
 
     def to_image(
         self,
@@ -1694,6 +1708,12 @@ class Map:
         buf = io.BytesIO(png)
         buf.seek(0)
         return buf
+
+    @overload
+    def to_svg(self, path: None = None, width: int = 1200, height: int = 800, delay: float = 2.0, hide_controls: bool = True) -> str: ...
+
+    @overload
+    def to_svg(self, path: str | Path, width: int = 1200, height: int = 800, delay: float = 2.0, hide_controls: bool = True) -> Path: ...
 
     def to_svg(
         self,

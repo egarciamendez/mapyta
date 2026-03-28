@@ -172,7 +172,7 @@ class TestMapCreation:
 
         # Assert - Then
         assert m._map is not None, "Map should be created with custom tiles"
-        assert m._config.tile_layer.startswith("https://")
+        assert m._config.tile_layer.startswith("https://")  # ty: ignore[unresolved-attribute]
 
 
 # ===================================================================
