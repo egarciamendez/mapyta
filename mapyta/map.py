@@ -1704,7 +1704,7 @@ class Map:
         io.BytesIO
             Buffer at position 0.
         """
-        png = cast(bytes, self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls))
+        png = self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls)
         buf = io.BytesIO(png)
         buf.seek(0)
         return buf
@@ -1748,7 +1748,7 @@ class Map:
         -------
         str | Path
         """
-        png_bytes = cast(bytes, self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls))
+        png_bytes = self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls)
         b64 = base64.b64encode(png_bytes).decode("ascii")
         svg = (
             f'<?xml version="1.0" encoding="UTF-8"?>\n'
