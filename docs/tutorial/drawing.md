@@ -72,40 +72,12 @@ m.enable_draw(on_submit="myGlobalHandler")
 
 This generates `window["myGlobalHandler"](geojson)`.
 
-## VIKTOR integration (BETA)
-
-When building apps on [VIKTOR](https://viktor.ai), use `viktor_params` to send drawn geometries back to the Python controller via `viktorSdk.sendParams()`:
-
-```python exec="true" html="true" source="tabbed-right"
-from mapyta import Map
-
-m = Map(title="Draw a route")
-m.enable_draw(
-    tools=["marker", "polyline", "polygon"],
-    viktor_params={
-        "marker": "geopoint",
-        "polyline": "geopolyline",
-        "polygon": "geopolygon",
-    },
-    submit_label="Verzenden",
-)
-
-print(m.to_html()) # markdown-exec: hide
-
-```
-
-Each key in `viktor_params` must match a tool in `tools`. The values are the VIKTOR parameter field names. Coordinates are automatically converted from GeoJSON `[lon, lat]` to VIKTOR's `{lat, lon}` format.
-
-!!! note
-    The `"circle"` tool is not supported with `viktor_params` because VIKTOR has no matching geometry type.
-
 ## DrawConfig reference
 
 | Field | Default | Description |
 |-------|---------|-------------|
 | `tools` | `["polyline", "polygon", "marker"]` | Active drawing tools |
 | `on_submit` | `None` (download) | Callback: `None`, URL, function name, or `RawJS` |
-| `viktor_params` | `None` | VIKTOR field mapping (overrides `on_submit`) |
 | `position` | `"topleft"` | Toolbar position |
 | `submit_label` | `"Submit"` | Submit button text |
 | `draw_style` | `None` | `shapeOptions` override |

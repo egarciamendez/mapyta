@@ -336,7 +336,6 @@ class Map:
         self,
         tools: list[str] | None = None,
         on_submit: str | RawJS | None = None,
-        viktor_params: dict[str, str] | None = None,
         position: str = "topleft",
         submit_label: str = "Submit",
         draw_style: dict[str, Any] | None = None,
@@ -355,12 +354,6 @@ class Map:
             GeoJSON file; a URL string sends a ``POST`` request; a plain
             string calls ``window["name"](geojson)``; a :class:`RawJS`
             instance is inlined verbatim.
-        viktor_params : dict[str, str] | None
-            VIKTOR field-name mapping.  Keys must be draw-tool names
-            present in *tools*; values are VIKTOR parameter field names.
-            When set, overrides *on_submit* and sends drawn geometries
-            via ``viktorSdk.sendParams()``.  ``"circle"`` is not
-            supported with VIKTOR.
         position : str
             Leaflet control position.
         submit_label : str
@@ -377,9 +370,7 @@ class Map:
         Raises
         ------
         ValueError
-            If *tools* contains an invalid tool name, if ``"circle"`` is
-            used with *viktor_params*, or if a *viktor_params* key is
-            not in *tools*.
+            If *tools* contains an invalid tool name.
         """
         if tools is None:
             tools = ["polyline", "polygon", "marker"]
@@ -389,19 +380,9 @@ class Map:
             msg = f"Invalid draw tool(s): {', '.join(sorted(invalid))}. Valid: {', '.join(sorted(VALID_DRAW_TOOLS))}"
             raise ValueError(msg)
 
-        if viktor_params:
-            if "circle" in tools:
-                msg = "Circle tool is not supported with viktor_params (no VIKTOR geometry type for circles)"
-                raise ValueError(msg)
-            invalid_keys = set(viktor_params.keys()) - set(tools)
-            if invalid_keys:
-                msg = f"viktor_params key(s) {', '.join(sorted(invalid_keys))} not in tools {tools}"
-                raise ValueError(msg)
-
         self._draw_config = DrawConfig(
             tools=tools,
             on_submit=on_submit,
-            viktor_params=viktor_params,
             position=position,
             submit_label=submit_label,
             draw_style=draw_style,
@@ -437,11 +418,6 @@ class Map:
             edit_options=edit_options,
         )
         draw_plugin.add_to(self._map)
-
-        if cfg.viktor_params:
-            self._map.get_root().html.add_child(  # type: ignore[union-attr]
-                folium.Element("<script src=VIKTOR_JS_SDK></script>")
-            )
 
         # Submit button: runs after DOMContentLoaded (after Folium's <script> block).
         map_var = self._map.get_name()
@@ -498,11 +474,7 @@ class Map:
         cfg = self._draw_config
         assert cfg is not None
 
-        # Priority 1: VIKTOR
-        if cfg.viktor_params:
-            return self._build_viktor_callback_js()
-
-        # Priority 2: RawJS
+        # Priority 1: RawJS
         if isinstance(cfg.on_submit, RawJS):
             return f"({cfg.on_submit.js})(geojson);"
 
@@ -528,43 +500,6 @@ class Map:
             "                a.href = url; a.download = 'drawn_features.geojson';\n"
             "                a.click(); URL.revokeObjectURL(url);"
         )
-
-    def _build_viktor_callback_js(self) -> str:
-        """Build JavaScript for VIKTOR ``sendParams()`` with coordinate conversion."""
-        cfg = self._draw_config
-        assert cfg is not None
-        assert cfg.viktor_params is not None
-
-        lines = ["var params = {};"]
-        lines.append("geojson.features.forEach(function(feature) {")
-        lines.append("    var geom = feature.geometry;")
-
-        for tool, field_name in cfg.viktor_params.items():
-            if tool == "marker":
-                lines.append('    if (geom.type === "Point") {')
-                lines.append(f'        params["{field_name}"] = {{lat: geom.coordinates[1], lon: geom.coordinates[0]}};')
-                lines.append("    }")
-            elif tool == "polyline":
-                lines.append('    if (geom.type === "LineString") {')
-                lines.append(f'        params["{field_name}"] = geom.coordinates.map(function(c) {{')
-                lines.append("            return {lat: c[1], lon: c[0]};")
-                lines.append("        });")
-                lines.append("    }")
-            elif tool in ("polygon", "rectangle"):
-                lines.append('    if (geom.type === "Polygon") {')
-                lines.append(f'        params["{field_name}"] = geom.coordinates[0].map(function(c) {{')
-                lines.append("            return {lat: c[1], lon: c[0]};")
-                lines.append("        });")
-                lines.append("    }")
-
-        lines.append("});")
-        lines.append('if (typeof viktorSdk !== "undefined") {')
-        lines.append("    viktorSdk.sendParams(params, true);")
-        lines.append("} else {")
-        lines.append('    console.warn("viktorSdk not available. Params:", JSON.stringify(params, null, 2));')
-        lines.append("}")
-
-        return "\n                ".join(lines)
 
     # ------------------------------------------------------------------
     # Adding geometries

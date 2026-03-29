@@ -55,41 +55,7 @@ class TestEnableDraw:
         with pytest.raises(ValueError, match="hexagon"):
             m.enable_draw(tools=["hexagon"])
 
-    # --- 3. Circle + viktor_params raises ---
-
-    def test_circle_with_viktor_params_raises(self) -> None:
-        """
-        Scenario: Circle tool with VIKTOR params is not supported.
-
-        Given: An empty map
-        When: enable_draw is called with circle and viktor_params
-        Then: A ValueError is raised about circle not being supported
-        """
-        # Arrange - Given
-        m = Map()
-
-        # Act & Assert - When/Then
-        with pytest.raises(ValueError, match="circle"):
-            m.enable_draw(tools=["circle"], viktor_params={"circle": "field"})
-
-    # --- 4. Viktor key not in tools raises ---
-
-    def test_viktor_key_not_in_tools_raises(self) -> None:
-        """
-        Scenario: VIKTOR param key must match a tool in tools list.
-
-        Given: An empty map
-        When: enable_draw has a viktor_params key not in tools
-        Then: A ValueError is raised about the missing key
-        """
-        # Arrange - Given
-        m = Map()
-
-        # Act & Assert - When/Then
-        with pytest.raises(ValueError, match="polygon"):
-            m.enable_draw(tools=["marker"], viktor_params={"polygon": "field"})
-
-    # --- 5. Stores config ---
+    # --- 3. Stores config ---
 
     def test_stores_draw_config(self) -> None:
         """
@@ -224,70 +190,7 @@ class TestEnableDraw:
         assert "download" in html
         assert ".geojson" in html
 
-    # --- 12. Viktor sendParams ---
-
-    def test_viktor_send_params(self) -> None:
-        """
-        Scenario: VIKTOR mode generates viktorSdk.sendParams call.
-
-        Given: A map with drawing enabled and viktor_params
-        When: HTML is rendered
-        Then: viktorSdk.sendParams appears in the HTML
-        """
-        # Arrange - Given
-        m = Map().enable_draw(
-            tools=["marker"],
-            viktor_params={"marker": "geopoint"},
-        )
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "viktorSdk.sendParams" in html
-
-    # --- 13. Viktor SDK placeholder ---
-
-    def test_viktor_sdk_placeholder(self) -> None:
-        """
-        Scenario: VIKTOR mode injects the SDK script placeholder.
-
-        Given: A map with drawing enabled and viktor_params
-        When: HTML is rendered
-        Then: VIKTOR_JS_SDK placeholder appears in the HTML
-        """
-        # Arrange - Given
-        m = Map().enable_draw(
-            tools=["marker"],
-            viktor_params={"marker": "geopoint"},
-        )
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "VIKTOR_JS_SDK" in html
-
-    # --- 14. No SDK without viktor ---
-
-    def test_no_sdk_without_viktor(self) -> None:
-        """
-        Scenario: Without viktor_params, no SDK placeholder is injected.
-
-        Given: A map with drawing enabled without viktor_params
-        When: HTML is rendered
-        Then: VIKTOR_JS_SDK does NOT appear in the HTML
-        """
-        # Arrange - Given
-        m = Map().enable_draw()
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "VIKTOR_JS_SDK" not in html
-
-    # --- 15. URL → fetch ---
+    # --- 12. URL → fetch ---
 
     def test_url_triggers_fetch(self, tmp_path: Path) -> None:
         """
@@ -370,75 +273,7 @@ class TestEnableDraw:
         # Assert - Then
         assert js_code in html
 
-    # --- 18. Viktor Point conversion ---
-
-    def test_viktor_point_conversion(self) -> None:
-        """
-        Scenario: VIKTOR marker generates Point coordinate conversion.
-
-        Given: A map with viktor_params mapping marker to a field
-        When: HTML is rendered
-        Then: The script converts coordinates[1] for lat and uses the field name
-        """
-        # Arrange - Given
-        m = Map().enable_draw(
-            tools=["marker"],
-            viktor_params={"marker": "geopoint"},
-        )
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "geom.coordinates[1]" in html
-        assert "geopoint" in html
-
-    # --- 19. Viktor Polyline conversion ---
-
-    def test_viktor_polyline_conversion(self) -> None:
-        """
-        Scenario: VIKTOR polyline generates LineString coordinate conversion.
-
-        Given: A map with viktor_params mapping polyline to a field
-        When: HTML is rendered
-        Then: The script checks for LineString and uses the field name
-        """
-        # Arrange - Given
-        m = Map().enable_draw(
-            tools=["polyline"],
-            viktor_params={"polyline": "route"},
-        )
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "LineString" in html
-        assert "route" in html
-
-    # --- 20. Nested field name ---
-
-    def test_nested_viktor_field_name(self) -> None:
-        """
-        Scenario: Dotted VIKTOR field names are passed through.
-
-        Given: A map with a dotted viktor_params field name
-        When: HTML is rendered
-        Then: The dotted field name appears in the HTML
-        """
-        # Arrange - Given
-        m = Map().enable_draw(
-            tools=["polyline"],
-            viktor_params={"polyline": "tab.section.route"},
-        )
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "tab.section.route" in html
-
-    # --- 21. Idempotent injection ---
+    # --- 18. Idempotent injection ---
 
     def test_idempotent_injection(self) -> None:
         """
@@ -541,27 +376,6 @@ class TestEnableDraw:
         # Assert - Then
         assert short_repr == f"RawJS({short_js!r})"
         assert "..." in long_repr
-
-    def test_viktor_polygon_conversion(self) -> None:
-        """
-        Scenario: VIKTOR polygon generates Polygon coordinate conversion.
-
-        Given: A map with viktor_params mapping polygon to a field
-        When: HTML is rendered
-        Then: The script converts Polygon coordinates with the field name
-        """
-        # Arrange - Given
-        m = Map().enable_draw(
-            tools=["polygon"],
-            viktor_params={"polygon": "poly_field"},
-        )
-
-        # Act - When
-        html = m.to_html()
-
-        # Assert - Then
-        assert "geom.coordinates[0].map" in html
-        assert "poly_field" in html
 
     def test_file_output_contains_draw_control(self, tmp_path: Path) -> None:
         """

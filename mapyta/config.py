@@ -204,8 +204,6 @@ class DrawConfig:
     on_submit : str | RawJS | None
         Callback on submit. ``None`` = download, URL = fetch,
         string = function name, ``RawJS`` = inline JS.
-    viktor_params : dict[str, str] | None
-        VIKTOR field-name mapping. Overrides *on_submit*.
     position : str
         Toolbar position.
     submit_label : str
@@ -218,7 +216,6 @@ class DrawConfig:
 
     tools: list[str] = field(default_factory=lambda: ["polyline", "polygon", "marker"])
     on_submit: str | RawJS | None = None
-    viktor_params: dict[str, str] | None = None
     position: str = "topleft"
     submit_label: str = "Submit"
     draw_style: dict[str, Any] | None = None
