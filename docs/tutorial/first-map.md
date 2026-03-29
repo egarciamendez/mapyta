@@ -1,17 +1,17 @@
 # Your First Map
 
-Let's start with the absolute minimum — a single point on a map, exported to HTML.
+Let's start with the absolute minimum, a single point on a map, exported to HTML.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
 from mapyta import Map
 
-m = Map(title="Hello Amsterdam")
+m = Map(title="Hello Utrecht")
 m.add_point(
-    point=Point(4.9041, 52.3676),
-    tooltip="**Amsterdam**",
-    popup="**Amsterdam** is the capital city of the Netherlands, known for its canals, museums, and vibrant culture.",
-    caption="AMS",
+    point=Point(5.121311, 52.090648),
+    tooltip="**Utrecht**",
+    popup="**Utrecht**\n THe most beatiful Dutch city :-)\nPopulation: ~350k",
+    caption="UTR",
 )
 
 m.to_html("hello.html")
