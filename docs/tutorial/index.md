@@ -30,4 +30,5 @@ pip install mapyta
 | [Map Configuration](configuration.md) | Tile providers, zoom, and optional plugins |
 | [Text Annotations](text-annotations.md) | Floating labels and site plan markers |
 | [Export](export.md) | HTML, PNG, SVG, async, and BytesIO |
+| [Drawing Tools](drawing.md) | Let users draw on the map and capture their input |
 | [Advanced](advanced.md) | Merge maps, GeoJSON layers, escape hatch |
