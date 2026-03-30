@@ -1,5 +1,36 @@
 # Export
 
+## Open in browser (live reload)
+
+```python
+m.open()
+```
+
+Starts a local HTTP server in the background and opens the map in your default browser. Every subsequent call to `open()` updates the map in place, the browser reloads automatically within one second, without a manual refresh.
+
+```python
+m = Map(title="Utrecht")
+m.add_point(Point(5.121, 52.091), marker="📍")
+m.open()                           # browser opens
+
+m.add_polygon(my_polygon)
+m.open()                           # browser reloads with the new polygon
+```
+
+!!! tip "Running from a script?"
+
+    The server thread is a daemon: it lives only as long as the Python process does. When running a `.py` file (as opposed to a REPL or notebook), pass `block=True` to keep the process alive until `Ctrl+C`:
+
+    ```python
+    m.open(block=True)
+    ```
+
+By default the OS picks a free port. Pass `port=8080` to pin it:
+
+```python
+m.open(port=8080)
+```
+
 ## HTML (always works)
 
 ```python

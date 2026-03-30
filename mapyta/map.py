@@ -49,6 +49,7 @@ from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
 from mapyta.markdown import RawHTML, markdown_to_html
 from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker, css_to_style
+from mapyta.server import _MapServer
 from mapyta.style import resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
@@ -98,6 +99,7 @@ class Map:
         self._zoom_js_injected: bool = False
         self._draw_config: DrawConfig | None = None
         self._draw_injected: bool = False
+        self._server: _MapServer | None = None
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -1445,7 +1447,11 @@ class Map:
         Map
             A new map combining both maps' features.
         """
+        saved_server = self._server
+        self._server = None
         result = copy.deepcopy(self)
+        self._server = saved_server
+        result._server = None
         for child in other._map._children.values():
             child.add_to(result._map)
         result._bounds.extend(other._bounds)
@@ -1548,6 +1554,50 @@ class Map:
         if open_in_browser:
             webbrowser.open(out.resolve().as_uri())
         return out
+
+    def open(self, port: int = 0, host: str = "localhost", block: bool = False) -> Self:
+        """Start a local HTTP server and open the map in the browser, with live-reload on subsequent calls.
+
+        On the **first** call a local HTTP server is started in a background daemon thread and the system browser
+        is opened at ``http://<host>:<port>/``.  On every subsequent call the served HTML is updated in-place and
+        the browser auto-reloads within one second.
+
+        The server thread is a **daemon thread**: it is kept alive as long as the Python process runs.  When calling
+        from a script (as opposed to a REPL or notebook), pass ``block=True`` so the process stays alive until
+        ``Ctrl+C`` is pressed.
+
+        Parameters
+        ----------
+        port : int
+            TCP port to listen on.  ``0`` (default) lets the OS pick a free ephemeral port.
+        host : str
+            Hostname or IP address the server binds to.  Defaults to ``"localhost"``.
+        block : bool
+            When ``True``, block until ``Ctrl+C``.  Use this when calling from a script so the server stays alive
+            after the script body finishes.  Defaults to ``False`` for REPL and notebook use.
+
+        Returns
+        -------
+        Self
+            The map instance for fluent chaining.
+        """
+        import time  # noqa: PLC0415
+
+        html = self._get_standalone_html()
+        if self._server is None:
+            self._server = _MapServer(host=host, port=port)
+            self._server.update(html)
+            self._server.start()
+            webbrowser.open(self._server.url())
+        else:
+            self._server.update(html)
+        if block:
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                pass
+        return self
 
     @overload
     def to_image(self, path: None = None, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True) -> bytes: ...
