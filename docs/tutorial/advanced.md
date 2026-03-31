@@ -9,12 +9,12 @@ from shapely.geometry import Point, Polygon
 from mapyta import Map
 
 museums = Map(title="Combined")
-museums.add_point(point=Point(4.8795, 52.3600), marker="🖼️", tooltip="**Rijksmuseum**")
+museums.add_point(point=Point(5.1213, 52.0908), marker="🏛️", tooltip="**Dom Tower**")
 
 parks = Map()
 parks.add_polygon(
-    polygon=Polygon([(4.8580, 52.3530), (4.8830, 52.3530), (4.8830, 52.3620), (4.8580, 52.3620)]),
-    tooltip="**Vondelpark**",
+    polygon=Polygon([(5.1215, 52.0828), (5.1282, 52.0828), (5.1282, 52.0881), (5.1215, 52.0881)]),
+    tooltip="**Wilhelminapark**",
 )
 
 combined = museums + parks
@@ -40,7 +40,7 @@ geojson = {
             "properties": {"name": "Zone A", "type": "residential"},
             "geometry": {
                 "type": "Polygon",
-                "coordinates": [[[4.88, 52.36], [4.90, 52.36], [4.90, 52.37], [4.88, 52.37], [4.88, 52.36]]],
+                "coordinates": [[[5.10, 52.08], [5.12, 52.08], [5.12, 52.09], [5.10, 52.09], [5.10, 52.08]]],
             },
         },
     ],
@@ -73,7 +73,7 @@ m = Map(title="Custom Folium")
 folium_map = m.folium_map
 
 # Add anything Folium supports directly
-folium.CircleMarker([52.37, 4.90], radius=50, color="red").add_to(folium_map)
+folium.CircleMarker([52.09, 5.12], radius=50, color="red").add_to(folium_map)
 
 m.to_html("custom.html")
 

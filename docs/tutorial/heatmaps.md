@@ -9,7 +9,7 @@ from mapyta import Map, HeatmapStyle
 
 random.seed(42)
 points = [
-    Point(4.85 + random.gauss(0, 0.03), 52.35 + random.gauss(0, 0.015))
+    Point(5.12 + random.gauss(0, 0.03), 52.09 + random.gauss(0, 0.015))
     for _ in range(200)
 ]
 

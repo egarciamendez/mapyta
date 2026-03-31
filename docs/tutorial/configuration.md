@@ -16,7 +16,7 @@ config = MapConfig(
 )
 
 m = Map(title="Dark Mode", config=config)
-m.add_point(Point(4.9041, 52.3676), marker="🌃", tooltip="**Night Amsterdam**")
+m.add_point(Point(5.1213, 52.0908), marker="🌃", tooltip="**Night Utrecht**")
 
 m.to_html("dark_mode.html")
 
@@ -77,7 +77,7 @@ m = Map(
         tile_layer=["kartodb_positron", "cartodb_dark", "kadaster_brt"],
     ),
 )
-m.add_point(Point(4.9041, 52.3676), marker="📍", tooltip="**Amsterdam**")
+m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Utrecht**")
 m.add_layer_control(collapsed=False)
 
 print(m.to_html()) # markdown-exec: hide

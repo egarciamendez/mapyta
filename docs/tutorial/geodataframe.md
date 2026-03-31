@@ -19,9 +19,9 @@ from mapyta import Map
 
 gdf = gpd.GeoDataFrame(
     {
-        "name": ["Amsterdam", "Rotterdam", "Utrecht"],
-        "population": [872_680, 651_446, 361_924],
-        "geometry": [Point(4.9041, 52.3676), Point(4.4777, 51.9244), Point(5.1214, 52.0907)],
+        "name": ["Utrecht", "Amsterdam", "Rotterdam"],
+        "population": [361_924, 872_680, 651_446],
+        "geometry": [Point(5.1214, 52.0907), Point(4.9041, 52.3676), Point(4.4777, 51.9244)],
     },
     crs="EPSG:4326",
 )

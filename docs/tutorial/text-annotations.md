@@ -9,8 +9,8 @@ from mapyta import Map
 m = Map(title="Annotations")
 
 m.add_text(
-    point=Point(4.9041, 52.3676),
-    text="Amsterdam Centrum",
+    point=Point(5.1213, 52.0908),
+    text="Utrecht Centrum",
     style={
         "font-size": "16px",
         "color": "black",
@@ -35,13 +35,13 @@ from shapely.geometry import Point
 from mapyta import Map, MapConfig
 
 surveys = [
-    {"lon": 4.6820, "lat": 52.3680, "name": "1123-25N-S13", "x_rd": 107650, "y_rd": 411350},
-    {"lon": 4.6835, "lat": 52.3655, "name": "1123-25N-S12", "x_rd": 107680, "y_rd": 411280},
-    {"lon": 4.6850, "lat": 52.3630, "name": "1123-25N-S11", "x_rd": 107710, "y_rd": 411240},
-    {"lon": 4.6880, "lat": 52.3628, "name": "1123-25N-S14", "x_rd": 107750, "y_rd": 411235},
-    {"lon": 4.6950, "lat": 52.3690, "name": "23248_S013",   "x_rd": 107850, "y_rd": 411380},
-    {"lon": 4.6990, "lat": 52.3685, "name": "23248_S019",   "x_rd": 107890, "y_rd": 411370},
-    {"lon": 4.6980, "lat": 52.3640, "name": "23248_S005",   "x_rd": 107880, "y_rd": 411260},
+    {"lon": 5.0420, "lat": 52.0900, "name": "1123-25N-S13", "x_rd": 128650, "y_rd": 454350},
+    {"lon": 5.0435, "lat": 52.0875, "name": "1123-25N-S12", "x_rd": 128680, "y_rd": 454280},
+    {"lon": 5.0450, "lat": 52.0850, "name": "1123-25N-S11", "x_rd": 128710, "y_rd": 454210},
+    {"lon": 5.0480, "lat": 52.0848, "name": "1123-25N-S14", "x_rd": 128750, "y_rd": 454205},
+    {"lon": 5.0550, "lat": 52.0910, "name": "23248_S013",   "x_rd": 128850, "y_rd": 454380},
+    {"lon": 5.0590, "lat": 52.0905, "name": "23248_S019",   "x_rd": 128890, "y_rd": 454370},
+    {"lon": 5.0580, "lat": 52.0860, "name": "23248_S005",   "x_rd": 128880, "y_rd": 454240},
 ]
 
 m = Map(

@@ -10,23 +10,23 @@ m = Map(title="Marker Styles")
 
 # Emoji marker
 m.add_point(
-    point=Point(4.9041, 52.3676),
+    point=Point(5.1213, 52.0908),
     marker="🏛️",
-    tooltip="**Royal Palace** (emoji marker)",
+    tooltip="**Dom Tower** (emoji marker)",
 )
 
 # Font Awesome icon marker with custom CSS
 m.add_point(
-    point=Point(4.8834, 52.3667),
+    point=Point(5.1178, 52.0865),
     marker="fa-house",
-    tooltip="**Anne Frank House** (Font Awesome marker)",
+    tooltip="**Centraal Museum** (Font Awesome marker)",
     marker_style={"font-size": "24px", "color": "green"},
 )
 
 # Circle marker (fixed pixel size, doesn't scale with zoom)
 m.add_circle(
-    point=Point(4.8795, 52.3600),
-    tooltip="**Rijksmuseum** (circle marker)",
+    point=Point(5.1378, 52.0871),
+    tooltip="**Rietveld Schröder House** (circle marker)",
     style=CircleStyle(
         radius=12,
         stroke=StrokeStyle(color="#8e44ad", weight=2),

@@ -6,17 +6,17 @@ When your map has multiple categories of data, you want users to toggle them on 
 from shapely.geometry import Point
 from mapyta import Map
 
-m = Map(title="Amsterdam POI")
+m = Map(title="Utrecht POI")
 
 # Group 1: Museums
 m.create_feature_group("🏛️ Museums")
-m.add_point(point=Point(4.8795, 52.3600), marker="🖼️", tooltip="**Rijksmuseum**")
-m.add_point(point=Point(4.8812, 52.3584), marker="🌻", tooltip="**Van Gogh Museum**")
+m.add_point(point=Point(5.1178, 52.0865), marker="🖼️", tooltip="**Centraal Museum**")
+m.add_point(point=Point(5.1197, 52.0820), marker="🚂", tooltip="**Spoorwegmuseum**")
 
 # Group 2: Parks
 m.create_feature_group("🌳 Parks")
-m.add_point(point=Point(4.8765, 52.3579), marker="🌳", tooltip="**Vondelpark**")
-m.add_point(point=Point(4.9125, 52.3597), marker="🌿", tooltip="**Oosterpark**")
+m.add_point(point=Point(5.1248, 52.0855), marker="🌳", tooltip="**Wilhelminapark**")
+m.add_point(point=Point(5.1367, 52.0945), marker="🌿", tooltip="**Griftpark**")
 
 m.add_layer_control(collapsed=False)
 

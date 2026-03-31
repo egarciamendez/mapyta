@@ -8,11 +8,11 @@ from shapely.geometry import Point
 from mapyta import Map
 
 random.seed(42)
-cafes = [Point(4.88 + random.uniform(-0.02, 0.02), 52.36 + random.uniform(-0.01, 0.01)) for _ in range(50)]
+cafes = [Point(5.12 + random.uniform(-0.02, 0.02), 52.09 + random.uniform(-0.01, 0.01)) for _ in range(50)]
 labels = ["☕"] * 50
 hovers = [f"**Café #{i + 1}**" for i in range(50)]
 
-m = Map(title="Amsterdam Cafés")
+m = Map(title="Utrecht Cafés")
 m.add_marker_cluster(points=cafes, labels=labels, hovers=hovers, name="Cafés")
 
 m.to_html("clusters.html")

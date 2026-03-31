@@ -11,10 +11,10 @@ from mapyta import Map, PopupStyle
 m = Map(title="Custom Popups")
 
 m.add_point(
-    point=Point(4.9041, 52.3676),
+    point=Point(5.1213, 52.0908),
     marker="📋",
-    tooltip="**Amsterdam**\n*Hover tooltip*",
-    popup="**Amsterdam**\n\nPopulation: 872,680\nProvince: North Holland\nFounded: 1275",
+    tooltip="**Utrecht**\n*Hover tooltip*",
+    popup="**Utrecht**\n\nPopulation: 361,924\nProvince: Utrecht\nFounded: 47 AD",
     popup_style=PopupStyle(width=300, height=150),
 )
 
@@ -39,16 +39,16 @@ table_html = RawHTML("""
     <th style="padding:6px;">Property</th>
     <th style="padding:6px;">Value</th>
   </tr>
-  <tr><td style="padding:4px;">Name</td><td style="padding:4px;">Amsterdam</td></tr>
-  <tr style="background:#f0f0f0;"><td style="padding:4px;">Population</td><td style="padding:4px;">872,680</td></tr>
-  <tr><td style="padding:4px;">Province</td><td style="padding:4px;">North Holland</td></tr>
+  <tr><td style="padding:4px;">Name</td><td style="padding:4px;">Utrecht</td></tr>
+  <tr style="background:#f0f0f0;"><td style="padding:4px;">Population</td><td style="padding:4px;">361,924</td></tr>
+  <tr><td style="padding:4px;">Province</td><td style="padding:4px;">Utrecht</td></tr>
 </table>
 """)
 
 m.add_point(
-    Point(4.9041, 52.3676),
+    Point(5.1213, 52.0908),
     marker="📊",
-    tooltip=RawHTML("<b>Amsterdam</b><br>click for details"),
+    tooltip=RawHTML("<b>Utrecht</b><br>click for details"),
     popup=table_html,
     popup_style=PopupStyle(width=320, height=160),
 )

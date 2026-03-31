@@ -9,9 +9,9 @@ from mapyta import Map
 # These are RD New coordinates (x: 0–300k, y: 300k–625k)
 m = Map(title="RD New Auto-Detection")
 m.add_point(
-    point=Point(121_000, 487_000),
+    point=Point(136_100, 455_900),
     marker="📍",
-    tooltip="**Amsterdam** (from RD New coordinates)",
+    tooltip="**Utrecht** (from RD New coordinates)",
 )
 
 m.to_html("rd_new.html")
