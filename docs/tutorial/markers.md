@@ -1,6 +1,6 @@
 # Markers
 
-The default marker is a down-arrow pin, but you can swap it for emojis, Font Awesome icons, or fixed-size circles. Marker styling uses plain CSS dicts, no special imports needed.
+The default marker is a down-arrow pin, but you can swap it for emojis, [Font Awesome icons](https://fontawesome.com/), or fixed-size circles. Marker styling uses plain CSS dicts, no special imports needed.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
