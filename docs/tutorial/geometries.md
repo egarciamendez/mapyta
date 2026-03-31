@@ -110,7 +110,11 @@ print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
 
     Pass interior rings as the second argument to `Polygon` — they render as cutouts:
 
-    ```python
+    ```python exec="true" html="true" source="tabbed-left"
+    from shapely.geometry import Polygon
+    from mapyta import Map
+
+    m = Map(title="Wilhelminapark")
     wilhelminapark = Polygon(
         [
             (5.1215, 52.0835), (5.1252, 52.0828), (5.1278, 52.0838),
@@ -123,4 +127,6 @@ print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
         ]],
     )
     m.add_polygon(wilhelminapark, tooltip="**Wilhelminapark** — the hole is the pond!")
+
+    print(m.to_html()) # markdown-exec: hide
     ```
