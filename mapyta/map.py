@@ -22,6 +22,7 @@ import asyncio
 import base64
 import copy
 import io
+import json
 import math
 import tempfile
 import webbrowser
@@ -40,6 +41,9 @@ from shapely.geometry import (
     MultiPolygon,
     Point,
     Polygon,
+)
+from shapely.geometry import (
+    mapping as geom_to_geojson,
 )
 from shapely.geometry.base import BaseGeometry
 
@@ -100,6 +104,9 @@ class Map:
         self._draw_config: DrawConfig | None = None
         self._draw_injected: bool = False
         self._server: _MapServer | None = None
+        self._geojson_features: list[dict] = []
+        self._export_button_config: dict[str, Any] | None = None
+        self._export_button_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -504,6 +511,31 @@ class Map:
         )
 
     # ------------------------------------------------------------------
+    # GeoJSON feature tracking
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _raw_text(val: str | RawHTML | None) -> str | None:
+        """Extract plain text from a tooltip/popup value (RawHTML is a str subclass)."""
+        if val is None:
+            return None
+        return str(val)
+
+    def _record_feature(self, geom: BaseGeometry, props: dict[str, Any]) -> None:
+        """Append a GeoJSON Feature to the internal tracking list."""
+        self._geojson_features.append(
+            {
+                "type": "Feature",
+                "geometry": dict(geom_to_geojson(geom)),
+                "properties": {k: v for k, v in props.items() if v is not None},
+            }
+        )
+
+    def _build_geojson_collection(self) -> dict:
+        """Return a GeoJSON FeatureCollection of all tracked features."""
+        return {"type": "FeatureCollection", "features": self._geojson_features}
+
+    # ------------------------------------------------------------------
     # Adding geometries
     # ------------------------------------------------------------------
 
@@ -581,6 +613,9 @@ class Map:
             popup=self._make_popup(popup, popup_style),
         )
         m.add_to(self._target())
+        self._record_feature(
+            point, {"marker": marker, "caption": caption, "tooltip": self._raw_text(tooltip), "popup": self._raw_text(popup), "min_zoom": min_zoom}
+        )
 
         if min_zoom is not None and min_zoom > 0:
             self._zoom_controlled_markers.append(
@@ -639,6 +674,21 @@ class Map:
             dash_array=cs.stroke.dash_array,
         )
         marker.add_to(self._target())
+        self._record_feature(
+            point,
+            {
+                "radius": cs.radius,
+                "stroke_color": cs.stroke.color,
+                "stroke_weight": cs.stroke.weight,
+                "stroke_opacity": cs.stroke.opacity,
+                "stroke_dash_array": cs.stroke.dash_array,
+                "fill_color": cs.fill.color,
+                "fill_opacity": cs.fill.opacity,
+                "tooltip": self._raw_text(tooltip),
+                "popup": self._raw_text(popup),
+                "min_zoom": min_zoom,
+            },
+        )
         if min_zoom is not None and min_zoom > 0:
             self._zoom_controlled_markers.append(
                 {
@@ -688,6 +738,17 @@ class Map:
             tooltip=self._make_tooltip(tooltip),
             popup=self._make_popup(popup, popup_style),
         ).add_to(self._target())
+        self._record_feature(
+            line,
+            {
+                "stroke_color": s.color,
+                "stroke_weight": s.weight,
+                "stroke_opacity": s.opacity,
+                "stroke_dash_array": s.dash_array,
+                "tooltip": self._raw_text(tooltip),
+                "popup": self._raw_text(popup),
+            },
+        )
         return self
 
     def add_polygon(
@@ -738,6 +799,19 @@ class Map:
             tooltip=self._make_tooltip(tooltip),
             popup=self._make_popup(popup, popup_style),
         ).add_to(self._target())
+        self._record_feature(
+            polygon,
+            {
+                "stroke_color": s.color,
+                "stroke_weight": s.weight,
+                "stroke_opacity": s.opacity,
+                "stroke_dash_array": s.dash_array,
+                "fill_color": f.color,
+                "fill_opacity": f.opacity,
+                "tooltip": self._raw_text(tooltip),
+                "popup": self._raw_text(popup),
+            },
+        )
         return self
 
     def add_multipolygon(
@@ -894,6 +968,10 @@ class Map:
         Map
         """
         data = load_geojson_input(data)
+        if data.get("type") == "FeatureCollection":
+            self._geojson_features.extend(data.get("features", []))
+        elif data.get("type") == "Feature":
+            self._geojson_features.append(data)
 
         ds = {"color": "#3388ff", "weight": 2, "fillOpacity": 0.2}
         if style:
@@ -969,6 +1047,10 @@ class Map:
         Map
         """
         geojson_data = load_geojson_input(geojson_data)
+        if geojson_data.get("type") == "FeatureCollection":
+            self._geojson_features.extend(geojson_data.get("features", []))
+        elif geojson_data.get("type") == "Feature":
+            self._geojson_features.append(geojson_data)
 
         # Extract values if not provided
         if values is None:
@@ -1061,12 +1143,15 @@ class Map:
                 pt = cast(Point, self._transform(p))
                 heat_data.append([pt.y, pt.x])
                 self._extend_bounds(pt)
-            elif len(p) == 2:
-                heat_data.append([p[0], p[1]])
-                self._bounds.append((p[0], p[1]))
+                self._record_feature(pt, {})
+            elif len(p) == 2:  # type: ignore[arg-type]
+                heat_data.append([p[0], p[1]])  # type: ignore[index]
+                self._bounds.append((p[0], p[1]))  # type: ignore[index]
+                self._record_feature(Point(p[1], p[0]), {})  # type: ignore[index]
             else:
-                heat_data.append(list(p[:3]))
-                self._bounds.append((p[0], p[1]))
+                heat_data.append(list(p[:3]))  # type: ignore[index]
+                self._bounds.append((p[0], p[1]))  # type: ignore[index]
+                self._record_feature(Point(p[1], p[0]), {"intensity": p[2]})  # type: ignore[index]
 
         kwargs: dict[str, Any] = {
             "radius": hs.radius,
@@ -1154,6 +1239,7 @@ class Map:
                 tooltip=self._make_tooltip(hover),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
+            self._record_feature(pt, {"marker": label, "caption": txt, "tooltip": hover, "popup": popup, "min_zoom": min_zoom})
 
         cluster.add_to(self._target())
         if min_zoom is not None and min_zoom > 0:
@@ -1231,6 +1317,7 @@ class Map:
             popup=self._make_popup(popup, popup_style),
         )
         marker.add_to(self._target())
+        self._record_feature(Point(lon, lat), {"text": text, "tooltip": self._raw_text(hover), "popup": self._raw_text(popup), "min_zoom": min_zoom})
         if min_zoom is not None and min_zoom > 0:
             self._zoom_controlled_markers.append(
                 {
@@ -1504,7 +1591,7 @@ class Map:
         )
 
     def _ensure_rendered(self) -> None:
-        """Fit bounds and inject zoom JS / draw plugin (idempotent)."""
+        """Fit bounds and inject zoom JS / draw plugin / export button (idempotent)."""
         if not self._center:
             self._fit_bounds()
         if self._zoom_controlled_markers and not self._zoom_js_injected:
@@ -1512,6 +1599,9 @@ class Map:
             self._zoom_js_injected = True
         if self._draw_config and not self._draw_injected:
             self._inject_draw_plugin()
+        if self._export_button_config and not self._export_button_injected:
+            self._inject_export_button()
+            self._export_button_injected = True
 
     def _get_html(self) -> str:
         """Render map to an embeddable HTML string (Jupyter/inline)."""
@@ -1554,6 +1644,107 @@ class Map:
         if open_in_browser:
             webbrowser.open(out.resolve().as_uri())
         return out
+
+    @overload
+    def to_geojson(self, path: None = None) -> dict: ...
+
+    @overload
+    def to_geojson(self, path: str | Path) -> Path: ...
+
+    def to_geojson(self, path: str | Path | None = None) -> dict | Path:
+        """Export tracked features as a GeoJSON FeatureCollection.
+
+        Parameters
+        ----------
+        path : str | Path | None
+            Output file path.  When ``None``, the FeatureCollection dict is
+            returned instead of being written to disk.
+
+        Returns
+        -------
+        dict | Path
+            FeatureCollection dict when *path* is ``None``, otherwise the
+            resolved output :class:`~pathlib.Path`.
+        """
+        fc = self._build_geojson_collection()
+        if path is None:
+            return fc
+        out = Path(path)
+        out.write_text(json.dumps(fc, indent=2, ensure_ascii=False), encoding="utf-8")
+        return out
+
+    def add_export_button(
+        self,
+        label: str = "Download GeoJSON",
+        filename: str = "export.geojson",
+        position: str = "topright",
+    ) -> Self:
+        """Add a download button to the map that exports all features as a GeoJSON file.
+
+        When clicked, the button triggers a browser download of a GeoJSON
+        ``FeatureCollection`` containing all features added to the map.
+
+        Parameters
+        ----------
+        label : str
+            Button label text.
+        filename : str
+            Default filename for the downloaded file.
+        position : str
+            Leaflet control position: ``"topleft"``, ``"topright"``,
+            ``"bottomleft"``, or ``"bottomright"``.
+
+        Returns
+        -------
+        Map
+        """
+        self._export_button_config = {"label": label, "filename": filename, "position": position}
+        return self
+
+    def _inject_export_button(self) -> None:
+        """Inject the GeoJSON export button as a Leaflet control."""
+        cfg = self._export_button_config
+        assert cfg is not None
+        map_var = self._map.get_name()
+        geojson_str = json.dumps(self._build_geojson_collection())
+        label = cfg["label"]
+        filename = cfg["filename"]
+        position = cfg["position"]
+
+        script = (
+            "<script>\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{map_var}'];\n"
+            "    if (!map) return;\n"
+            f"    var _exportData = {geojson_str};\n"
+            f"    var exportControl = L.control({{position: '{position}'}});\n"
+            "    exportControl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        var btn = L.DomUtil.create('a', '', div);\n"
+            f"        btn.innerHTML = '{label}';\n"
+            "        btn.href = '#';\n"
+            "        btn.style.cssText = 'display:block;padding:5px 12px;background:#1e90ff;color:#fff;' +\n"
+            "            'text-decoration:none;font-weight:bold;font-size:13px;cursor:pointer;' +\n"
+            "            'width:auto;height:auto;line-height:normal;white-space:nowrap;';\n"
+            "        btn.onclick = function(e) {\n"
+            "            e.preventDefault();\n"
+            "            e.stopPropagation();\n"
+            "            var blob = new Blob([JSON.stringify(_exportData, null, 2)], {type: 'application/json'});\n"
+            "            var url = URL.createObjectURL(blob);\n"
+            "            var a = document.createElement('a');\n"
+            "            a.href = url;\n"
+            f"            a.download = '{filename}';\n"
+            "            a.click();\n"
+            "            URL.revokeObjectURL(url);\n"
+            "        };\n"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        return div;\n"
+            "    };\n"
+            "    exportControl.addTo(map);\n"
+            "});\n"
+            "</script>\n"
+        )
+        self._map.get_root().html.add_child(folium.Element(script))  # type: ignore[union-attr]
 
     def open(self, port: int = 0, host: str = "localhost", block: bool = False) -> Self:
         """Start a local HTTP server and open the map in the browser, with live-reload on subsequent calls.
