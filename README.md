@@ -33,7 +33,7 @@ but rather to provide a simple way to create interactive maps without needing to
 - 🎨 **Choropleth & heatmaps** — color-coded maps from numeric data
 - 📊 **GeoPandas integration** — `Map.from_geodataframe()` one-liner
 - 🌐 **Auto CRS detection** — RD New (EPSG:28992) coordinates transform automatically
-- 📤 **Export anywhere** — HTML, PNG, SVG, async variants, and `BytesIO` buffers
+- 📤 **Export anywhere** — HTML, PNG, SVG, GeoJSON, async variants, and `BytesIO` buffers
 - 🧩 **Feature groups** — toggleable layers with a built-in layer control
 - 🔌 **Set of tile providers** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
 
