@@ -23,13 +23,13 @@ Open `hello.html` and you'll see an interactive OpenStreetMap centered on Amster
 
 ## How it works
 
-**`Map(title="Hello Amsterdam")`** creates a new map. The `title` shows as a floating label at the top. You didn't pass a `center` — that's fine. Map auto-fits the viewport to whatever geometries you add.
+**`Map(title="Hello Amsterdam")`** creates a new map. The `title` shows as a floating label at the top. You didn't pass a `center`, that's fine. Map auto-fits the viewport to whatever geometries you add.
 
 **`add_point()`** takes a Shapely `Point(longitude, latitude)`. The `tooltip` parameter accepts Markdown, so `**Amsterdam**` renders as bold text.
 
 **`caption`** places a small text label just below the marker.
 
-**`to_html()`** writes a standalone HTML file. No server needed — just open it in a browser. Call it without a path to get the HTML as a string instead.
+**`to_html()`** writes a standalone HTML file. No server needed, just open it in a browser. Call it without a path to get the HTML as a string instead.
 
 !!! tip "Fluent chaining"
 

@@ -23,7 +23,7 @@ print(m.to_html()) # markdown-exec: hide
 
 Map checks whether the x-coordinate is between 0–300,000 and y is between 300,000–625,000. If so, it assumes EPSG:28992 (RD New) and transforms to WGS84 via pyproj.
 
-For coordinates outside that range, nothing happens — they're assumed to be WGS84 already.
+For coordinates outside that range, nothing happens, they're assumed to be WGS84 already.
 
 You can also set the CRS explicitly on the constructor:
 
@@ -33,4 +33,4 @@ m = Map(title="Explicit CRS", source_crs="EPSG:28992")
 
 !!! info "Mixing CRS systems"
 
-    Auto-detection runs on the first coordinate of each geometry. This means you can't mix RD New and WGS84 geometries on the same map without setting `source_crs` explicitly on the constructor — doing so will force all geometries through the same transformation.
+    Auto-detection runs on the first coordinate of each geometry. This means you can't mix RD New and WGS84 geometries on the same map without setting `source_crs` explicitly on the constructor, doing so will force all geometries through the same transformation.

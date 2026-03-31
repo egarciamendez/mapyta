@@ -44,7 +44,7 @@ print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
 
 ## How it works
 
-**Coordinates are always `(longitude, latitude)`** — that's the Shapely convention (x, y). Map handles the flip to Leaflet's `(lat, lon)` internally.
+**Coordinates are always `(longitude, latitude)`**, that's the Shapely convention (x, y). Map handles the flip to Leaflet's `(lat, lon)` internally.
 
 **`StrokeStyle`** controls borders and lines. Fields: `color`, `weight` (pixels), `opacity`, and `dash_array` (SVG pattern like `"10 6"` for dashes).
 
@@ -108,7 +108,7 @@ print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
 
 !!! tip "Polygons with holes"
 
-    Pass interior rings as the second argument to `Polygon` — they render as cutouts:
+    Pass interior rings as the second argument to `Polygon`, they render as cutouts:
 
     ```python exec="true" html="true" source="tabbed-left"
     from shapely.geometry import Polygon
@@ -126,7 +126,7 @@ print(m.to_html()) # markdown-exec: hide # markdown-exec: hide
             (5.1242, 52.0867), (5.1222, 52.0859),
         ]],
     )
-    m.add_polygon(wilhelminapark, tooltip="**Wilhelminapark** — the hole is the pond!")
+    m.add_polygon(wilhelminapark, tooltip="**Wilhelminapark**, the hole is the pond!")
 
     print(m.to_html()) # markdown-exec: hide
     ```

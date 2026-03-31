@@ -438,7 +438,7 @@ class Map:
         """Build the submit button ``<script>`` block.
 
         Uses ``DOMContentLoaded`` so both Folium variables (``map_var`` and
-        ``drawn_items_var``) are guaranteed to be defined — Folium's ``<script>``
+        ``drawn_items_var``) are guaranteed to be defined, Folium's ``<script>``
         block runs synchronously before that event fires.
         """
         cfg = self._draw_config
@@ -921,7 +921,7 @@ class Map:
         if isinstance(geom, Point):
             self.add_point(geom, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style)
         elif isinstance(geom, LinearRing):
-            # LinearRing is a subclass of LineString — check first
+            # LinearRing is a subclass of LineString, check first
             self.add_linestring(LineString(geom.coords), tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style)
         elif isinstance(geom, LineString):
             self.add_linestring(geom, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style)
@@ -1852,7 +1852,7 @@ class Map:
         """Export as SVG with an embedded raster image.
 
         This captures a PNG screenshot and wraps it in an SVG container.
-        The result is **not** a true vector SVG — text and shapes are
+        The result is **not** a true vector SVG, text and shapes are
         rasterized.  This approach is used because Leaflet renders to
         an HTML canvas, which cannot be serialized to vector paths.
 

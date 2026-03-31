@@ -1,6 +1,6 @@
 # Markers
 
-The default marker is a down-arrow pin, but you can swap it for emojis, Font Awesome icons, or fixed-size circles. Marker styling uses plain CSS dicts — no special imports needed.
+The default marker is a down-arrow pin, but you can swap it for emojis, Font Awesome icons, or fixed-size circles. Marker styling uses plain CSS dicts, no special imports needed.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
@@ -50,7 +50,7 @@ print(m.to_html()) # markdown-exec: hide
 
 **`marker_style`** is a plain CSS dict. Any CSS property works: `font-size`, `color`, `text-shadow`, etc.
 
-**`add_circle()`** draws a `CircleMarker` — a circle that stays the same pixel size at every zoom level. Useful when you don't want markers overlapping at low zoom.
+**`add_circle()`** draws a `CircleMarker`, a circle that stays the same pixel size at every zoom level. Useful when you don't want markers overlapping at low zoom.
 
 !!! tip "Captions below markers"
 
@@ -61,4 +61,4 @@ print(m.to_html()) # markdown-exec: hide
     m.add_point(pt, marker="📍", caption="Site office", caption_style={"font-size": "14px"})
     ```
 
-    For marker and caption styling, pass a CSS dict — any CSS property is valid.
+    For marker and caption styling, pass a CSS dict, any CSS property is valid.

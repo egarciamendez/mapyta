@@ -23,7 +23,7 @@ combined.to_html("merged.html")
 print(combined.to_html())
 ```
 
-You can chain as many maps together as you like — `a + b + c` — and all geometries and layers combine.
+You can chain as many maps together as you like, `a + b + c`, and all geometries and layers combine.
 
 ## GeoJSON layers
 

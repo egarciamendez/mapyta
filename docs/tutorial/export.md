@@ -13,7 +13,7 @@ html_string = m.to_html()
 m.to_html("map.html", open_in_browser=True)
 ```
 
-Writes a standalone HTML file. No server needed — just open in any browser. Useful for sharing with clients or embedding in reports.
+Writes a standalone HTML file. No server needed, just open in any browser. Useful for sharing with clients or embedding in reports.
 
 ## PNG image
 
@@ -54,7 +54,7 @@ svg_string = m.to_svg()
 
 !!! note "Raster, not vector"
 
-    `to_svg()` captures a PNG screenshot and wraps it in an SVG container. Text and shapes are **rasterized** — the output does not contain editable vector paths. This is a Leaflet limitation: it renders to an HTML canvas that cannot be serialized to vector geometry.
+    `to_svg()` captures a PNG screenshot and wraps it in an SVG container. Text and shapes are **rasterized**, the output does not contain editable vector paths. This is a Leaflet limitation: it renders to an HTML canvas that cannot be serialized to vector geometry.
 
     For high-resolution output, increase `width` and `height`. For a true vector workflow, export to HTML and use a dedicated conversion tool.
 
@@ -70,7 +70,7 @@ fc = m.to_geojson()
 m.to_geojson("map.geojson")
 ```
 
-Each feature in the collection carries the geometry (in WGS84) and the properties passed when it was added — tooltip text, popup text, marker name, style values, and so on:
+Each feature in the collection carries the geometry (in WGS84) and the properties passed when it was added, tooltip text, popup text, marker name, style values, and so on:
 
 ```python exec="true" html="true" source="tabbed-right" result="ansi"
 from shapely.geometry import Point, LineString

@@ -47,18 +47,18 @@ print(m.to_html()) # markdown-exec: hide
 | `openstreetmap` | Default OpenStreetMap |
 | `cartodb_positron` | Light, minimal CartoDB (default) |
 | `cartodb_dark` | Dark CartoDB |
-| `cartodb_voyager` | CartoDB Voyager — colourful, detailed |
+| `cartodb_voyager` | CartoDB Voyager, colourful, detailed |
 | `esri_satellite` | Esri satellite imagery |
 | `esri_topo` | Esri topographic |
 | `esri_streets` | Esri street map |
 | `esri_gray` | Esri light gray canvas |
 | `esri_ocean` | Esri ocean basemap |
-| `opentopomap` | OpenTopoMap — topographic with contour lines |
+| `opentopomap` | OpenTopoMap, topographic with contour lines |
 | `stamen_terrain` | Stamen terrain with hillshading |
 | `stamen_toner` | Stamen high-contrast B&W |
-| `stamen_watercolor` | Stamen watercolor — artistic style |
-| `stadia_alidade` | Stadia Alidade Smooth — clean, light |
-| `stadia_dark` | Stadia Alidade Dark — modern dark theme |
+| `stamen_watercolor` | Stamen watercolor, artistic style |
+| `stadia_alidade` | Stadia Alidade Smooth, clean, light |
+| `stadia_dark` | Stadia Alidade Dark, modern dark theme |
 | `kadaster_brt` | Dutch Kadaster topographic |
 | `kadaster_luchtfoto` | Dutch Kadaster aerial photos |
 | `kadaster_grijs` | Dutch Kadaster greyscale |

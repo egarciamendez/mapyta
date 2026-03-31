@@ -25,7 +25,7 @@ print(m.to_html()) # markdown-exec: hide
 
 ## Raw HTML
 
-When Markdown isn't enough — styled tables, colored text, embedded images — wrap your string in `RawHTML` to bypass conversion entirely.
+When Markdown isn't enough, styled tables, colored text, embedded images, wrap your string in `RawHTML` to bypass conversion entirely.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
@@ -56,7 +56,7 @@ m.add_point(
 print(m.to_html()) # markdown-exec: hide
 ```
 
-**`RawHTML`** is a `str` subclass — it works anywhere a regular string does. The difference is that Map skips the Markdown-to-HTML conversion step, so your `<table>`, `<img>`, and `<style>` tags pass through untouched.
+**`RawHTML`** is a `str` subclass, it works anywhere a regular string does. The difference is that Map skips the Markdown-to-HTML conversion step, so your `<table>`, `<img>`, and `<style>` tags pass through untouched.
 
 !!! tip
 

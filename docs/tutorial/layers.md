@@ -1,6 +1,6 @@
 # Feature Groups
 
-When your map has multiple categories of data, you want users to toggle them on and off. That's what "feature groups" are for — think of them as named folders. Everything you add while a group is active goes into that folder.
+When your map has multiple categories of data, you want users to toggle them on and off. That's what "feature groups" are for, think of them as named folders. Everything you add while a group is active goes into that folder.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point

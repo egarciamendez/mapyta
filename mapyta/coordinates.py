@@ -73,7 +73,7 @@ def transform_geometry(geom: BaseGeometry, source_crs: str | None = None) -> Bas
         coords = detect_and_transform_coords([(geom.x, geom.y)], source_crs)
         return Point(coords[0])
     if isinstance(geom, LinearRing):
-        # LinearRing is a subclass of LineString — check first
+        # LinearRing is a subclass of LineString, check first
         coords = detect_and_transform_coords(list(geom.coords), source_crs)
         return LinearRing(coords)
     if isinstance(geom, LineString):

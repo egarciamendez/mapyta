@@ -1,6 +1,6 @@
 # Heatmaps
 
-For dense point data — sensor readings, incidents, GPS traces — a heatmap shows intensity patterns better than individual markers.
+For dense point data, sensor readings, incidents, GPS traces, a heatmap shows intensity patterns better than individual markers.
 
 ```python exec="true" html="true" source="tabbed-right"
 import random

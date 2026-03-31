@@ -1,6 +1,6 @@
 # Text Annotations
 
-Sometimes you need a floating label on the map — not tied to a marker, just text at a location.
+Sometimes you need a floating label on the map, not tied to a marker, just text at a location.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
@@ -24,7 +24,7 @@ m.add_text(
 print(m.to_html()) # markdown-exec: hide
 ```
 
-**`add_text()`** accepts a Shapely `Point(lon, lat)` or a plain `(lat, lon)` tuple. The `style` parameter is a CSS dict — any CSS property works.
+**`add_text()`** accepts a Shapely `Point(lon, lat)` or a plain `(lat, lon)` tuple. The `style` parameter is a CSS dict, any CSS property works.
 
 ## Site plans with icon markers
 
@@ -63,7 +63,7 @@ m.to_html("site_plan.html")
 print(m.to_html()) # markdown-exec: hide
 ```
 
-**`marker`** supports bare FontAwesome names (`"fa-location-dot"`) — the `"fa-solid"` prefix is added automatically. You can also use emoji (`"📍"`) or full CSS class strings.
+**`marker`** supports bare FontAwesome names (`"fa-location-dot"`), the `"fa-solid"` prefix is added automatically. You can also use emoji (`"📍"`) or full CSS class strings.
 
 **`caption`** works with any marker type. By default it has a transparent background; pass a `caption_style` CSS dict to override.
 
