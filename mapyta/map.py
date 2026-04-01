@@ -1190,6 +1190,280 @@ class Map:
         return self
 
     # ------------------------------------------------------------------
+    # Animated / time-based layers
+    # ------------------------------------------------------------------
+
+    def add_ant_path(  # noqa: PLR0913
+        self,
+        line: LineString | list[Point],
+        tooltip: str | RawHTML | None = None,
+        popup: str | RawHTML | None = None,
+        color: str = "#0000FF",
+        pulse_color: str = "#FFFFFF",
+        weight: int = 5,
+        delay: int = 400,
+        dash_array: list[int] | None = None,
+        paused: bool = False,
+        reverse: bool = False,
+        popup_style: PopupStyle | dict[str, Any] | None = None,
+    ) -> Self:
+        """Add an animated dashed line (ant path) along a route.
+
+        The path is drawn as a marching-ants animation: a dashed line
+        whose gaps appear to travel in the direction of travel.
+
+        Parameters
+        ----------
+        line : LineString | list[Point]
+            Route geometry.  Pass a Shapely ``LineString`` or a list of
+            Shapely ``Point`` objects as waypoints.
+        tooltip : str | RawHTML | None
+            Markdown tooltip, or ``RawHTML`` for pre-formatted HTML.
+        popup : str | RawHTML | None
+            Markdown popup, or ``RawHTML`` for pre-formatted HTML.
+        color : str
+            Line colour (CSS hex or name).
+        pulse_color : str
+            Colour of the travelling pulse / gap fill.
+        weight : int
+            Line width in pixels.
+        delay : int
+            Animation step interval in milliseconds.  Lower = faster.
+        dash_array : list[int] | None
+            ``[dash_length, gap_length]`` pattern in pixels.
+            Defaults to ``[10, 20]`` when ``None``.
+        paused : bool
+            Start the animation paused.
+        reverse : bool
+            Reverse the direction of travel.
+        popup_style : PopupStyle | dict[str, Any] | None
+            Popup dimensions.
+
+        Returns
+        -------
+        Map
+        """
+        if isinstance(line, LineString):
+            transformed = cast(LineString, self._transform(line))
+            self._extend_bounds(transformed)
+            locations = [(c[1], c[0]) for c in transformed.coords]
+            self._record_feature(
+                transformed,
+                {"color": color, "tooltip": self._raw_text(tooltip), "popup": self._raw_text(popup)},
+            )
+        else:
+            locations = []
+            for pt in line:
+                t = cast(Point, self._transform(pt))
+                self._extend_bounds(t)
+                locations.append((t.y, t.x))
+                self._record_feature(t, {"color": color})
+
+        kwargs: dict[str, Any] = {
+            "color": color,
+            "pulseColor": pulse_color,
+            "weight": weight,
+            "delay": delay,
+            "paused": paused,
+            "reverse": reverse,
+        }
+        if dash_array is not None:
+            kwargs["dashArray"] = dash_array
+
+        folium.plugins.AntPath(
+            locations=locations,
+            tooltip=self._make_tooltip(tooltip),
+            popup=self._make_popup(popup, popup_style),
+            **kwargs,
+        ).add_to(self._target())
+        return self
+
+    def add_heatmap_with_time(
+        self,
+        data: list[list[Point] | list[tuple[float, float]] | list[tuple[float, float, float]]],
+        index: list[str],
+        radius: int = 15,
+        blur: float = 0.8,
+        max_opacity: float = 0.6,
+        min_opacity: float = 0.0,
+        gradient: dict[float, str] | None = None,
+        auto_play: bool = False,
+        display_index: bool = True,
+        position: str = "bottomleft",
+    ) -> Self:
+        """Add a heatmap with a time slider.
+
+        Displays a heatmap that changes over time.  A playback control
+        lets users step or scrub through the time steps.
+
+        Parameters
+        ----------
+        data : list of timestep point lists
+            Outer list corresponds to time steps (must match *index*
+            length).  Each inner list is a collection of points for that
+            step, in the same format accepted by :meth:`add_heatmap`:
+            Shapely ``Point`` objects or ``(lat, lon[, intensity])``
+            tuples.
+        index : list[str]
+            Labels for each time step shown in the slider (e.g. dates:
+            ``["2024-01", "2024-02", ...]``).
+        radius : int
+            Heatmap point radius in pixels.
+        blur : float
+            Blur amount (0–1).
+        max_opacity : float
+            Maximum heatmap opacity (0–1).
+        min_opacity : float
+            Minimum heatmap opacity (0–1).
+        gradient : dict[float, str] | None
+            Colour gradient mapping density values (0–1) to CSS colours,
+            e.g. ``{0.0: "blue", 0.5: "yellow", 1.0: "red"}``.
+        auto_play : bool
+            Start playback automatically when the map loads.
+        display_index : bool
+            Show the current time step label in the control.
+        position : str
+            Control position: ``"bottomleft"``, ``"bottomright"``,
+            ``"topleft"``, or ``"topright"``.
+
+        Returns
+        -------
+        Map
+
+        Raises
+        ------
+        ValueError
+            If the length of *data* does not match the length of *index*.
+        """
+        if len(data) != len(index):
+            msg = f"add_heatmap_with_time(): data has {len(data)} time step(s) but index has {len(index)} label(s). They must be equal."
+            raise ValueError(msg)
+
+        time_data: list[list[list[float]]] = []
+        for timestep in data:
+            step_points: list[list[float]] = []
+            for p in timestep:
+                if isinstance(p, Point):
+                    pt = cast(Point, self._transform(p))
+                    self._extend_bounds(pt)
+                    step_points.append([pt.y, pt.x])
+                elif len(p) == 3:  # type: ignore[arg-type]
+                    self._bounds.append((p[0], p[1]))  # type: ignore[index]
+                    step_points.append([p[0], p[1], p[2]])  # type: ignore[index]
+                else:
+                    self._bounds.append((p[0], p[1]))  # type: ignore[index]
+                    step_points.append([p[0], p[1]])  # type: ignore[index]
+            time_data.append(step_points)
+
+        kwargs: dict[str, Any] = {
+            "radius": radius,
+            "blur": blur,
+            "max_opacity": max_opacity,
+            "min_opacity": min_opacity,
+            "auto_play": auto_play,
+            "display_index": display_index,
+            "position": position,
+        }
+        if gradient:
+            kwargs["gradient"] = gradient
+
+        folium.plugins.HeatMapWithTime(time_data, index=index, **kwargs).add_to(self._target())
+        return self
+
+    def add_timestamped_geojson(
+        self,
+        data: dict | str | Path,
+        auto_play: bool = True,
+        loop: bool = True,
+        transition_time: int = 200,
+        period: str = "P1D",
+        date_options: str = "YYYY-MM-DD HH:mm:ss",
+        duration: str | None = None,
+    ) -> Self:
+        """Add a GeoJSON layer animated over time.
+
+        Each feature in *data* must carry a ``times`` property — an array
+        of timestamps (ISO 8601 strings or milliseconds since epoch) with
+        one entry per coordinate in the geometry.  A playback control is
+        injected into the map automatically.
+
+        Parameters
+        ----------
+        data : dict | str | Path
+            GeoJSON ``FeatureCollection`` as a Python dict, a JSON
+            string, or a file path.  Every feature must have a ``times``
+            property whose length matches its coordinate count.
+        auto_play : bool
+            Start playback when the map loads.
+        loop : bool
+            Loop animation continuously.
+        transition_time : int
+            Duration of each frame transition in milliseconds.
+        period : str
+            ISO 8601 duration string controlling the slider step
+            (e.g. ``"P1D"`` = 1 day, ``"PT1H"`` = 1 hour,
+            ``"PT1M"`` = 1 minute).
+        date_options : str
+            `moment.js <https://momentjs.com/docs/#/displaying/>`_ format
+            string for the displayed timestamp label.
+        duration : str | None
+            ISO 8601 duration for how long each feature remains visible
+            after its timestamp.  ``None`` means it stays visible forever
+            once shown.
+
+        Returns
+        -------
+        Map
+
+        Notes
+        -----
+        Supported geometry types: ``LineString``, ``MultiPoint``,
+        ``MultiLineString``, ``Polygon``, ``MultiPolygon``.
+
+        Example GeoJSON feature with timestamps::
+
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [4.90, 52.37],
+                        [4.91, 52.38],
+                        [4.92, 52.39],
+                    ],
+                },
+                "properties": {
+                    "times": ["2024-01-01", "2024-01-02", "2024-01-03"],
+                    "tooltip": "Route segment",
+                },
+            }
+        """
+        if isinstance(data, Path):
+            raw: dict | str = data.read_text(encoding="utf-8")
+        else:
+            raw = data
+
+        layer = folium.plugins.TimestampedGeoJson(
+            data=raw,
+            auto_play=auto_play,
+            loop=loop,
+            transition_time=transition_time,
+            period=period,
+            date_options=date_options,
+            duration=duration,
+        )
+        layer.add_to(self._target())
+
+        try:
+            bounds = layer.get_bounds()
+            if bounds:
+                self._bounds.extend(cast(list[tuple[float, float]], bounds))
+        except Exception:
+            pass
+
+        return self
+
+    # ------------------------------------------------------------------
     # Marker cluster
     # ------------------------------------------------------------------
 

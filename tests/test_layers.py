@@ -5,8 +5,12 @@ docstring and Arrange/Act/Assert comments.
 """
 # ruff: noqa: SLF001
 
+import json
+from pathlib import Path
+
 import pytest
 from shapely import Point
+from shapely.geometry import LineString
 
 from mapyta import HeatmapStyle, Map
 
@@ -624,6 +628,279 @@ class TestZoomDependentVisibility:
 
         combined = a + b
         assert len(combined._zoom_controlled_markers) == 2
+
+
+# ===================================================================
+# Scenarios for AntPath animated lines.
+# ===================================================================
+
+
+class TestAntPath:
+    """Scenarios for add_ant_path."""
+
+    def test_ant_path_from_linestring(self) -> None:
+        """
+        Scenario: Add an animated path from a Shapely LineString.
+
+        Given: An empty map and a LineString
+        When: add_ant_path is called
+        Then: Returns self and bounds are tracked
+        """
+        m = Map()
+        route = LineString([(4.9, 52.37), (4.91, 52.38), (4.92, 52.39)])
+        result = m.add_ant_path(route)
+        assert result is m
+        assert len(m._bounds) > 0
+
+    def test_ant_path_from_point_list(self) -> None:
+        """
+        Scenario: Add an animated path from a list of Shapely Points.
+
+        Given: An empty map and a list of waypoints
+        When: add_ant_path is called with the list
+        Then: Returns self and all points contribute to bounds
+        """
+        m = Map()
+        waypoints = [Point(4.9, 52.37), Point(4.91, 52.38), Point(4.92, 52.39)]
+        result = m.add_ant_path(waypoints)
+        assert result is m
+        assert len(m._bounds) == 6  # 3 points x 2 bound entries each
+
+    def test_ant_path_custom_style(self) -> None:
+        """
+        Scenario: AntPath with custom colour and delay.
+
+        Given: An empty map
+        When: add_ant_path is called with color, pulse_color, and delay
+        Then: Returns self
+        """
+        m = Map()
+        route = LineString([(4.9, 52.37), (4.95, 52.38)])
+        result = m.add_ant_path(route, color="#e74c3c", pulse_color="#ffffff", delay=200)
+        assert result is m
+
+    def test_ant_path_paused_and_reversed(self) -> None:
+        """
+        Scenario: AntPath with paused and reversed flags.
+
+        Given: An empty map
+        When: add_ant_path is called with paused=True and reverse=True
+        Then: Returns self without error
+        """
+        m = Map()
+        route = LineString([(4.9, 52.37), (4.95, 52.38)])
+        result = m.add_ant_path(route, paused=True, reverse=True)
+        assert result is m
+
+    def test_ant_path_with_dash_array(self) -> None:
+        """
+        Scenario: AntPath with a custom dash array.
+
+        Given: An empty map
+        When: add_ant_path is called with dash_array=[20, 20]
+        Then: Returns self without error
+        """
+        m = Map()
+        route = LineString([(4.9, 52.37), (4.95, 52.38)])
+        result = m.add_ant_path(route, dash_array=[20, 20])
+        assert result is m
+
+    def test_ant_path_feature_recorded(self) -> None:
+        """
+        Scenario: AntPath geometry is recorded for GeoJSON export.
+
+        Given: An empty map and a LineString route
+        When: add_ant_path is called
+        Then: The feature is tracked in _geojson_features
+        """
+        m = Map()
+        route = LineString([(4.9, 52.37), (4.95, 52.38)])
+        m.add_ant_path(route)
+        assert len(m._geojson_features) == 1
+
+
+# ===================================================================
+# Scenarios for HeatMapWithTime time-series heatmap.
+# ===================================================================
+
+
+class TestHeatmapWithTime:
+    """Scenarios for add_heatmap_with_time."""
+
+    def test_heatmap_with_time_from_points(self) -> None:
+        """
+        Scenario: Time-series heatmap from Shapely Points.
+
+        Given: Two timesteps of Shapely Point lists and matching index
+        When: add_heatmap_with_time is called
+        Then: Returns self and bounds are tracked
+        """
+        m = Map()
+        step1 = [Point(4.9, 52.37), Point(4.91, 52.38)]
+        step2 = [Point(4.92, 52.39), Point(4.93, 52.40)]
+        result = m.add_heatmap_with_time([step1, step2], index=["Jan", "Feb"])
+        assert result is m
+        assert len(m._bounds) > 0
+
+    def test_heatmap_with_time_from_tuples(self) -> None:
+        """
+        Scenario: Time-series heatmap from (lat, lng) tuples.
+
+        Given: Timesteps as lists of coordinate tuples
+        When: add_heatmap_with_time is called
+        Then: Returns self
+        """
+        m = Map()
+        step1 = [(52.37, 4.9), (52.38, 4.91)]
+        step2 = [(52.39, 4.92)]
+        result = m.add_heatmap_with_time([step1, step2], index=["T1", "T2"])
+        assert result is m
+
+    def test_heatmap_with_time_from_weighted_tuples(self) -> None:
+        """
+        Scenario: Time-series heatmap with intensity weights.
+
+        Given: Timesteps as (lat, lng, weight) triples
+        When: add_heatmap_with_time is called
+        Then: Returns self
+        """
+        m = Map()
+        step1 = [(52.37, 4.9, 0.8), (52.38, 4.91, 0.5)]
+        result = m.add_heatmap_with_time([step1], index=["Week 1"])
+        assert result is m
+
+    def test_heatmap_with_time_raises_on_length_mismatch(self) -> None:
+        """
+        Scenario: Mismatched data and index lengths raise ValueError.
+
+        Given: 2 timesteps but only 1 index label
+        When: add_heatmap_with_time is called
+        Then: A ValueError is raised with a descriptive message
+        """
+        m = Map()
+        with pytest.raises(ValueError, match="2 time step"):
+            m.add_heatmap_with_time(
+                [[(52.37, 4.9)], [(52.38, 4.91)]],
+                index=["only one label"],
+            )
+
+    def test_heatmap_with_time_auto_play(self) -> None:
+        """
+        Scenario: Auto-play flag is accepted.
+
+        Given: A valid dataset
+        When: add_heatmap_with_time is called with auto_play=True
+        Then: Returns self without error
+        """
+        m = Map()
+        result = m.add_heatmap_with_time(
+            [[(52.37, 4.9)]],
+            index=["Step 1"],
+            auto_play=True,
+        )
+        assert result is m
+
+    def test_heatmap_with_time_custom_gradient(self) -> None:
+        """
+        Scenario: Custom colour gradient is accepted.
+
+        Given: A valid dataset and gradient dict
+        When: add_heatmap_with_time is called with gradient
+        Then: Returns self without error
+        """
+        m = Map()
+        result = m.add_heatmap_with_time(
+            [[(52.37, 4.9)]],
+            index=["Step 1"],
+            gradient={0.0: "blue", 0.5: "yellow", 1.0: "red"},
+        )
+        assert result is m
+
+
+# ===================================================================
+# Scenarios for TimestampedGeoJson animated GeoJSON.
+# ===================================================================
+
+
+class TestTimestampedGeoJson:
+    """Scenarios for add_timestamped_geojson."""
+
+    @pytest.fixture
+    def timestamped_fc(self) -> dict:
+        """Minimal FeatureCollection with timestamps on a LineString."""
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [[4.90, 52.37], [4.91, 52.38], [4.92, 52.39]],
+                    },
+                    "properties": {
+                        "times": ["2024-01-01", "2024-01-02", "2024-01-03"],
+                        "tooltip": "Route",
+                    },
+                }
+            ],
+        }
+
+    def test_timestamped_geojson_from_dict(self, timestamped_fc: dict) -> None:
+        """
+        Scenario: Add a timestamped GeoJSON layer from a dict.
+
+        Given: A FeatureCollection dict with times properties
+        When: add_timestamped_geojson is called
+        Then: Returns self
+        """
+        m = Map()
+        result = m.add_timestamped_geojson(timestamped_fc)
+        assert result is m
+
+    def test_timestamped_geojson_from_string(self, timestamped_fc: dict) -> None:
+        """
+        Scenario: Add a timestamped GeoJSON layer from a JSON string.
+
+        Given: A FeatureCollection serialised as a JSON string
+        When: add_timestamped_geojson is called
+        Then: Returns self
+        """
+        m = Map()
+        result = m.add_timestamped_geojson(json.dumps(timestamped_fc))
+        assert result is m
+
+    def test_timestamped_geojson_from_path(self, timestamped_fc: dict, tmp_path: Path) -> None:
+        """
+        Scenario: Add a timestamped GeoJSON layer from a file path.
+
+        Given: A GeoJSON file on disk
+        When: add_timestamped_geojson is called with a Path
+        Then: Returns self
+        """
+        p = tmp_path / "route.geojson"
+        p.write_text(json.dumps(timestamped_fc), encoding="utf-8")
+        m = Map()
+        result = m.add_timestamped_geojson(p)
+        assert result is m
+
+    def test_timestamped_geojson_control_params(self, timestamped_fc: dict) -> None:
+        """
+        Scenario: Control parameters are accepted without error.
+
+        Given: A FeatureCollection dict
+        When: add_timestamped_geojson is called with non-default params
+        Then: Returns self
+        """
+        m = Map()
+        result = m.add_timestamped_geojson(
+            timestamped_fc,
+            auto_play=False,
+            loop=False,
+            transition_time=500,
+            period="PT1H",
+            duration="P1D",
+        )
+        assert result is m
 
 
 # ===================================================================

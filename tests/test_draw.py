@@ -53,7 +53,7 @@ class TestEnableDraw:
 
         # Act & Assert - When/Then
         with pytest.raises(ValueError, match="hexagon"):
-            m.enable_draw(tools=["hexagon"])
+            m.enable_draw(tools=["hexagon"])  # type: ignore[arg-type]
 
     # --- 3. Stores config ---
 
