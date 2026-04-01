@@ -32,6 +32,7 @@ but rather to provide a simple way to create interactive maps without needing to
 - 📌 **Emoji & icon markers** — any text or Font Awesome icons as markers
 - 🎨 **Choropleth & heatmaps** — color-coded maps from numeric data
 - 📊 **GeoPandas integration** — `Map.from_geodataframe()` one-liner
+- 🗂️ **DataFrame support** — `add_dataframe()` works with any Pandas or Polars DataFrame with a WKT geometry column
 - 🌐 **Auto CRS detection** — RD New (EPSG:28992) coordinates transform automatically
 - 📤 **Export anywhere** — HTML, PNG, SVG, GeoJSON, async variants, and `BytesIO` buffers
 - 🧩 **Feature groups** — toggleable layers with a built-in layer control

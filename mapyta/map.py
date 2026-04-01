@@ -1021,6 +1021,56 @@ class Map:
             pass
         return self
 
+    def add_dataframe(
+        self,
+        df: Any,  # noqa: ANN401
+        geometry_col: str = "geometry",
+        hover_fields: list[str] | None = None,
+        style: dict[str, Any] | None = None,
+        highlight: dict[str, Any] | None = None,
+    ) -> Self:
+        """Add a Pandas or Polars DataFrame as a GeoJSON layer.
+
+        The DataFrame must contain WKT geometry strings in WGS84 (EPSG:4326) in ``geometry_col``.
+        All other columns become GeoJSON Feature properties and are accessible via ``hover_fields``.
+
+        Parameters
+        ----------
+        df : pandas.DataFrame | polars.DataFrame
+            Input DataFrame. GeoPandas GeoDataFrames are not supported; use
+            :meth:`from_geodataframe` instead.
+        geometry_col : str
+            Column name that holds WKT geometry strings. Default ``"geometry"``.
+        hover_fields : list[str] | None
+            Property fields to show in the hover tooltip.
+        style : dict[str, Any] | None
+            Style kwargs forwarded to Folium GeoJson (e.g. ``color``, ``weight``).
+        highlight : dict[str, Any] | None
+            Highlight kwargs for mouse-over.
+
+        Returns
+        -------
+        Map
+
+        Raises
+        ------
+        TypeError
+            If ``df`` is not a pandas or polars DataFrame.
+        ValueError
+            If ``geometry_col`` is missing, the DataFrame is empty, or a WKT string cannot be parsed.
+
+        Examples
+        --------
+        >>> import pandas as pd
+        >>> from mapyta import Map
+        >>> df = pd.DataFrame({"geometry": ["POINT (4.9 52.37)"], "name": ["Amsterdam"]})
+        >>> m = Map().add_dataframe(df, hover_fields=["name"])
+        """
+        from mapyta.dataframe import dataframe_to_geojson  # noqa: PLC0415
+
+        fc = dataframe_to_geojson(df, geometry_col=geometry_col)
+        return self.add_geojson(fc, hover_fields=hover_fields, style=style, highlight=highlight)
+
     # ------------------------------------------------------------------
     # Choropleth / colormap
     # ------------------------------------------------------------------

@@ -26,6 +26,7 @@ pip install mapyta
 | [Heatmaps](heatmaps.md) | Visualize point density |
 | [Marker Clusters](clusters.md) | Group hundreds of markers at low zoom |
 | [GeoPandas Integration](geodataframe.md) | Build a map directly from a GeoDataFrame |
+| [DataFrames (Pandas & Polars)](dataframe.md) | Add any DataFrame with a WKT geometry column |
 | [Open data (CBS & PDOK)](open-data.md) | Real Dutch datasets: provinces, population density, BAG buildings |
 | [Coordinate Detection](coordinates.md) | Automatic RD New → WGS84 transformation |
 | [Map Configuration](configuration.md) | Tile providers, zoom, and optional plugins |
