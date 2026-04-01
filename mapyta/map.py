@@ -891,6 +891,7 @@ class Map:
         label: str | None = None,
         marker_style: dict[str, str] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        min_zoom: int | None = None,
     ) -> Self:
         """Add a MultiPoint.
 
@@ -900,13 +901,15 @@ class Map:
             Shapely MultiPoint.
         hover, popup, label, marker_style, popup_style
             See ``add_point``.
+        min_zoom : int | None
+            Minimum zoom level at which each point is visible.
 
         Returns
         -------
         Map
         """
         for pt in mp.geoms:
-            self.add_point(pt, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style)
+            self.add_point(pt, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom)
         return self
 
     def add_geometry(
@@ -919,6 +922,7 @@ class Map:
         fill: FillStyle | dict[str, Any] | None = None,
         marker_style: dict[str, str] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        min_zoom: int | None = None,
     ) -> Self:
         """Add any Shapely geometry (auto-dispatches by type).
 
@@ -928,6 +932,8 @@ class Map:
             Any supported Shapely geometry.
         hover, popup, label, stroke, fill, marker_style, popup_style
             Style and interaction parameters.
+        min_zoom : int | None
+            Minimum zoom level at which the geometry is visible.
 
         Returns
         -------
@@ -939,20 +945,20 @@ class Map:
             If geometry type is unsupported.
         """
         if isinstance(geom, Point):
-            self.add_point(geom, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style)
+            self.add_point(geom, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom)
         elif isinstance(geom, LinearRing):
             # LinearRing is a subclass of LineString, check first
-            self.add_linestring(LineString(geom.coords), tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style)
+            self.add_linestring(LineString(geom.coords), tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
         elif isinstance(geom, LineString):
-            self.add_linestring(geom, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style)
+            self.add_linestring(geom, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
         elif isinstance(geom, Polygon):
-            self.add_polygon(geom, tooltip=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style)
+            self.add_polygon(geom, tooltip=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom)
         elif isinstance(geom, MultiPolygon):
-            self.add_multipolygon(geom, hover=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style)
+            self.add_multipolygon(geom, hover=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom)
         elif isinstance(geom, MultiLineString):
-            self.add_multilinestring(geom, hover=hover, popup=popup, stroke=stroke, popup_style=popup_style)
+            self.add_multilinestring(geom, hover=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
         elif isinstance(geom, MultiPoint):
-            self.add_multipoint(geom, hover=hover, popup=popup, label=label, marker_style=marker_style, popup_style=popup_style)
+            self.add_multipoint(geom, hover=hover, popup=popup, label=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom)
         else:
             raise TypeError(f"Unsupported geometry type: {type(geom).__name__}")
         return self
