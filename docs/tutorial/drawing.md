@@ -7,9 +7,9 @@ Let users draw markers, lines, and polygons on the map and submit the results.
 Enable the default drawing tools (polyline, polygon, marker) with a download-on-submit fallback:
 
 ```python exec="true" html="true" source="tabbed-right"
-from mapyta import Map
+from mapyta import Map, MapConfig
 
-m = Map(title="Drawing demo")
+m = Map(title="Drawing demo", center=(52.0907, 5.1214), config=MapConfig(zoom_start=13))
 m.enable_draw()
 
 m.to_html("custom.html")
@@ -28,9 +28,9 @@ Use the toolbar in the **top-left corner** of the map to draw:
 Pick only the tools you need:
 
 ```python exec="true" html="true" source="tabbed-right"
-from mapyta import Map
+from mapyta import Map, MapConfig
 
-m = Map(title="Polygons only")
+m = Map(title="Polygons only", center=(52.0907, 5.1214), config=MapConfig(zoom_start=13))
 m.enable_draw(tools=["polygon", "rectangle"])
 
 print(m.to_html()) # markdown-exec: hide
@@ -53,10 +53,9 @@ This sends a `POST` request with the GeoJSON FeatureCollection as the body.
 For full control, pass a `RawJS` function expression:
 
 ```python exec="true" html="true" source="tabbed-right"
-from mapyta import Map
-from mapyta import RawJS
+from mapyta import Map, MapConfig, RawJS
 
-m = Map(title="Custom callback, check console (F12)")
+m = Map(title="Custom callback, check console (F12)", center=(52.0907, 5.1214), config=MapConfig(zoom_start=13))
 m.enable_draw(on_submit=RawJS("function(geojson) { console.log(geojson); }"))
 
 print(m.to_html()) # markdown-exec: hide
