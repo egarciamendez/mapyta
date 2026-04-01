@@ -7,6 +7,7 @@ from shapely.geometry import Point, LineString, Polygon
 from mapyta import Map, StrokeStyle, FillStyle, MapConfig
 
 m = Map(
+    center=(52.090, 5.120),
     title="Zoom in to see more detail",
     config=MapConfig(zoom_start=12),
 )
