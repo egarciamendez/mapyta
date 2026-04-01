@@ -314,6 +314,32 @@ class TestGeoJSON:
         # Assert - Then
         assert result is m
 
+    def test_add_geojson_single_feature(self) -> None:
+        """
+        Scenario: Add a single GeoJSON Feature (not a FeatureCollection).
+
+        Given: A single Feature dict
+        When: add_geojson is called
+        Then: The feature is tracked in _geojson_features
+        """
+        # Arrange - Given
+        m = Map()
+        feature = {
+            "type": "Feature",
+            "properties": {"name": "Zone A"},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[(4.85, 52.35), (4.95, 52.35), (4.95, 52.40), (4.85, 52.40), (4.85, 52.35)]],
+            },
+        }
+
+        # Act - When
+        result = m.add_geojson(feature)
+
+        # Assert - Then
+        assert result is m
+        assert len(m._geojson_features) == 1
+
 
 # ===================================================================
 # Scenarios for colour-coded choropleth layers.
@@ -616,6 +642,151 @@ class TestChoropleth:
         # Assert - Then
         assert len(m._colormaps) == 1
         assert "#aaaaaa" in html, "nan_fill_color should appear in rendered output"
+
+    def test_choropleth_single_feature_input(self) -> None:
+        """
+        Scenario: add_choropleth accepts a single Feature (not FeatureCollection).
+
+        Given: A single Feature dict with a numeric property
+        When: add_choropleth is called
+        Then: The feature is tracked in _geojson_features and the method returns self
+        """
+        # Arrange - Given
+        m = Map()
+        feature = {
+            "type": "Feature",
+            "properties": {"name": "Centrum", "score": 80},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[(4.88, 52.36), (4.92, 52.36), (4.92, 52.38), (4.88, 52.38), (4.88, 52.36)]],
+            },
+        }
+
+        # Act - When
+        result = m.add_choropleth(feature, value_column="score", key_on="feature.properties.name")
+
+        # Assert - Then
+        assert result is m
+        assert len(m._geojson_features) == 1
+
+
+# ===================================================================
+# Scenarios for GeoJSON export.
+# ===================================================================
+
+
+class TestToGeoJSON:
+    """Scenarios for exporting map features as GeoJSON."""
+
+    def test_to_geojson_returns_dict_without_path(self) -> None:
+        """
+        Scenario: to_geojson with no path returns a FeatureCollection dict.
+
+        Given: A map with a point
+        When: to_geojson is called without a path
+        Then: A FeatureCollection dict is returned
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37), tooltip="Dom")
+
+        # Act - When
+        result = m.to_geojson()
+
+        # Assert - Then
+        assert isinstance(result, dict)
+        assert result["type"] == "FeatureCollection"
+
+    def test_to_geojson_saves_to_file(self, tmp_path: Path) -> None:
+        """
+        Scenario: to_geojson with a path writes GeoJSON to disk.
+
+        Given: A map with a point and an output path
+        When: to_geojson is called with a path
+        Then: The file is written and the Path is returned
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37), tooltip="Dom")
+        out = tmp_path / "features.geojson"
+
+        # Act - When
+        result = m.to_geojson(out)
+
+        # Assert - Then
+        assert result == out
+        assert out.exists()
+        data = json.loads(out.read_text())
+        assert data["type"] == "FeatureCollection"
+
+
+# ===================================================================
+# Scenarios for the GeoJSON export button.
+# ===================================================================
+
+
+class TestExportButton:
+    """Scenarios for add_export_button and _inject_export_button."""
+
+    def test_add_export_button_returns_self(self) -> None:
+        """
+        Scenario: add_export_button returns the map for chaining.
+
+        Given: An empty map
+        When: add_export_button is called
+        Then: The map is returned and _export_button_config is set
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        result = m.add_export_button()
+
+        # Assert - Then
+        assert result is m
+        assert m._export_button_config is not None
+
+    def test_export_button_script_injected_on_render(self) -> None:
+        """
+        Scenario: Rendering a map with add_export_button injects the download script.
+
+        Given: A map with a point and an export button
+        When: to_html is called
+        Then: The rendered HTML contains the download button script
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+        m.add_export_button(label="Download GeoJSON", filename="export.geojson")
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "Download GeoJSON" in html
+        assert "export.geojson" in html
+        assert "exportControl" in html
+
+    def test_export_button_not_injected_twice(self) -> None:
+        """
+        Scenario: Calling to_html twice does not inject the button script twice.
+
+        Given: A map with an export button
+        When: to_html is called twice
+        Then: The script appears exactly once
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+        m.add_export_button()
+
+        # Act - When
+        html1 = m.to_html()
+        html2 = m.to_html()
+
+        # Assert - Then — script injected once, same count on re-render
+        assert html1.count("exportControl.addTo") == 1
+        assert html2.count("exportControl.addTo") == 1
 
 
 # ===================================================================
