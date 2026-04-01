@@ -112,7 +112,7 @@ Each entry in `data` is one time step and must be the same length as `index`. Po
 
 `add_timestamped_geojson()` animates a GeoJSON `FeatureCollection` over time. Each feature must have a `times` property — an array of ISO 8601 timestamps, one per coordinate.
 
-```python
+```python exec="true" html="true" source="tabbed-right"
 from mapyta import Map
 
 geojson = {
@@ -137,6 +137,15 @@ geojson = {
                     "2024-06-01T08:45:00",
                 ],
                 "style": {"color": "#e67e22", "weight": 4},
+                "icon": "circle",
+                "iconstyle": {
+                    "fillColor": "#e67e22",
+                    "fillOpacity": 1,
+                    "stroke": True,
+                    "radius": 6,
+                    "color": "#fff",
+                    "weight": 2,
+                },
                 "popup": "Morning commute",
             },
         }
@@ -153,6 +162,8 @@ m.add_timestamped_geojson(
     date_options="HH:mm",
 )
 m.to_html("gps_replay.html")
+
+print(m.to_html())  # markdown-exec: hide
 ```
 
 ### Parameters
@@ -169,19 +180,29 @@ m.to_html("gps_replay.html")
 
 ### GeoJSON feature format
 
-```json
+```python
 {
-  "type": "Feature",
-  "geometry": {
-    "type": "LineString",
-    "coordinates": [[lon, lat], [lon, lat], ...]
-  },
-  "properties": {
-    "times": ["2024-01-01T00:00:00", "2024-01-01T01:00:00", ...],
-    "style": { "color": "#e74c3c", "weight": 3 },
-    "popup": "Optional popup text",
-    "icon": "circle"
-  }
+    "type": "Feature",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [[lon, lat], [lon, lat], ...],  # one pair per timestamp
+    },
+    "properties": {
+        "times": ["2024-01-01T00:00:00", "2024-01-01T01:00:00", ...],
+        "style": {"color": "#e74c3c", "weight": 3},
+        # Use "circle" to show a dot at the current animated position.
+        # Without this, a default Leaflet pin marker appears instead.
+        "icon": "circle",
+        "iconstyle": {
+            "fillColor": "#e74c3c",
+            "fillOpacity": 1,
+            "stroke": True,
+            "radius": 6,
+            "color": "#fff",
+            "weight": 2,
+        },
+        "popup": "Optional popup text",
+    },
 }
 ```
 
