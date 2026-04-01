@@ -24,6 +24,7 @@ import io
 import json
 import math
 import tempfile
+import warnings
 import webbrowser
 from pathlib import Path
 from typing import Any, Self, cast, overload
@@ -46,7 +47,7 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
-from mapyta.config import CircleStyle, DrawConfig, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
+from mapyta.config import CircleStyle, DrawConfig, DrawTool, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
 from mapyta.coordinates import transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
@@ -340,7 +341,7 @@ class Map:
 
     def enable_draw(
         self,
-        tools: list[str] | None = None,
+        tools: list[DrawTool] | None = None,
         on_submit: str | RawJS | None = None,
         position: str = "topleft",
         submit_label: str = "Submit",
@@ -351,7 +352,7 @@ class Map:
 
         Parameters
         ----------
-        tools : list[str] | None
+        tools : list[DrawTool] | None
             Active drawing tools.  Valid values: ``"marker"``,
             ``"polyline"``, ``"polygon"``, ``"rectangle"``, ``"circle"``.
             Defaults to ``["polyline", "polygon", "marker"]``.
@@ -702,6 +703,7 @@ class Map:
         popup: str | RawHTML | None = None,
         stroke: StrokeStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        min_zoom: int | None = None,
     ) -> Self:
         """Add a LineString.
 
@@ -717,6 +719,8 @@ class Map:
             Line style.
         popup_style : PopupStyle | dict[str, Any] | None
             Popup dimensions.
+        min_zoom : int | None
+            Minimum zoom level at which the line is visible.
 
         Returns
         -------
@@ -726,7 +730,7 @@ class Map:
         self._extend_bounds(line)
         s = resolve_style(stroke, StrokeStyle) or StrokeStyle()
         locations = [(c[1], c[0]) for c in line.coords]
-        folium.PolyLine(
+        layer = folium.PolyLine(
             locations=locations,
             color=s.color,
             weight=s.weight,
@@ -734,7 +738,8 @@ class Map:
             dash_array=s.dash_array,
             tooltip=self._make_tooltip(tooltip),
             popup=self._make_popup(popup, popup_style),
-        ).add_to(self._target())
+        )
+        layer.add_to(self._target())
         self._record_feature(
             line,
             {
@@ -744,8 +749,11 @@ class Map:
                 "stroke_dash_array": s.dash_array,
                 "tooltip": self._raw_text(tooltip),
                 "popup": self._raw_text(popup),
+                "min_zoom": min_zoom,
             },
         )
+        if min_zoom is not None and min_zoom > 0:
+            self._zoom_controlled_markers.append({"var_name": layer.get_name(), "min_zoom": min_zoom})
         return self
 
     def add_polygon(
@@ -756,6 +764,7 @@ class Map:
         stroke: StrokeStyle | dict[str, Any] | None = None,
         fill: FillStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        min_zoom: int | None = None,
     ) -> Self:
         """Add a Polygon.
 
@@ -773,6 +782,8 @@ class Map:
             Fill style.
         popup_style : PopupStyle | dict[str, Any] | None
             Popup dimensions.
+        min_zoom : int | None
+            Minimum zoom level at which the polygon is visible.
 
         Returns
         -------
@@ -784,7 +795,7 @@ class Map:
         f = resolve_style(fill, FillStyle) or FillStyle()
         exterior = [(c[1], c[0]) for c in polygon.exterior.coords]
         locations: list[list[tuple[float, float]]] = [exterior] + [[(c[1], c[0]) for c in interior.coords] for interior in polygon.interiors]
-        folium.Polygon(
+        layer = folium.Polygon(
             locations=locations,
             color=s.color,
             weight=s.weight,
@@ -795,7 +806,8 @@ class Map:
             fill_opacity=f.opacity,
             tooltip=self._make_tooltip(tooltip),
             popup=self._make_popup(popup, popup_style),
-        ).add_to(self._target())
+        )
+        layer.add_to(self._target())
         self._record_feature(
             polygon,
             {
@@ -807,8 +819,11 @@ class Map:
                 "fill_opacity": f.opacity,
                 "tooltip": self._raw_text(tooltip),
                 "popup": self._raw_text(popup),
+                "min_zoom": min_zoom,
             },
         )
+        if min_zoom is not None and min_zoom > 0:
+            self._zoom_controlled_markers.append({"var_name": layer.get_name(), "min_zoom": min_zoom})
         return self
 
     def add_multipolygon(
@@ -819,6 +834,7 @@ class Map:
         stroke: StrokeStyle | dict[str, Any] | None = None,
         fill: FillStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        min_zoom: int | None = None,
     ) -> Self:
         """Add a MultiPolygon.
 
@@ -828,13 +844,15 @@ class Map:
             Shapely MultiPolygon.
         hover, popup, stroke, fill, popup_style
             See ``add_polygon``.
+        min_zoom : int | None
+            Minimum zoom level at which each polygon is visible.
 
         Returns
         -------
         Map
         """
         for poly in mp.geoms:
-            self.add_polygon(poly, tooltip=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style)
+            self.add_polygon(poly, tooltip=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom)
         return self
 
     def add_multilinestring(
@@ -844,6 +862,7 @@ class Map:
         popup: str | RawHTML | None = None,
         stroke: StrokeStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        min_zoom: int | None = None,
     ) -> Self:
         """Add a MultiLineString.
 
@@ -853,13 +872,15 @@ class Map:
             Shapely MultiLineString.
         hover, popup, stroke, popup_style
             See ``add_linestring``.
+        min_zoom : int | None
+            Minimum zoom level at which each line is visible.
 
         Returns
         -------
         Map
         """
         for line in ml.geoms:
-            self.add_linestring(line, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style)
+            self.add_linestring(line, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
         return self
 
     def add_multipoint(
@@ -1329,7 +1350,7 @@ class Map:
     # ------------------------------------------------------------------
 
     @classmethod
-    def from_geodataframe(  # noqa: PLR0913, C901
+    def from_geodataframe(  # noqa: PLR0913, C901, PLR0912
         cls,
         gdf: Any,  # noqa: ANN401
         hover_columns: list[str] | None = None,
@@ -1387,6 +1408,24 @@ class Map:
         # Reproject to WGS84 if needed
         if gdf.crs and str(gdf.crs) != "EPSG:4326":
             gdf = gdf.to_crs("EPSG:4326")
+
+        # Validate column references
+        available = list(gdf.columns)
+        for param_name, cols in [("hover_columns", hover_columns or []), ("popup_columns", popup_columns or [])]:
+            missing = [c for c in cols if c not in gdf.columns]
+            if missing:
+                warnings.warn(
+                    f"from_geodataframe(): {param_name} contains column(s) not found in the GeoDataFrame: {missing}. Available columns: {available}",
+                    UserWarning,
+                    stacklevel=2,
+                )
+        for param_name, col in [("label_column", label_column), ("color_column", color_column)]:
+            if col is not None and col not in gdf.columns:
+                warnings.warn(
+                    f"from_geodataframe(): {param_name}={col!r} not found in the GeoDataFrame. Available columns: {available}",
+                    UserWarning,
+                    stacklevel=2,
+                )
 
         m = cls(title=title, config=config)
 

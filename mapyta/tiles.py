@@ -1,5 +1,29 @@
 """Tile provider definitions for Mapyta."""
 
+from typing import Literal
+
+TileProviderKey = Literal[
+    "openstreetmap",
+    "cartodb_positron",
+    "cartodb_dark",
+    "esri_satellite",
+    "esri_topo",
+    "stamen_terrain",
+    "stamen_toner",
+    "kadaster_brt",
+    "kadaster_luchtfoto",
+    "kadaster_grijs",
+    "cartodb_voyager",
+    "esri_streets",
+    "esri_gray",
+    "esri_ocean",
+    "opentopomap",
+    "stamen_watercolor",
+    "stadia_alidade",
+    "stadia_dark",
+]
+"""Valid built-in tile provider keys for :class:`~mapyta.config.MapConfig`."""
+
 TILE_PROVIDERS: dict[str, dict[str, str]] = {
     "openstreetmap": {"tiles": "OpenStreetMap", "attr": "OpenStreetMap", "name": "OpenStreetMap"},
     "cartodb_positron": {"tiles": "CartoDB positron", "attr": "CartoDB", "name": "CartoDB Positron"},

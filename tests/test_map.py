@@ -3685,6 +3685,28 @@ class TestGeoDataFrame:
         # Assert - Then -
         assert len(m._bounds) == 4, "Two polygons x 2 bound entries each"
 
+    def test_from_geodataframe_warns_on_missing_hover_columns(self, cities_gdf: GeoDataFrame) -> None:
+        """
+        Scenario: from_geodataframe warns when hover_columns contains unknown column names.
+
+        Given: A GeoDataFrame with columns "name" and "population"
+        When: from_geodataframe is called with hover_columns=["name", "nonexistent"]
+        Then: A UserWarning is emitted for the missing column
+        """
+        with pytest.warns(UserWarning, match="nonexistent"):
+            Map.from_geodataframe(cities_gdf, hover_columns=["name", "nonexistent"])
+
+    def test_from_geodataframe_warns_on_missing_label_column(self, cities_gdf: GeoDataFrame) -> None:
+        """
+        Scenario: from_geodataframe warns when label_column does not exist.
+
+        Given: A GeoDataFrame without a "category" column
+        When: from_geodataframe is called with label_column="category"
+        Then: A UserWarning is emitted
+        """
+        with pytest.warns(UserWarning, match="category"):
+            Map.from_geodataframe(cities_gdf, label_column="category")
+
 
 # ===================================================================
 # Scenarios for caption on add_point.
@@ -3954,6 +3976,32 @@ class TestZoomDependentVisibility:
 
         combined = a + b
         assert len(combined._zoom_controlled_markers) == 2
+
+    def test_add_linestring_with_min_zoom(self) -> None:
+        """
+        Scenario: LineString with min_zoom is tracked.
+
+        Given: A Map
+        When: add_linestring is called with min_zoom=10
+        Then: The layer is tracked in _zoom_controlled_markers
+        """
+        m = Map()
+        m.add_linestring(LineString([(4.9, 52.37), (5.0, 52.38)]), min_zoom=10)
+        assert len(m._zoom_controlled_markers) == 1
+        assert m._zoom_controlled_markers[0]["min_zoom"] == 10
+
+    def test_add_polygon_with_min_zoom(self) -> None:
+        """
+        Scenario: Polygon with min_zoom is tracked.
+
+        Given: A Map
+        When: add_polygon is called with min_zoom=12
+        Then: The layer is tracked in _zoom_controlled_markers
+        """
+        m = Map()
+        m.add_polygon(Polygon([(4.9, 52.3), (5.0, 52.3), (5.0, 52.4), (4.9, 52.4)]), min_zoom=12)
+        assert len(m._zoom_controlled_markers) == 1
+        assert m._zoom_controlled_markers[0]["min_zoom"] == 12
 
 
 # ===================================================================

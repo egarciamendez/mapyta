@@ -1,7 +1,12 @@
 """Style configuration dataclasses for Mapyta."""
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Literal
+
+from mapyta.tiles import TileProviderKey
+
+DrawTool = Literal["marker", "polyline", "polygon", "rectangle", "circle"]
+"""Valid drawing tool names for :meth:`~mapyta.map.Map.enable_draw`."""
 
 
 @dataclass
@@ -128,10 +133,12 @@ class MapConfig:
 
     Parameters
     ----------
-    tile_layer : str | list[str]
-        Key from ``TILE_PROVIDERS`` or Folium built-in name.
-        Pass a list to add multiple base layers (use
+    tile_layer : TileProviderKey | str | list[TileProviderKey | str]
+        Built-in provider key (e.g. ``"cartodb_positron"``) or a raw tile
+        URL string.  Pass a list to add multiple base layers (use
         :meth:`Map.add_layer_control` to toggle between them).
+        Built-in keys are auto-completed by IDEs; arbitrary URLs are also
+        accepted as an escape hatch.
     zoom_start : int
         Initial zoom level.
     min_zoom : int
@@ -161,7 +168,7 @@ class MapConfig:
         Show cursor coordinates.
     """
 
-    tile_layer: str | list[str] = "cartodb_positron"
+    tile_layer: TileProviderKey | str | list[TileProviderKey | str] = "cartodb_positron"
     zoom_start: int = 12
     min_zoom: int = 0
     max_zoom: int = 19
@@ -198,7 +205,7 @@ class DrawConfig:
 
     Parameters
     ----------
-    tools : list[str]
+    tools : list[DrawTool]
         Active drawing tools: ``"marker"``, ``"polyline"``, ``"polygon"``,
         ``"rectangle"``, ``"circle"``.
     on_submit : str | RawJS | None
@@ -214,7 +221,7 @@ class DrawConfig:
         Whether edit/delete controls are active.
     """
 
-    tools: list[str] = field(default_factory=lambda: ["polyline", "polygon", "marker"])
+    tools: list[DrawTool] = field(default_factory=lambda: ["polyline", "polygon", "marker"])
     on_submit: str | RawJS | None = None
     position: str = "topleft"
     submit_label: str = "Submit"
