@@ -1876,20 +1876,28 @@ class Map:
         str
             A ``<script>`` block that toggles marker visibility based on zoom.
         """
+        ids = ", ".join(f'"{m["var_name"]}"' for m in self._zoom_controlled_markers)
         marker_config = ", ".join(f'{{id: "{m["var_name"]}", minZoom: {m["min_zoom"]}}}' for m in self._zoom_controlled_markers)
         return (
             "<script>\n"
             "document.addEventListener('DOMContentLoaded', function() {\n"
+            # Build registry using window[id] — avoids eval and scope issues.
+            # By DOMContentLoaded all Folium layer vars (declared with `var` after </body>) are in window.
+            "    var registry = {};\n"
+            "    [" + ids + "].forEach(function(id) { registry[id] = window[id]; });\n"
             "    var checkInterval = setInterval(function() {\n"
             "        var mapContainer = document.querySelector('.folium-map');\n"
-            "        if (mapContainer && mapContainer._leaflet_map) {\n"
+            # Folium names the map variable identically to the container id (e.g. map_abc123).
+            # window[mapContainer.id] is the Leaflet map object once the Folium init script has run.
+            "        if (mapContainer && window[mapContainer.id] && window[mapContainer.id].getZoom) {\n"
             "            clearInterval(checkInterval);\n"
-            "            var map = mapContainer._leaflet_map;\n"
+            "            var map = window[mapContainer.id];\n"
             "            var configs = [" + marker_config + "];\n"
             "            function update() {\n"
             "                var z = map.getZoom();\n"
             "                configs.forEach(function(c) {\n"
-            "                    var el = eval(c.id);\n"
+            "                    var el = registry[c.id];\n"
+            "                    if (!el) { return; }\n"
             "                    if (z >= c.minZoom) { el.addTo(map); }\n"
             "                    else { map.removeLayer(el); }\n"
             "                });\n"

@@ -80,7 +80,7 @@ The check also runs once on load, so layers start hidden if the initial zoom is 
 
 `min_zoom` and feature groups are independent. A layer can belong to a group *and* have a zoom threshold. The group toggle controls whether the layer is in the map at all; `min_zoom` controls whether it is rendered at the current zoom within that group.
 
-```python
+```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
 from mapyta import Map
 
@@ -92,13 +92,15 @@ m.add_point(Point(5.1178, 52.0865), marker="🖼️", tooltip="Centraal Museum",
 
 m.reset_target()
 m.add_layer_control()
+
+print(m.to_html())  # markdown-exec: hide
 ```
 
 ## Using add_geometry()
 
 `add_geometry()` dispatches to the right method automatically, so you can use it with any Shapely type and still set `min_zoom`:
 
-```python
+```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point, LineString, Polygon
 from mapyta import Map
 
@@ -106,4 +108,6 @@ m = Map()
 
 for geom in [Point(5.12, 52.09), LineString([(5.11, 52.09), (5.13, 52.09)])]:
     m.add_geometry(geom, hover="Zoom in to see me", min_zoom=14)
+
+print(m.to_html())  # markdown-exec: hide
 ```
