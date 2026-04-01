@@ -19,7 +19,6 @@ Examples
 """
 
 import asyncio
-import base64
 import copy
 import io
 import json
@@ -1835,62 +1834,6 @@ class Map:
         buf.seek(0)
         return buf
 
-    @overload
-    def to_svg(self, path: None = None, width: int = 1200, height: int = 800, delay: float = 2.0, hide_controls: bool = True) -> str: ...
-
-    @overload
-    def to_svg(self, path: str | Path, width: int = 1200, height: int = 800, delay: float = 2.0, hide_controls: bool = True) -> Path: ...
-
-    def to_svg(
-        self,
-        path: str | Path | None = None,
-        width: int = 1200,
-        height: int = 800,
-        delay: float = 2.0,
-        hide_controls: bool = True,
-    ) -> str | Path:
-        """Export as SVG with an embedded raster image.
-
-        This captures a PNG screenshot and wraps it in an SVG container.
-        The result is **not** a true vector SVG, text and shapes are
-        rasterized.  This approach is used because Leaflet renders to
-        an HTML canvas, which cannot be serialized to vector paths.
-
-        For a true vector workflow, export to HTML and use a dedicated
-        tool to convert the map to vector format.
-
-        Parameters
-        ----------
-        path : str | Path | None
-            Output path. Returns SVG string if ``None``.
-        width, height : int
-            Viewport dimensions.
-        delay : float
-            Tile loading wait time.
-        hide_controls : bool
-            If ``True``, hide Leaflet UI controls.
-
-        Returns
-        -------
-        str | Path
-        """
-        png_bytes = self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls)
-        b64 = base64.b64encode(png_bytes).decode("ascii")
-        svg = (
-            f'<?xml version="1.0" encoding="UTF-8"?>\n'
-            f'<svg xmlns="http://www.w3.org/2000/svg" '
-            f'xmlns:xlink="http://www.w3.org/1999/xlink" '
-            f'width="{width}" height="{height}" viewBox="0 0 {width} {height}">\n'
-            f'  <image width="{width}" height="{height}" '
-            f'xlink:href="data:image/png;base64,{b64}"/>\n'
-            f"</svg>"
-        )
-        if path is None:
-            return svg
-        out = Path(path)
-        out.write_text(svg, encoding="utf-8")
-        return out
-
     async def to_image_async(
         self,
         path: str | Path | None = None,
@@ -1916,39 +1859,6 @@ class Map:
         return await loop.run_in_executor(
             None,
             lambda: self.to_image(
-                path=path,
-                width=width,
-                height=height,
-                delay=delay,
-                hide_controls=hide_controls,
-            ),
-        )
-
-    async def to_svg_async(
-        self,
-        path: str | Path | None = None,
-        width: int = 1200,
-        height: int = 800,
-        delay: float = 2.0,
-        hide_controls: bool = True,
-    ) -> str | Path:
-        """Async SVG export.
-
-        Parameters
-        ----------
-        path, width, height, delay
-            See ``to_svg``.
-        hide_controls : bool
-            If ``True``, hide Leaflet UI controls.
-
-        Returns
-        -------
-        str | Path
-        """
-        loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(
-            None,
-            lambda: self.to_svg(
                 path=path,
                 width=width,
                 height=height,

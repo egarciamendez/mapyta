@@ -42,22 +42,6 @@ buf = m.to_bytesio(width=1200, height=800)
 
 The `delay` parameter (seconds) controls how long Map waits for tiles to load before taking the screenshot. Increase it on slow connections.
 
-## SVG
-
-```python
-# Raster-wrapped SVG (PNG embedded in SVG container)
-m.to_svg("map.svg")
-
-# Get the SVG string
-svg_string = m.to_svg()
-```
-
-!!! note "Raster, not vector"
-
-    `to_svg()` captures a PNG screenshot and wraps it in an SVG container. Text and shapes are **rasterized**, the output does not contain editable vector paths. This is a Leaflet limitation: it renders to an HTML canvas that cannot be serialized to vector geometry.
-
-    For high-resolution output, increase `width` and `height`. For a true vector workflow, export to HTML and use a dedicated conversion tool.
-
 ## GeoJSON
 
 Export all features added to the map as a GeoJSON `FeatureCollection`:
@@ -134,7 +118,6 @@ For web frameworks (FastAPI, Starlette, etc.) that run an async event loop:
 
 ```python
 png_bytes = await m.to_image_async()
-svg_string = await m.to_svg_async()
 ```
 
-These run the Selenium capture in a thread executor so they don't block the event loop.
+This runs the Selenium capture in a thread executor so it doesn't block the event loop.

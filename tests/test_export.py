@@ -461,46 +461,6 @@ class TestExport:
         content = result.read()
         assert content == mock_to_image.fake_png  # ty: ignore[unresolved-attribute]
 
-    def test_to_svg_returns_string(self, map_with_point: Map) -> None:
-        """
-        Scenario: to_svg with path=None returns an SVG string.
-
-        Given: A map with a location
-        When: to_svg is called without a path
-        Then: An SVG string containing the base64-encoded PNG is returned
-
-        """
-        # Act - When
-        with patch("mapyta.map.capture_screenshot", return_value=b"\x89PNG_fake"):
-            result = map_with_point.to_svg(path=None, width=800, height=600, delay=0.1)
-
-        # Assert - Then
-        assert isinstance(result, str)
-        assert result.startswith('<?xml version="1.0"')
-        assert "<svg" in result
-        assert "data:image/png;base64," in result
-
-    def test_to_svg_saves_to_file(self, map_with_point: Map, tmp_path: Path) -> None:
-        """
-        Scenario: to_svg with a path saves SVG to disk.
-
-        Given: A map and an output path
-        When: to_svg is called with a file path
-        Then: The SVG file is written
-        """
-        # Arrange - Given
-        out_path = tmp_path / "map.svg"
-
-        # Act - When
-        with patch("mapyta.map.capture_screenshot", return_value=b"\x89PNG_fake"):
-            result = map_with_point.to_svg(path=out_path, width=800, height=600, delay=0.1)
-
-        # Assert - Then
-        assert result == out_path
-        assert out_path.exists()
-        content = out_path.read_text()
-        assert "<svg" in content
-
     def test_to_image_async(self, map_with_point: Map, mock_to_image: Generator[MagicMock | AsyncMock, Any, None]) -> None:
         """
         Scenario: Async PNG export delegates to to_image in an executor.
@@ -515,25 +475,6 @@ class TestExport:
 
         # Assert - Then
         assert result == mock_to_image.fake_png  # ty: ignore[unresolved-attribute]
-
-    def test_to_svg_async(self, map_with_point: Map) -> None:
-        """
-        Scenario: Async SVG export delegates to to_svg in an executor.
-
-        Given: A map with a location
-        When: to_svg_async is awaited
-        Then: An SVG string is returned
-
-        """
-        # Arrange — mock to_image so to_svg can work
-        fake_png = b"\x89PNG_fake"
-        with patch.object(Map, "to_image", return_value=fake_png):
-            # Act - When
-            result = asyncio.run(map_with_point.to_svg_async(path=None, width=800, height=600, delay=0.1))
-
-        # Assert - Then
-        assert isinstance(result, str)
-        assert "<svg" in result
 
 
 # ===================================================================
@@ -618,22 +559,6 @@ class TestHideControls:
         fake_png = b"\x89PNG_fake_data_for_bytesio"
         with patch.object(Map, "to_image", return_value=fake_png) as mock_img:
             m.to_bytesio(hide_controls=False)
-            mock_img.assert_called_once_with(path=None, width=1200, height=800, delay=2.0, hide_controls=False)
-
-    def test_hide_controls_propagates_to_svg(self) -> None:
-        """
-        Scenario: to_svg passes hide_controls to to_image.
-
-        Given: A Map with a location
-        When: to_svg is called with hide_controls=False
-        Then: to_image receives hide_controls=False
-        """
-        m = Map()
-        m.add_point(Point(4.9, 52.37))
-
-        fake_png = b"\x89PNG_fake_data_for_svg"
-        with patch.object(Map, "to_image", return_value=fake_png) as mock_img:
-            m.to_svg(hide_controls=False)
             mock_img.assert_called_once_with(path=None, width=1200, height=800, delay=2.0, hide_controls=False)
 
 
