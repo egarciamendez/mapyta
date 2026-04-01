@@ -32,4 +32,5 @@ pip install mapyta
 | [Export](export.md) | HTML, PNG, SVG, GeoJSON, download button, async, BytesIO |
 | [Drawing Tools](drawing.md) | Let users draw on the map and capture their input |
 | [Advanced](advanced.md) | Merge maps, GeoJSON layers, escape hatch |
+| [Zoom-dependent Visibility](min-zoom.md) | Hide layers until the user zooms in |
 | [FAQ](faq.md) | Common questions and answers |
