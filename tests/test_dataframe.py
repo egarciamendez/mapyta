@@ -7,6 +7,7 @@ docstring and Arrange/Act/Assert comments.
 
 import json
 
+import numpy as np
 import pytest
 
 pandas = pytest.importorskip("pandas")
@@ -14,10 +15,10 @@ pandas = pytest.importorskip("pandas")
 import pandas as pd  # noqa: E402
 
 from mapyta import Map  # noqa: E402
-from mapyta.dataframe import dataframe_to_geojson  # noqa: E402
+from mapyta.dataframe import _coerce_value, dataframe_to_geojson  # noqa: E402
 
 try:
-    import polars as pl  # ty: ignore[unresolved-import]
+    import polars as pl
 
     HAS_POLARS = True
 except ImportError:
@@ -318,6 +319,25 @@ class TestDataFrameConversion:
         # Assert — must not raise
         serialised = json.dumps(result)
         assert "42" in serialised
+
+    def test_coerce_value_converts_numpy_scalar_to_python_native(self) -> None:
+        """
+        Scenario: _coerce_value converts numpy scalars to plain Python types.
+
+        Given: A numpy int64 scalar (which has an .item() method)
+        When: _coerce_value is called
+        Then: A plain Python int is returned, not a numpy type
+
+        Also: plain Python values pass through unchanged.
+        """
+        # Numpy scalar → Python native
+        result = _coerce_value(np.int64(42))
+        assert result == 42
+        assert type(result) is int
+
+        # Plain Python value → unchanged
+        assert _coerce_value("text") == "text"
+        assert _coerce_value(3.14) == 3.14
 
 
 # ===================================================================
