@@ -17,7 +17,7 @@ from mapyta import Map  # noqa: E402
 from mapyta.dataframe import dataframe_to_geojson  # noqa: E402
 
 try:
-    import polars as pl
+    import polars as pl  # ty: ignore[unresolved-import]
 
     HAS_POLARS = True
 except ImportError:
@@ -43,7 +43,7 @@ def point_pandas() -> pd.DataFrame:
 
 
 @pytest.fixture
-def point_polars() -> "pl.DataFrame":  # type: ignore[name-defined]
+def point_polars() -> "pl.DataFrame":
     """Polars DataFrame with two Point WKT rows and a property column."""
     if not HAS_POLARS:
         pytest.skip("polars not installed")
@@ -92,7 +92,7 @@ class TestDataFrameConversion:
         assert result["features"][0]["type"] == "Feature"
 
     @skip_if_no_polars
-    def test_polars_points_produce_feature_collection(self, point_polars: "pl.DataFrame") -> None:  # type: ignore[name-defined]
+    def test_polars_points_produce_feature_collection(self, point_polars: "pl.DataFrame") -> None:
         """
         Scenario: Convert a polars DataFrame with Point WKT to a FeatureCollection.
 

@@ -1218,13 +1218,13 @@ class Map:
                 heat_data.append([pt.y, pt.x])
                 self._extend_bounds(pt)
                 self._record_feature(pt, {})
-            elif len(p) == 2:  # type: ignore[arg-type]
-                heat_data.append([p[0], p[1]])  # type: ignore[index]
-                self._bounds.append((p[0], p[1]))  # type: ignore[index]
-                self._record_feature(Point(p[1], p[0]), {})  # type: ignore[index]
+            elif len(p) == 2:
+                heat_data.append([p[0], p[1]])
+                self._bounds.append((p[0], p[1]))
+                self._record_feature(Point(p[1], p[0]), {})
             else:
-                heat_data.append(list(p[:3]))  # type: ignore[index]
-                self._bounds.append((p[0], p[1]))  # type: ignore[index]
+                heat_data.append(list(p[:3]))
+                self._bounds.append((p[0], p[1]))
                 self._record_feature(Point(p[1], p[0]), {"intensity": p[2]})  # type: ignore[index]
 
         kwargs: dict[str, Any] = {
@@ -1397,12 +1397,12 @@ class Map:
                     pt = cast(Point, self._transform(p))
                     self._extend_bounds(pt)
                     step_points.append([pt.y, pt.x])
-                elif len(p) == 3:  # type: ignore[arg-type]
-                    self._bounds.append((p[0], p[1]))  # type: ignore[index]
+                elif len(p) == 3:
+                    self._bounds.append((p[0], p[1]))
                     step_points.append([p[0], p[1], p[2]])  # type: ignore[index]
                 else:
-                    self._bounds.append((p[0], p[1]))  # type: ignore[index]
-                    step_points.append([p[0], p[1]])  # type: ignore[index]
+                    self._bounds.append((p[0], p[1]))
+                    step_points.append([p[0], p[1]])
             time_data.append(step_points)
 
         kwargs: dict[str, Any] = {
