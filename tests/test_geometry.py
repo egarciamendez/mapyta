@@ -99,7 +99,7 @@ class TestAddShapes:
         )
 
         # Act - When
-        result = m.add_multipolygon(mp, hover="**Two zones**")
+        result = m.add_multipolygon(mp, tooltip="**Two zones**")
 
         # Assert - Then
         assert result is m, "add_multipolygon should return self"
@@ -302,7 +302,7 @@ class TestGeometryDispatch:
         ring = LinearRing([(4.85, 52.35), (4.95, 52.35), (4.95, 52.40), (4.85, 52.40)])
 
         # Act - When
-        result = m.add_geometry(ring, hover="**Ring boundary**", stroke=StrokeStyle(color="red"))
+        result = m.add_geometry(ring, tooltip="**Ring boundary**", stroke=StrokeStyle(color="red"))
 
         # Assert - Then
         assert result is m

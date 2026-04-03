@@ -1161,7 +1161,7 @@ class TestTextPopup:
         result = m.add_text(
             Point(4.9, 52.37),
             "Label",
-            hover="**Hover text**",
+            tooltip="**Hover text**",
             popup="**Popup text**",
         )
         assert result is m

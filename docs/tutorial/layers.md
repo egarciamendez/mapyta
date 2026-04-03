@@ -42,3 +42,35 @@ print(m.to_html()) # markdown-exec: hide
     ```python
     m.create_feature_group("🔵 Boreholes", show=False)
     ```
+
+## Search control
+
+`add_search_control()` adds a search box that lets users find a feature in a feature group by one of its properties:
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map
+
+m = Map(title="Station Finder")
+
+m.create_feature_group("🚉 Stations")
+m.add_point(Point(4.9003, 52.3791), marker="🚉", tooltip="**Amsterdam Centraal**")
+m.add_point(Point(5.1213, 52.0908), marker="🚉", tooltip="**Utrecht Centraal**")
+m.add_point(Point(4.4703, 51.9225), marker="🚉", tooltip="**Rotterdam Centraal**")
+m.reset_target()
+
+m.add_search_control(
+    layer_name="🚉 Stations",
+    property_name="name",          # the GeoJSON property to match against
+    placeholder="Find station...",
+    zoom=14,                       # zoom level when a result is selected
+)
+
+print(m.to_html())  # markdown-exec: hide
+```
+
+**`layer_name`** must match the name used in `create_feature_group()`. **`property_name`** is the GeoJSON property to search on — it must exist on your features. The control uses `folium.plugins.Search` internally.
+
+!!! note
+
+    `add_search_control()` searches the GeoJSON properties of features in the given feature group. Make sure your features have the property you're searching on.

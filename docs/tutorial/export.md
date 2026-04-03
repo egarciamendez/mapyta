@@ -42,6 +42,21 @@ buf = m.to_bytesio(width=1200, height=800)
 
 The `delay` parameter (seconds) controls how long Map waits for tiles to load before taking the screenshot. Increase it on slow connections.
 
+### High-DPI / print-quality export
+
+Use the `scale` parameter to produce a higher-resolution PNG without changing the map layout:
+
+```python
+# 2× resolution (2400 × 1600 px output from a 1200 × 800 viewport)
+m.to_image("map_hd.png", width=1200, height=800, scale=2.0)
+
+# Same for BytesIO and async
+buf = m.to_bytesio(width=1600, height=900, scale=2.0)
+png_bytes = await m.to_image_async(width=1600, height=900, scale=2.0)
+```
+
+`scale=1.0` is the default (no change). `scale=2.0` is suitable for most print use cases.
+
 ## GeoJSON
 
 Export all features added to the map as a GeoJSON `FeatureCollection`:

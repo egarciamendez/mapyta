@@ -60,6 +60,7 @@ def capture_screenshot(
     width: int = 1200,
     height: int = 800,
     delay: float = 2.0,
+    scale: float = 1.0,
 ) -> bytes:
     """Capture a screenshot of an HTML file using headless Chrome.
 
@@ -73,6 +74,9 @@ def capture_screenshot(
         Viewport height in pixels.
     delay : float
         Seconds to wait for tile loading.
+    scale : float
+        Output resolution multiplier. ``scale=2.0`` produces a 2× (high-DPI)
+        image at ``width * 2`` × ``height * 2`` pixels.
 
     Returns
     -------
@@ -84,17 +88,20 @@ def capture_screenshot(
     from selenium import webdriver  # noqa: PLC0415  # ty: ignore[unresolved-import]
     from selenium.webdriver.chrome.options import Options  # noqa: PLC0415  # ty: ignore[unresolved-import]
 
+    scaled_width = int(width * scale)
+    scaled_height = int(height * scale)
+
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
-    options.add_argument(f"--window-size={width},{height}")
+    options.add_argument(f"--window-size={scaled_width},{scaled_height}")
 
     driver = None
     try:
         driver = webdriver.Chrome(options=options)
-        driver.set_window_size(width, height)
+        driver.set_window_size(scaled_width, scaled_height)
         driver.get(f"file://{html_path}")
         time.sleep(delay)
         return driver.get_screenshot_as_png()

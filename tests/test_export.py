@@ -559,7 +559,7 @@ class TestHideControls:
         fake_png = b"\x89PNG_fake_data_for_bytesio"
         with patch.object(Map, "to_image", return_value=fake_png) as mock_img:
             m.to_bytesio(hide_controls=False)
-            mock_img.assert_called_once_with(path=None, width=1200, height=800, delay=2.0, hide_controls=False)
+            mock_img.assert_called_once_with(path=None, width=1200, height=800, delay=2.0, hide_controls=False, scale=1.0)
 
 
 # ===================================================================

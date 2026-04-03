@@ -61,3 +61,34 @@ print(m.to_html()) # markdown-exec: hide
 !!! tip
 
     `RawHTML` works on both `tooltip` and `popup` parameters across all `add_*` methods.
+
+## Tooltip style
+
+`TooltipStyle` controls the appearance of the tooltip box. Pass it to any `add_*` geometry method:
+
+```python
+from shapely.geometry import LineString, Polygon, Point
+from mapyta import Map, TooltipStyle
+
+m = Map()
+
+m.add_point(
+    Point(4.9, 52.37),
+    tooltip="**Amsterdam**",
+    tooltip_style=TooltipStyle(sticky=False, style="font-size: 14px; font-weight: bold;"),
+)
+
+m.add_linestring(
+    LineString([(4.9, 52.37), (5.0, 52.38)]),
+    tooltip="Route A → B",
+    tooltip_style=TooltipStyle(sticky=True),
+)
+
+m.add_polygon(
+    Polygon([(4.9, 52.3), (5.0, 52.3), (5.0, 52.4), (4.9, 52.4)]),
+    tooltip="Zone",
+    tooltip_style={"sticky": False, "style": "color: red;"},
+)
+```
+
+`sticky=True` (default) means the tooltip follows the cursor. `sticky=False` pins the tooltip to the feature. The `style` field takes a raw CSS string applied to the tooltip container.

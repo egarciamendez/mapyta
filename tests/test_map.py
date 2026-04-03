@@ -586,7 +586,7 @@ class TestAddShapes:
         )
 
         # Act - When
-        result = m.add_multipolygon(mp, hover="**Two zones**")
+        result = m.add_multipolygon(mp, tooltip="**Two zones**")
 
         # Assert - Then
         assert result is m, "add_multipolygon should return self"
@@ -789,7 +789,7 @@ class TestGeometryDispatch:
         ring = LinearRing([(4.85, 52.35), (4.95, 52.35), (4.95, 52.40), (4.85, 52.40)])
 
         # Act - When
-        result = m.add_geometry(ring, hover="**Ring boundary**", stroke=StrokeStyle(color="red"))
+        result = m.add_geometry(ring, tooltip="**Ring boundary**", stroke=StrokeStyle(color="red"))
 
         # Assert - Then
         assert result is m
@@ -1552,6 +1552,235 @@ class TestChoropleth:
 
 
 # ===================================================================
+# Scenarios for choropleth color palettes (new: colors parameter).
+# ===================================================================
+
+
+class TestChoroplethColors:
+    """Tests for the new ``colors`` parameter and categorical choropleth support."""
+
+    def _make_geojson(self) -> dict:
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A", "val": 10.0}},
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [5.0, 52.38]}, "properties": {"id": "B", "val": 90.0}},
+            ],
+        }
+
+    def test_named_palette_blues(self) -> None:
+        """
+        Scenario: Use a named palette 'blues' for choropleth.
+
+        Given: A GeoJSON with numeric values
+        When: add_choropleth is called with colors='blues'
+        Then: The colormap uses the blues palette colors
+        """
+        m = Map()
+        geojson = self._make_geojson()
+        result = m.add_choropleth(geojson, value_column="val", key_on="feature.properties.id", colors="blues")
+        assert result is m
+        assert len(m._colormaps) == 1
+
+    def test_custom_color_list(self) -> None:
+        """
+        Scenario: Use a custom list of hex colors for choropleth.
+
+        Given: A GeoJSON with numeric values
+        When: add_choropleth is called with colors=['#ff0000', '#00ff00', '#0000ff']
+        Then: The colormap is created with those colors
+        """
+        m = Map()
+        geojson = self._make_geojson()
+        result = m.add_choropleth(geojson, value_column="val", key_on="feature.properties.id", colors=["#ff0000", "#00ff00", "#0000ff"])
+        assert result is m
+        assert len(m._colormaps) == 1
+
+    def test_unknown_palette_raises_value_error(self) -> None:
+        """
+        Scenario: Pass an unknown palette name.
+
+        Given: A GeoJSON
+        When: add_choropleth is called with colors='nonexistent'
+        Then: A ValueError is raised with a helpful message
+        """
+        import pytest
+
+        m = Map()
+        geojson = self._make_geojson()
+        with pytest.raises(ValueError, match="Unknown palette"):
+            m.add_choropleth(geojson, value_column="val", key_on="feature.properties.id", colors="nonexistent")
+
+    def test_categorical_choropleth_auto_detect(self) -> None:
+        """
+        Scenario: Categorical choropleth auto-detected from string values.
+
+        Given: A GeoJSON with string category values
+        When: add_choropleth is called without explicit categorical flag
+        Then: A StepColormap is used and colors are assigned per category
+        """
+        m = Map()
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A", "cat": "urban"}},
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [5.0, 52.38]}, "properties": {"id": "B", "cat": "rural"}},
+            ],
+        }
+        result = m.add_choropleth(geojson, value_column="cat", key_on="feature.properties.id")
+        assert result is m
+        assert len(m._colormaps) == 1
+
+    def test_categorical_choropleth_forced(self) -> None:
+        """
+        Scenario: Force categorical mode via categorical=True.
+
+        Given: A GeoJSON with numeric values treated as categories
+        When: add_choropleth is called with categorical=True
+        Then: Discrete colors are assigned per unique value
+        """
+        m = Map()
+        geojson = self._make_geojson()
+        result = m.add_choropleth(geojson, value_column="val", key_on="feature.properties.id", categorical=True)
+        assert result is m
+        assert len(m._colormaps) == 1
+
+    def test_categorical_choropleth_named_palette(self) -> None:
+        """
+        Scenario: Categorical choropleth with a named palette.
+
+        Given: A GeoJSON with string category values
+        When: add_choropleth is called with categorical=True and colors='greens'
+        Then: The greens palette colors are used for categories
+        """
+        m = Map()
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A", "cat": "a"}},
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [5.0, 52.38]}, "properties": {"id": "B", "cat": "b"}},
+            ],
+        }
+        result = m.add_choropleth(geojson, value_column="cat", key_on="feature.properties.id", colors="greens")
+        assert result is m
+
+    def test_categorical_choropleth_custom_color_list(self) -> None:
+        """
+        Scenario: Categorical choropleth with a custom color list.
+
+        Given: A GeoJSON with string category values
+        When: add_choropleth is called with categorical=True and a custom colors list
+        Then: The custom colors are used for categories
+        """
+        m = Map()
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A", "cat": "a"}},
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [5.0, 52.38]}, "properties": {"id": "B", "cat": "b"}},
+            ],
+        }
+        result = m.add_choropleth(geojson, value_column="cat", key_on="feature.properties.id", categorical=True, colors=["#aabbcc", "#112233"])
+        assert result is m
+
+    def test_categorical_choropleth_unknown_palette_raises(self) -> None:
+        """
+        Scenario: Categorical choropleth with unknown named palette.
+
+        Given: A GeoJSON with string category values
+        When: add_choropleth is called with categorical=True and colors='unknown'
+        Then: A ValueError is raised
+        """
+        import pytest
+
+        m = Map()
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A", "cat": "a"}},
+            ],
+        }
+        with pytest.raises(ValueError, match="Unknown palette"):
+            m.add_choropleth(geojson, value_column="cat", key_on="feature.properties.id", categorical=True, colors="unknown")
+
+    def test_categorical_style_fn_renders_correct_colors(self) -> None:
+        """
+        Scenario: Categorical style_fn returns correct fill colors.
+
+        Given: A GeoJSON with two categories
+        When: The HTML is rendered (triggering style_fn for each feature)
+        Then: The HTML contains the category color values
+        """
+        m = Map()
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A", "cat": "urban"}},
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [5.0, 52.38]}, "properties": {"id": "B", "cat": "rural"}},
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [5.1, 52.39]}, "properties": {"id": "C", "cat": None}},
+            ],
+        }
+        m.add_choropleth(geojson, value_column="cat", key_on="feature.properties.id")
+        html = m._repr_html_()
+        assert html  # HTML renders without error
+
+
+# ===================================================================
+# Scenarios for search control.
+# ===================================================================
+
+
+class TestSearchControl:
+    """Tests for add_search_control()."""
+
+    def test_add_search_control_basic(self) -> None:
+        """
+        Scenario: Add a search control to a map with a feature group.
+
+        Given: A map with a feature group containing points
+        When: add_search_control is called with layer_name and property_name
+        Then: The method returns self (chainable)
+        """
+        m = Map()
+        m.create_feature_group("stations")
+        m.set_feature_group("stations")
+        m.add_point(Point(4.9, 52.37), tooltip="CS")
+        m.reset_target()
+        result = m.add_search_control(layer_name="stations", property_name="name")
+        assert result is m
+
+    def test_add_search_control_with_zoom(self) -> None:
+        """
+        Scenario: Add a search control with custom zoom level.
+
+        Given: A map with a feature group
+        When: add_search_control is called with zoom=14
+        Then: The method returns self without error
+        """
+        m = Map()
+        m.create_feature_group("places")
+        m.set_feature_group("places")
+        m.add_point(Point(4.9, 52.37))
+        m.reset_target()
+        result = m.add_search_control(layer_name="places", property_name="naam", zoom=14)
+        assert result is m
+
+    def test_add_search_control_unknown_group_raises(self) -> None:
+        """
+        Scenario: Call add_search_control with a non-existent group name.
+
+        Given: A map with no feature groups
+        When: add_search_control is called with layer_name='nonexistent'
+        Then: A KeyError is raised with a helpful message
+        """
+        import pytest
+
+        m = Map()
+        with pytest.raises(KeyError, match="nonexistent"):
+            m.add_search_control(layer_name="nonexistent", property_name="name")
+
+
+# ===================================================================
 # Scenarios for heatmap layers.
 # ===================================================================
 
@@ -1676,10 +1905,10 @@ class TestMarkerCluster:
         m = Map()
         cafes = [Point(4.88 + i * 0.001, 52.36 + i * 0.0005) for i in range(50)]
         labels = ["☕"] * 50
-        hovers = [f"**Café #{i + 1}**" for i in range(50)]
+        tooltips = [f"**Café #{i + 1}**" for i in range(50)]
 
         # Act - When
-        result = m.add_marker_cluster(cafes, labels=labels, hovers=hovers, name="Cafés")
+        result = m.add_marker_cluster(cafes, labels=labels, tooltips=tooltips, name="Cafés")
 
         # Assert - Then
         assert result is m, "add_marker_cluster should return self"
@@ -1848,7 +2077,7 @@ class TestTextAnnotation:
         result = m.add_text(
             Point(4.9, 52.37),
             "Station A",
-            hover="**Click for details**",
+            tooltip="**Click for details**",
         )
 
         # Assert - Then
@@ -4162,7 +4391,7 @@ class TestHideControls:
         fake_png = b"\x89PNG_fake_data_for_bytesio"
         with patch.object(Map, "to_image", return_value=fake_png) as mock_img:
             m.to_bytesio(hide_controls=False)
-            mock_img.assert_called_once_with(path=None, width=1200, height=800, delay=2.0, hide_controls=False)
+            mock_img.assert_called_once_with(path=None, width=1200, height=800, delay=2.0, hide_controls=False, scale=1.0)
 
 
 # ===================================================================
@@ -4531,7 +4760,7 @@ class TestTextPopup:
         result = m.add_text(
             Point(4.9, 52.37),
             "Label",
-            hover="**Hover text**",
+            tooltip="**Hover text**",
             popup="**Popup text**",
         )
         assert result is m

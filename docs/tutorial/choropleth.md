@@ -63,3 +63,77 @@ If you don't pass `values` explicitly, Map reads them straight from the GeoJSON 
 !!! tip "Multiple ways to pass GeoJSON"
 
     `geojson_data` accepts a dict, a JSON string, or a `Path` to a `.geojson` file, Map handles all three.
+
+## Custom color palettes
+
+By default choropleths use a yellow-to-red gradient (`"ylrd"`). Pass a named palette or a list of hex colors to the `colors` parameter:
+
+```python
+# Named palette
+m.add_choropleth(
+    geojson_data=geojson,
+    value_column="score",
+    key_on="feature.properties.name",
+    colors="blues",           # "blues" | "greens" | "reds" | "purples" | "oranges" | "viridis" | "plasma" | "spectral" | "rdylgn"
+)
+
+# Custom colors (low → high)
+m.add_choropleth(
+    geojson_data=geojson,
+    value_column="score",
+    key_on="feature.properties.name",
+    colors=["#f7fbff", "#6baed6", "#084594"],
+)
+```
+
+All available palette names are exposed in `mapyta.PALETTES`:
+
+```python
+from mapyta import PALETTES
+
+print(list(PALETTES.keys()))
+# ['ylrd', 'blues', 'greens', 'reds', 'purples', 'oranges', 'viridis', 'plasma', 'spectral', 'rdylgn']
+```
+
+The same `colors` parameter works on `Map.from_geodataframe()` when using `color_column`.
+
+## Categorical data
+
+If your values are string categories (land use type, municipality class, etc.), set `categorical=True` or pass string values and mapyta auto-detects them. Each unique category gets a distinct color from the palette:
+
+```python exec="true" html="true" source="tabbed-right"
+from mapyta import Map
+
+geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {"name": "Binnenstad", "type": "urban"},
+            "geometry": {"type": "Polygon", "coordinates": [[[5.10, 52.08], [5.14, 52.08], [5.14, 52.10], [5.10, 52.10], [5.10, 52.08]]]},
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "West", "type": "suburban"},
+            "geometry": {"type": "Polygon", "coordinates": [[[5.06, 52.08], [5.10, 52.08], [5.10, 52.10], [5.06, 52.10], [5.06, 52.08]]]},
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "Oost", "type": "urban"},
+            "geometry": {"type": "Polygon", "coordinates": [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.10], [5.14, 52.10], [5.14, 52.08]]]},
+        },
+    ],
+}
+
+m = Map(title="Area Types")
+m.add_choropleth(
+    geojson_data=geojson,
+    value_column="type",
+    key_on="feature.properties.name",
+    legend_name="Area type",
+    colors="spectral",
+    hover_fields=["name", "type"],
+)
+
+print(m.to_html())  # markdown-exec: hide
+```

@@ -446,7 +446,7 @@ wheels = [
 
 [[package]]
 name = "mapyta"
-version = "0.2.0"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "folium" },
@@ -482,6 +482,8 @@ docs = [
     { name = "pygments" },
 ]
 test = [
+    { name = "pandas" },
+    { name = "polars" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-describe" },
@@ -525,6 +527,8 @@ docs = [
     { name = "pygments", specifier = "~=2.19.1" },
 ]
 test = [
+    { name = "pandas", specifier = ">=3.0.1" },
+    { name = "polars", specifier = ">=1.39.3" },
     { name = "pytest", specifier = "==9.0.2" },
     { name = "pytest-cov", specifier = "==7.0.0" },
     { name = "pytest-describe", specifier = "==3.1.0" },
