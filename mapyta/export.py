@@ -84,6 +84,9 @@ def capture_screenshot(
     bytes
         PNG image bytes.
     """
+    if scale <= 0:
+        raise ValueError(f"scale must be greater than 0, got {scale!r}")
+
     check_selenium()
 
     from selenium import webdriver  # noqa: PLC0415  # ty: ignore[unresolved-import]

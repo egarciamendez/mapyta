@@ -1140,6 +1140,8 @@ class Map:
                 raise ValueError(f"Unknown palette {colors!r}. Available palettes: {valid}")
             color_list = palette
         elif colors is not None:
+            if not colors:
+                raise ValueError("colors list must not be empty")
             color_list = colors
         else:
             color_list = PALETTES["ylrd"]
@@ -1266,7 +1268,14 @@ class Map:
 
         else:
             # Numeric mode
-            num_vals = [float(v) for v in raw_vals if not isinstance(v, str)]
+            num_vals: list[float] = []
+            for v in raw_vals:
+                if isinstance(v, str):
+                    continue
+                try:
+                    num_vals.append(float(v))
+                except (TypeError, ValueError) as exc:
+                    raise ValueError(f"Non-numeric value {v!r} in choropleth values cannot be converted to float") from exc
             if num_vals:
                 vmin = vmin if vmin is not None else min(num_vals)
                 vmax = vmax if vmax is not None else max(num_vals)
@@ -1642,7 +1651,7 @@ class Map:
     # Marker cluster
     # ------------------------------------------------------------------
 
-    def add_marker_cluster(
+    def add_marker_cluster(  # noqa: PLR0913
         self,
         points: list[Point],
         labels: list[str] | None = None,
@@ -1654,6 +1663,7 @@ class Map:
         popup_style: PopupStyle | dict[str, Any] | None = None,
         captions: list[str] | None = None,
         caption_style: dict[str, str] | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add clustered markers that group at low zoom.
 
@@ -1679,6 +1689,8 @@ class Map:
             Per-location text annotations placed below each marker.
         caption_style : dict[str, str] | None
             CSS property overrides for ``captions``.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance (font size, width, etc.).
 
         Returns
         -------
@@ -1709,7 +1721,7 @@ class Map:
             folium.Marker(
                 location=[lat, lon],
                 icon=icon,
-                tooltip=self._make_tooltip(tip),
+                tooltip=self._make_tooltip(tip, tooltip_style),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
             self._record_feature(pt, {"marker": label, "caption": txt, "tooltip": tip, "popup": popup, "min_zoom": min_zoom})
@@ -2033,7 +2045,7 @@ class Map:
             "position": position,
         }
         if zoom is not None:
-            search_kwargs["zoom"] = zoom
+            search_kwargs["search_zoom"] = zoom
         folium.plugins.Search(**search_kwargs).add_to(self._map)
         return self
 

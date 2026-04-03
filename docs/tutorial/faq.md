@@ -216,8 +216,16 @@ m.add_choropleth(geojson, value_column="score", key_on="feature.properties.id", 
 Use `add_search_control()`. The layer must be in a feature group:
 
 ```python
+geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {"type": "Feature", "properties": {"name": "Amsterdam", "score": 1}, "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}},
+        {"type": "Feature", "properties": {"name": "Utrecht", "score": 2}, "geometry": {"type": "Point", "coordinates": [5.12, 52.09]}},
+    ],
+}
+
 m.create_feature_group("Places")
-m.add_point(Point(4.9, 52.37), tooltip="Amsterdam")
+m.add_choropleth(geojson, value_column="score", key_on="feature.properties.name")
 m.reset_target()
 
 m.add_search_control(layer_name="Places", property_name="name", zoom=14)

@@ -434,6 +434,21 @@ class TestExport:
         assert len(scale_call) == 1
         assert "2.0" in str(scale_call[0])
 
+    def test_capture_screenshot_invalid_scale_raises(self, tmp_path: Path) -> None:
+        """
+        Scenario: capture_screenshot raises ValueError for scale <= 0.
+
+        Given: An HTML file
+        When: capture_screenshot is called with scale=0 or negative
+        Then: A ValueError is raised before Chrome is invoked
+        """
+        html_file = tmp_path / "test.html"
+        html_file.write_text("<html><body>Hello</body></html>")
+        with pytest.raises(ValueError, match="scale must be greater than 0"):
+            capture_screenshot(str(html_file), scale=0)
+        with pytest.raises(ValueError, match="scale must be greater than 0"):
+            capture_screenshot(str(html_file), scale=-1.0)
+
     @pytest.fixture
     def map_with_point(self) -> Map:
         """A map with one location for export tests."""
