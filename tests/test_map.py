@@ -1604,8 +1604,6 @@ class TestChoroplethColors:
         When: add_choropleth is called with colors='nonexistent'
         Then: A ValueError is raised with a helpful message
         """
-        import pytest
-
         m = Map()
         geojson = self._make_geojson()
         with pytest.raises(ValueError, match="Unknown palette"):
@@ -1691,8 +1689,6 @@ class TestChoroplethColors:
         When: add_choropleth is called with categorical=True and colors='unknown'
         Then: A ValueError is raised
         """
-        import pytest
-
         m = Map()
         geojson = {
             "type": "FeatureCollection",
@@ -1773,8 +1769,6 @@ class TestSearchControl:
         When: add_search_control is called with layer_name='nonexistent'
         Then: A KeyError is raised with a helpful message
         """
-        import pytest
-
         m = Map()
         with pytest.raises(KeyError, match="nonexistent"):
             m.add_search_control(layer_name="nonexistent", property_name="name")
