@@ -387,6 +387,53 @@ class TestExport:
         mock_driver.set_window_size.assert_called_once_with(800, 600)
         assert mock_options_instance.add_argument.call_count == 5
 
+    def test_capture_screenshot_scale_2x(self, tmp_path: Path) -> None:
+        """
+        Scenario: Capture a high-DPI screenshot with scale=2.0.
+
+        Given: A valid HTML file and a mocked Chrome WebDriver
+        When: capture_screenshot is called with scale=2.0
+        Then: --force-device-scale-factor=2.0 is added and window size stays at original dimensions
+        """
+        # Arrange - Given
+        html_file = tmp_path / "test.html"
+        html_file.write_text("<html><body>Hello</body></html>")
+
+        fake_png = b"\x89PNG_fake_image_bytes"
+
+        mock_driver = MagicMock()
+        mock_driver.get_screenshot_as_png.return_value = fake_png
+
+        mock_options_instance = MagicMock()
+
+        mock_selenium = MagicMock()
+        mock_selenium.webdriver.Chrome.return_value = mock_driver
+        mock_selenium.webdriver.chrome.options.Options.return_value = mock_options_instance
+
+        # Act - When
+        with (
+            patch("mapyta.export.check_selenium"),
+            patch.dict(
+                "sys.modules",
+                {
+                    "selenium": mock_selenium,
+                    "selenium.webdriver": mock_selenium.webdriver,
+                    "selenium.webdriver.chrome": mock_selenium.webdriver.chrome,
+                    "selenium.webdriver.chrome.options": mock_selenium.webdriver.chrome.options,
+                },
+            ),
+        ):
+            result = capture_screenshot(str(html_file), 800, 600, 0.1, scale=2.0)
+
+        # Assert - Then
+        assert result == fake_png
+        mock_driver.set_window_size.assert_called_once_with(800, 600)
+        # 5 base args + 1 --force-device-scale-factor
+        assert mock_options_instance.add_argument.call_count == 6
+        scale_call = [c for c in mock_options_instance.add_argument.call_args_list if "force-device-scale-factor" in str(c)]
+        assert len(scale_call) == 1
+        assert "2.0" in str(scale_call[0])
+
     @pytest.fixture
     def map_with_point(self) -> Map:
         """A map with one location for export tests."""

@@ -1235,14 +1235,18 @@ class Map:
                     valid = ", ".join(f'"{k}"' for k in sorted(PALETTES))
                     raise ValueError(f"Unknown palette {colors!r}. Available palettes: {valid}")
             elif colors is not None:
+                if not colors:
+                    raise ValueError("colors list must not be empty")
                 palette_colors = colors
             else:
                 palette_colors = PALETTES["ylrd"]
             # Cycle colors if more categories than palette entries
             cat_color_map: dict[str, str] = {cat: palette_colors[i % len(palette_colors)] for i, cat in enumerate(categories)}
 
+            # Use the actual cycled colors per category so the legend matches the map
+            legend_colors = [cat_color_map[cat] for cat in categories] if categories else palette_colors[:1]
             colormap = cm.StepColormap(
-                colors=palette_colors[: len(categories)] if len(categories) <= len(palette_colors) else palette_colors,
+                colors=legend_colors,
                 vmin=0,
                 vmax=max(len(categories) - 1, 1),
                 caption=caption,
@@ -1980,9 +1984,10 @@ class Map:
         self,
         layer_name: str,
         property_name: str,
-        placeholder: str = "Zoeken...",
+        placeholder: str = "Search...",
         position: str = "topright",
         zoom: int | None = None,
+        geom_type: str = "Point",
     ) -> Self:
         """Add a search control to find features by property value.
 
@@ -2002,6 +2007,9 @@ class Map:
             Control position: ``"topleft"``, ``"topright"``, ``"bottomleft"``, ``"bottomright"``.
         zoom : int | None
             Zoom level to use when a result is selected. Uses the map's current zoom if ``None``.
+        geom_type : str
+            Geometry type of the features being searched: ``"Point"`` or ``"Polygon"``.
+            Use ``"Polygon"`` when searching choropleth or polygon layers.
 
         Returns
         -------
@@ -2018,7 +2026,7 @@ class Map:
         layer = self._feature_groups[layer_name]
         search_kwargs: dict[str, Any] = {
             "layer": layer,
-            "geom_type": "Point",
+            "geom_type": geom_type,
             "placeholder": placeholder,
             "collapsed": False,
             "search_label": property_name,

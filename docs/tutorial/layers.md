@@ -48,29 +48,55 @@ print(m.to_html()) # markdown-exec: hide
 `add_search_control()` adds a search box that lets users find a feature in a feature group by one of its properties:
 
 ```python exec="true" html="true" source="tabbed-right"
-from shapely.geometry import Point
 from mapyta import Map
 
-m = Map(title="Station Finder")
+geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {"name": "Binnenstad", "score": 92},
+            "geometry": {"type": "Polygon", "coordinates": [[[5.10, 52.08], [5.14, 52.08], [5.14, 52.10], [5.10, 52.10], [5.10, 52.08]]]},
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "West", "score": 74},
+            "geometry": {"type": "Polygon", "coordinates": [[[5.06, 52.08], [5.10, 52.08], [5.10, 52.10], [5.06, 52.10], [5.06, 52.08]]]},
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "Oost", "score": 85},
+            "geometry": {"type": "Polygon", "coordinates": [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.10], [5.14, 52.10], [5.14, 52.08]]]},
+        },
+    ],
+}
 
-m.create_feature_group("🚉 Stations")
-m.add_point(Point(4.9003, 52.3791), marker="🚉", tooltip="**Amsterdam Centraal**")
-m.add_point(Point(5.1213, 52.0908), marker="🚉", tooltip="**Utrecht Centraal**")
-m.add_point(Point(4.4703, 51.9225), marker="🚉", tooltip="**Rotterdam Centraal**")
+m = Map(title="Neighbourhood Finder")
+
+# Add the choropleth to a named feature group so it can be searched
+m.create_feature_group("Neighbourhoods")
+m.add_choropleth(
+    geojson_data=geojson,
+    value_column="score",
+    key_on="feature.properties.name",
+    legend_name="Liveability Score",
+    hover_fields=["name", "score"],
+)
 m.reset_target()
 
 m.add_search_control(
-    layer_name="🚉 Stations",
-    property_name="name",          # the GeoJSON property to match against
-    placeholder="Find station...",
+    layer_name="Neighbourhoods",
+    property_name="name",          # GeoJSON property to match against
+    placeholder="Find neighbourhood...",
     zoom=14,                       # zoom level when a result is selected
+    geom_type="Polygon",           # use "Polygon" for area features
 )
 
 print(m.to_html())  # markdown-exec: hide
 ```
 
-**`layer_name`** must match the name used in `create_feature_group()`. **`property_name`** is the GeoJSON property to search on — it must exist on your features. The control uses `folium.plugins.Search` internally.
+**`layer_name`** must match the name used in `create_feature_group()`. **`property_name`** is the GeoJSON property to search on — it must exist on your features. Use `geom_type="Polygon"` when searching polygon or choropleth layers. The control uses `folium.plugins.Search` internally.
 
 !!! note
 
-    `add_search_control()` searches the GeoJSON properties of features in the given feature group. Make sure your features have the property you're searching on.
+    `add_search_control()` searches the GeoJSON properties of features in the given feature group. The feature group must contain a GeoJSON layer (e.g. added via `add_choropleth`) so that property-based search works correctly.
