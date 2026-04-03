@@ -68,31 +68,108 @@ If you don't pass `values` explicitly, Map reads them straight from the GeoJSON 
 
 By default choropleths use a yellow-to-red gradient (`"ylrd"`). Pass a named palette or a list of hex colors to the `colors` parameter:
 
-```python
-# Named palette
+```python exec="true" html="true" source="tabbed-right"
+from mapyta import Map
+
+geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {"name": "Binnenstad", "score": 92},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[5.10, 52.08], [5.14, 52.08], [5.14, 52.10], [5.10, 52.10], [5.10, 52.08]]],
+            },
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "West", "score": 74},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[5.06, 52.08], [5.10, 52.08], [5.10, 52.10], [5.06, 52.10], [5.06, 52.08]]],
+            },
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "Oost", "score": 85},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.10], [5.14, 52.10], [5.14, 52.08]]],
+            },
+        },
+    ],
+}
+
+m = Map(title="Neighbourhood Scores — Blues palette")
 m.add_choropleth(
     geojson_data=geojson,
     value_column="score",
     key_on="feature.properties.name",
-    colors="blues",           # "blues" | "greens" | "reds" | "purples" | "oranges" | "viridis" | "plasma" | "spectral" | "rdylgn"
+    legend_name="Liveability Score",
+    hover_fields=["name", "score"],
+    fill_opacity=0.7,
+    colors="blues",
 )
 
-# Custom colors (low → high)
+print(m.to_html())  # markdown-exec: hide
+```
+
+You can also pass a custom list of hex colors (ordered from low to high values):
+
+```python exec="true" html="true" source="tabbed-right"
+from mapyta import Map
+
+geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {"name": "Binnenstad", "score": 92},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[5.10, 52.08], [5.14, 52.08], [5.14, 52.10], [5.10, 52.10], [5.10, 52.08]]],
+            },
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "West", "score": 74},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[5.06, 52.08], [5.10, 52.08], [5.10, 52.10], [5.06, 52.10], [5.06, 52.08]]],
+            },
+        },
+        {
+            "type": "Feature",
+            "properties": {"name": "Oost", "score": 85},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.10], [5.14, 52.10], [5.14, 52.08]]],
+            },
+        },
+    ],
+}
+
+m = Map(title="Neighbourhood Scores — Custom colors")
 m.add_choropleth(
     geojson_data=geojson,
     value_column="score",
     key_on="feature.properties.name",
+    legend_name="Liveability Score",
+    hover_fields=["name", "score"],
+    fill_opacity=0.7,
     colors=["#f7fbff", "#6baed6", "#084594"],
 )
+
+print(m.to_html())  # markdown-exec: hide
 ```
 
 All available palette names are exposed in `mapyta.PALETTES`:
 
-```python
+```python exec="true" result="ansi" source="tabbed-right"
 from mapyta import PALETTES
 
 print(list(PALETTES.keys()))
-# ['ylrd', 'blues', 'greens', 'reds', 'purples', 'oranges', 'viridis', 'plasma', 'spectral', 'rdylgn']
 ```
 
 The same `colors` parameter works on `Map.from_geodataframe()` when using `color_column`.
