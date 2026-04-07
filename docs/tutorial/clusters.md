@@ -10,10 +10,10 @@ from mapyta import Map
 random.seed(42)
 cafes = [Point(5.12 + random.uniform(-0.02, 0.02), 52.09 + random.uniform(-0.01, 0.01)) for _ in range(50)]
 labels = ["☕"] * 50
-hovers = [f"**Café #{i + 1}**" for i in range(50)]
+tooltips = [f"**Café #{i + 1}**" for i in range(50)]
 
 m = Map(title="Utrecht Cafés")
-m.add_marker_cluster(points=cafes, labels=labels, hovers=hovers, name="Cafés")
+m.add_marker_cluster(points=cafes, labels=labels, tooltips=tooltips, name="Cafés")
 
 m.to_html("clusters.html")
 
@@ -28,7 +28,7 @@ At low zoom you'll see cluster bubbles with counts. Zoom in and they split into 
 |-----------|-------------|
 | `points` | List of Shapely `Point` objects |
 | `labels` | Marker text per point (emoji, text, or FA icon name) |
-| `hovers` | Markdown tooltip per point |
+| `tooltips` | Markdown tooltip per point |
 | `popups` | Markdown popup per point |
 | `captions` | Text label below each marker |
 | `marker_style` | CSS dict applied to all markers |

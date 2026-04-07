@@ -21,7 +21,7 @@ jobs:
         run: uv sync --group docs
 
       - name: Build docs
-        run: uv run properdocs build --clean
+        run: uv run properdocs build --clean --strict
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
