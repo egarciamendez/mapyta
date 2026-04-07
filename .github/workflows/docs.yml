@@ -24,8 +24,7 @@ jobs:
         run: uv run properdocs build --clean
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          exclude_assets: "pr-preview/**"
+          folder: site
+          clean-exclude: pr-preview
