@@ -1591,18 +1591,1731 @@
 
 <h1 id="marker-clusters">Marker Clusters</h1>
 <p>When you have hundreds of markers, the map becomes unreadable at low zoom. Marker clusters group nearby points into numbered bubbles that expand as you zoom in.</p>
-<div class="highlight"><pre><span></span><code><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s2">&quot;/home/runner/work/mapyta/mapyta/.venv/lib/python3.13/site-packages/markdown_exec/_internal/formatters/python.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">71</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_run_python</span>
-    <span class="n">exec_python</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">code_block_id</span><span class="p">,</span> <span class="n">exec_globals</span><span class="p">)</span>
-    <span class="o">~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
-  <span class="n">File</span> <span class="s2">&quot;/home/runner/work/mapyta/mapyta/.venv/lib/python3.13/site-packages/markdown_exec/_internal/formatters/_exec_python.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">8</span><span class="p">,</span> <span class="ow">in</span> <span class="n">exec_python</span>
-    <span class="n">exec</span><span class="p">(</span><span class="n">compiled</span><span class="p">,</span> <span class="n">exec_globals</span><span class="p">)</span>  <span class="c1"># noqa: S102</span>
-    <span class="o">~~~~^^^^^^^^^^^^^^^^^^^^^^^^</span>
-  <span class="n">File</span> <span class="s2">&quot;&lt;code block: n14&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">11</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">add_marker_cluster</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">cafes</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">hovers</span><span class="o">=</span><span class="n">hovers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cafés&quot;</span><span class="p">)</span>
-    <span class="o">~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
-<span class="ne">TypeError</span><span class="p">:</span> <span class="n">Map</span><span class="o">.</span><span class="n">add_marker_cluster</span><span class="p">()</span> <span class="n">got</span> <span class="n">an</span> <span class="n">unexpected</span> <span class="n">keyword</span> <span class="n">argument</span> <span class="s1">&#39;hovers&#39;</span>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-14--__tabbed_1_1" name="exec-14--__tabbed_1" type="radio" /><input id="exec-14--__tabbed_1_2" name="exec-14--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-14--__tabbed_1_1">Result</label><label for="exec-14--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_1019724e8c872d5e994e567afbed3651 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Utrecht Cafés&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_1019724e8c872d5e994e567afbed3651&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_1019724e8c872d5e994e567afbed3651 = L.map(
+                &quot;map_1019724e8c872d5e994e567afbed3651&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_1019724e8c872d5e994e567afbed3651);
+
+            
+
+        
+    
+            var tile_layer_9f79a81d03dff51664af04dcc88b9c9c = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_9f79a81d03dff51664af04dcc88b9c9c.addTo(map_1019724e8c872d5e994e567afbed3651);
+        
+    
+            var mouse_position_4fecd4474883e98e05612b9ba111e445 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_4fecd4474883e98e05612b9ba111e445.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_4fecd4474883e98e05612b9ba111e445.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_1019724e8c872d5e994e567afbed3651.addControl(mouse_position_4fecd4474883e98e05612b9ba111e445);
+        
+    
+            var marker_cluster_558e61f8b5481012135d2802f9dd2ff6 = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_9fd6e2b05df48ba631a03bc51e1611ab = L.marker(
+                [52.08050021510446, 5.125577071938316],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_cd5e0ed158e188c5236e5701bc11a0b2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_9fd6e2b05df48ba631a03bc51e1611ab.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #1&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_9fd6e2b05df48ba631a03bc51e1611ab.setIcon(div_icon_cd5e0ed158e188c5236e5701bc11a0b2);
+            
+    
+            var marker_70c53d77e09570fea05f6423ea4ff0df = L.marker(
+                [52.08446421476298, 5.111001172734765],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_ec45c0e3377ea0baee4a7b1b13b74a1f = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_70c53d77e09570fea05f6423ea4ff0df.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #2&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_70c53d77e09570fea05f6423ea4ff0df.setIcon(div_icon_ec45c0e3377ea0baee4a7b1b13b74a1f);
+            
+    
+            var marker_7d26f87af4c90b6971f4f85502317091 = L.marker(
+                [52.09353398974846, 5.129458848566561],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_020a0204e040e3be8d26f496f1625f45 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_7d26f87af4c90b6971f4f85502317091.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #3&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_7d26f87af4c90b6971f4f85502317091.setIcon(div_icon_020a0204e040e3be8d26f496f1625f45);
+            
+    
+            var marker_0e5cb7cc439d72d01d2767287b1cc01b = L.marker(
+                [52.08173877665259, 5.135687182708194],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_18701cb4556f3442b2ec0adc7bb1966f = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0e5cb7cc439d72d01d2767287b1cc01b.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #4&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0e5cb7cc439d72d01d2767287b1cc01b.setIcon(div_icon_18701cb4556f3442b2ec0adc7bb1966f);
+            
+    
+            var marker_b923c0f8c5980fc7bb19040c0e99f11e = L.marker(
+                [52.08059594438876, 5.116876872787411],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_7d81a74bc27c75fe59c2be996a900950 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_b923c0f8c5980fc7bb19040c0e99f11e.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #5&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_b923c0f8c5980fc7bb19040c0e99f11e.setIcon(div_icon_7d81a74bc27c75fe59c2be996a900950);
+            
+    
+            var marker_1743285e52bc3ae7a86d324d46d8cf2a = L.marker(
+                [52.09010710576207, 5.108745518992144],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_777191b473363a66193038feac9882de = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_1743285e52bc3ae7a86d324d46d8cf2a.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #6&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_1743285e52bc3ae7a86d324d46d8cf2a.setIcon(div_icon_777191b473363a66193038feac9882de);
+            
+    
+            var marker_0090f7207fbbec802d23e41e2b7fe049 = L.marker(
+                [52.08397675301374, 5.1010614387873545],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_11f69b8f17e8ab6a76c7cd2cf5de4da9 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0090f7207fbbec802d23e41e2b7fe049.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #7&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0090f7207fbbec802d23e41e2b7fe049.setIcon(div_icon_11f69b8f17e8ab6a76c7cd2cf5de4da9);
+            
+    
+            var marker_e61d3be808c4131c00cc175c330dc34f = L.marker(
+                [52.090898829612065, 5.125995377511181],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_c25d09259a919c92da88c0864ac9d1d2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_e61d3be808c4131c00cc175c330dc34f.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #8&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_e61d3be808c4131c00cc175c330dc34f.setIcon(div_icon_c25d09259a919c92da88c0864ac9d1d2);
+            
+    
+            var marker_c2fd73c908667131c90d624508c2c9ee = L.marker(
+                [52.09178531367752, 5.108817624881628],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_fb8f2bd420ac170e48ba66abf275f66c = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_c2fd73c908667131c90d624508c2c9ee.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #9&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_c2fd73c908667131c90d624508c2c9ee.setIcon(div_icon_fb8f2bd420ac170e48ba66abf275f66c);
+            
+    
+            var marker_8d9d4c182ad68c1090c6302a6a5093d4 = L.marker(
+                [52.080129975193564, 5.132377218267113],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_3036ea57eb5208affba72bb09955c2b5 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_8d9d4c182ad68c1090c6302a6a5093d4.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #10&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_8d9d4c182ad68c1090c6302a6a5093d4.setIcon(div_icon_3036ea57eb5208affba72bb09955c2b5);
+            
+    
+            var marker_4547612587ea019e18435f21fe17e07f = L.marker(
+                [52.09396278789977, 5.132232770073313],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_183ca33293f2affd59a1d280c3db8ccc = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_4547612587ea019e18435f21fe17e07f.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #11&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_4547612587ea019e18435f21fe17e07f.setIcon(div_icon_183ca33293f2affd59a1d280c3db8ccc);
+            
+    
+            var marker_28939ea4efd5d30bb3e0e0f478accb2c = L.marker(
+                [52.08310958999624, 5.11361002066072],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_4fc9fba09ac57ac4dad4f52aa460e0e0 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_28939ea4efd5d30bb3e0e0f478accb2c.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #12&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_28939ea4efd5d30bb3e0e0f478accb2c.setIcon(div_icon_4fc9fba09ac57ac4dad4f52aa460e0e0);
+            
+    
+            var marker_378a9d84c7c0c4d6e947ee4648558f22 = L.marker(
+                [52.08673189090226, 5.1382885228882715],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_219708923d066655ffb6764d55d5745d = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_378a9d84c7c0c4d6e947ee4648558f22.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #13&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_378a9d84c7c0c4d6e947ee4648558f22.setIcon(div_icon_219708923d066655ffb6764d55d5745d);
+            
+    
+            var marker_d5947315314389cee25a3a6291d2b661 = L.marker(
+                [52.08193432753667, 5.103709833735206],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_a8b1d22c7bd8ecd3f50a19399a3a0b65 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_d5947315314389cee25a3a6291d2b661.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #14&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_d5947315314389cee25a3a6291d2b661.setIcon(div_icon_a8b1d22c7bd8ecd3f50a19399a3a0b65);
+            
+    
+            var marker_ac74a00968a19bae3000eb7c700943cf = L.marker(
+                [52.09207452062734, 5.133899774653899],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_013eb4195ae596e0a24ce0a3d79c680c = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_ac74a00968a19bae3000eb7c700943cf.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #15&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_ac74a00968a19bae3000eb7c700943cf.setIcon(div_icon_013eb4195ae596e0a24ce0a3d79c680c);
+            
+    
+            var marker_3c1581642390e1c2377a08025daed2f9 = L.marker(
+                [52.09459463573388, 5.132285130930975],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_4b388b2e53812abd42e94474c3440f45 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_3c1581642390e1c2377a08025daed2f9.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #16&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_3c1581642390e1c2377a08025daed2f9.setIcon(div_icon_4b388b2e53812abd42e94474c3440f45);
+            
+    
+            var marker_bb1d6ded85fefa347effccfe7602aeaf = L.marker(
+                [52.09946231527959, 5.121449123658188],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_62eb3b1b79b1fcd326d8e3a4cc7a6c26 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_bb1d6ded85fefa347effccfe7602aeaf.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #17&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_bb1d6ded85fefa347effccfe7602aeaf.setIcon(div_icon_62eb3b1b79b1fcd326d8e3a4cc7a6c26);
+            
+    
+            var marker_fd600495747dabb4cb5983edbc96fa3c = L.marker(
+                [52.091040812625465, 5.115141375088334],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_bd2c7e55d540a311db19be6c036e0fda = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_fd600495747dabb4cb5983edbc96fa3c.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #18&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_fd600495747dabb4cb5983edbc96fa3c.setIcon(div_icon_bd2c7e55d540a311db19be6c036e0fda);
+            
+    
+            var marker_6987ecae34193951f510495f0840dd94 = L.marker(
+                [52.09237039504729, 5.13317618657012],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_3ebea26ed971ba8e1d3e1cc6825296ad = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_6987ecae34193951f510495f0840dd94.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #19&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_6987ecae34193951f510495f0840dd94.setIcon(div_icon_3ebea26ed971ba8e1d3e1cc6825296ad);
+            
+    
+            var marker_6ae06e5e8d05d59d6315743f3693c611 = L.marker(
+                [52.09154704290514, 5.134468276012432],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_8806b24bafe95d17843012d121d8a8f8 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_6ae06e5e8d05d59d6315743f3693c611.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #20&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_6ae06e5e8d05d59d6315743f3693c611.setIcon(div_icon_8806b24bafe95d17843012d121d8a8f8);
+            
+    
+            var marker_4c4c1c1aded33e7454e0b7f323f27226 = L.marker(
+                [52.080916487673115, 5.128182873448597],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_1748e4486cb19cc7e02a1e9cd03cf290 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_4c4c1c1aded33e7454e0b7f323f27226.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #21&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_4c4c1c1aded33e7454e0b7f323f27226.setIcon(div_icon_1748e4486cb19cc7e02a1e9cd03cf290);
+            
+    
+            var marker_f6cf13734197ad05ea040fcdc57226d3 = L.marker(
+                [52.085787759272044, 5.109115931026062],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_69a5ce5eb42d6ddd2d857c8dbeb9f7dc = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_f6cf13734197ad05ea040fcdc57226d3.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #22&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_f6cf13734197ad05ea040fcdc57226d3.setIcon(div_icon_69a5ce5eb42d6ddd2d857c8dbeb9f7dc);
+            
+    
+            var marker_8d10680e8400d9309213bf9c728f3711 = L.marker(
+                [52.084655817727224, 5.103191679076946],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_b9cc2e457b40763b872ec83f63e42439 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_8d10680e8400d9309213bf9c728f3711.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #23&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_8d10680e8400d9309213bf9c728f3711.setIcon(div_icon_b9cc2e457b40763b872ec83f63e42439);
+            
+    
+            var marker_17a256d37bd00f746246f803b64ec5d9 = L.marker(
+                [52.08555947206221, 5.104040057176389],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_1ba0fa459cb4aef340ff2dd55d381dc8 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_17a256d37bd00f746246f803b64ec5d9.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #24&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_17a256d37bd00f746246f803b64ec5d9.setIcon(div_icon_1ba0fa459cb4aef340ff2dd55d381dc8);
+            
+    
+            var marker_678c8e3dfec1c0a0080c0c0ae0f215ff = L.marker(
+                [52.08729664357941, 5.125427377770576],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_ddcad10cd3812bac1ae4e1c5fd5520e1 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_678c8e3dfec1c0a0080c0c0ae0f215ff.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #25&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_678c8e3dfec1c0a0080c0c0ae0f215ff.setIcon(div_icon_ddcad10cd3812bac1ae4e1c5fd5520e1);
+            
+    
+            var marker_ec9ae8c9ed60eb467f30f313b237d0c1 = L.marker(
+                [52.08419014061543, 5.1148072386846755],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_1ca4f66a6b9547383961f5d83cea65fa = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_ec9ae8c9ed60eb467f30f313b237d0c1.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #26&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_ec9ae8c9ed60eb467f30f313b237d0c1.setIcon(div_icon_1ca4f66a6b9547383961f5d83cea65fa);
+            
+    
+            var marker_3e9de9b1402acdba987e0890cc9957e0 = L.marker(
+                [52.098733091754255, 5.110679112881964],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_40d22658320c3c887f2d683a77ff53f3 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_3e9de9b1402acdba987e0890cc9957e0.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #27&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_3e9de9b1402acdba987e0890cc9957e0.setIcon(div_icon_40d22658320c3c887f2d683a77ff53f3);
+            
+    
+            var marker_a31f34cb0498a83b37c377c704e3e80d = L.marker(
+                [52.09218262011334, 5.125921415409864],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_b8c2cf3fce7d59a08da1a09c28ec26fc = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_a31f34cb0498a83b37c377c704e3e80d.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #28&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_a31f34cb0498a83b37c377c704e3e80d.setIcon(div_icon_b8c2cf3fce7d59a08da1a09c28ec26fc);
+            
+    
+            var marker_a843383a445b4509495f6f6f4cf03bc7 = L.marker(
+                [52.09458253595901, 5.106845545927924],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_23725c1c66a3f2b50de766a6c8988a9f = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_a843383a445b4509495f6f6f4cf03bc7.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #29&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_a843383a445b4509495f6f6f4cf03bc7.setIcon(div_icon_23725c1c66a3f2b50de766a6c8988a9f);
+            
+    
+            var marker_a64c346f640fd1f2cae26f4f464cd734 = L.marker(
+                [52.087589108835154, 5.106536099750477],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_29ee21f7c72ef8359872b8e7771f0477 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_a64c346f640fd1f2cae26f4f464cd734.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #30&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_a64c346f640fd1f2cae26f4f464cd734.setIcon(div_icon_29ee21f7c72ef8359872b8e7771f0477);
+            
+    
+            var marker_96110fa63c80eba6b3d0ce977ece1e9d = L.marker(
+                [52.09279999519708, 5.139580934025464],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_8aec02feb220f1fcc90e0019d92962e6 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_96110fa63c80eba6b3d0ce977ece1e9d.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #31&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_96110fa63c80eba6b3d0ce977ece1e9d.setIcon(div_icon_8aec02feb220f1fcc90e0019d92962e6);
+            
+    
+            var marker_ce0f6c851290e269c22a392efe134691 = L.marker(
+                [52.0936922850198, 5.122277989750986],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_a163209df63dd6a54b35ab5274fa8a9a = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_ce0f6c851290e269c22a392efe134691.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #32&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_ce0f6c851290e269c22a392efe134691.setIcon(div_icon_a163209df63dd6a54b35ab5274fa8a9a);
+            
+    
+            var marker_89812cea90b95cac66d23407966c159c = L.marker(
+                [52.09551999823093, 5.133714076807593],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_7a516d322e2955b7948129ad76166dd6 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_89812cea90b95cac66d23407966c159c.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #33&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_89812cea90b95cac66d23407966c159c.setIcon(div_icon_7a516d322e2955b7948129ad76166dd6);
+            
+    
+            var marker_82f87b6510a853e117f17bd54ef42819 = L.marker(
+                [52.08064200487809, 5.109161922878564],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_d0fbb75f493f5637d4f22c464ffcc0ea = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_82f87b6510a853e117f17bd54ef42819.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #34&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_82f87b6510a853e117f17bd54ef42819.setIcon(div_icon_d0fbb75f493f5637d4f22c464ffcc0ea);
+            
+    
+            var marker_c28ef9a6da13552fbc12f29e9720eab9 = L.marker(
+                [52.085354817519516, 5.112618121922363],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_a49f0dc94fd3cc9f995f232333095ce7 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_c28ef9a6da13552fbc12f29e9720eab9.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #35&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_c28ef9a6da13552fbc12f29e9720eab9.setIcon(div_icon_a49f0dc94fd3cc9f995f232333095ce7);
+            
+    
+            var marker_5cb52235bf1292e9bc16217294afa835 = L.marker(
+                [52.098858194286706, 5.108439313743453],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_36386c00ba392798c0557128f598f14d = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_5cb52235bf1292e9bc16217294afa835.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #36&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_5cb52235bf1292e9bc16217294afa835.setIcon(div_icon_36386c00ba392798c0557128f598f14d);
+            
+    
+            var marker_c1fcc25f184a848bb07b9eb8d2548bf9 = L.marker(
+                [52.086293557615974, 5.135054705058907],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_e8df109a7c8fb7aa17c872094994968a = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_c1fcc25f184a848bb07b9eb8d2548bf9.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #37&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_c1fcc25f184a848bb07b9eb8d2548bf9.setIcon(div_icon_e8df109a7c8fb7aa17c872094994968a);
+            
+    
+            var marker_cea207b8fbed9fcee71709481798a3a4 = L.marker(
+                [52.087912638021216, 5.126217546611795],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_62ed8a5ae0943e212c68f790038503e2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_cea207b8fbed9fcee71709481798a3a4.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #38&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_cea207b8fbed9fcee71709481798a3a4.setIcon(div_icon_62ed8a5ae0943e212c68f790038503e2);
+            
+    
+            var marker_987e4a280f9e645dbf3c15e887ee3e2f = L.marker(
+                [52.089177037051755, 5.136581903589621],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_245c4b873a4f96f6b6258fadfc5df44d = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_987e4a280f9e645dbf3c15e887ee3e2f.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #39&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_987e4a280f9e645dbf3c15e887ee3e2f.setIcon(div_icon_245c4b873a4f96f6b6258fadfc5df44d);
+            
+    
+            var marker_cefe4da7a5951c12b709cacad44d835e = L.marker(
+                [52.08493255015388, 5.110595206659922],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_fb1ae02a0f84d11d13d1731a3b0c5845 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_cefe4da7a5951c12b709cacad44d835e.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #40&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_cefe4da7a5951c12b709cacad44d835e.setIcon(div_icon_fb1ae02a0f84d11d13d1731a3b0c5845);
+            
+    
+            var marker_0531d1c356fae3cfafe09a3d1c5ee02d = L.marker(
+                [52.08525483217046, 5.122454725366526],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_4599cd6f0479a9834f3ee25048ae3c64 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0531d1c356fae3cfafe09a3d1c5ee02d.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #41&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0531d1c356fae3cfafe09a3d1c5ee02d.setIcon(div_icon_4599cd6f0479a9834f3ee25048ae3c64);
+            
+    
+            var marker_a93561b8c5662b7678a71dd43ba0ad5d = L.marker(
+                [52.097956457672055, 5.123383439608942],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_ad25505ae164b85f6ef9718fca28baa4 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_a93561b8c5662b7678a71dd43ba0ad5d.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #42&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_a93561b8c5662b7678a71dd43ba0ad5d.setIcon(div_icon_ad25505ae164b85f6ef9718fca28baa4);
+            
+    
+            var marker_8635850038b11e7add8af2244e17a710 = L.marker(
+                [52.08438641518315, 5.115976020205616],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_8207f2494db3c2bacfd29aa4d6e622df = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_8635850038b11e7add8af2244e17a710.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #43&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_8635850038b11e7add8af2244e17a710.setIcon(div_icon_8207f2494db3c2bacfd29aa4d6e622df);
+            
+    
+            var marker_b923e3ebfaed0889f69bb149e35559a5 = L.marker(
+                [52.09019052587353, 5.139901504259805],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_aeb949ca499d444325bad9749fdb2cb5 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_b923e3ebfaed0889f69bb149e35559a5.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #44&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_b923e3ebfaed0889f69bb149e35559a5.setIcon(div_icon_aeb949ca499d444325bad9749fdb2cb5);
+            
+    
+            var marker_285fe9504557c22bcc9090936ad9923f = L.marker(
+                [52.080942327508495, 5.103636376486952],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_9b1d70d85a6aec55c35d005dc932ab6e = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_285fe9504557c22bcc9090936ad9923f.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #45&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_285fe9504557c22bcc9090936ad9923f.setIcon(div_icon_9b1d70d85a6aec55c35d005dc932ab6e);
+            
+    
+            var marker_a9dc31dbc90c3c06e9d31c64a561b09c = L.marker(
+                [52.09254892083406, 5.104385965214027],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_8bf4c3cbfc625c6505b6c3b04eca1749 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_a9dc31dbc90c3c06e9d31c64a561b09c.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #46&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_a9dc31dbc90c3c06e9d31c64a561b09c.setIcon(div_icon_8bf4c3cbfc625c6505b6c3b04eca1749);
+            
+    
+            var marker_0d11ebdacec0cc2b9bb9419a207dfa05 = L.marker(
+                [52.088443199336, 5.131683174574519],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_9f05135b1ac94092225bd1eb8e9cbd38 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0d11ebdacec0cc2b9bb9419a207dfa05.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #47&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0d11ebdacec0cc2b9bb9419a207dfa05.setIcon(div_icon_9f05135b1ac94092225bd1eb8e9cbd38);
+            
+    
+            var marker_4b8bebe29bd9620e53aff88513f0b7a8 = L.marker(
+                [52.08763238573013, 5.102541108246078],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_c1b99af7566c5c498f7d7c52f9a9f5cb = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_4b8bebe29bd9620e53aff88513f0b7a8.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #48&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_4b8bebe29bd9620e53aff88513f0b7a8.setIcon(div_icon_c1b99af7566c5c498f7d7c52f9a9f5cb);
+            
+    
+            var marker_0965d42b2a711af682ed041550483a1e = L.marker(
+                [52.090582286901984, 5.139844855209604],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_6dcc2a27184ebf7a86cd85badd86f002 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0965d42b2a711af682ed041550483a1e.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #49&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0965d42b2a711af682ed041550483a1e.setIcon(div_icon_6dcc2a27184ebf7a86cd85badd86f002);
+            
+    
+            var marker_2ccc0b8bc4c54ab15de87ef1f6533e86 = L.marker(
+                [52.09721559404469, 5.138843135104545],
+                {
+}
+            ).addTo(marker_cluster_558e61f8b5481012135d2802f9dd2ff6);
+        
+    
+            var div_icon_dbbe0d52e43aa7a9487d70294d227d5c = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_2ccc0b8bc4c54ab15de87ef1f6533e86.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #50&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_2ccc0b8bc4c54ab15de87ef1f6533e86.setIcon(div_icon_dbbe0d52e43aa7a9487d70294d227d5c);
+            
+    
+            marker_cluster_558e61f8b5481012135d2802f9dd2ff6.addTo(map_1019724e8c872d5e994e567afbed3651);
+        
+    
+            map_1019724e8c872d5e994e567afbed3651.fitBounds(
+                [[52.08050021510446, 5.125577071938316], [52.08050021510446, 5.125577071938316], [52.08446421476298, 5.111001172734765], [52.08446421476298, 5.111001172734765], [52.09353398974846, 5.129458848566561], [52.09353398974846, 5.129458848566561], [52.08173877665259, 5.135687182708194], [52.08173877665259, 5.135687182708194], [52.08059594438876, 5.116876872787411], [52.08059594438876, 5.116876872787411], [52.09010710576207, 5.108745518992144], [52.09010710576207, 5.108745518992144], [52.08397675301374, 5.1010614387873545], [52.08397675301374, 5.1010614387873545], [52.090898829612065, 5.125995377511181], [52.090898829612065, 5.125995377511181], [52.09178531367752, 5.108817624881628], [52.09178531367752, 5.108817624881628], [52.080129975193564, 5.132377218267113], [52.080129975193564, 5.132377218267113], [52.09396278789977, 5.132232770073313], [52.09396278789977, 5.132232770073313], [52.08310958999624, 5.11361002066072], [52.08310958999624, 5.11361002066072], [52.08673189090226, 5.1382885228882715], [52.08673189090226, 5.1382885228882715], [52.08193432753667, 5.103709833735206], [52.08193432753667, 5.103709833735206], [52.09207452062734, 5.133899774653899], [52.09207452062734, 5.133899774653899], [52.09459463573388, 5.132285130930975], [52.09459463573388, 5.132285130930975], [52.09946231527959, 5.121449123658188], [52.09946231527959, 5.121449123658188], [52.091040812625465, 5.115141375088334], [52.091040812625465, 5.115141375088334], [52.09237039504729, 5.13317618657012], [52.09237039504729, 5.13317618657012], [52.09154704290514, 5.134468276012432], [52.09154704290514, 5.134468276012432], [52.080916487673115, 5.128182873448597], [52.080916487673115, 5.128182873448597], [52.085787759272044, 5.109115931026062], [52.085787759272044, 5.109115931026062], [52.084655817727224, 5.103191679076946], [52.084655817727224, 5.103191679076946], [52.08555947206221, 5.104040057176389], [52.08555947206221, 5.104040057176389], [52.08729664357941, 5.125427377770576], [52.08729664357941, 5.125427377770576], [52.08419014061543, 5.1148072386846755], [52.08419014061543, 5.1148072386846755], [52.098733091754255, 5.110679112881964], [52.098733091754255, 5.110679112881964], [52.09218262011334, 5.125921415409864], [52.09218262011334, 5.125921415409864], [52.09458253595901, 5.106845545927924], [52.09458253595901, 5.106845545927924], [52.087589108835154, 5.106536099750477], [52.087589108835154, 5.106536099750477], [52.09279999519708, 5.139580934025464], [52.09279999519708, 5.139580934025464], [52.0936922850198, 5.122277989750986], [52.0936922850198, 5.122277989750986], [52.09551999823093, 5.133714076807593], [52.09551999823093, 5.133714076807593], [52.08064200487809, 5.109161922878564], [52.08064200487809, 5.109161922878564], [52.085354817519516, 5.112618121922363], [52.085354817519516, 5.112618121922363], [52.098858194286706, 5.108439313743453], [52.098858194286706, 5.108439313743453], [52.086293557615974, 5.135054705058907], [52.086293557615974, 5.135054705058907], [52.087912638021216, 5.126217546611795], [52.087912638021216, 5.126217546611795], [52.089177037051755, 5.136581903589621], [52.089177037051755, 5.136581903589621], [52.08493255015388, 5.110595206659922], [52.08493255015388, 5.110595206659922], [52.08525483217046, 5.122454725366526], [52.08525483217046, 5.122454725366526], [52.097956457672055, 5.123383439608942], [52.097956457672055, 5.123383439608942], [52.08438641518315, 5.115976020205616], [52.08438641518315, 5.115976020205616], [52.09019052587353, 5.139901504259805], [52.09019052587353, 5.139901504259805], [52.080942327508495, 5.103636376486952], [52.080942327508495, 5.103636376486952], [52.09254892083406, 5.104385965214027], [52.09254892083406, 5.104385965214027], [52.088443199336, 5.131683174574519], [52.088443199336, 5.131683174574519], [52.08763238573013, 5.102541108246078], [52.08763238573013, 5.102541108246078], [52.090582286901984, 5.139844855209604], [52.090582286901984, 5.139844855209604], [52.09721559404469, 5.138843135104545], [52.09721559404469, 5.138843135104545]],
+                {}
+            );
+        
+    
+            tile_layer_9f79a81d03dff51664af04dcc88b9c9c.addTo(map_1019724e8c872d5e994e567afbed3651);
+        
+    
+                marker_9fd6e2b05df48ba631a03bc51e1611ab.setIcon(div_icon_cd5e0ed158e188c5236e5701bc11a0b2);
+            
+    
+                marker_70c53d77e09570fea05f6423ea4ff0df.setIcon(div_icon_ec45c0e3377ea0baee4a7b1b13b74a1f);
+            
+    
+                marker_7d26f87af4c90b6971f4f85502317091.setIcon(div_icon_020a0204e040e3be8d26f496f1625f45);
+            
+    
+                marker_0e5cb7cc439d72d01d2767287b1cc01b.setIcon(div_icon_18701cb4556f3442b2ec0adc7bb1966f);
+            
+    
+                marker_b923c0f8c5980fc7bb19040c0e99f11e.setIcon(div_icon_7d81a74bc27c75fe59c2be996a900950);
+            
+    
+                marker_1743285e52bc3ae7a86d324d46d8cf2a.setIcon(div_icon_777191b473363a66193038feac9882de);
+            
+    
+                marker_0090f7207fbbec802d23e41e2b7fe049.setIcon(div_icon_11f69b8f17e8ab6a76c7cd2cf5de4da9);
+            
+    
+                marker_e61d3be808c4131c00cc175c330dc34f.setIcon(div_icon_c25d09259a919c92da88c0864ac9d1d2);
+            
+    
+                marker_c2fd73c908667131c90d624508c2c9ee.setIcon(div_icon_fb8f2bd420ac170e48ba66abf275f66c);
+            
+    
+                marker_8d9d4c182ad68c1090c6302a6a5093d4.setIcon(div_icon_3036ea57eb5208affba72bb09955c2b5);
+            
+    
+                marker_4547612587ea019e18435f21fe17e07f.setIcon(div_icon_183ca33293f2affd59a1d280c3db8ccc);
+            
+    
+                marker_28939ea4efd5d30bb3e0e0f478accb2c.setIcon(div_icon_4fc9fba09ac57ac4dad4f52aa460e0e0);
+            
+    
+                marker_378a9d84c7c0c4d6e947ee4648558f22.setIcon(div_icon_219708923d066655ffb6764d55d5745d);
+            
+    
+                marker_d5947315314389cee25a3a6291d2b661.setIcon(div_icon_a8b1d22c7bd8ecd3f50a19399a3a0b65);
+            
+    
+                marker_ac74a00968a19bae3000eb7c700943cf.setIcon(div_icon_013eb4195ae596e0a24ce0a3d79c680c);
+            
+    
+                marker_3c1581642390e1c2377a08025daed2f9.setIcon(div_icon_4b388b2e53812abd42e94474c3440f45);
+            
+    
+                marker_bb1d6ded85fefa347effccfe7602aeaf.setIcon(div_icon_62eb3b1b79b1fcd326d8e3a4cc7a6c26);
+            
+    
+                marker_fd600495747dabb4cb5983edbc96fa3c.setIcon(div_icon_bd2c7e55d540a311db19be6c036e0fda);
+            
+    
+                marker_6987ecae34193951f510495f0840dd94.setIcon(div_icon_3ebea26ed971ba8e1d3e1cc6825296ad);
+            
+    
+                marker_6ae06e5e8d05d59d6315743f3693c611.setIcon(div_icon_8806b24bafe95d17843012d121d8a8f8);
+            
+    
+                marker_4c4c1c1aded33e7454e0b7f323f27226.setIcon(div_icon_1748e4486cb19cc7e02a1e9cd03cf290);
+            
+    
+                marker_f6cf13734197ad05ea040fcdc57226d3.setIcon(div_icon_69a5ce5eb42d6ddd2d857c8dbeb9f7dc);
+            
+    
+                marker_8d10680e8400d9309213bf9c728f3711.setIcon(div_icon_b9cc2e457b40763b872ec83f63e42439);
+            
+    
+                marker_17a256d37bd00f746246f803b64ec5d9.setIcon(div_icon_1ba0fa459cb4aef340ff2dd55d381dc8);
+            
+    
+                marker_678c8e3dfec1c0a0080c0c0ae0f215ff.setIcon(div_icon_ddcad10cd3812bac1ae4e1c5fd5520e1);
+            
+    
+                marker_ec9ae8c9ed60eb467f30f313b237d0c1.setIcon(div_icon_1ca4f66a6b9547383961f5d83cea65fa);
+            
+    
+                marker_3e9de9b1402acdba987e0890cc9957e0.setIcon(div_icon_40d22658320c3c887f2d683a77ff53f3);
+            
+    
+                marker_a31f34cb0498a83b37c377c704e3e80d.setIcon(div_icon_b8c2cf3fce7d59a08da1a09c28ec26fc);
+            
+    
+                marker_a843383a445b4509495f6f6f4cf03bc7.setIcon(div_icon_23725c1c66a3f2b50de766a6c8988a9f);
+            
+    
+                marker_a64c346f640fd1f2cae26f4f464cd734.setIcon(div_icon_29ee21f7c72ef8359872b8e7771f0477);
+            
+    
+                marker_96110fa63c80eba6b3d0ce977ece1e9d.setIcon(div_icon_8aec02feb220f1fcc90e0019d92962e6);
+            
+    
+                marker_ce0f6c851290e269c22a392efe134691.setIcon(div_icon_a163209df63dd6a54b35ab5274fa8a9a);
+            
+    
+                marker_89812cea90b95cac66d23407966c159c.setIcon(div_icon_7a516d322e2955b7948129ad76166dd6);
+            
+    
+                marker_82f87b6510a853e117f17bd54ef42819.setIcon(div_icon_d0fbb75f493f5637d4f22c464ffcc0ea);
+            
+    
+                marker_c28ef9a6da13552fbc12f29e9720eab9.setIcon(div_icon_a49f0dc94fd3cc9f995f232333095ce7);
+            
+    
+                marker_5cb52235bf1292e9bc16217294afa835.setIcon(div_icon_36386c00ba392798c0557128f598f14d);
+            
+    
+                marker_c1fcc25f184a848bb07b9eb8d2548bf9.setIcon(div_icon_e8df109a7c8fb7aa17c872094994968a);
+            
+    
+                marker_cea207b8fbed9fcee71709481798a3a4.setIcon(div_icon_62ed8a5ae0943e212c68f790038503e2);
+            
+    
+                marker_987e4a280f9e645dbf3c15e887ee3e2f.setIcon(div_icon_245c4b873a4f96f6b6258fadfc5df44d);
+            
+    
+                marker_cefe4da7a5951c12b709cacad44d835e.setIcon(div_icon_fb1ae02a0f84d11d13d1731a3b0c5845);
+            
+    
+                marker_0531d1c356fae3cfafe09a3d1c5ee02d.setIcon(div_icon_4599cd6f0479a9834f3ee25048ae3c64);
+            
+    
+                marker_a93561b8c5662b7678a71dd43ba0ad5d.setIcon(div_icon_ad25505ae164b85f6ef9718fca28baa4);
+            
+    
+                marker_8635850038b11e7add8af2244e17a710.setIcon(div_icon_8207f2494db3c2bacfd29aa4d6e622df);
+            
+    
+                marker_b923e3ebfaed0889f69bb149e35559a5.setIcon(div_icon_aeb949ca499d444325bad9749fdb2cb5);
+            
+    
+                marker_285fe9504557c22bcc9090936ad9923f.setIcon(div_icon_9b1d70d85a6aec55c35d005dc932ab6e);
+            
+    
+                marker_a9dc31dbc90c3c06e9d31c64a561b09c.setIcon(div_icon_8bf4c3cbfc625c6505b6c3b04eca1749);
+            
+    
+                marker_0d11ebdacec0cc2b9bb9419a207dfa05.setIcon(div_icon_9f05135b1ac94092225bd1eb8e9cbd38);
+            
+    
+                marker_4b8bebe29bd9620e53aff88513f0b7a8.setIcon(div_icon_c1b99af7566c5c498f7d7c52f9a9f5cb);
+            
+    
+                marker_0965d42b2a711af682ed041550483a1e.setIcon(div_icon_6dcc2a27184ebf7a86cd85badd86f002);
+            
+    
+                marker_2ccc0b8bc4c54ab15de87ef1f6533e86.setIcon(div_icon_dbbe0d52e43aa7a9487d70294d227d5c);
+            
+    
+            marker_cluster_558e61f8b5481012135d2802f9dd2ff6.addTo(map_1019724e8c872d5e994e567afbed3651);
+        
+    
+            map_1019724e8c872d5e994e567afbed3651.fitBounds(
+                [[52.08050021510446, 5.125577071938316], [52.08050021510446, 5.125577071938316], [52.08446421476298, 5.111001172734765], [52.08446421476298, 5.111001172734765], [52.09353398974846, 5.129458848566561], [52.09353398974846, 5.129458848566561], [52.08173877665259, 5.135687182708194], [52.08173877665259, 5.135687182708194], [52.08059594438876, 5.116876872787411], [52.08059594438876, 5.116876872787411], [52.09010710576207, 5.108745518992144], [52.09010710576207, 5.108745518992144], [52.08397675301374, 5.1010614387873545], [52.08397675301374, 5.1010614387873545], [52.090898829612065, 5.125995377511181], [52.090898829612065, 5.125995377511181], [52.09178531367752, 5.108817624881628], [52.09178531367752, 5.108817624881628], [52.080129975193564, 5.132377218267113], [52.080129975193564, 5.132377218267113], [52.09396278789977, 5.132232770073313], [52.09396278789977, 5.132232770073313], [52.08310958999624, 5.11361002066072], [52.08310958999624, 5.11361002066072], [52.08673189090226, 5.1382885228882715], [52.08673189090226, 5.1382885228882715], [52.08193432753667, 5.103709833735206], [52.08193432753667, 5.103709833735206], [52.09207452062734, 5.133899774653899], [52.09207452062734, 5.133899774653899], [52.09459463573388, 5.132285130930975], [52.09459463573388, 5.132285130930975], [52.09946231527959, 5.121449123658188], [52.09946231527959, 5.121449123658188], [52.091040812625465, 5.115141375088334], [52.091040812625465, 5.115141375088334], [52.09237039504729, 5.13317618657012], [52.09237039504729, 5.13317618657012], [52.09154704290514, 5.134468276012432], [52.09154704290514, 5.134468276012432], [52.080916487673115, 5.128182873448597], [52.080916487673115, 5.128182873448597], [52.085787759272044, 5.109115931026062], [52.085787759272044, 5.109115931026062], [52.084655817727224, 5.103191679076946], [52.084655817727224, 5.103191679076946], [52.08555947206221, 5.104040057176389], [52.08555947206221, 5.104040057176389], [52.08729664357941, 5.125427377770576], [52.08729664357941, 5.125427377770576], [52.08419014061543, 5.1148072386846755], [52.08419014061543, 5.1148072386846755], [52.098733091754255, 5.110679112881964], [52.098733091754255, 5.110679112881964], [52.09218262011334, 5.125921415409864], [52.09218262011334, 5.125921415409864], [52.09458253595901, 5.106845545927924], [52.09458253595901, 5.106845545927924], [52.087589108835154, 5.106536099750477], [52.087589108835154, 5.106536099750477], [52.09279999519708, 5.139580934025464], [52.09279999519708, 5.139580934025464], [52.0936922850198, 5.122277989750986], [52.0936922850198, 5.122277989750986], [52.09551999823093, 5.133714076807593], [52.09551999823093, 5.133714076807593], [52.08064200487809, 5.109161922878564], [52.08064200487809, 5.109161922878564], [52.085354817519516, 5.112618121922363], [52.085354817519516, 5.112618121922363], [52.098858194286706, 5.108439313743453], [52.098858194286706, 5.108439313743453], [52.086293557615974, 5.135054705058907], [52.086293557615974, 5.135054705058907], [52.087912638021216, 5.126217546611795], [52.087912638021216, 5.126217546611795], [52.089177037051755, 5.136581903589621], [52.089177037051755, 5.136581903589621], [52.08493255015388, 5.110595206659922], [52.08493255015388, 5.110595206659922], [52.08525483217046, 5.122454725366526], [52.08525483217046, 5.122454725366526], [52.097956457672055, 5.123383439608942], [52.097956457672055, 5.123383439608942], [52.08438641518315, 5.115976020205616], [52.08438641518315, 5.115976020205616], [52.09019052587353, 5.139901504259805], [52.09019052587353, 5.139901504259805], [52.080942327508495, 5.103636376486952], [52.080942327508495, 5.103636376486952], [52.09254892083406, 5.104385965214027], [52.09254892083406, 5.104385965214027], [52.088443199336, 5.131683174574519], [52.088443199336, 5.131683174574519], [52.08763238573013, 5.102541108246078], [52.08763238573013, 5.102541108246078], [52.090582286901984, 5.139844855209604], [52.090582286901984, 5.139844855209604], [52.09721559404469, 5.138843135104545], [52.09721559404469, 5.138843135104545]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">cafes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.12</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">),</span> <span class="mf">52.09</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;☕&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">50</span>
+<span class="n">tooltips</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;**Café #</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">**&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)]</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Utrecht Cafés&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_marker_cluster</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">cafes</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">tooltips</span><span class="o">=</span><span class="n">tooltips</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cafés&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s2">&quot;clusters.html&quot;</span><span class="p">)</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <p>At low zoom you'll see cluster bubbles with counts. Zoom in and they split into individual ☕ markers.</p>
 <h2 id="parameters">Parameters</h2>
 <table>
@@ -1622,7 +3335,7 @@
 <td>Marker text per point (emoji, text, or FA icon name)</td>
 </tr>
 <tr>
-<td><code>hovers</code></td>
+<td><code>tooltips</code></td>
 <td>Markdown tooltip per point</td>
 </tr>
 <tr>
