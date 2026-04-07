@@ -53,7 +53,7 @@ from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
 from mapyta.markdown import RawHTML, markdown_to_html
 from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker, css_to_style
-from mapyta.style import resolve_style
+from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
 LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
@@ -97,7 +97,7 @@ class Map:
         self._bounds: list[tuple[float, float]] = []
         self._feature_groups: dict[str, folium.FeatureGroup] = {}
         self._active_group: folium.FeatureGroup | folium.Map = self._map
-        self._colormaps: list[cm.LinearColormap] = []
+        self._colormaps: list[cm.LinearColormap | cm.StepColormap] = []
         self._zoom_controlled_markers: list[dict[str, Any]] = []
         self._zoom_js_injected: bool = False
         self._draw_config: DrawConfig | None = None
@@ -633,6 +633,7 @@ class Map:
         style: CircleStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a circle marker (fixed pixel size).
 
@@ -650,6 +651,8 @@ class Map:
             Minimum zoom level at which the marker is visible.
         popup_style : PopupStyle | dict[str, Any] | None
             Popup dimensions.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance.
 
         Returns
         -------
@@ -667,7 +670,7 @@ class Map:
             fill=True,
             fill_color=cs.fill.color,
             fill_opacity=cs.fill.opacity,
-            tooltip=self._make_tooltip(tooltip),
+            tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
             dash_array=cs.stroke.dash_array,
         )
@@ -704,6 +707,7 @@ class Map:
         stroke: StrokeStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a LineString.
 
@@ -721,6 +725,8 @@ class Map:
             Popup dimensions.
         min_zoom : int | None
             Minimum zoom level at which the line is visible.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance.
 
         Returns
         -------
@@ -736,7 +742,7 @@ class Map:
             weight=s.weight,
             opacity=s.opacity,
             dash_array=s.dash_array,
-            tooltip=self._make_tooltip(tooltip),
+            tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
         )
         layer.add_to(self._target())
@@ -765,6 +771,7 @@ class Map:
         fill: FillStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a Polygon.
 
@@ -784,6 +791,8 @@ class Map:
             Popup dimensions.
         min_zoom : int | None
             Minimum zoom level at which the polygon is visible.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance.
 
         Returns
         -------
@@ -804,7 +813,7 @@ class Map:
             fill=True,
             fill_color=f.color,
             fill_opacity=f.opacity,
-            tooltip=self._make_tooltip(tooltip),
+            tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
         )
         layer.add_to(self._target())
@@ -829,12 +838,13 @@ class Map:
     def add_multipolygon(
         self,
         mp: MultiPolygon,
-        hover: str | RawHTML | None = None,
+        tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         stroke: StrokeStyle | dict[str, Any] | None = None,
         fill: FillStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a MultiPolygon.
 
@@ -842,7 +852,7 @@ class Map:
         ----------
         mp : MultiPolygon
             Shapely MultiPolygon.
-        hover, popup, stroke, fill, popup_style
+        tooltip, popup, stroke, fill, popup_style, tooltip_style
             See ``add_polygon``.
         min_zoom : int | None
             Minimum zoom level at which each polygon is visible.
@@ -852,17 +862,20 @@ class Map:
         Map
         """
         for poly in mp.geoms:
-            self.add_polygon(poly, tooltip=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_polygon(
+                poly, tooltip=tooltip, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=tooltip_style
+            )
         return self
 
     def add_multilinestring(
         self,
         ml: MultiLineString,
-        hover: str | RawHTML | None = None,
+        tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         stroke: StrokeStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a MultiLineString.
 
@@ -870,7 +883,7 @@ class Map:
         ----------
         ml : MultiLineString
             Shapely MultiLineString.
-        hover, popup, stroke, popup_style
+        tooltip, popup, stroke, popup_style, tooltip_style
             See ``add_linestring``.
         min_zoom : int | None
             Minimum zoom level at which each line is visible.
@@ -880,18 +893,21 @@ class Map:
         Map
         """
         for line in ml.geoms:
-            self.add_linestring(line, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_linestring(
+                line, tooltip=tooltip, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=tooltip_style
+            )
         return self
 
     def add_multipoint(
         self,
         mp: MultiPoint,
-        hover: str | RawHTML | None = None,
+        tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         label: str | None = None,
         marker_style: dict[str, str] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a MultiPoint.
 
@@ -899,7 +915,7 @@ class Map:
         ----------
         mp : MultiPoint
             Shapely MultiPoint.
-        hover, popup, label, marker_style, popup_style
+        tooltip, popup, label, marker_style, popup_style, tooltip_style
             See ``add_point``.
         min_zoom : int | None
             Minimum zoom level at which each point is visible.
@@ -909,13 +925,22 @@ class Map:
         Map
         """
         for pt in mp.geoms:
-            self.add_point(pt, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_point(
+                pt,
+                tooltip=tooltip,
+                popup=popup,
+                marker=label,
+                marker_style=marker_style,
+                popup_style=popup_style,
+                min_zoom=min_zoom,
+                tooltip_style=tooltip_style,
+            )
         return self
 
     def add_geometry(
         self,
         geom: BaseGeometry,
-        hover: str | RawHTML | None = None,
+        tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         label: str | None = None,
         stroke: StrokeStyle | dict[str, Any] | None = None,
@@ -923,6 +948,7 @@ class Map:
         marker_style: dict[str, str] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add any Shapely geometry (auto-dispatches by type).
 
@@ -930,7 +956,7 @@ class Map:
         ----------
         geom : BaseGeometry
             Any supported Shapely geometry.
-        hover, popup, label, stroke, fill, marker_style, popup_style
+        tooltip, popup, label, stroke, fill, marker_style, popup_style, tooltip_style
             Style and interaction parameters.
         min_zoom : int | None
             Minimum zoom level at which the geometry is visible.
@@ -944,21 +970,31 @@ class Map:
         TypeError
             If geometry type is unsupported.
         """
+        tip = tooltip
+        ts = tooltip_style
         if isinstance(geom, Point):
-            self.add_point(geom, tooltip=hover, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_point(
+                geom, tooltip=tip, popup=popup, marker=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts
+            )
         elif isinstance(geom, LinearRing):
             # LinearRing is a subclass of LineString, check first
-            self.add_linestring(LineString(geom.coords), tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_linestring(
+                LineString(geom.coords), tooltip=tip, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts
+            )
         elif isinstance(geom, LineString):
-            self.add_linestring(geom, tooltip=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_linestring(geom, tooltip=tip, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts)
         elif isinstance(geom, Polygon):
-            self.add_polygon(geom, tooltip=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_polygon(geom, tooltip=tip, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts)
         elif isinstance(geom, MultiPolygon):
-            self.add_multipolygon(geom, hover=hover, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_multipolygon(
+                geom, tooltip=tip, popup=popup, stroke=stroke, fill=fill, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts
+            )
         elif isinstance(geom, MultiLineString):
-            self.add_multilinestring(geom, hover=hover, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_multilinestring(geom, tooltip=tip, popup=popup, stroke=stroke, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts)
         elif isinstance(geom, MultiPoint):
-            self.add_multipoint(geom, hover=hover, popup=popup, label=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom)
+            self.add_multipoint(
+                geom, tooltip=tip, popup=popup, label=label, marker_style=marker_style, popup_style=popup_style, min_zoom=min_zoom, tooltip_style=ts
+            )
         else:
             raise TypeError(f"Unsupported geometry type: {type(geom).__name__}")
         return self
@@ -1075,12 +1111,48 @@ class Map:
     # Choropleth / colormap
     # ------------------------------------------------------------------
 
-    def add_choropleth(  # noqa: C901, PLR0913
+    def _build_colormap(
+        self,
+        colors: list[str] | str | None,
+        vmin: float,
+        vmax: float,
+        caption: str,
+    ) -> cm.LinearColormap:
+        """Build a LinearColormap from a palette name, color list, or the default palette.
+
+        Parameters
+        ----------
+        colors : list[str] | str | None
+            Palette name (e.g. ``"blues"``), list of hex colors, or ``None`` for default.
+        vmin, vmax : float
+            Color scale range.
+        caption : str
+            Legend label.
+
+        Returns
+        -------
+        branca.colormap.LinearColormap
+        """
+        if isinstance(colors, str):
+            palette = PALETTES.get(colors)
+            if palette is None:
+                valid = ", ".join(f'"{k}"' for k in sorted(PALETTES))
+                raise ValueError(f"Unknown palette {colors!r}. Available palettes: {valid}")
+            color_list = palette
+        elif colors is not None:
+            if not colors:
+                raise ValueError("colors list must not be empty")
+            color_list = colors
+        else:
+            color_list = PALETTES["ylrd"]
+        return cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=caption)
+
+    def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
         self,
         geojson_data: dict | str | Path,
         value_column: str,
         key_on: str,
-        values: dict[str, float] | None = None,
+        values: dict[str, float | str] | None = None,
         vmin: float | None = None,
         vmax: float | None = None,
         legend_name: str | None = None,
@@ -1090,6 +1162,8 @@ class Map:
         line_opacity: float = 0.5,
         fill_opacity: float = 0.7,
         hover_fields: list[str] | None = None,
+        colors: list[str] | str | None = None,
+        categorical: bool | None = None,
     ) -> Self:
         """Add a choropleth (color-coded) layer.
 
@@ -1098,15 +1172,15 @@ class Map:
         geojson_data : dict | str | Path
             GeoJSON FeatureCollection.
         value_column : str
-            Property name with numeric values.
+            Property name with numeric or categorical values.
         key_on : str
             Join key, e.g. ``"feature.properties.id"``.
-        values : dict[str, float] | None
+        values : dict[str, float | str] | None
             Key -> value mapping. Reads from properties if ``None``.
         vmin, vmax : float | None
-            Color scale range. Auto-calculated if ``None``.
+            Color scale range for numeric data. Auto-calculated if ``None``.
         legend_name : str | None
-            Legend marker.
+            Legend label.
         nan_fill_color : str
             Color for missing values.
         nan_fill_opacity : float
@@ -1115,6 +1189,14 @@ class Map:
             Styling parameters.
         hover_fields : list[str] | None
             Tooltip property fields.
+        colors : list[str] | str | None
+            Color palette. Pass a palette name (e.g. ``"blues"``, ``"viridis"``) or
+            a list of hex color strings. See ``mapyta.PALETTES`` for available names.
+            Defaults to ``"ylrd"`` (yellow → red).
+        categorical : bool | None
+            Force categorical mode (``True``), numeric mode (``False``), or auto-detect
+            from values (``None``). In categorical mode, each unique value gets a
+            distinct color from the palette.
 
         Returns
         -------
@@ -1135,36 +1217,88 @@ class Map:
                 for part in key_parts[1:]:
                     obj = obj.get(part, {})
                 key = obj if isinstance(obj, str) else str(obj)
-                val = feat.get("properties", {}).get(value_column)
+                raw_val = feat.get("properties", {}).get(value_column)
+                if raw_val is not None:
+                    values[key] = raw_val
+
+        # Determine if categorical
+        raw_vals = list(values.values())
+        is_categorical = categorical if categorical is not None else any(isinstance(v, str) for v in raw_vals)
+
+        caption = legend_name or value_column
+
+        if is_categorical:
+            # Build discrete color mapping per unique category
+            categories = list(dict.fromkeys(str(v) for v in raw_vals))
+            palette_colors: list[str]
+            if isinstance(colors, str):
+                palette_colors = PALETTES.get(colors) or []
+                if not palette_colors:
+                    valid = ", ".join(f'"{k}"' for k in sorted(PALETTES))
+                    raise ValueError(f"Unknown palette {colors!r}. Available palettes: {valid}")
+            elif colors is not None:
+                if not colors:
+                    raise ValueError("colors list must not be empty")
+                palette_colors = colors
+            else:
+                palette_colors = PALETTES["ylrd"]
+            # Cycle colors if more categories than palette entries
+            cat_color_map: dict[str, str] = {cat: palette_colors[i % len(palette_colors)] for i, cat in enumerate(categories)}
+
+            # Use the actual cycled colors per category so the legend matches the map
+            legend_colors = [cat_color_map[cat] for cat in categories] if categories else palette_colors[:1]
+            colormap = cm.StepColormap(
+                colors=legend_colors,
+                vmin=0,
+                vmax=max(len(categories) - 1, 1),
+                caption=caption,
+            )
+
+            _str_vals = {k: str(v) for k, v in values.items()}
+            _cat_map = cat_color_map
+
+            def style_fn(feature: dict) -> dict:
+                obj = feature
+                for part in key_on.split(".")[1:]:
+                    obj = obj.get(part, {})
+                key = obj if isinstance(obj, str) else str(obj)
+                val_str = _str_vals.get(key)
+                fill_color = _cat_map.get(val_str, nan_fill_color) if val_str is not None else nan_fill_color
+                return {"fillColor": fill_color, "color": "#333", "weight": line_weight, "fillOpacity": fill_opacity, "opacity": line_opacity}
+
+        else:
+            # Numeric mode
+            num_vals: list[float] = []
+            for v in raw_vals:
+                if isinstance(v, str):
+                    continue
+                try:
+                    num_vals.append(float(v))
+                except (TypeError, ValueError) as exc:
+                    raise ValueError(f"Non-numeric value {v!r} in choropleth values cannot be converted to float") from exc
+            if num_vals:
+                vmin = vmin if vmin is not None else min(num_vals)
+                vmax = vmax if vmax is not None else max(num_vals)
+
+            colormap = self._build_colormap(
+                colors=colors,
+                vmin=vmin if vmin is not None else 0,
+                vmax=vmax if vmax is not None else 1,
+                caption=caption,
+            )
+
+            _num_vals = {k: float(v) for k, v in values.items() if not isinstance(v, str)}
+            _cmap = colormap
+
+            def style_fn(feature: dict) -> dict:
+                obj = feature
+                for part in key_on.split(".")[1:]:
+                    obj = obj.get(part, {})
+                key = obj if isinstance(obj, str) else str(obj)
+                val = _num_vals.get(key)
                 if val is not None:
-                    values[key] = float(val)
-
-        # Min/max
-        vals = list(values.values())
-        if vals:
-            vmin = vmin if vmin is not None else min(vals)
-            vmax = vmax if vmax is not None else max(vals)
-
-        # Build colormap
-        colormap = cm.LinearColormap(
-            colors=["#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"],
-            vmin=vmin if vmin is not None else 0,
-            vmax=vmax if vmax is not None else 1,
-            caption=legend_name or value_column,
-        )
-
-        # Capture in closure
-        _vals, _cmap = values, colormap
-
-        def style_fn(feature: dict) -> dict:
-            obj = feature
-            for part in key_on.split(".")[1:]:
-                obj = obj.get(part, {})
-            key = obj if isinstance(obj, str) else str(obj)
-            val = _vals.get(key)
-            if val is not None:
-                return {"fillColor": _cmap(val), "color": "#333", "weight": line_weight, "fillOpacity": fill_opacity, "opacity": line_opacity}
-            return {"fillColor": nan_fill_color, "color": "#333", "weight": line_weight, "fillOpacity": nan_fill_opacity, "opacity": line_opacity}
+                    return {"fillColor": _cmap(val), "color": "#333", "weight": line_weight, "fillOpacity": fill_opacity, "opacity": line_opacity}
+                return {"fillColor": nan_fill_color, "color": "#333", "weight": line_weight, "fillOpacity": nan_fill_opacity, "opacity": line_opacity}
 
         tooltip = folium.GeoJsonTooltip(fields=hover_fields, localize=True) if hover_fields else None
         layer = folium.GeoJson(
@@ -1517,11 +1651,11 @@ class Map:
     # Marker cluster
     # ------------------------------------------------------------------
 
-    def add_marker_cluster(
+    def add_marker_cluster(  # noqa: PLR0913
         self,
         points: list[Point],
         labels: list[str] | None = None,
-        hovers: list[str] | None = None,
+        tooltips: list[str] | None = None,
         popups: list[str] | None = None,
         marker_style: dict[str, str] | None = None,
         name: str | None = None,
@@ -1529,6 +1663,7 @@ class Map:
         popup_style: PopupStyle | dict[str, Any] | None = None,
         captions: list[str] | None = None,
         caption_style: dict[str, str] | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add clustered markers that group at low zoom.
 
@@ -1538,7 +1673,7 @@ class Map:
             Shapely Points.
         labels : list[str] | None
             Per-location marker content (icon names or emoji/text).
-        hovers : list[str] | None
+        tooltips : list[str] | None
             Per-location markdown tooltips.
         popups : list[str] | None
             Per-location markdown popups.
@@ -1554,6 +1689,8 @@ class Map:
             Per-location text annotations placed below each marker.
         caption_style : dict[str, str] | None
             CSS property overrides for ``captions``.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance (font size, width, etc.).
 
         Returns
         -------
@@ -1569,7 +1706,7 @@ class Map:
             lat, lon = pt.y, pt.x
 
             label = labels[i] if labels and i < len(labels) else None
-            hover = hovers[i] if hovers and i < len(hovers) else None
+            tip = tooltips[i] if tooltips and i < len(tooltips) else None
             popup = popups[i] if popups and i < len(popups) else None
             txt = captions[i] if captions and i < len(captions) else None
 
@@ -1584,10 +1721,10 @@ class Map:
             folium.Marker(
                 location=[lat, lon],
                 icon=icon,
-                tooltip=self._make_tooltip(hover),
+                tooltip=self._make_tooltip(tip, tooltip_style),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
-            self._record_feature(pt, {"marker": label, "caption": txt, "tooltip": hover, "popup": popup, "min_zoom": min_zoom})
+            self._record_feature(pt, {"marker": label, "caption": txt, "tooltip": tip, "popup": popup, "min_zoom": min_zoom})
 
         cluster.add_to(self._target())
         if min_zoom is not None and min_zoom > 0:
@@ -1608,10 +1745,11 @@ class Map:
         point: tuple[float, float] | Point,
         text: str,
         style: dict[str, str] | None = None,
-        hover: str | RawHTML | None = None,
+        tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add a text marker at a location.
 
@@ -1623,12 +1761,14 @@ class Map:
             Label text.
         style : dict[str, str] | None
             CSS property overrides.
-        hover : str | RawHTML | None
+        tooltip : str | RawHTML | None
             Markdown tooltip, or ``RawHTML`` for pre-formatted HTML.
         popup : str | RawHTML | None
             Markdown popup, or ``RawHTML`` for pre-formatted HTML.
         popup_style : PopupStyle | dict[str, Any] | None
             Popup dimensions.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance.
         min_zoom : int | None
             Minimum zoom level at which the text is visible.
 
@@ -1661,11 +1801,13 @@ class Map:
         marker = folium.Marker(
             location=[lat, lon],
             icon=icon,
-            tooltip=self._make_tooltip(hover),
+            tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
         )
         marker.add_to(self._target())
-        self._record_feature(Point(lon, lat), {"text": text, "tooltip": self._raw_text(hover), "popup": self._raw_text(popup), "min_zoom": min_zoom})
+        self._record_feature(
+            Point(lon, lat), {"text": text, "tooltip": self._raw_text(tooltip), "popup": self._raw_text(popup), "min_zoom": min_zoom}
+        )
         if min_zoom is not None and min_zoom > 0:
             self._zoom_controlled_markers.append(
                 {
@@ -1693,6 +1835,7 @@ class Map:
         title: str | None = None,
         config: MapConfig | None = None,
         legend_name: str | None = None,
+        colors: list[str] | str | None = None,
     ) -> Self:
         """Create a GeoMap from a GeoPandas GeoDataFrame.
 
@@ -1719,7 +1862,11 @@ class Map:
         config : MapConfig | None
             Map configuration.
         legend_name : str | None
-            Color scale marker.
+            Color scale label.
+        colors : list[str] | str | None
+            Color palette for ``color_column``. Pass a palette name (e.g. ``"blues"``)
+            or a list of hex color strings. See ``mapyta.PALETTES`` for available names.
+            Defaults to ``"ylrd"`` (yellow → red).
 
         Returns
         -------
@@ -1765,8 +1912,8 @@ class Map:
             vals = gdf[color_column].dropna()
             if len(vals) > 0:
                 vmin, vmax = float(vals.min()), float(vals.max())
-                colormap = cm.LinearColormap(
-                    colors=["#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"],
+                colormap = m._build_colormap(
+                    colors=colors,
                     vmin=vmin,
                     vmax=vmax,
                     caption=legend_name or color_column,
@@ -1785,10 +1932,10 @@ class Map:
                 continue
 
             # Build tooltip/popup text
-            hover = None
+            tooltip = None
             if hover_columns:
                 parts = [f"**{c}**: {row[c]}" for c in hover_columns if c in row.index]
-                hover = "\n".join(parts) if parts else None
+                tooltip = "\n".join(parts) if parts else None
 
             popup = None
             if popup_columns:
@@ -1814,7 +1961,7 @@ class Map:
 
             m.add_geometry(
                 geom=geom,
-                hover=hover,
+                tooltip=tooltip,
                 popup=popup,
                 label=lbl,
                 stroke=cur_stroke,
@@ -1843,6 +1990,63 @@ class Map:
         Map
         """
         folium.LayerControl(collapsed=collapsed, position=position).add_to(self._map)
+        return self
+
+    def add_search_control(
+        self,
+        layer_name: str,
+        property_name: str,
+        placeholder: str = "Search...",
+        position: str = "topright",
+        zoom: int | None = None,
+        geom_type: str = "Point",
+    ) -> Self:
+        """Add a search control to find features by property value.
+
+        Users can type in the search box to locate and zoom to a matching feature.
+        The layer being searched must have been added to a feature group with the
+        given ``layer_name``.
+
+        Parameters
+        ----------
+        layer_name : str
+            Name of the feature group to search (as passed to ``create_feature_group``).
+        property_name : str
+            GeoJSON property name to search on (e.g. ``"name"``, ``"gemeente"``).
+        placeholder : str
+            Placeholder text in the search input box.
+        position : str
+            Control position: ``"topleft"``, ``"topright"``, ``"bottomleft"``, ``"bottomright"``.
+        zoom : int | None
+            Zoom level to use when a result is selected. Uses the map's current zoom if ``None``.
+        geom_type : str
+            Geometry type of the features being searched: ``"Point"`` or ``"Polygon"``.
+            Use ``"Polygon"`` when searching choropleth or polygon layers.
+
+        Returns
+        -------
+        Map
+
+        Raises
+        ------
+        KeyError
+            If ``layer_name`` is not found in the map's feature groups.
+        """
+        if layer_name not in self._feature_groups:
+            available = ", ".join(f'"{n}"' for n in self._feature_groups) or "(none)"
+            raise KeyError(f"Feature group {layer_name!r} not found. Available groups: {available}")
+        layer = self._feature_groups[layer_name]
+        search_kwargs: dict[str, Any] = {
+            "layer": layer,
+            "geom_type": geom_type,
+            "placeholder": placeholder,
+            "collapsed": False,
+            "search_label": property_name,
+            "position": position,
+        }
+        if zoom is not None:
+            search_kwargs["search_zoom"] = zoom
+        folium.plugins.Search(**search_kwargs).add_to(self._map)
         return self
 
     def add_tile_layer(
@@ -2117,10 +2321,14 @@ class Map:
         self._map.get_root().html.add_child(folium.Element(script))  # type: ignore[union-attr]
 
     @overload
-    def to_image(self, path: None = None, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True) -> bytes: ...
+    def to_image(
+        self, path: None = None, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True, scale: float = 1.0
+    ) -> bytes: ...
 
     @overload
-    def to_image(self, path: str | Path, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True) -> Path: ...
+    def to_image(
+        self, path: str | Path, width: int = 1200, height: int = 800, delay: float = 0.50, hide_controls: bool = True, scale: float = 1.0
+    ) -> Path: ...
 
     def to_image(
         self,
@@ -2129,6 +2337,7 @@ class Map:
         height: int = 800,
         delay: float = 0.50,
         hide_controls: bool = True,
+        scale: float = 1.0,
     ) -> bytes | Path:
         """Save the map as a PNG image.
 
@@ -2145,6 +2354,9 @@ class Map:
         hide_controls : bool
             If ``True``, inject CSS to hide Leaflet UI controls in the
             exported image.
+        scale : float
+            Output resolution multiplier. ``scale=2.0`` produces a 2× (high-DPI)
+            image at ``width * 2`` × ``height * 2`` pixels. Defaults to ``1.0``.
 
         Returns
         -------
@@ -2171,6 +2383,7 @@ class Map:
                 width=width,
                 height=height,
                 delay=delay,
+                scale=scale,
             )
         finally:
             Path(tmp_path).unlink(missing_ok=True)
@@ -2187,6 +2400,7 @@ class Map:
         height: int = 800,
         delay: float = 2.0,
         hide_controls: bool = True,
+        scale: float = 1.0,
     ) -> io.BytesIO:
         """Export as PNG in a BytesIO buffer.
 
@@ -2200,13 +2414,15 @@ class Map:
             Tile loading wait time.
         hide_controls : bool
             If ``True``, hide Leaflet UI controls.
+        scale : float
+            Output resolution multiplier. ``scale=2.0`` produces a 2× (high-DPI) image.
 
         Returns
         -------
         io.BytesIO
             Buffer at position 0.
         """
-        png = self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls)
+        png = self.to_image(path=None, width=width, height=height, delay=delay, hide_controls=hide_controls, scale=scale)
         buf = io.BytesIO(png)
         buf.seek(0)
         return buf
@@ -2218,15 +2434,14 @@ class Map:
         height: int = 800,
         delay: float = 2.0,
         hide_controls: bool = True,
+        scale: float = 1.0,
     ) -> bytes | Path:
         """Async PNG export (runs Selenium in executor).
 
         Parameters
         ----------
-        path, width, height, delay
+        path, width, height, delay, hide_controls, scale
             See ``to_image``.
-        hide_controls : bool
-            If ``True``, hide Leaflet UI controls.
 
         Returns
         -------
@@ -2241,6 +2456,7 @@ class Map:
                 height=height,
                 delay=delay,
                 hide_controls=hide_controls,
+                scale=scale,
             ),
         )
 

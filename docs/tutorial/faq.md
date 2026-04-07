@@ -177,6 +177,62 @@ m.add_layer_control()
 
 ---
 
+## Choropleth & colors
+
+**How do I customise the colors of a choropleth?**
+
+Pass a palette name or a list of hex colors to the `colors` parameter:
+
+```python
+# Named palette (see mapyta.PALETTES for all options)
+m.add_choropleth(geojson, value_column="score", key_on="feature.properties.id", colors="blues")
+
+# Custom colors (low → high)
+m.add_choropleth(geojson, value_column="score", key_on="feature.properties.id", colors=["#eef", "#44f", "#004"])
+```
+
+The same `colors` parameter works on `Map.from_geodataframe(color_column=...)`.
+
+---
+
+**How do I create a choropleth with categorical (non-numeric) data?**
+
+Just use string values. Mapyta auto-detects them and assigns a distinct color per category:
+
+```python
+# String values → auto-detected as categorical
+m.add_choropleth(geojson, value_column="land_use", key_on="feature.properties.id")
+
+# Force categorical mode explicitly
+m.add_choropleth(geojson, value_column="score", key_on="feature.properties.id", categorical=True)
+```
+
+---
+
+## Search
+
+**How do I add a search box to the map?**
+
+Use `add_search_control()`. The layer must be in a feature group:
+
+```python
+geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {"type": "Feature", "properties": {"name": "Amsterdam", "score": 1}, "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}},
+        {"type": "Feature", "properties": {"name": "Utrecht", "score": 2}, "geometry": {"type": "Point", "coordinates": [5.12, 52.09]}},
+    ],
+}
+
+m.create_feature_group("Places")
+m.add_choropleth(geojson, value_column="score", key_on="feature.properties.name")
+m.reset_target()
+
+m.add_search_control(layer_name="Places", property_name="name", zoom=14)
+```
+
+---
+
 ## Export
 
 **How do I save the map to an HTML file?**
@@ -208,6 +264,19 @@ m.to_image("map.png", width=1600, height=900)
 ```
 
 Chrome or Chromium must be installed.
+
+---
+
+**How do I export a higher-resolution PNG for print or presentations?**
+
+Use the `scale` parameter:
+
+```python
+# 2× resolution (2400 × 1600 px from a 1200 × 800 layout)
+m.to_image("map_print.png", width=1200, height=800, scale=2.0)
+```
+
+`scale=2.0` doubles the pixel dimensions without changing the map layout.
 
 ---
 

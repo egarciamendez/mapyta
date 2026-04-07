@@ -107,7 +107,7 @@ from mapyta import Map
 m = Map()
 
 for geom in [Point(5.12, 52.09), LineString([(5.11, 52.09), (5.13, 52.09)])]:
-    m.add_geometry(geom, hover="Zoom in to see me", min_zoom=14)
+    m.add_geometry(geom, tooltip="Zoom in to see me", min_zoom=14)
 
 print(m.to_html())  # markdown-exec: hide
 ```

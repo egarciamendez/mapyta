@@ -1149,7 +1149,7 @@ class TestTextPopup:
         )
         assert result is m
 
-    def test_add_text_with_popup_and_hover(self) -> None:
+    def test_add_text_with_popup_and_tooltip(self) -> None:
         """
         Scenario: add_text with both popup and tooltip.
 
@@ -1161,7 +1161,7 @@ class TestTextPopup:
         result = m.add_text(
             Point(4.9, 52.37),
             "Label",
-            hover="**Hover text**",
+            tooltip="**Hover text**",
             popup="**Popup text**",
         )
         assert result is m

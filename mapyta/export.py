@@ -60,6 +60,7 @@ def capture_screenshot(
     width: int = 1200,
     height: int = 800,
     delay: float = 2.0,
+    scale: float = 1.0,
 ) -> bytes:
     """Capture a screenshot of an HTML file using headless Chrome.
 
@@ -73,12 +74,19 @@ def capture_screenshot(
         Viewport height in pixels.
     delay : float
         Seconds to wait for tile loading.
+    scale : float
+        Device pixel ratio. ``scale=2.0`` renders at 2× pixel density (Retina),
+        producing a ``width * 2`` × ``height * 2`` pixel image while keeping the
+        map layout identical to ``scale=1.0``.
 
     Returns
     -------
     bytes
         PNG image bytes.
     """
+    if scale <= 0:
+        raise ValueError(f"scale must be greater than 0, got {scale!r}")
+
     check_selenium()
 
     from selenium import webdriver  # noqa: PLC0415  # ty: ignore[unresolved-import]
@@ -90,6 +98,8 @@ def capture_screenshot(
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument(f"--window-size={width},{height}")
+    if scale != 1.0:
+        options.add_argument(f"--force-device-scale-factor={scale}")
 
     driver = None
     try:

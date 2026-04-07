@@ -294,10 +294,10 @@ class TestMarkerCluster:
         m = Map()
         cafes = [Point(4.88 + i * 0.001, 52.36 + i * 0.0005) for i in range(50)]
         labels = ["☕"] * 50
-        hovers = [f"**Café #{i + 1}**" for i in range(50)]
+        tooltips = [f"**Café #{i + 1}**" for i in range(50)]
 
         # Act - When
-        result = m.add_marker_cluster(cafes, labels=labels, hovers=hovers, name="Cafés")
+        result = m.add_marker_cluster(cafes, labels=labels, tooltips=tooltips, name="Cafés")
 
         # Assert - Then
         assert result is m, "add_marker_cluster should return self"
@@ -466,7 +466,7 @@ class TestTextAnnotation:
         result = m.add_text(
             Point(4.9, 52.37),
             "Station A",
-            hover="**Click for details**",
+            tooltip="**Click for details**",
         )
 
         # Assert - Then
