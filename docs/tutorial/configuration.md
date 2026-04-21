@@ -31,6 +31,7 @@ print(m.to_html()) # markdown-exec: hide
 | `zoom_start` | `12` | Initial zoom level |
 | `min_zoom` | `0` | Prevent zooming out beyond this level |
 | `max_zoom` | `19` | Prevent zooming in beyond this level |
+| `max_native_zoom` | `None` | Highest zoom level the tile provider actually serves. Set this below `max_zoom` to upscale tiles instead of showing blank placeholders. |
 | `attribution` | `None` | Custom tile attribution |
 | `width` | `"100%"` | Map width |
 | `height` | `"100%"` | Map height |
@@ -62,6 +63,34 @@ print(m.to_html()) # markdown-exec: hide
 | `kadaster_brt` | Dutch Kadaster topographic |
 | `kadaster_luchtfoto` | Dutch Kadaster aerial photos |
 | `kadaster_grijs` | Dutch Kadaster greyscale |
+
+## Zooming beyond native tile resolution
+
+Every tile provider has a maximum zoom level at which it actually serves tiles. OpenStreetMap, for example, caps at zoom 19. If `max_zoom` is set higher than that, Leaflet requests tiles that don't exist and renders blank gray placeholders instead.
+
+Setting `max_native_zoom` tells Leaflet the highest zoom at which real tiles are available. When the user zooms past that level, Leaflet upscales the last available tile rather than showing a blank:
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(
+    center=(52.090, 5.121),
+    title="Zooming beyond native resolution",
+    config=MapConfig(
+        tile_layer="openstreetmap",
+        zoom_start=18,
+        max_zoom=21,
+        max_native_zoom=19,
+    ),
+)
+m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Dom Tower**")
+
+m.to_html("max_native_zoom.html")
+print(m.to_html())  # markdown-exec: hide
+```
+
+Zoom in past level 19 — the tiles blur slightly rather than going blank. Leaving `max_native_zoom` as `None` (the default) keeps the original behaviour where zooming past the provider's limit shows empty tiles.
 
 ## Multiple tile layers
 
