@@ -2472,6 +2472,7 @@ string = function name, <code>RawJS</code> = inline JS.</p>
     <span class="n">zoom_start</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
     <span class="n">min_zoom</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">max_zoom</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+    <span class="n">max_native_zoom</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">attribution</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
@@ -2538,7 +2539,24 @@ Useful for bounding maps to specific regions.</p>
             <p>Maximum zoom level, limiting how far users can zoom in.  Higher
 values enable more detailed views, but effectiveness depends on
 the tile provider (e.g. OpenStreetMap maxes at 19).  Exceeding
-the provider's limit may show blank tiles.</p>
+the provider's limit may show blank tiles unless
+<code>max_native_zoom</code> is also set.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>max_native_zoom</code></b>
+              (<code><span title="int">int</span> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Highest zoom level at which the tile provider actually serves
+tiles.  When set below <code>max_zoom</code>, Leaflet keeps the last
+native-resolution tile visible (upscaled, so it blurs) instead
+of rendering blank placeholders.  <code>None</code> (default) means
+Leaflet will request tiles at every zoom level up to
+<code>max_zoom</code>, which can produce blank or gray tiles if the
+provider does not serve them.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2785,8 +2803,8 @@ the provider's limit may show blank tiles.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>mapyta/config.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">195</span>
-<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">js</span> <span class="o">=</span> <span class="n">js</span>
 </code></pre></div></td></tr></table></div>
                   </details>
