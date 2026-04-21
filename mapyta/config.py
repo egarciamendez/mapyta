@@ -149,7 +149,15 @@ class MapConfig:
         Maximum zoom level, limiting how far users can zoom in.  Higher
         values enable more detailed views, but effectiveness depends on
         the tile provider (e.g. OpenStreetMap maxes at 19).  Exceeding
-        the provider's limit may show blank tiles.
+        the provider's limit may show blank tiles unless
+        ``max_native_zoom`` is also set.
+    max_native_zoom : int | None
+        Highest zoom level at which the tile provider actually serves
+        tiles.  When set below ``max_zoom``, Leaflet keeps the last
+        native-resolution tile visible (upscaled, so it blurs) instead
+        of rendering blank placeholders.  ``None`` (default) keeps the
+        original behaviour where zoom is effectively capped at
+        ``max_zoom``.
     attribution : str | None
         Custom tile attribution.
     width : str | int
@@ -172,6 +180,7 @@ class MapConfig:
     zoom_start: int = 12
     min_zoom: int = 0
     max_zoom: int = 19
+    max_native_zoom: int | None = None
     attribution: str | None = None
     width: str | int = "100%"
     height: str | int = "100%"

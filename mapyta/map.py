@@ -123,6 +123,8 @@ class Map:
         layers = cfg.tile_layer if isinstance(cfg.tile_layer, list) else [cfg.tile_layer]
         multiple = len(layers) > 1
 
+        max_native_zoom = cfg.max_native_zoom if cfg.max_native_zoom is not None else cfg.max_zoom
+
         if multiple:
             # Multiple layers: create map without tiles, add all as TileLayer
             kwargs: dict[str, Any] = {
@@ -145,6 +147,8 @@ class Map:
                         tiles=p["tiles"],
                         name=p.get("name", layer_key),
                         attr=p.get("attr"),
+                        max_zoom=cfg.max_zoom,
+                        max_native_zoom=max_native_zoom,
                         show=i == 0,
                     ).add_to(fmap)
                 else:
@@ -152,20 +156,26 @@ class Map:
                         tiles=layer_key,
                         name=layer_key,
                         attr=cfg.attribution,
+                        max_zoom=cfg.max_zoom,
+                        max_native_zoom=max_native_zoom,
                         show=i == 0,
                     ).add_to(fmap)
         else:
-            # Single layer: pass directly to folium.Map (original behaviour)
+            # Single layer: build the map without tiles, then add a TileLayer
+            # explicitly so max_native_zoom can be set (folium.Map(tiles=...)
+            # does not expose it).
             provider = TILE_PROVIDERS.get(layers[0].lower())
             if provider:
                 tiles = provider["tiles"]
                 attr = provider.get("attr")
+                name = provider.get("name", layers[0])
             else:
                 tiles = layers[0]
                 attr = cfg.attribution
+                name = layers[0]
 
             kwargs: dict[str, Any] = {
-                "tiles": tiles,
+                "tiles": None,
                 "zoom_start": cfg.zoom_start,
                 "min_zoom": cfg.min_zoom,
                 "max_zoom": cfg.max_zoom,
@@ -175,9 +185,14 @@ class Map:
             }
             if self._center:
                 kwargs["location"] = list(self._center)
-            if attr:
-                kwargs["attr"] = attr
             fmap = folium.Map(**kwargs)
+            folium.TileLayer(
+                tiles=tiles,
+                name=name,
+                attr=attr,
+                max_zoom=cfg.max_zoom,
+                max_native_zoom=max_native_zoom,
+            ).add_to(fmap)
 
         # Title overlay
         if self._title:
