@@ -1728,7 +1728,7 @@
 <p>The WKT strings in your geometry column must use geographic coordinates (longitude, latitude) in WGS84 (EPSG:4326). If your data is in RD New or another CRS, reproject it first.</p>
 </div>
 <h2 id="minimal-example">Minimal example</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-18--__tabbed_1_1" name="exec-18--__tabbed_1" type="radio" /><input id="exec-18--__tabbed_1_2" name="exec-18--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-18--__tabbed_1_1">Result</label><label for="exec-18--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-19--__tabbed_1_1" name="exec-19--__tabbed_1" type="radio" /><input id="exec-19--__tabbed_1_2" name="exec-19--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-19--__tabbed_1_1">Result</label><label for="exec-19--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1750,7 +1750,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_7e6aa63ba6ce4dea59f8c0ecbbaf5542 {
+                #map_17e43e9016867142a44f9ba56621363f {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1806,14 +1806,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Dutch Cities&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_7e6aa63ba6ce4dea59f8c0ecbbaf5542&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_17e43e9016867142a44f9ba56621363f&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_7e6aa63ba6ce4dea59f8c0ecbbaf5542 = L.map(
-                &quot;map_7e6aa63ba6ce4dea59f8c0ecbbaf5542&quot;,
+            var map_17e43e9016867142a44f9ba56621363f = L.map(
+                &quot;map_17e43e9016867142a44f9ba56621363f&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1825,13 +1825,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_7e6aa63ba6ce4dea59f8c0ecbbaf5542);
+            L.control.scale().addTo(map_17e43e9016867142a44f9ba56621363f);
 
             
 
         
     
-            var tile_layer_25df9d6ca148040166ffdfc5c3d53c9a = L.tileLayer(
+            var tile_layer_4d3de36919cef34aa0440f494d089dd8 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1848,10 +1848,10 @@
             );
         
     
-            tile_layer_25df9d6ca148040166ffdfc5c3d53c9a.addTo(map_7e6aa63ba6ce4dea59f8c0ecbbaf5542);
+            tile_layer_4d3de36919cef34aa0440f494d089dd8.addTo(map_17e43e9016867142a44f9ba56621363f);
         
     
-            var mouse_position_70a64eba4e19633b0cd731c00d5847d6 = new L.Control.MousePosition(
+            var mouse_position_e582b188b6b8cdc3ad6f0564c6688575 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1861,59 +1861,59 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_70a64eba4e19633b0cd731c00d5847d6.options[&quot;latFormatter&quot;] =
+            mouse_position_e582b188b6b8cdc3ad6f0564c6688575.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_70a64eba4e19633b0cd731c00d5847d6.options[&quot;lngFormatter&quot;] =
+            mouse_position_e582b188b6b8cdc3ad6f0564c6688575.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_7e6aa63ba6ce4dea59f8c0ecbbaf5542.addControl(mouse_position_70a64eba4e19633b0cd731c00d5847d6);
+            map_17e43e9016867142a44f9ba56621363f.addControl(mouse_position_e582b188b6b8cdc3ad6f0564c6688575);
         
     
-        function geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_styler(feature) {
+        function geo_json_c130388abca00d0a4666815e6a37bfcc_styler(feature) {
             switch(feature.properties.city) {
                 default:
                     return {&quot;color&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;weight&quot;: 2};
             }
         }
-        function geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_highlighter(feature) {
+        function geo_json_c130388abca00d0a4666815e6a37bfcc_highlighter(feature) {
             switch(feature.properties.city) {
                 default:
                     return {&quot;fillOpacity&quot;: 0.4, &quot;weight&quot;: 5};
             }
         }
 
-        function geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_onEachFeature(feature, layer) {
+        function geo_json_c130388abca00d0a4666815e6a37bfcc_onEachFeature(feature, layer) {
 
             layer.on({
                 mouseout: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                            geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f.resetStyle(e.target);
+                            geo_json_c130388abca00d0a4666815e6a37bfcc.resetStyle(e.target);
                     }
                 },
                 mouseover: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                        const highlightStyle = geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_highlighter(e.target.feature)
+                        const highlightStyle = geo_json_c130388abca00d0a4666815e6a37bfcc_highlighter(e.target.feature)
                         e.target.setStyle(highlightStyle);
                     }
                 },
             });
         };
-        var geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f = L.geoJson(null, {
-                onEachFeature: geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_onEachFeature,
+        var geo_json_c130388abca00d0a4666815e6a37bfcc = L.geoJson(null, {
+                onEachFeature: geo_json_c130388abca00d0a4666815e6a37bfcc_onEachFeature,
             
-                style: geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_styler,
+                style: geo_json_c130388abca00d0a4666815e6a37bfcc_styler,
             ...{
 }
         });
 
-        function geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_add (data) {
-            geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f
+        function geo_json_c130388abca00d0a4666815e6a37bfcc_add (data) {
+            geo_json_c130388abca00d0a4666815e6a37bfcc
                 .addData(data);
         }
-            geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3676], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Amsterdam&quot;, &quot;population&quot;: 872680}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Utrecht&quot;, &quot;population&quot;: 361924}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Rotterdam&quot;, &quot;population&quot;: 651446}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_c130388abca00d0a4666815e6a37bfcc_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3676], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Amsterdam&quot;, &quot;population&quot;: 872680}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Utrecht&quot;, &quot;population&quot;: 361924}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Rotterdam&quot;, &quot;population&quot;: 651446}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-    geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f.bindTooltip(
+    geo_json_c130388abca00d0a4666815e6a37bfcc.bindTooltip(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -1948,22 +1948,22 @@
 });
                      
     
-            geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f.addTo(map_7e6aa63ba6ce4dea59f8c0ecbbaf5542);
+            geo_json_c130388abca00d0a4666815e6a37bfcc.addTo(map_17e43e9016867142a44f9ba56621363f);
         
     
-            map_7e6aa63ba6ce4dea59f8c0ecbbaf5542.fitBounds(
+            map_17e43e9016867142a44f9ba56621363f.fitBounds(
                 [[51.9244, 4.4777], [52.3676, 5.1214]],
                 {}
             );
         
     
-            tile_layer_25df9d6ca148040166ffdfc5c3d53c9a.addTo(map_7e6aa63ba6ce4dea59f8c0ecbbaf5542);
+            tile_layer_4d3de36919cef34aa0440f494d089dd8.addTo(map_17e43e9016867142a44f9ba56621363f);
         
     
-            geo_json_a1c3b6c5c86c6e43b081dffca4ff0d8f.addTo(map_7e6aa63ba6ce4dea59f8c0ecbbaf5542);
+            geo_json_c130388abca00d0a4666815e6a37bfcc.addTo(map_17e43e9016867142a44f9ba56621363f);
         
     
-            map_7e6aa63ba6ce4dea59f8c0ecbbaf5542.fitBounds(
+            map_17e43e9016867142a44f9ba56621363f.fitBounds(
                 [[51.9244, 4.4777], [52.3676, 5.1214]],
                 {}
             );
@@ -1996,7 +1996,7 @@
 </div>
 </div>
 <h2 id="polars-works-the-same-way">Polars works the same way</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-19--__tabbed_1_1" name="exec-19--__tabbed_1" type="radio" /><input id="exec-19--__tabbed_1_2" name="exec-19--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-19--__tabbed_1_1">Result</label><label for="exec-19--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-20--__tabbed_1_1" name="exec-20--__tabbed_1" type="radio" /><input id="exec-20--__tabbed_1_2" name="exec-20--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-20--__tabbed_1_1">Result</label><label for="exec-20--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2018,7 +2018,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_129f16697f5fcc5a113c5e3bcc98bbad {
+                #map_01be756a537f4b8decac11254ca2cebb {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2074,14 +2074,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Cities&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_129f16697f5fcc5a113c5e3bcc98bbad&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_01be756a537f4b8decac11254ca2cebb&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_129f16697f5fcc5a113c5e3bcc98bbad = L.map(
-                &quot;map_129f16697f5fcc5a113c5e3bcc98bbad&quot;,
+            var map_01be756a537f4b8decac11254ca2cebb = L.map(
+                &quot;map_01be756a537f4b8decac11254ca2cebb&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2093,13 +2093,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_129f16697f5fcc5a113c5e3bcc98bbad);
+            L.control.scale().addTo(map_01be756a537f4b8decac11254ca2cebb);
 
             
 
         
     
-            var tile_layer_b33bb50cbf2ec8e0d785af26e77e4687 = L.tileLayer(
+            var tile_layer_cab9a1864bf32327a56a5b2d90abb921 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2116,10 +2116,10 @@
             );
         
     
-            tile_layer_b33bb50cbf2ec8e0d785af26e77e4687.addTo(map_129f16697f5fcc5a113c5e3bcc98bbad);
+            tile_layer_cab9a1864bf32327a56a5b2d90abb921.addTo(map_01be756a537f4b8decac11254ca2cebb);
         
     
-            var mouse_position_3d95708cab72a1224c08ac88f1b9e1af = new L.Control.MousePosition(
+            var mouse_position_0544c8016b39a7dac3f79f594f1fc102 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2129,59 +2129,59 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_3d95708cab72a1224c08ac88f1b9e1af.options[&quot;latFormatter&quot;] =
+            mouse_position_0544c8016b39a7dac3f79f594f1fc102.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_3d95708cab72a1224c08ac88f1b9e1af.options[&quot;lngFormatter&quot;] =
+            mouse_position_0544c8016b39a7dac3f79f594f1fc102.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_129f16697f5fcc5a113c5e3bcc98bbad.addControl(mouse_position_3d95708cab72a1224c08ac88f1b9e1af);
+            map_01be756a537f4b8decac11254ca2cebb.addControl(mouse_position_0544c8016b39a7dac3f79f594f1fc102);
         
     
-        function geo_json_fd21dd5a1083264f606ed81da5e162f6_styler(feature) {
+        function geo_json_7c752258a1ace8b933276ea0d39b0b05_styler(feature) {
             switch(feature.properties.city) {
                 default:
                     return {&quot;color&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;weight&quot;: 2};
             }
         }
-        function geo_json_fd21dd5a1083264f606ed81da5e162f6_highlighter(feature) {
+        function geo_json_7c752258a1ace8b933276ea0d39b0b05_highlighter(feature) {
             switch(feature.properties.city) {
                 default:
                     return {&quot;fillOpacity&quot;: 0.4, &quot;weight&quot;: 5};
             }
         }
 
-        function geo_json_fd21dd5a1083264f606ed81da5e162f6_onEachFeature(feature, layer) {
+        function geo_json_7c752258a1ace8b933276ea0d39b0b05_onEachFeature(feature, layer) {
 
             layer.on({
                 mouseout: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                            geo_json_fd21dd5a1083264f606ed81da5e162f6.resetStyle(e.target);
+                            geo_json_7c752258a1ace8b933276ea0d39b0b05.resetStyle(e.target);
                     }
                 },
                 mouseover: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                        const highlightStyle = geo_json_fd21dd5a1083264f606ed81da5e162f6_highlighter(e.target.feature)
+                        const highlightStyle = geo_json_7c752258a1ace8b933276ea0d39b0b05_highlighter(e.target.feature)
                         e.target.setStyle(highlightStyle);
                     }
                 },
             });
         };
-        var geo_json_fd21dd5a1083264f606ed81da5e162f6 = L.geoJson(null, {
-                onEachFeature: geo_json_fd21dd5a1083264f606ed81da5e162f6_onEachFeature,
+        var geo_json_7c752258a1ace8b933276ea0d39b0b05 = L.geoJson(null, {
+                onEachFeature: geo_json_7c752258a1ace8b933276ea0d39b0b05_onEachFeature,
             
-                style: geo_json_fd21dd5a1083264f606ed81da5e162f6_styler,
+                style: geo_json_7c752258a1ace8b933276ea0d39b0b05_styler,
             ...{
 }
         });
 
-        function geo_json_fd21dd5a1083264f606ed81da5e162f6_add (data) {
-            geo_json_fd21dd5a1083264f606ed81da5e162f6
+        function geo_json_7c752258a1ace8b933276ea0d39b0b05_add (data) {
+            geo_json_7c752258a1ace8b933276ea0d39b0b05
                 .addData(data);
         }
-            geo_json_fd21dd5a1083264f606ed81da5e162f6_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3676], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_7c752258a1ace8b933276ea0d39b0b05_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3676], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;city&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-    geo_json_fd21dd5a1083264f606ed81da5e162f6.bindTooltip(
+    geo_json_7c752258a1ace8b933276ea0d39b0b05.bindTooltip(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -2216,22 +2216,22 @@
 });
                      
     
-            geo_json_fd21dd5a1083264f606ed81da5e162f6.addTo(map_129f16697f5fcc5a113c5e3bcc98bbad);
+            geo_json_7c752258a1ace8b933276ea0d39b0b05.addTo(map_01be756a537f4b8decac11254ca2cebb);
         
     
-            map_129f16697f5fcc5a113c5e3bcc98bbad.fitBounds(
+            map_01be756a537f4b8decac11254ca2cebb.fitBounds(
                 [[52.0907, 4.9041], [52.3676, 5.1214]],
                 {}
             );
         
     
-            tile_layer_b33bb50cbf2ec8e0d785af26e77e4687.addTo(map_129f16697f5fcc5a113c5e3bcc98bbad);
+            tile_layer_cab9a1864bf32327a56a5b2d90abb921.addTo(map_01be756a537f4b8decac11254ca2cebb);
         
     
-            geo_json_fd21dd5a1083264f606ed81da5e162f6.addTo(map_129f16697f5fcc5a113c5e3bcc98bbad);
+            geo_json_7c752258a1ace8b933276ea0d39b0b05.addTo(map_01be756a537f4b8decac11254ca2cebb);
         
     
-            map_129f16697f5fcc5a113c5e3bcc98bbad.fitBounds(
+            map_01be756a537f4b8decac11254ca2cebb.fitBounds(
                 [[52.0907, 4.9041], [52.3676, 5.1214]],
                 {}
             );
@@ -2263,7 +2263,7 @@
 </div>
 <h2 id="polygons-and-lines">Polygons and lines</h2>
 <p><code>add_dataframe()</code> works with any geometry type — not just points. The WKT column can contain <code>POLYGON</code>, <code>LINESTRING</code>, <code>MULTIPOLYGON</code>, or any combination.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-20--__tabbed_1_1" name="exec-20--__tabbed_1" type="radio" /><input id="exec-20--__tabbed_1_2" name="exec-20--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-20--__tabbed_1_1">Result</label><label for="exec-20--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-21--__tabbed_1_1" name="exec-21--__tabbed_1" type="radio" /><input id="exec-21--__tabbed_1_2" name="exec-21--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-21--__tabbed_1_1">Result</label><label for="exec-21--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2285,7 +2285,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_775775ec8d48d6ddd98a2685082e58fc {
+                #map_c789ec9d30bc2f4bd6074af096c45f88 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2341,14 +2341,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Shapes&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_775775ec8d48d6ddd98a2685082e58fc&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_c789ec9d30bc2f4bd6074af096c45f88&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_775775ec8d48d6ddd98a2685082e58fc = L.map(
-                &quot;map_775775ec8d48d6ddd98a2685082e58fc&quot;,
+            var map_c789ec9d30bc2f4bd6074af096c45f88 = L.map(
+                &quot;map_c789ec9d30bc2f4bd6074af096c45f88&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2360,13 +2360,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_775775ec8d48d6ddd98a2685082e58fc);
+            L.control.scale().addTo(map_c789ec9d30bc2f4bd6074af096c45f88);
 
             
 
         
     
-            var tile_layer_41a0577273b9fb15bda92fb86398176d = L.tileLayer(
+            var tile_layer_9ec6b049362b077ed2fad5d93606700c = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2383,10 +2383,10 @@
             );
         
     
-            tile_layer_41a0577273b9fb15bda92fb86398176d.addTo(map_775775ec8d48d6ddd98a2685082e58fc);
+            tile_layer_9ec6b049362b077ed2fad5d93606700c.addTo(map_c789ec9d30bc2f4bd6074af096c45f88);
         
     
-            var mouse_position_c265f2e3607a27840ac49af46021d158 = new L.Control.MousePosition(
+            var mouse_position_914811a674381522815bcbec61729438 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2396,59 +2396,59 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_c265f2e3607a27840ac49af46021d158.options[&quot;latFormatter&quot;] =
+            mouse_position_914811a674381522815bcbec61729438.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_c265f2e3607a27840ac49af46021d158.options[&quot;lngFormatter&quot;] =
+            mouse_position_914811a674381522815bcbec61729438.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_775775ec8d48d6ddd98a2685082e58fc.addControl(mouse_position_c265f2e3607a27840ac49af46021d158);
+            map_c789ec9d30bc2f4bd6074af096c45f88.addControl(mouse_position_914811a674381522815bcbec61729438);
         
     
-        function geo_json_3d37148d1c503da9095579cebdddf682_styler(feature) {
+        function geo_json_0ab8bb56e9db8befd3617d05489ff40a_styler(feature) {
             switch(feature.properties.label) {
                 default:
                     return {&quot;color&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;weight&quot;: 2};
             }
         }
-        function geo_json_3d37148d1c503da9095579cebdddf682_highlighter(feature) {
+        function geo_json_0ab8bb56e9db8befd3617d05489ff40a_highlighter(feature) {
             switch(feature.properties.label) {
                 default:
                     return {&quot;fillOpacity&quot;: 0.4, &quot;weight&quot;: 5};
             }
         }
 
-        function geo_json_3d37148d1c503da9095579cebdddf682_onEachFeature(feature, layer) {
+        function geo_json_0ab8bb56e9db8befd3617d05489ff40a_onEachFeature(feature, layer) {
 
             layer.on({
                 mouseout: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                            geo_json_3d37148d1c503da9095579cebdddf682.resetStyle(e.target);
+                            geo_json_0ab8bb56e9db8befd3617d05489ff40a.resetStyle(e.target);
                     }
                 },
                 mouseover: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                        const highlightStyle = geo_json_3d37148d1c503da9095579cebdddf682_highlighter(e.target.feature)
+                        const highlightStyle = geo_json_0ab8bb56e9db8befd3617d05489ff40a_highlighter(e.target.feature)
                         e.target.setStyle(highlightStyle);
                     }
                 },
             });
         };
-        var geo_json_3d37148d1c503da9095579cebdddf682 = L.geoJson(null, {
-                onEachFeature: geo_json_3d37148d1c503da9095579cebdddf682_onEachFeature,
+        var geo_json_0ab8bb56e9db8befd3617d05489ff40a = L.geoJson(null, {
+                onEachFeature: geo_json_0ab8bb56e9db8befd3617d05489ff40a_onEachFeature,
             
-                style: geo_json_3d37148d1c503da9095579cebdddf682_styler,
+                style: geo_json_0ab8bb56e9db8befd3617d05489ff40a_styler,
             ...{
 }
         });
 
-        function geo_json_3d37148d1c503da9095579cebdddf682_add (data) {
-            geo_json_3d37148d1c503da9095579cebdddf682
+        function geo_json_0ab8bb56e9db8befd3617d05489ff40a_add (data) {
+            geo_json_0ab8bb56e9db8befd3617d05489ff40a
                 .addData(data);
         }
-            geo_json_3d37148d1c503da9095579cebdddf682_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[4.85, 52.35], [4.95, 52.35], [4.95, 52.4], [4.85, 52.4], [4.85, 52.35]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;label&quot;: &quot;Zone A&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[4.9, 52.37], [5.0, 52.38], [5.1, 52.35]], &quot;type&quot;: &quot;LineString&quot;}, &quot;properties&quot;: {&quot;label&quot;: &quot;Route 1&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_0ab8bb56e9db8befd3617d05489ff40a_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[4.85, 52.35], [4.95, 52.35], [4.95, 52.4], [4.85, 52.4], [4.85, 52.35]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;label&quot;: &quot;Zone A&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[4.9, 52.37], [5.0, 52.38], [5.1, 52.35]], &quot;type&quot;: &quot;LineString&quot;}, &quot;properties&quot;: {&quot;label&quot;: &quot;Route 1&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-    geo_json_3d37148d1c503da9095579cebdddf682.bindTooltip(
+    geo_json_0ab8bb56e9db8befd3617d05489ff40a.bindTooltip(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -2483,22 +2483,22 @@
 });
                      
     
-            geo_json_3d37148d1c503da9095579cebdddf682.addTo(map_775775ec8d48d6ddd98a2685082e58fc);
+            geo_json_0ab8bb56e9db8befd3617d05489ff40a.addTo(map_c789ec9d30bc2f4bd6074af096c45f88);
         
     
-            map_775775ec8d48d6ddd98a2685082e58fc.fitBounds(
+            map_c789ec9d30bc2f4bd6074af096c45f88.fitBounds(
                 [[52.35, 4.85], [52.4, 5.1]],
                 {}
             );
         
     
-            tile_layer_41a0577273b9fb15bda92fb86398176d.addTo(map_775775ec8d48d6ddd98a2685082e58fc);
+            tile_layer_9ec6b049362b077ed2fad5d93606700c.addTo(map_c789ec9d30bc2f4bd6074af096c45f88);
         
     
-            geo_json_3d37148d1c503da9095579cebdddf682.addTo(map_775775ec8d48d6ddd98a2685082e58fc);
+            geo_json_0ab8bb56e9db8befd3617d05489ff40a.addTo(map_c789ec9d30bc2f4bd6074af096c45f88);
         
     
-            map_775775ec8d48d6ddd98a2685082e58fc.fitBounds(
+            map_c789ec9d30bc2f4bd6074af096c45f88.fitBounds(
                 [[52.35, 4.85], [52.4, 5.1]],
                 {}
             );
