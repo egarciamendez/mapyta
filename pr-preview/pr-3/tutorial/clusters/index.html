@@ -1,0 +1,3514 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../heatmaps/">
+      
+      
+        <link rel="next" href="../dataframe/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Marker Clusters - Mapyta</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"DM Sans";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#marker-clusters" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mapyta" class="md-header__button md-logo" aria-label="Mapyta" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-dark-mode.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mapyta
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Marker Clusters
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/egarciamendez/mapyta" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Mapyta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../API%20reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Mapyta" class="md-nav__button md-logo" aria-label="Mapyta" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-dark-mode.svg" alt="logo">
+
+    </a>
+    Mapyta
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/egarciamendez/mapyta" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mapyta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lines & Polygons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tooltips-popups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooltips & Popups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Groups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choropleth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choropleth Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heatmaps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heatmaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Clusters
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Clusters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataframes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geodataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GeoPandas Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../open-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open data (CBS & PDOK)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Map Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../text-annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Text Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drawing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../animated/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animated Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../min-zoom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zoom-dependent Visibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../API%20reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    coordinates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/dataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    dataframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/geojson/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    geojson
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/markdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    markdown
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/tiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Mapyta
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="marker-clusters">Marker Clusters</h1>
+<p>When you have hundreds of markers, the map becomes unreadable at low zoom. Marker clusters group nearby points into numbered bubbles that expand as you zoom in.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-14--__tabbed_1_1" name="exec-14--__tabbed_1" type="radio" /><input id="exec-14--__tabbed_1_2" name="exec-14--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-14--__tabbed_1_1">Result</label><label for="exec-14--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_b1bafbfa41f3aa6d5b180ac08c555b08 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Utrecht Cafés&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_b1bafbfa41f3aa6d5b180ac08c555b08&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_b1bafbfa41f3aa6d5b180ac08c555b08 = L.map(
+                &quot;map_b1bafbfa41f3aa6d5b180ac08c555b08&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_b1bafbfa41f3aa6d5b180ac08c555b08);
+
+            
+
+        
+    
+            var tile_layer_a10ac299f98303af0ee3651004c38c68 = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_a10ac299f98303af0ee3651004c38c68.addTo(map_b1bafbfa41f3aa6d5b180ac08c555b08);
+        
+    
+            var mouse_position_93ad407d9e96dfcfa33869a5c8546996 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_93ad407d9e96dfcfa33869a5c8546996.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_93ad407d9e96dfcfa33869a5c8546996.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_b1bafbfa41f3aa6d5b180ac08c555b08.addControl(mouse_position_93ad407d9e96dfcfa33869a5c8546996);
+        
+    
+            var marker_cluster_de0f925d6b568ad27e14c21f79e0828d = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_4fc830223ff6cb3e91e3cd3ebe60ac89 = L.marker(
+                [52.08050021510446, 5.125577071938316],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_1828ba24be9a6992289a52b93f0dd795 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_4fc830223ff6cb3e91e3cd3ebe60ac89.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #1&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_4fc830223ff6cb3e91e3cd3ebe60ac89.setIcon(div_icon_1828ba24be9a6992289a52b93f0dd795);
+            
+    
+            var marker_9dd000e02d112415f39b6dede7c8412a = L.marker(
+                [52.08446421476298, 5.111001172734765],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_56aa1715ff06c68884d800ff1b5624af = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_9dd000e02d112415f39b6dede7c8412a.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #2&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_9dd000e02d112415f39b6dede7c8412a.setIcon(div_icon_56aa1715ff06c68884d800ff1b5624af);
+            
+    
+            var marker_abda4ead1a6321a69bbc5d7dc1700173 = L.marker(
+                [52.09353398974846, 5.129458848566561],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_4d6c1a5e1336030b376c0797848b0a51 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_abda4ead1a6321a69bbc5d7dc1700173.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #3&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_abda4ead1a6321a69bbc5d7dc1700173.setIcon(div_icon_4d6c1a5e1336030b376c0797848b0a51);
+            
+    
+            var marker_0a2b3ac7388d37b2e96b372b73b11520 = L.marker(
+                [52.08173877665259, 5.135687182708194],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_053d07ee8ff39d7837e298a85de4d966 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0a2b3ac7388d37b2e96b372b73b11520.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #4&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0a2b3ac7388d37b2e96b372b73b11520.setIcon(div_icon_053d07ee8ff39d7837e298a85de4d966);
+            
+    
+            var marker_e7e350551ebc44b2308c8d9c18b88077 = L.marker(
+                [52.08059594438876, 5.116876872787411],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_cbf508b78a5a6e140d756c1c160de464 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_e7e350551ebc44b2308c8d9c18b88077.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #5&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_e7e350551ebc44b2308c8d9c18b88077.setIcon(div_icon_cbf508b78a5a6e140d756c1c160de464);
+            
+    
+            var marker_d352dd661aee7f88532eeaabdb337bdf = L.marker(
+                [52.09010710576207, 5.108745518992144],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_235557d0bfb89b26e24278065e08746e = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_d352dd661aee7f88532eeaabdb337bdf.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #6&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_d352dd661aee7f88532eeaabdb337bdf.setIcon(div_icon_235557d0bfb89b26e24278065e08746e);
+            
+    
+            var marker_672fc7e0a0fe6f4dfaf91ac26051f193 = L.marker(
+                [52.08397675301374, 5.1010614387873545],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_b7cb8c73be1938457c5955288cfbfd66 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_672fc7e0a0fe6f4dfaf91ac26051f193.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #7&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_672fc7e0a0fe6f4dfaf91ac26051f193.setIcon(div_icon_b7cb8c73be1938457c5955288cfbfd66);
+            
+    
+            var marker_161ea73ea01f6e4726a7e39a6cfefae5 = L.marker(
+                [52.090898829612065, 5.125995377511181],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_aadaa78d3bb464bf1db125f9af039b60 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_161ea73ea01f6e4726a7e39a6cfefae5.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #8&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_161ea73ea01f6e4726a7e39a6cfefae5.setIcon(div_icon_aadaa78d3bb464bf1db125f9af039b60);
+            
+    
+            var marker_4b8ef0354147d6af7db6823f66d4f887 = L.marker(
+                [52.09178531367752, 5.108817624881628],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_fa5b21e6c0dcf4f5a3734926e0183a2f = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_4b8ef0354147d6af7db6823f66d4f887.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #9&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_4b8ef0354147d6af7db6823f66d4f887.setIcon(div_icon_fa5b21e6c0dcf4f5a3734926e0183a2f);
+            
+    
+            var marker_30d29e8216c8324dd2abc01406427f90 = L.marker(
+                [52.080129975193564, 5.132377218267113],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_d5a801423ad324d9cc1cc9e2ba1d78b0 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_30d29e8216c8324dd2abc01406427f90.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #10&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_30d29e8216c8324dd2abc01406427f90.setIcon(div_icon_d5a801423ad324d9cc1cc9e2ba1d78b0);
+            
+    
+            var marker_aafdef8e3c8ab4825f3fcf2d0cdec657 = L.marker(
+                [52.09396278789977, 5.132232770073313],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_7e74ebe2d150829f7d5c3eb53341c712 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_aafdef8e3c8ab4825f3fcf2d0cdec657.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #11&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_aafdef8e3c8ab4825f3fcf2d0cdec657.setIcon(div_icon_7e74ebe2d150829f7d5c3eb53341c712);
+            
+    
+            var marker_66c9a491005508760eeb8986b3a1014a = L.marker(
+                [52.08310958999624, 5.11361002066072],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_f0a3c34bae7509d715c929faa59e7eb9 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_66c9a491005508760eeb8986b3a1014a.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #12&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_66c9a491005508760eeb8986b3a1014a.setIcon(div_icon_f0a3c34bae7509d715c929faa59e7eb9);
+            
+    
+            var marker_f669c51494fd12dd93009d688c1ce4f0 = L.marker(
+                [52.08673189090226, 5.1382885228882715],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_2e201974780eb65afcde95ec9f0dafa7 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_f669c51494fd12dd93009d688c1ce4f0.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #13&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_f669c51494fd12dd93009d688c1ce4f0.setIcon(div_icon_2e201974780eb65afcde95ec9f0dafa7);
+            
+    
+            var marker_8308c6dfd7b979cb3507e40646f28401 = L.marker(
+                [52.08193432753667, 5.103709833735206],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_47db582ad4db702c28d0c318e6a194a9 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_8308c6dfd7b979cb3507e40646f28401.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #14&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_8308c6dfd7b979cb3507e40646f28401.setIcon(div_icon_47db582ad4db702c28d0c318e6a194a9);
+            
+    
+            var marker_110b200fbb0f5013a3efecd79c5f450e = L.marker(
+                [52.09207452062734, 5.133899774653899],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_fb7abffd3f2a0a2e2179c7cab538abba = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_110b200fbb0f5013a3efecd79c5f450e.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #15&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_110b200fbb0f5013a3efecd79c5f450e.setIcon(div_icon_fb7abffd3f2a0a2e2179c7cab538abba);
+            
+    
+            var marker_23267ef569702aaa89cc89e684c0aaaa = L.marker(
+                [52.09459463573388, 5.132285130930975],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_151ae82245f0beebd1776b97dacc9ee2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_23267ef569702aaa89cc89e684c0aaaa.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #16&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_23267ef569702aaa89cc89e684c0aaaa.setIcon(div_icon_151ae82245f0beebd1776b97dacc9ee2);
+            
+    
+            var marker_ee6ec3cd221e1b8df2da280f8c17dd29 = L.marker(
+                [52.09946231527959, 5.121449123658188],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_e5c696cda8795b3bc0a1d8917cfab3a4 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_ee6ec3cd221e1b8df2da280f8c17dd29.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #17&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_ee6ec3cd221e1b8df2da280f8c17dd29.setIcon(div_icon_e5c696cda8795b3bc0a1d8917cfab3a4);
+            
+    
+            var marker_543d5b401009df95fbd8bc146de73466 = L.marker(
+                [52.091040812625465, 5.115141375088334],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_96af50de5644d622951874f364c96b70 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_543d5b401009df95fbd8bc146de73466.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #18&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_543d5b401009df95fbd8bc146de73466.setIcon(div_icon_96af50de5644d622951874f364c96b70);
+            
+    
+            var marker_e5d77ebc3ce6d32bd67dab9be4e91877 = L.marker(
+                [52.09237039504729, 5.13317618657012],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_3764e840bd32ca04bde74b96e8329cc5 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_e5d77ebc3ce6d32bd67dab9be4e91877.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #19&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_e5d77ebc3ce6d32bd67dab9be4e91877.setIcon(div_icon_3764e840bd32ca04bde74b96e8329cc5);
+            
+    
+            var marker_83ec8eac08f607dfef1a4e0d6c9ad469 = L.marker(
+                [52.09154704290514, 5.134468276012432],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_ff4ddb95a2c5a13335801cbcd9df3a93 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_83ec8eac08f607dfef1a4e0d6c9ad469.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #20&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_83ec8eac08f607dfef1a4e0d6c9ad469.setIcon(div_icon_ff4ddb95a2c5a13335801cbcd9df3a93);
+            
+    
+            var marker_a9b8d75d2d5f4e14da372a2c32360bed = L.marker(
+                [52.080916487673115, 5.128182873448597],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_d061ef6ed01342d882ebe3377b5fa26b = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_a9b8d75d2d5f4e14da372a2c32360bed.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #21&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_a9b8d75d2d5f4e14da372a2c32360bed.setIcon(div_icon_d061ef6ed01342d882ebe3377b5fa26b);
+            
+    
+            var marker_258270df2255dd91677d7f88b75eec31 = L.marker(
+                [52.085787759272044, 5.109115931026062],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_42c159bec062620d49f84b1dcfce7c1f = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_258270df2255dd91677d7f88b75eec31.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #22&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_258270df2255dd91677d7f88b75eec31.setIcon(div_icon_42c159bec062620d49f84b1dcfce7c1f);
+            
+    
+            var marker_f445440fcc1bbd4f2caf82c85aaf2ee3 = L.marker(
+                [52.084655817727224, 5.103191679076946],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_b2b655af63b9a142ce75ababccc8bb79 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_f445440fcc1bbd4f2caf82c85aaf2ee3.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #23&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_f445440fcc1bbd4f2caf82c85aaf2ee3.setIcon(div_icon_b2b655af63b9a142ce75ababccc8bb79);
+            
+    
+            var marker_22d9d8e22ea4061598947d93dddce978 = L.marker(
+                [52.08555947206221, 5.104040057176389],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_e3e0a81521358d95a560dcb9b1448305 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_22d9d8e22ea4061598947d93dddce978.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #24&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_22d9d8e22ea4061598947d93dddce978.setIcon(div_icon_e3e0a81521358d95a560dcb9b1448305);
+            
+    
+            var marker_09490b7b63a12ec3156825f0f5b966d5 = L.marker(
+                [52.08729664357941, 5.125427377770576],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_801b96b3b6943d877c5111df68081265 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_09490b7b63a12ec3156825f0f5b966d5.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #25&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_09490b7b63a12ec3156825f0f5b966d5.setIcon(div_icon_801b96b3b6943d877c5111df68081265);
+            
+    
+            var marker_bb89af5d2bc4463b6c524f3eeffab15e = L.marker(
+                [52.08419014061543, 5.1148072386846755],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_5b0a0546f9514c0785d2ae714f5cbbbf = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_bb89af5d2bc4463b6c524f3eeffab15e.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #26&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_bb89af5d2bc4463b6c524f3eeffab15e.setIcon(div_icon_5b0a0546f9514c0785d2ae714f5cbbbf);
+            
+    
+            var marker_d038c0eb2eaef061794fe6113fc17d66 = L.marker(
+                [52.098733091754255, 5.110679112881964],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_b84d82deed240d91f4915c501002b5d7 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_d038c0eb2eaef061794fe6113fc17d66.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #27&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_d038c0eb2eaef061794fe6113fc17d66.setIcon(div_icon_b84d82deed240d91f4915c501002b5d7);
+            
+    
+            var marker_6c659c1b5a49926a4b63226c26c0badf = L.marker(
+                [52.09218262011334, 5.125921415409864],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_b5bc56a32106c5580affa5a5d102c3b2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_6c659c1b5a49926a4b63226c26c0badf.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #28&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_6c659c1b5a49926a4b63226c26c0badf.setIcon(div_icon_b5bc56a32106c5580affa5a5d102c3b2);
+            
+    
+            var marker_cd45ae32916597d42cb94b2a408fa28b = L.marker(
+                [52.09458253595901, 5.106845545927924],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_0932c844482f67fa18a81df61d7675c5 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_cd45ae32916597d42cb94b2a408fa28b.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #29&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_cd45ae32916597d42cb94b2a408fa28b.setIcon(div_icon_0932c844482f67fa18a81df61d7675c5);
+            
+    
+            var marker_285619a866fdff17668e0dbae8f9181f = L.marker(
+                [52.087589108835154, 5.106536099750477],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_4b3558c7ab22aa510c8a545d1a298d60 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_285619a866fdff17668e0dbae8f9181f.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #30&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_285619a866fdff17668e0dbae8f9181f.setIcon(div_icon_4b3558c7ab22aa510c8a545d1a298d60);
+            
+    
+            var marker_26f7a03fb7682fee41e79fedbc8f3f77 = L.marker(
+                [52.09279999519708, 5.139580934025464],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_fc06356d1f12019225e570fc180dc932 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_26f7a03fb7682fee41e79fedbc8f3f77.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #31&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_26f7a03fb7682fee41e79fedbc8f3f77.setIcon(div_icon_fc06356d1f12019225e570fc180dc932);
+            
+    
+            var marker_e75c4e6af1bc06e344be942baf2520e7 = L.marker(
+                [52.0936922850198, 5.122277989750986],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_bda38082979113769a43c5230670a8d8 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_e75c4e6af1bc06e344be942baf2520e7.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #32&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_e75c4e6af1bc06e344be942baf2520e7.setIcon(div_icon_bda38082979113769a43c5230670a8d8);
+            
+    
+            var marker_7cc504466a2b4d6c69ad14a720019651 = L.marker(
+                [52.09551999823093, 5.133714076807593],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_c556c6d2a4d7c7ac989a3fdf6844a9c2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_7cc504466a2b4d6c69ad14a720019651.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #33&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_7cc504466a2b4d6c69ad14a720019651.setIcon(div_icon_c556c6d2a4d7c7ac989a3fdf6844a9c2);
+            
+    
+            var marker_ece940dc252054630d96d916b4bfa1d8 = L.marker(
+                [52.08064200487809, 5.109161922878564],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_e9c6be4ee008b205ddcb683374a7777b = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_ece940dc252054630d96d916b4bfa1d8.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #34&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_ece940dc252054630d96d916b4bfa1d8.setIcon(div_icon_e9c6be4ee008b205ddcb683374a7777b);
+            
+    
+            var marker_79c464e70a09fc0cec6123a831acaa02 = L.marker(
+                [52.085354817519516, 5.112618121922363],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_b141eab9ec064da7684d8e7aac413d17 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_79c464e70a09fc0cec6123a831acaa02.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #35&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_79c464e70a09fc0cec6123a831acaa02.setIcon(div_icon_b141eab9ec064da7684d8e7aac413d17);
+            
+    
+            var marker_4fdd09d76cfdbe4375390b8b7e559cbf = L.marker(
+                [52.098858194286706, 5.108439313743453],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_8f2e62c4a0a014522f36a3a8be6de295 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_4fdd09d76cfdbe4375390b8b7e559cbf.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #36&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_4fdd09d76cfdbe4375390b8b7e559cbf.setIcon(div_icon_8f2e62c4a0a014522f36a3a8be6de295);
+            
+    
+            var marker_312535a080600b11544d581f1a09812d = L.marker(
+                [52.086293557615974, 5.135054705058907],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_1c2678a2d9e46ec18329603b23792d1f = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_312535a080600b11544d581f1a09812d.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #37&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_312535a080600b11544d581f1a09812d.setIcon(div_icon_1c2678a2d9e46ec18329603b23792d1f);
+            
+    
+            var marker_919f0bcba9b5eb1e67af107f42c97100 = L.marker(
+                [52.087912638021216, 5.126217546611795],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_544f238b93fc63f67cbcd9e4b01b7438 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_919f0bcba9b5eb1e67af107f42c97100.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #38&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_919f0bcba9b5eb1e67af107f42c97100.setIcon(div_icon_544f238b93fc63f67cbcd9e4b01b7438);
+            
+    
+            var marker_18ea9779f3a6db0818550385a4a92e74 = L.marker(
+                [52.089177037051755, 5.136581903589621],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_236fd36027a1adcf2f9a8286986f08f7 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_18ea9779f3a6db0818550385a4a92e74.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #39&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_18ea9779f3a6db0818550385a4a92e74.setIcon(div_icon_236fd36027a1adcf2f9a8286986f08f7);
+            
+    
+            var marker_51f4dd412d66af622002c1cb23c82f22 = L.marker(
+                [52.08493255015388, 5.110595206659922],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_9ee6170f1a4810932652e0189e3e5221 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_51f4dd412d66af622002c1cb23c82f22.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #40&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_51f4dd412d66af622002c1cb23c82f22.setIcon(div_icon_9ee6170f1a4810932652e0189e3e5221);
+            
+    
+            var marker_6fdf918efd2374c1c38120b554da9571 = L.marker(
+                [52.08525483217046, 5.122454725366526],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_92885abb51559945daf734490d081cc3 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_6fdf918efd2374c1c38120b554da9571.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #41&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_6fdf918efd2374c1c38120b554da9571.setIcon(div_icon_92885abb51559945daf734490d081cc3);
+            
+    
+            var marker_5cc7e383222094186a88a88772f3b874 = L.marker(
+                [52.097956457672055, 5.123383439608942],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_45e8f235001c383dc02bc8af63749440 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_5cc7e383222094186a88a88772f3b874.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #42&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_5cc7e383222094186a88a88772f3b874.setIcon(div_icon_45e8f235001c383dc02bc8af63749440);
+            
+    
+            var marker_7bd94d9951947d877754b6b12bac7ac6 = L.marker(
+                [52.08438641518315, 5.115976020205616],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_306098b5d24eba91ff70bba43cec3551 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_7bd94d9951947d877754b6b12bac7ac6.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #43&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_7bd94d9951947d877754b6b12bac7ac6.setIcon(div_icon_306098b5d24eba91ff70bba43cec3551);
+            
+    
+            var marker_ef74b636d1a22c7728f9fc4c99824ce3 = L.marker(
+                [52.09019052587353, 5.139901504259805],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_5e0edeff9592c960c7979f559e7209dd = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_ef74b636d1a22c7728f9fc4c99824ce3.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #44&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_ef74b636d1a22c7728f9fc4c99824ce3.setIcon(div_icon_5e0edeff9592c960c7979f559e7209dd);
+            
+    
+            var marker_c7398711210af8c0e879c09caf1dff28 = L.marker(
+                [52.080942327508495, 5.103636376486952],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_e28859bb8c90d6e282df95eb2a662fd4 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_c7398711210af8c0e879c09caf1dff28.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #45&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_c7398711210af8c0e879c09caf1dff28.setIcon(div_icon_e28859bb8c90d6e282df95eb2a662fd4);
+            
+    
+            var marker_f1c56c040458629e88db2dc3ff922c60 = L.marker(
+                [52.09254892083406, 5.104385965214027],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_9356688ef829ed1d7dbb91be2b84b1e7 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_f1c56c040458629e88db2dc3ff922c60.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #46&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_f1c56c040458629e88db2dc3ff922c60.setIcon(div_icon_9356688ef829ed1d7dbb91be2b84b1e7);
+            
+    
+            var marker_51fbc693c1211f8a807cc023407786e3 = L.marker(
+                [52.088443199336, 5.131683174574519],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_f3cc3f86122b1acf8012c398a6d594dc = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_51fbc693c1211f8a807cc023407786e3.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #47&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_51fbc693c1211f8a807cc023407786e3.setIcon(div_icon_f3cc3f86122b1acf8012c398a6d594dc);
+            
+    
+            var marker_69aac84acd9d8894f3658dcb00247ec1 = L.marker(
+                [52.08763238573013, 5.102541108246078],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_76033089ab96f2a483334a40e1fd54ff = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_69aac84acd9d8894f3658dcb00247ec1.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #48&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_69aac84acd9d8894f3658dcb00247ec1.setIcon(div_icon_76033089ab96f2a483334a40e1fd54ff);
+            
+    
+            var marker_98d85a585c794ef3c22294a757254cf8 = L.marker(
+                [52.090582286901984, 5.139844855209604],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_ba2728bc801aae1a04902deeb7a5eecb = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_98d85a585c794ef3c22294a757254cf8.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #49&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_98d85a585c794ef3c22294a757254cf8.setIcon(div_icon_ba2728bc801aae1a04902deeb7a5eecb);
+            
+    
+            var marker_c546c6a573f2acb537ea06c05940c493 = L.marker(
+                [52.09721559404469, 5.138843135104545],
+                {
+}
+            ).addTo(marker_cluster_de0f925d6b568ad27e14c21f79e0828d);
+        
+    
+            var div_icon_cbaa0c5debb7ac007ab591c910dc3580 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\u2615\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_c546c6a573f2acb537ea06c05940c493.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Café #50&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_c546c6a573f2acb537ea06c05940c493.setIcon(div_icon_cbaa0c5debb7ac007ab591c910dc3580);
+            
+    
+            marker_cluster_de0f925d6b568ad27e14c21f79e0828d.addTo(map_b1bafbfa41f3aa6d5b180ac08c555b08);
+        
+    
+            map_b1bafbfa41f3aa6d5b180ac08c555b08.fitBounds(
+                [[52.08050021510446, 5.125577071938316], [52.08050021510446, 5.125577071938316], [52.08446421476298, 5.111001172734765], [52.08446421476298, 5.111001172734765], [52.09353398974846, 5.129458848566561], [52.09353398974846, 5.129458848566561], [52.08173877665259, 5.135687182708194], [52.08173877665259, 5.135687182708194], [52.08059594438876, 5.116876872787411], [52.08059594438876, 5.116876872787411], [52.09010710576207, 5.108745518992144], [52.09010710576207, 5.108745518992144], [52.08397675301374, 5.1010614387873545], [52.08397675301374, 5.1010614387873545], [52.090898829612065, 5.125995377511181], [52.090898829612065, 5.125995377511181], [52.09178531367752, 5.108817624881628], [52.09178531367752, 5.108817624881628], [52.080129975193564, 5.132377218267113], [52.080129975193564, 5.132377218267113], [52.09396278789977, 5.132232770073313], [52.09396278789977, 5.132232770073313], [52.08310958999624, 5.11361002066072], [52.08310958999624, 5.11361002066072], [52.08673189090226, 5.1382885228882715], [52.08673189090226, 5.1382885228882715], [52.08193432753667, 5.103709833735206], [52.08193432753667, 5.103709833735206], [52.09207452062734, 5.133899774653899], [52.09207452062734, 5.133899774653899], [52.09459463573388, 5.132285130930975], [52.09459463573388, 5.132285130930975], [52.09946231527959, 5.121449123658188], [52.09946231527959, 5.121449123658188], [52.091040812625465, 5.115141375088334], [52.091040812625465, 5.115141375088334], [52.09237039504729, 5.13317618657012], [52.09237039504729, 5.13317618657012], [52.09154704290514, 5.134468276012432], [52.09154704290514, 5.134468276012432], [52.080916487673115, 5.128182873448597], [52.080916487673115, 5.128182873448597], [52.085787759272044, 5.109115931026062], [52.085787759272044, 5.109115931026062], [52.084655817727224, 5.103191679076946], [52.084655817727224, 5.103191679076946], [52.08555947206221, 5.104040057176389], [52.08555947206221, 5.104040057176389], [52.08729664357941, 5.125427377770576], [52.08729664357941, 5.125427377770576], [52.08419014061543, 5.1148072386846755], [52.08419014061543, 5.1148072386846755], [52.098733091754255, 5.110679112881964], [52.098733091754255, 5.110679112881964], [52.09218262011334, 5.125921415409864], [52.09218262011334, 5.125921415409864], [52.09458253595901, 5.106845545927924], [52.09458253595901, 5.106845545927924], [52.087589108835154, 5.106536099750477], [52.087589108835154, 5.106536099750477], [52.09279999519708, 5.139580934025464], [52.09279999519708, 5.139580934025464], [52.0936922850198, 5.122277989750986], [52.0936922850198, 5.122277989750986], [52.09551999823093, 5.133714076807593], [52.09551999823093, 5.133714076807593], [52.08064200487809, 5.109161922878564], [52.08064200487809, 5.109161922878564], [52.085354817519516, 5.112618121922363], [52.085354817519516, 5.112618121922363], [52.098858194286706, 5.108439313743453], [52.098858194286706, 5.108439313743453], [52.086293557615974, 5.135054705058907], [52.086293557615974, 5.135054705058907], [52.087912638021216, 5.126217546611795], [52.087912638021216, 5.126217546611795], [52.089177037051755, 5.136581903589621], [52.089177037051755, 5.136581903589621], [52.08493255015388, 5.110595206659922], [52.08493255015388, 5.110595206659922], [52.08525483217046, 5.122454725366526], [52.08525483217046, 5.122454725366526], [52.097956457672055, 5.123383439608942], [52.097956457672055, 5.123383439608942], [52.08438641518315, 5.115976020205616], [52.08438641518315, 5.115976020205616], [52.09019052587353, 5.139901504259805], [52.09019052587353, 5.139901504259805], [52.080942327508495, 5.103636376486952], [52.080942327508495, 5.103636376486952], [52.09254892083406, 5.104385965214027], [52.09254892083406, 5.104385965214027], [52.088443199336, 5.131683174574519], [52.088443199336, 5.131683174574519], [52.08763238573013, 5.102541108246078], [52.08763238573013, 5.102541108246078], [52.090582286901984, 5.139844855209604], [52.090582286901984, 5.139844855209604], [52.09721559404469, 5.138843135104545], [52.09721559404469, 5.138843135104545]],
+                {}
+            );
+        
+    
+            tile_layer_a10ac299f98303af0ee3651004c38c68.addTo(map_b1bafbfa41f3aa6d5b180ac08c555b08);
+        
+    
+                marker_4fc830223ff6cb3e91e3cd3ebe60ac89.setIcon(div_icon_1828ba24be9a6992289a52b93f0dd795);
+            
+    
+                marker_9dd000e02d112415f39b6dede7c8412a.setIcon(div_icon_56aa1715ff06c68884d800ff1b5624af);
+            
+    
+                marker_abda4ead1a6321a69bbc5d7dc1700173.setIcon(div_icon_4d6c1a5e1336030b376c0797848b0a51);
+            
+    
+                marker_0a2b3ac7388d37b2e96b372b73b11520.setIcon(div_icon_053d07ee8ff39d7837e298a85de4d966);
+            
+    
+                marker_e7e350551ebc44b2308c8d9c18b88077.setIcon(div_icon_cbf508b78a5a6e140d756c1c160de464);
+            
+    
+                marker_d352dd661aee7f88532eeaabdb337bdf.setIcon(div_icon_235557d0bfb89b26e24278065e08746e);
+            
+    
+                marker_672fc7e0a0fe6f4dfaf91ac26051f193.setIcon(div_icon_b7cb8c73be1938457c5955288cfbfd66);
+            
+    
+                marker_161ea73ea01f6e4726a7e39a6cfefae5.setIcon(div_icon_aadaa78d3bb464bf1db125f9af039b60);
+            
+    
+                marker_4b8ef0354147d6af7db6823f66d4f887.setIcon(div_icon_fa5b21e6c0dcf4f5a3734926e0183a2f);
+            
+    
+                marker_30d29e8216c8324dd2abc01406427f90.setIcon(div_icon_d5a801423ad324d9cc1cc9e2ba1d78b0);
+            
+    
+                marker_aafdef8e3c8ab4825f3fcf2d0cdec657.setIcon(div_icon_7e74ebe2d150829f7d5c3eb53341c712);
+            
+    
+                marker_66c9a491005508760eeb8986b3a1014a.setIcon(div_icon_f0a3c34bae7509d715c929faa59e7eb9);
+            
+    
+                marker_f669c51494fd12dd93009d688c1ce4f0.setIcon(div_icon_2e201974780eb65afcde95ec9f0dafa7);
+            
+    
+                marker_8308c6dfd7b979cb3507e40646f28401.setIcon(div_icon_47db582ad4db702c28d0c318e6a194a9);
+            
+    
+                marker_110b200fbb0f5013a3efecd79c5f450e.setIcon(div_icon_fb7abffd3f2a0a2e2179c7cab538abba);
+            
+    
+                marker_23267ef569702aaa89cc89e684c0aaaa.setIcon(div_icon_151ae82245f0beebd1776b97dacc9ee2);
+            
+    
+                marker_ee6ec3cd221e1b8df2da280f8c17dd29.setIcon(div_icon_e5c696cda8795b3bc0a1d8917cfab3a4);
+            
+    
+                marker_543d5b401009df95fbd8bc146de73466.setIcon(div_icon_96af50de5644d622951874f364c96b70);
+            
+    
+                marker_e5d77ebc3ce6d32bd67dab9be4e91877.setIcon(div_icon_3764e840bd32ca04bde74b96e8329cc5);
+            
+    
+                marker_83ec8eac08f607dfef1a4e0d6c9ad469.setIcon(div_icon_ff4ddb95a2c5a13335801cbcd9df3a93);
+            
+    
+                marker_a9b8d75d2d5f4e14da372a2c32360bed.setIcon(div_icon_d061ef6ed01342d882ebe3377b5fa26b);
+            
+    
+                marker_258270df2255dd91677d7f88b75eec31.setIcon(div_icon_42c159bec062620d49f84b1dcfce7c1f);
+            
+    
+                marker_f445440fcc1bbd4f2caf82c85aaf2ee3.setIcon(div_icon_b2b655af63b9a142ce75ababccc8bb79);
+            
+    
+                marker_22d9d8e22ea4061598947d93dddce978.setIcon(div_icon_e3e0a81521358d95a560dcb9b1448305);
+            
+    
+                marker_09490b7b63a12ec3156825f0f5b966d5.setIcon(div_icon_801b96b3b6943d877c5111df68081265);
+            
+    
+                marker_bb89af5d2bc4463b6c524f3eeffab15e.setIcon(div_icon_5b0a0546f9514c0785d2ae714f5cbbbf);
+            
+    
+                marker_d038c0eb2eaef061794fe6113fc17d66.setIcon(div_icon_b84d82deed240d91f4915c501002b5d7);
+            
+    
+                marker_6c659c1b5a49926a4b63226c26c0badf.setIcon(div_icon_b5bc56a32106c5580affa5a5d102c3b2);
+            
+    
+                marker_cd45ae32916597d42cb94b2a408fa28b.setIcon(div_icon_0932c844482f67fa18a81df61d7675c5);
+            
+    
+                marker_285619a866fdff17668e0dbae8f9181f.setIcon(div_icon_4b3558c7ab22aa510c8a545d1a298d60);
+            
+    
+                marker_26f7a03fb7682fee41e79fedbc8f3f77.setIcon(div_icon_fc06356d1f12019225e570fc180dc932);
+            
+    
+                marker_e75c4e6af1bc06e344be942baf2520e7.setIcon(div_icon_bda38082979113769a43c5230670a8d8);
+            
+    
+                marker_7cc504466a2b4d6c69ad14a720019651.setIcon(div_icon_c556c6d2a4d7c7ac989a3fdf6844a9c2);
+            
+    
+                marker_ece940dc252054630d96d916b4bfa1d8.setIcon(div_icon_e9c6be4ee008b205ddcb683374a7777b);
+            
+    
+                marker_79c464e70a09fc0cec6123a831acaa02.setIcon(div_icon_b141eab9ec064da7684d8e7aac413d17);
+            
+    
+                marker_4fdd09d76cfdbe4375390b8b7e559cbf.setIcon(div_icon_8f2e62c4a0a014522f36a3a8be6de295);
+            
+    
+                marker_312535a080600b11544d581f1a09812d.setIcon(div_icon_1c2678a2d9e46ec18329603b23792d1f);
+            
+    
+                marker_919f0bcba9b5eb1e67af107f42c97100.setIcon(div_icon_544f238b93fc63f67cbcd9e4b01b7438);
+            
+    
+                marker_18ea9779f3a6db0818550385a4a92e74.setIcon(div_icon_236fd36027a1adcf2f9a8286986f08f7);
+            
+    
+                marker_51f4dd412d66af622002c1cb23c82f22.setIcon(div_icon_9ee6170f1a4810932652e0189e3e5221);
+            
+    
+                marker_6fdf918efd2374c1c38120b554da9571.setIcon(div_icon_92885abb51559945daf734490d081cc3);
+            
+    
+                marker_5cc7e383222094186a88a88772f3b874.setIcon(div_icon_45e8f235001c383dc02bc8af63749440);
+            
+    
+                marker_7bd94d9951947d877754b6b12bac7ac6.setIcon(div_icon_306098b5d24eba91ff70bba43cec3551);
+            
+    
+                marker_ef74b636d1a22c7728f9fc4c99824ce3.setIcon(div_icon_5e0edeff9592c960c7979f559e7209dd);
+            
+    
+                marker_c7398711210af8c0e879c09caf1dff28.setIcon(div_icon_e28859bb8c90d6e282df95eb2a662fd4);
+            
+    
+                marker_f1c56c040458629e88db2dc3ff922c60.setIcon(div_icon_9356688ef829ed1d7dbb91be2b84b1e7);
+            
+    
+                marker_51fbc693c1211f8a807cc023407786e3.setIcon(div_icon_f3cc3f86122b1acf8012c398a6d594dc);
+            
+    
+                marker_69aac84acd9d8894f3658dcb00247ec1.setIcon(div_icon_76033089ab96f2a483334a40e1fd54ff);
+            
+    
+                marker_98d85a585c794ef3c22294a757254cf8.setIcon(div_icon_ba2728bc801aae1a04902deeb7a5eecb);
+            
+    
+                marker_c546c6a573f2acb537ea06c05940c493.setIcon(div_icon_cbaa0c5debb7ac007ab591c910dc3580);
+            
+    
+            marker_cluster_de0f925d6b568ad27e14c21f79e0828d.addTo(map_b1bafbfa41f3aa6d5b180ac08c555b08);
+        
+    
+            map_b1bafbfa41f3aa6d5b180ac08c555b08.fitBounds(
+                [[52.08050021510446, 5.125577071938316], [52.08050021510446, 5.125577071938316], [52.08446421476298, 5.111001172734765], [52.08446421476298, 5.111001172734765], [52.09353398974846, 5.129458848566561], [52.09353398974846, 5.129458848566561], [52.08173877665259, 5.135687182708194], [52.08173877665259, 5.135687182708194], [52.08059594438876, 5.116876872787411], [52.08059594438876, 5.116876872787411], [52.09010710576207, 5.108745518992144], [52.09010710576207, 5.108745518992144], [52.08397675301374, 5.1010614387873545], [52.08397675301374, 5.1010614387873545], [52.090898829612065, 5.125995377511181], [52.090898829612065, 5.125995377511181], [52.09178531367752, 5.108817624881628], [52.09178531367752, 5.108817624881628], [52.080129975193564, 5.132377218267113], [52.080129975193564, 5.132377218267113], [52.09396278789977, 5.132232770073313], [52.09396278789977, 5.132232770073313], [52.08310958999624, 5.11361002066072], [52.08310958999624, 5.11361002066072], [52.08673189090226, 5.1382885228882715], [52.08673189090226, 5.1382885228882715], [52.08193432753667, 5.103709833735206], [52.08193432753667, 5.103709833735206], [52.09207452062734, 5.133899774653899], [52.09207452062734, 5.133899774653899], [52.09459463573388, 5.132285130930975], [52.09459463573388, 5.132285130930975], [52.09946231527959, 5.121449123658188], [52.09946231527959, 5.121449123658188], [52.091040812625465, 5.115141375088334], [52.091040812625465, 5.115141375088334], [52.09237039504729, 5.13317618657012], [52.09237039504729, 5.13317618657012], [52.09154704290514, 5.134468276012432], [52.09154704290514, 5.134468276012432], [52.080916487673115, 5.128182873448597], [52.080916487673115, 5.128182873448597], [52.085787759272044, 5.109115931026062], [52.085787759272044, 5.109115931026062], [52.084655817727224, 5.103191679076946], [52.084655817727224, 5.103191679076946], [52.08555947206221, 5.104040057176389], [52.08555947206221, 5.104040057176389], [52.08729664357941, 5.125427377770576], [52.08729664357941, 5.125427377770576], [52.08419014061543, 5.1148072386846755], [52.08419014061543, 5.1148072386846755], [52.098733091754255, 5.110679112881964], [52.098733091754255, 5.110679112881964], [52.09218262011334, 5.125921415409864], [52.09218262011334, 5.125921415409864], [52.09458253595901, 5.106845545927924], [52.09458253595901, 5.106845545927924], [52.087589108835154, 5.106536099750477], [52.087589108835154, 5.106536099750477], [52.09279999519708, 5.139580934025464], [52.09279999519708, 5.139580934025464], [52.0936922850198, 5.122277989750986], [52.0936922850198, 5.122277989750986], [52.09551999823093, 5.133714076807593], [52.09551999823093, 5.133714076807593], [52.08064200487809, 5.109161922878564], [52.08064200487809, 5.109161922878564], [52.085354817519516, 5.112618121922363], [52.085354817519516, 5.112618121922363], [52.098858194286706, 5.108439313743453], [52.098858194286706, 5.108439313743453], [52.086293557615974, 5.135054705058907], [52.086293557615974, 5.135054705058907], [52.087912638021216, 5.126217546611795], [52.087912638021216, 5.126217546611795], [52.089177037051755, 5.136581903589621], [52.089177037051755, 5.136581903589621], [52.08493255015388, 5.110595206659922], [52.08493255015388, 5.110595206659922], [52.08525483217046, 5.122454725366526], [52.08525483217046, 5.122454725366526], [52.097956457672055, 5.123383439608942], [52.097956457672055, 5.123383439608942], [52.08438641518315, 5.115976020205616], [52.08438641518315, 5.115976020205616], [52.09019052587353, 5.139901504259805], [52.09019052587353, 5.139901504259805], [52.080942327508495, 5.103636376486952], [52.080942327508495, 5.103636376486952], [52.09254892083406, 5.104385965214027], [52.09254892083406, 5.104385965214027], [52.088443199336, 5.131683174574519], [52.088443199336, 5.131683174574519], [52.08763238573013, 5.102541108246078], [52.08763238573013, 5.102541108246078], [52.090582286901984, 5.139844855209604], [52.090582286901984, 5.139844855209604], [52.09721559404469, 5.138843135104545], [52.09721559404469, 5.138843135104545]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">cafes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.12</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">),</span> <span class="mf">52.09</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;☕&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">50</span>
+<span class="n">tooltips</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;**Café #</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">**&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)]</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Utrecht Cafés&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_marker_cluster</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">cafes</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">tooltips</span><span class="o">=</span><span class="n">tooltips</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cafés&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s2">&quot;clusters.html&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>At low zoom you'll see cluster bubbles with counts. Zoom in and they split into individual ☕ markers.</p>
+<h2 id="parameters">Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>points</code></td>
+<td>List of Shapely <code>Point</code> objects</td>
+</tr>
+<tr>
+<td><code>labels</code></td>
+<td>Marker text per point (emoji, text, or FA icon name)</td>
+</tr>
+<tr>
+<td><code>tooltips</code></td>
+<td>Markdown tooltip per point</td>
+</tr>
+<tr>
+<td><code>popups</code></td>
+<td>Markdown popup per point</td>
+</tr>
+<tr>
+<td><code>captions</code></td>
+<td>Text label below each marker</td>
+</tr>
+<tr>
+<td><code>marker_style</code></td>
+<td>CSS dict applied to all markers</td>
+</tr>
+<tr>
+<td><code>caption_style</code></td>
+<td>CSS dict for captions</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Cluster group name</td>
+</tr>
+<tr>
+<td><code>min_zoom</code></td>
+<td>Zoom level at which markers appear individually</td>
+</tr>
+<tr>
+<td><code>popup_style</code></td>
+<td><code>PopupStyle</code> or dict for popup dimensions</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../heatmaps/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Heatmaps">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Heatmaps
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dataframe/" class="md-footer__link md-footer__link--next" aria-label="Next: Dataframes">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Dataframes
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026 &copy; Mapyta - Enrique García
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/engarcia/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/egarciamendez/mapyta" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.code.copy", "content.code.select", "content.footnote.tooltips", "content.tabs.link", "content.tooltips", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "search.highlight", "search.share", "search.suggest", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+        <script src="../../js/open_in_new_tab.js"></script>
+      
+    
+  </body>
+</html>

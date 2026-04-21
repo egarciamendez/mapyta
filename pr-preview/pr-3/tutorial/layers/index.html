@@ -1,0 +1,2495 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../tooltips-popups/">
+      
+      
+        <link rel="next" href="../choropleth/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Feature Groups - Mapyta</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"DM Sans";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#feature-groups" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mapyta" class="md-header__button md-logo" aria-label="Mapyta" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-dark-mode.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mapyta
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Feature Groups
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/egarciamendez/mapyta" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Mapyta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../API%20reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Mapyta" class="md-nav__button md-logo" aria-label="Mapyta" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-dark-mode.svg" alt="logo">
+
+    </a>
+    Mapyta
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/egarciamendez/mapyta" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mapyta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lines & Polygons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tooltips-popups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooltips & Popups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Groups
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Groups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search control
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choropleth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choropleth Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heatmaps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heatmaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clusters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Clusters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataframes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geodataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GeoPandas Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../open-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open data (CBS & PDOK)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Map Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../text-annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Text Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drawing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../animated/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animated Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../min-zoom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zoom-dependent Visibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../API%20reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    coordinates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/dataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    dataframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/geojson/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    geojson
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/markdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    markdown
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/tiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search control
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Mapyta
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="feature-groups">Feature Groups</h1>
+<p>When your map has multiple categories of data, you want users to toggle them on and off. That's what "feature groups" are for, think of them as named folders. Everything you add while a group is active goes into that folder.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-31--__tabbed_1_1" name="exec-31--__tabbed_1" type="radio" /><input id="exec-31--__tabbed_1_2" name="exec-31--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-31--__tabbed_1_1">Result</label><label for="exec-31--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_e4b71a0865905e9721296b0a24345824 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Utrecht POI&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_e4b71a0865905e9721296b0a24345824&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_e4b71a0865905e9721296b0a24345824 = L.map(
+                &quot;map_e4b71a0865905e9721296b0a24345824&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_e4b71a0865905e9721296b0a24345824);
+
+            
+
+        
+    
+            var tile_layer_529fc0aa04281d94ee499768c464fe0b = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_529fc0aa04281d94ee499768c464fe0b.addTo(map_e4b71a0865905e9721296b0a24345824);
+        
+    
+            var mouse_position_a257997061392c415da9a0e24821e495 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_a257997061392c415da9a0e24821e495.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_a257997061392c415da9a0e24821e495.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_e4b71a0865905e9721296b0a24345824.addControl(mouse_position_a257997061392c415da9a0e24821e495);
+        
+    
+            var feature_group_ca060b789fe4dece01dd821fabb3b293 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_15e4bd9da4f1daf7f503c6ad61bb0e23 = L.marker(
+                [52.0865, 5.1178],
+                {
+}
+            ).addTo(feature_group_ca060b789fe4dece01dd821fabb3b293);
+        
+    
+            var div_icon_914de5ca1b3c96b915648c42799acfd9 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\ud83d\uddbc\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_15e4bd9da4f1daf7f503c6ad61bb0e23.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Centraal Museum&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_15e4bd9da4f1daf7f503c6ad61bb0e23.setIcon(div_icon_914de5ca1b3c96b915648c42799acfd9);
+            
+    
+            var marker_528893b75bdbf01c52ddfeac904603a8 = L.marker(
+                [52.082, 5.1197],
+                {
+}
+            ).addTo(feature_group_ca060b789fe4dece01dd821fabb3b293);
+        
+    
+            var div_icon_717eb777d16ca1fc16ea5d295db8a75b = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\ud83d\ude82\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_528893b75bdbf01c52ddfeac904603a8.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Spoorwegmuseum&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_528893b75bdbf01c52ddfeac904603a8.setIcon(div_icon_717eb777d16ca1fc16ea5d295db8a75b);
+            
+    
+            feature_group_ca060b789fe4dece01dd821fabb3b293.addTo(map_e4b71a0865905e9721296b0a24345824);
+        
+    
+            var feature_group_83218fbb24ba265e562dd591c239d183 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_d3c7f391424302507f9cbd0d69229d82 = L.marker(
+                [52.0855, 5.1248],
+                {
+}
+            ).addTo(feature_group_83218fbb24ba265e562dd591c239d183);
+        
+    
+            var div_icon_68398f4f6b0947294dfee15f5a4571c2 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_d3c7f391424302507f9cbd0d69229d82.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Wilhelminapark&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_d3c7f391424302507f9cbd0d69229d82.setIcon(div_icon_68398f4f6b0947294dfee15f5a4571c2);
+            
+    
+            var marker_b5637c187e3f1edf3a2e6c631e6a34be = L.marker(
+                [52.0945, 5.1367],
+                {
+}
+            ).addTo(feature_group_83218fbb24ba265e562dd591c239d183);
+        
+    
+            var div_icon_94475a1b3a5500846eac1e938ce40f0e = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\ud83c\udf3f\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_b5637c187e3f1edf3a2e6c631e6a34be.bindTooltip(
+                `&lt;div&gt;
+                     &lt;strong&gt;Griftpark&lt;/strong&gt;
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_b5637c187e3f1edf3a2e6c631e6a34be.setIcon(div_icon_94475a1b3a5500846eac1e938ce40f0e);
+            
+    
+            feature_group_83218fbb24ba265e562dd591c239d183.addTo(map_e4b71a0865905e9721296b0a24345824);
+        
+    
+            var layer_control_f52f7914bfebad0639165bac3a340a7d_layers = {
+                base_layers : {
+                    &quot;CartoDB Positron&quot; : tile_layer_529fc0aa04281d94ee499768c464fe0b,
+                },
+                overlays :  {
+                    &quot;\ud83c\udfdb\ufe0f Museums&quot; : feature_group_ca060b789fe4dece01dd821fabb3b293,
+                    &quot;\ud83c\udf33 Parks&quot; : feature_group_83218fbb24ba265e562dd591c239d183,
+                },
+            };
+            let layer_control_f52f7914bfebad0639165bac3a340a7d = L.control.layers(
+                layer_control_f52f7914bfebad0639165bac3a340a7d_layers.base_layers,
+                layer_control_f52f7914bfebad0639165bac3a340a7d_layers.overlays,
+                {
+  &quot;position&quot;: &quot;topright&quot;,
+  &quot;collapsed&quot;: false,
+  &quot;autoZIndex&quot;: true,
+}
+            ).addTo(map_e4b71a0865905e9721296b0a24345824);
+
+        
+    
+            map_e4b71a0865905e9721296b0a24345824.fitBounds(
+                [[52.0865, 5.1178], [52.0865, 5.1178], [52.082, 5.1197], [52.082, 5.1197], [52.0855, 5.1248], [52.0855, 5.1248], [52.0945, 5.1367], [52.0945, 5.1367]],
+                {}
+            );
+        
+    
+            tile_layer_529fc0aa04281d94ee499768c464fe0b.addTo(map_e4b71a0865905e9721296b0a24345824);
+        
+    
+                marker_15e4bd9da4f1daf7f503c6ad61bb0e23.setIcon(div_icon_914de5ca1b3c96b915648c42799acfd9);
+            
+    
+                marker_528893b75bdbf01c52ddfeac904603a8.setIcon(div_icon_717eb777d16ca1fc16ea5d295db8a75b);
+            
+    
+            feature_group_ca060b789fe4dece01dd821fabb3b293.addTo(map_e4b71a0865905e9721296b0a24345824);
+        
+    
+                marker_d3c7f391424302507f9cbd0d69229d82.setIcon(div_icon_68398f4f6b0947294dfee15f5a4571c2);
+            
+    
+                marker_b5637c187e3f1edf3a2e6c631e6a34be.setIcon(div_icon_94475a1b3a5500846eac1e938ce40f0e);
+            
+    
+            feature_group_83218fbb24ba265e562dd591c239d183.addTo(map_e4b71a0865905e9721296b0a24345824);
+        
+    
+            map_e4b71a0865905e9721296b0a24345824.fitBounds(
+                [[52.0865, 5.1178], [52.0865, 5.1178], [52.082, 5.1197], [52.082, 5.1197], [52.0855, 5.1248], [52.0855, 5.1248], [52.0945, 5.1367], [52.0945, 5.1367]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Utrecht POI&quot;</span><span class="p">)</span>
+
+<span class="c1"># Group 1: Museums</span>
+<span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;🏛️ Museums&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.1178</span><span class="p">,</span> <span class="mf">52.0865</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🖼️&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;**Centraal Museum**&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.1197</span><span class="p">,</span> <span class="mf">52.0820</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🚂&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;**Spoorwegmuseum**&quot;</span><span class="p">)</span>
+
+<span class="c1"># Group 2: Parks</span>
+<span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;🌳 Parks&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.1248</span><span class="p">,</span> <span class="mf">52.0855</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌳&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;**Wilhelminapark**&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.1367</span><span class="p">,</span> <span class="mf">52.0945</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌿&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;**Griftpark**&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">(</span><span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s2">&quot;poi_layers.html&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="how-it-works">How it works</h2>
+<p><strong><code>create_feature_group("name")</code></strong> creates a new group and immediately activates it. All subsequent <code>add_*</code> calls go into this group until you:</p>
+<ul>
+<li>Call <code>create_feature_group()</code> again to create and switch to a new group</li>
+<li>Call <code>set_feature_group("name")</code> to switch to an existing group</li>
+<li>Call <code>reset_target()</code> to go back to the base map</li>
+</ul>
+<p><strong><code>add_layer_control()</code></strong> adds the toggle widget in the corner. Set <code>collapsed=False</code> to show it expanded by default.</p>
+<div class="admonition tip">
+<p class="admonition-title">Hiding groups by default</p>
+<p>Pass <code>show=False</code> to <code>create_feature_group()</code> to have a layer hidden when the map loads:</p>
+<div class="highlight"><pre><span></span><code><span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;🔵 Boreholes&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<h2 id="search-control">Search control</h2>
+<p><code>add_search_control()</code> adds a search box that lets users find a feature in a feature group by one of its properties:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-32--__tabbed_1_1" name="exec-32--__tabbed_1" type="radio" /><input id="exec-32--__tabbed_1_2" name="exec-32--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-32--__tabbed_1_1">Result</label><label for="exec-32--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_990a35d62c8538b3c0e2f3ef0e405829 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    
+                    &lt;style&gt;
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+            
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Neighbourhood Finder&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_990a35d62c8538b3c0e2f3ef0e405829&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_990a35d62c8538b3c0e2f3ef0e405829 = L.map(
+                &quot;map_990a35d62c8538b3c0e2f3ef0e405829&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_990a35d62c8538b3c0e2f3ef0e405829);
+
+            
+
+        
+    
+            var tile_layer_ed0613d1280a3a6005c5aee3d987e5d4 = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_ed0613d1280a3a6005c5aee3d987e5d4.addTo(map_990a35d62c8538b3c0e2f3ef0e405829);
+        
+    
+            var mouse_position_fed9fa1ae44c356950bcd3ad404fb597 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_fed9fa1ae44c356950bcd3ad404fb597.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_fed9fa1ae44c356950bcd3ad404fb597.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_990a35d62c8538b3c0e2f3ef0e405829.addControl(mouse_position_fed9fa1ae44c356950bcd3ad404fb597);
+        
+    
+            var feature_group_84cef34bb9fc6113f8b7d5502bd734b0 = L.featureGroup(
+                {
+}
+            );
+        
+    
+        function geo_json_6a30f6afb0a74d6166c75a828d86853c_styler(feature) {
+            switch(feature.properties.name) {
+                case &quot;Binnenstad&quot;: 
+                    return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#bd0026ff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
+                case &quot;Oost&quot;: 
+                    return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#f8682fff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
+                default:
+                    return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#ffffb2ff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
+            }
+        }
+        function geo_json_6a30f6afb0a74d6166c75a828d86853c_highlighter(feature) {
+            switch(feature.properties.name) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.85, &quot;weight&quot;: 3};
+            }
+        }
+
+        function geo_json_6a30f6afb0a74d6166c75a828d86853c_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                            geo_json_6a30f6afb0a74d6166c75a828d86853c.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        const highlightStyle = geo_json_6a30f6afb0a74d6166c75a828d86853c_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_6a30f6afb0a74d6166c75a828d86853c = L.geoJson(null, {
+                onEachFeature: geo_json_6a30f6afb0a74d6166c75a828d86853c_onEachFeature,
+            
+                style: geo_json_6a30f6afb0a74d6166c75a828d86853c_styler,
+            ...{
+}
+        });
+
+        function geo_json_6a30f6afb0a74d6166c75a828d86853c_add (data) {
+            geo_json_6a30f6afb0a74d6166c75a828d86853c
+                .addData(data);
+        }
+            geo_json_6a30f6afb0a74d6166c75a828d86853c_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.1, 52.08], [5.14, 52.08], [5.14, 52.1], [5.1, 52.1], [5.1, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Binnenstad&quot;, &quot;score&quot;: 92}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.06, 52.08], [5.1, 52.08], [5.1, 52.1], [5.06, 52.1], [5.06, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;West&quot;, &quot;score&quot;: 74}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.1], [5.14, 52.1], [5.14, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Oost&quot;, &quot;score&quot;: 85}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+    geo_json_6a30f6afb0a74d6166c75a828d86853c.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+    
+    let handleObject = feature =&gt; {
+        if (feature === null) {
+            return &#x27;&#x27;;
+        } else if (typeof(feature)==&#x27;object&#x27;) {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = [&quot;name&quot;, &quot;score&quot;];
+    let aliases = [&quot;name&quot;, &quot;score&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i].toLocaleString()}&lt;/th&gt;
+            
+            &lt;td&gt;${handleObject(layer.feature.properties[v]).toLocaleString()}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  &quot;sticky&quot;: true,
+  &quot;className&quot;: &quot;foliumtooltip&quot;,
+});
+                     
+    
+            geo_json_6a30f6afb0a74d6166c75a828d86853c.addTo(feature_group_84cef34bb9fc6113f8b7d5502bd734b0);
+        
+    
+            feature_group_84cef34bb9fc6113f8b7d5502bd734b0.addTo(map_990a35d62c8538b3c0e2f3ef0e405829);
+        
+    
+    var color_map_4dc53dc1de079538bc7d4691d7aa8a2b = {};
+
+    
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.color = d3.scale.threshold()
+              .domain([74.0, 74.03607214428858, 74.07214428857715, 74.10821643286573, 74.14428857715431, 74.18036072144288, 74.21643286573146, 74.25250501002004, 74.28857715430861, 74.3246492985972, 74.36072144288578, 74.39679358717434, 74.43286573146293, 74.46893787575151, 74.50501002004007, 74.54108216432866, 74.57715430861724, 74.6132264529058, 74.64929859719439, 74.68537074148297, 74.72144288577154, 74.75751503006012, 74.7935871743487, 74.82965931863727, 74.86573146292585, 74.90180360721443, 74.937875751503, 74.97394789579158, 75.01002004008016, 75.04609218436873, 75.08216432865731, 75.1182364729459, 75.15430861723446, 75.19038076152304, 75.22645290581163, 75.2625250501002, 75.29859719438878, 75.33466933867736, 75.37074148296593, 75.40681362725451, 75.44288577154309, 75.47895791583166, 75.51503006012024, 75.55110220440882, 75.58717434869739, 75.62324649298597, 75.65931863727455, 75.69539078156312, 75.7314629258517, 75.76753507014028, 75.80360721442885, 75.83967935871743, 75.87575150300601, 75.91182364729458, 75.94789579158316, 75.98396793587175, 76.02004008016031, 76.0561122244489, 76.09218436873748, 76.12825651302606, 76.16432865731463, 76.20040080160321, 76.23647294589179, 76.27254509018036, 76.30861723446894, 76.34468937875752, 76.38076152304609, 76.41683366733467, 76.45290581162325, 76.48897795591182, 76.5250501002004, 76.56112224448898, 76.59719438877755, 76.63326653306613, 76.66933867735472, 76.70541082164328, 76.74148296593187, 76.77755511022045, 76.81362725450902, 76.8496993987976, 76.88577154308618, 76.92184368737475, 76.95791583166333, 76.99398797595191, 77.03006012024048, 77.06613226452906, 77.10220440881764, 77.13827655310621, 77.17434869739479, 77.21042084168337, 77.24649298597194, 77.28256513026052, 77.3186372745491, 77.35470941883767, 77.39078156312625, 77.42685370741484, 77.4629258517034, 77.49899799599199, 77.53507014028057, 77.57114228456913, 77.60721442885772, 77.6432865731463, 77.67935871743487, 77.71543086172345, 77.75150300601203, 77.7875751503006, 77.82364729458918, 77.85971943887776, 77.89579158316633, 77.93186372745491, 77.96793587174349, 78.00400801603206, 78.04008016032064, 78.07615230460922, 78.11222444889779, 78.14829659318637, 78.18436873747495, 78.22044088176352, 78.2565130260521, 78.29258517034069, 78.32865731462925, 78.36472945891784, 78.40080160320642, 78.43687374749499, 78.47294589178357, 78.50901803607215, 78.54509018036072, 78.5811623246493, 78.61723446893788, 78.65330661322645, 78.68937875751503, 78.72545090180361, 78.76152304609218, 78.79759519038076, 78.83366733466934, 78.86973947895791, 78.90581162324649, 78.94188376753507, 78.97795591182364, 79.01402805611222, 79.0501002004008, 79.08617234468937, 79.12224448897796, 79.15831663326654, 79.1943887775551, 79.23046092184369, 79.26653306613227, 79.30260521042084, 79.33867735470942, 79.374749498998, 79.41082164328657, 79.44689378757515, 79.48296593186373, 79.5190380761523, 79.55511022044088, 79.59118236472946, 79.62725450901803, 79.66332665330661, 79.6993987975952, 79.73547094188376, 79.77154308617234, 79.80761523046093, 79.84368737474949, 79.87975951903807, 79.91583166332666, 79.95190380761522, 79.9879759519038, 80.02404809619239, 80.06012024048096, 80.09619238476954, 80.13226452905812, 80.16833667334669, 80.20440881763527, 80.24048096192385, 80.27655310621242, 80.312625250501, 80.34869739478958, 80.38476953907815, 80.42084168336673, 80.45691382765531, 80.49298597194388, 80.52905811623246, 80.56513026052104, 80.60120240480961, 80.6372745490982, 80.67334669338678, 80.70941883767534, 80.74549098196393, 80.78156312625251, 80.81763527054107, 80.85370741482966, 80.88977955911824, 80.9258517034068, 80.96192384769539, 80.99799599198397, 81.03406813627254, 81.07014028056112, 81.1062124248497, 81.14228456913827, 81.17835671342685, 81.21442885771543, 81.25050100200401, 81.28657314629258, 81.32264529058116, 81.35871743486975, 81.39478957915831, 81.4308617234469, 81.46693386773548, 81.50300601202404, 81.53907815631263, 81.57515030060121, 81.61122244488978, 81.64729458917836, 81.68336673346694, 81.71943887775551, 81.75551102204409, 81.79158316633267, 81.82765531062124, 81.86372745490982, 81.8997995991984, 81.93587174348697, 81.97194388777555, 82.00801603206413, 82.0440881763527, 82.08016032064128, 82.11623246492987, 82.15230460921843, 82.18837675350701, 82.2244488977956, 82.26052104208416, 82.29659318637275, 82.33266533066133, 82.3687374749499, 82.40480961923848, 82.44088176352706, 82.47695390781563, 82.51302605210421, 82.54909819639279, 82.58517034068136, 82.62124248496994, 82.65731462925852, 82.69338677354709, 82.72945891783567, 82.76553106212425, 82.80160320641282, 82.8376753507014, 82.87374749498998, 82.90981963927855, 82.94589178356713, 82.98196392785572, 83.01803607214428, 83.05410821643287, 83.09018036072145, 83.12625250501002, 83.1623246492986, 83.19839679358718, 83.23446893787575, 83.27054108216433, 83.30661322645291, 83.34268537074148, 83.37875751503006, 83.41482965931864, 83.45090180360721, 83.48697394789579, 83.52304609218437, 83.55911823647294, 83.59519038076152, 83.6312625250501, 83.66733466933867, 83.70340681362725, 83.73947895791584, 83.7755511022044, 83.81162324649299, 83.84769539078157, 83.88376753507013, 83.91983967935872, 83.9559118236473, 83.99198396793587, 84.02805611222445, 84.06412825651303, 84.1002004008016, 84.13627254509018, 84.17234468937876, 84.20841683366733, 84.24448897795591, 84.28056112224449, 84.31663326653306, 84.35270541082164, 84.38877755511022, 84.4248496993988, 84.46092184368737, 84.49699398797596, 84.53306613226454, 84.5691382765531, 84.60521042084169, 84.64128256513027, 84.67735470941884, 84.71342685370742, 84.749498997996, 84.78557114228457, 84.82164328657315, 84.85771543086173, 84.8937875751503, 84.92985971943888, 84.96593186372746, 85.00200400801603, 85.03807615230461, 85.0741482965932, 85.11022044088176, 85.14629258517034, 85.18236472945893, 85.21843687374749, 85.25450901803607, 85.29058116232466, 85.32665330661322, 85.3627254509018, 85.39879759519039, 85.43486973947896, 85.47094188376754, 85.50701402805612, 85.54308617234469, 85.57915831663327, 85.61523046092185, 85.65130260521042, 85.687374749499, 85.72344689378758, 85.75951903807615, 85.79559118236473, 85.83166332665331, 85.86773547094188, 85.90380761523046, 85.93987975951904, 85.97595190380761, 86.0120240480962, 86.04809619238478, 86.08416833667334, 86.12024048096193, 86.15631262525051, 86.19238476953907, 86.22845691382766, 86.26452905811624, 86.3006012024048, 86.33667334669339, 86.37274549098197, 86.40881763527054, 86.44488977955912, 86.4809619238477, 86.51703406813627, 86.55310621242485, 86.58917835671343, 86.625250501002, 86.66132264529058, 86.69739478957916, 86.73346693386773, 86.76953907815631, 86.8056112224449, 86.84168336673346, 86.87775551102204, 86.91382765531063, 86.9498997995992, 86.98597194388778, 87.02204408817636, 87.05811623246493, 87.09418837675351, 87.13026052104209, 87.16633266533066, 87.20240480961924, 87.23847695390782, 87.27454909819639, 87.31062124248497, 87.34669338677355, 87.38276553106212, 87.4188376753507, 87.45490981963928, 87.49098196392785, 87.52705410821643, 87.56312625250501, 87.59919839679358, 87.63527054108216, 87.67134268537075, 87.70741482965931, 87.7434869739479, 87.77955911823648, 87.81563126252505, 87.85170340681363, 87.88777555110221, 87.92384769539078, 87.95991983967936, 87.99599198396794, 88.03206412825651, 88.06813627254509, 88.10420841683367, 88.14028056112224, 88.17635270541082, 88.2124248496994, 88.24849699398797, 88.28456913827655, 88.32064128256513, 88.3567134268537, 88.39278557114228, 88.42885771543087, 88.46492985971943, 88.50100200400801, 88.5370741482966, 88.57314629258516, 88.60921843687375, 88.64529058116233, 88.6813627254509, 88.71743486973948, 88.75350701402806, 88.78957915831663, 88.82565130260521, 88.86172344689379, 88.89779559118236, 88.93386773547094, 88.96993987975952, 89.00601202404809, 89.04208416833667, 89.07815631262525, 89.11422845691382, 89.1503006012024, 89.18637274549098, 89.22244488977955, 89.25851703406813, 89.29458917835672, 89.33066132264528, 89.36673346693387, 89.40280561122245, 89.43887775551102, 89.4749498997996, 89.51102204408818, 89.54709418837675, 89.58316633266533, 89.61923847695391, 89.65531062124248, 89.69138276553106, 89.72745490981964, 89.76352705410821, 89.79959919839679, 89.83567134268537, 89.87174348697394, 89.90781563126252, 89.9438877755511, 89.97995991983967, 90.01603206412825, 90.05210420841684, 90.0881763527054, 90.12424849699399, 90.16032064128257, 90.19639278557113, 90.23246492985972, 90.2685370741483, 90.30460921843687, 90.34068136272545, 90.37675350701403, 90.4128256513026, 90.44889779559118, 90.48496993987976, 90.52104208416833, 90.55711422845691, 90.59318637274549, 90.62925851703406, 90.66533066132264, 90.70140280561122, 90.73747494989979, 90.77354709418837, 90.80961923847696, 90.84569138276552, 90.8817635270541, 90.91783567134269, 90.95390781563125, 90.98997995991984, 91.02605210420842, 91.06212424849699, 91.09819639278557, 91.13426853707415, 91.17034068136272, 91.2064128256513, 91.24248496993988, 91.27855711422845, 91.31462925851703, 91.35070140280561, 91.38677354709418, 91.42284569138276, 91.45891783567134, 91.49498997995993, 91.53106212424849, 91.56713426853707, 91.60320641282566, 91.63927855711422, 91.6753507014028, 91.71142284569139, 91.74749498997996, 91.78356713426854, 91.81963927855712, 91.85571142284569, 91.89178356713427, 91.92785571142285, 91.96392785571142, 92.0])
+              .range([&#x27;#ffffb2ff&#x27;, &#x27;#ffffb2ff&#x27;, &#x27;#ffffb1ff&#x27;, &#x27;#fffeb0ff&#x27;, &#x27;#fffeafff&#x27;, &#x27;#fffdafff&#x27;, &#x27;#fffdaeff&#x27;, &#x27;#fffdadff&#x27;, &#x27;#fffcadff&#x27;, &#x27;#fffcacff&#x27;, &#x27;#fffbabff&#x27;, &#x27;#fffbabff&#x27;, &#x27;#fffbaaff&#x27;, &#x27;#fffaa9ff&#x27;, &#x27;#fffaa9ff&#x27;, &#x27;#fff9a8ff&#x27;, &#x27;#fff9a7ff&#x27;, &#x27;#fff9a6ff&#x27;, &#x27;#fff8a6ff&#x27;, &#x27;#fff8a5ff&#x27;, &#x27;#fff7a4ff&#x27;, &#x27;#fff7a4ff&#x27;, &#x27;#fff6a3ff&#x27;, &#x27;#fff6a2ff&#x27;, &#x27;#fff6a2ff&#x27;, &#x27;#fff5a1ff&#x27;, &#x27;#fff5a0ff&#x27;, &#x27;#fff4a0ff&#x27;, &#x27;#fff49fff&#x27;, &#x27;#fff49eff&#x27;, &#x27;#fff39dff&#x27;, &#x27;#fff39dff&#x27;, &#x27;#fff29cff&#x27;, &#x27;#fff29bff&#x27;, &#x27;#fff29bff&#x27;, &#x27;#fff19aff&#x27;, &#x27;#fff199ff&#x27;, &#x27;#fff099ff&#x27;, &#x27;#fff098ff&#x27;, &#x27;#ffef97ff&#x27;, &#x27;#ffef97ff&#x27;, &#x27;#ffef96ff&#x27;, &#x27;#ffee95ff&#x27;, &#x27;#ffee94ff&#x27;, &#x27;#ffed94ff&#x27;, &#x27;#ffed93ff&#x27;, &#x27;#ffed92ff&#x27;, &#x27;#ffec92ff&#x27;, &#x27;#ffec91ff&#x27;, &#x27;#ffeb90ff&#x27;, &#x27;#ffeb90ff&#x27;, &#x27;#ffeb8fff&#x27;, &#x27;#ffea8eff&#x27;, &#x27;#ffea8eff&#x27;, &#x27;#ffe98dff&#x27;, &#x27;#ffe98cff&#x27;, &#x27;#ffe98bff&#x27;, &#x27;#ffe88bff&#x27;, &#x27;#ffe88aff&#x27;, &#x27;#ffe789ff&#x27;, &#x27;#ffe789ff&#x27;, &#x27;#ffe688ff&#x27;, &#x27;#ffe687ff&#x27;, &#x27;#ffe687ff&#x27;, &#x27;#ffe586ff&#x27;, &#x27;#ffe585ff&#x27;, &#x27;#ffe485ff&#x27;, &#x27;#ffe484ff&#x27;, &#x27;#ffe483ff&#x27;, &#x27;#ffe382ff&#x27;, &#x27;#ffe382ff&#x27;, &#x27;#ffe281ff&#x27;, &#x27;#ffe280ff&#x27;, &#x27;#ffe280ff&#x27;, &#x27;#ffe17fff&#x27;, &#x27;#ffe17eff&#x27;, &#x27;#ffe07eff&#x27;, &#x27;#ffe07dff&#x27;, &#x27;#ffdf7cff&#x27;, &#x27;#ffdf7cff&#x27;, &#x27;#ffdf7bff&#x27;, &#x27;#ffde7aff&#x27;, &#x27;#ffde79ff&#x27;, &#x27;#ffdd79ff&#x27;, &#x27;#ffdd78ff&#x27;, &#x27;#ffdd77ff&#x27;, &#x27;#ffdc77ff&#x27;, &#x27;#ffdc76ff&#x27;, &#x27;#ffdb75ff&#x27;, &#x27;#ffdb75ff&#x27;, &#x27;#ffdb74ff&#x27;, &#x27;#ffda73ff&#x27;, &#x27;#ffda73ff&#x27;, &#x27;#ffd972ff&#x27;, &#x27;#ffd971ff&#x27;, &#x27;#ffd970ff&#x27;, &#x27;#ffd870ff&#x27;, &#x27;#ffd86fff&#x27;, &#x27;#ffd76eff&#x27;, &#x27;#ffd76eff&#x27;, &#x27;#ffd66dff&#x27;, &#x27;#ffd66cff&#x27;, &#x27;#ffd66cff&#x27;, &#x27;#ffd56bff&#x27;, &#x27;#ffd56aff&#x27;, &#x27;#ffd46aff&#x27;, &#x27;#ffd469ff&#x27;, &#x27;#ffd468ff&#x27;, &#x27;#ffd367ff&#x27;, &#x27;#ffd367ff&#x27;, &#x27;#ffd266ff&#x27;, &#x27;#ffd265ff&#x27;, &#x27;#ffd265ff&#x27;, &#x27;#ffd164ff&#x27;, &#x27;#ffd163ff&#x27;, &#x27;#ffd063ff&#x27;, &#x27;#ffd062ff&#x27;, &#x27;#ffcf61ff&#x27;, &#x27;#ffcf61ff&#x27;, &#x27;#ffcf60ff&#x27;, &#x27;#ffce5fff&#x27;, &#x27;#ffce5eff&#x27;, &#x27;#ffcd5eff&#x27;, &#x27;#ffcd5dff&#x27;, &#x27;#ffcd5cff&#x27;, &#x27;#fecc5cff&#x27;, &#x27;#fecc5cff&#x27;, &#x27;#fecb5bff&#x27;, &#x27;#fecb5bff&#x27;, &#x27;#feca5bff&#x27;, &#x27;#feca5bff&#x27;, &#x27;#fec95aff&#x27;, &#x27;#fec95aff&#x27;, &#x27;#fec85aff&#x27;, &#x27;#fec859ff&#x27;, &#x27;#fec759ff&#x27;, &#x27;#fec759ff&#x27;, &#x27;#fec659ff&#x27;, &#x27;#fec658ff&#x27;, &#x27;#fec558ff&#x27;, &#x27;#fec558ff&#x27;, &#x27;#fec458ff&#x27;, &#x27;#fec457ff&#x27;, &#x27;#fec357ff&#x27;, &#x27;#fec357ff&#x27;, &#x27;#fec257ff&#x27;, &#x27;#fec256ff&#x27;, &#x27;#fec156ff&#x27;, &#x27;#fec156ff&#x27;, &#x27;#fec056ff&#x27;, &#x27;#febf55ff&#x27;, &#x27;#febf55ff&#x27;, &#x27;#febe55ff&#x27;, &#x27;#febe55ff&#x27;, &#x27;#febd54ff&#x27;, &#x27;#febd54ff&#x27;, &#x27;#febc54ff&#x27;, &#x27;#febc54ff&#x27;, &#x27;#febb53ff&#x27;, &#x27;#febb53ff&#x27;, &#x27;#feba53ff&#x27;, &#x27;#feba53ff&#x27;, &#x27;#feb952ff&#x27;, &#x27;#feb952ff&#x27;, &#x27;#feb852ff&#x27;, &#x27;#feb851ff&#x27;, &#x27;#feb751ff&#x27;, &#x27;#feb751ff&#x27;, &#x27;#feb651ff&#x27;, &#x27;#feb650ff&#x27;, &#x27;#feb550ff&#x27;, &#x27;#feb550ff&#x27;, &#x27;#feb450ff&#x27;, &#x27;#feb44fff&#x27;, &#x27;#feb34fff&#x27;, &#x27;#feb34fff&#x27;, &#x27;#feb24fff&#x27;, &#x27;#feb24eff&#x27;, &#x27;#feb14eff&#x27;, &#x27;#feb14eff&#x27;, &#x27;#feb04eff&#x27;, &#x27;#feb04dff&#x27;, &#x27;#feaf4dff&#x27;, &#x27;#feaf4dff&#x27;, &#x27;#feae4dff&#x27;, &#x27;#feae4cff&#x27;, &#x27;#fead4cff&#x27;, &#x27;#fead4cff&#x27;, &#x27;#feac4cff&#x27;, &#x27;#feac4bff&#x27;, &#x27;#feab4bff&#x27;, &#x27;#feab4bff&#x27;, &#x27;#feaa4bff&#x27;, &#x27;#feaa4aff&#x27;, &#x27;#fea94aff&#x27;, &#x27;#fea94aff&#x27;, &#x27;#fea84aff&#x27;, &#x27;#fea849ff&#x27;, &#x27;#fea749ff&#x27;, &#x27;#fea749ff&#x27;, &#x27;#fea648ff&#x27;, &#x27;#fea648ff&#x27;, &#x27;#fea548ff&#x27;, &#x27;#fea548ff&#x27;, &#x27;#fea447ff&#x27;, &#x27;#fea447ff&#x27;, &#x27;#fea347ff&#x27;, &#x27;#fea347ff&#x27;, &#x27;#fea246ff&#x27;, &#x27;#fea246ff&#x27;, &#x27;#fea146ff&#x27;, &#x27;#fea146ff&#x27;, &#x27;#fea045ff&#x27;, &#x27;#fea045ff&#x27;, &#x27;#fe9f45ff&#x27;, &#x27;#fe9f45ff&#x27;, &#x27;#fe9e44ff&#x27;, &#x27;#fe9e44ff&#x27;, &#x27;#fe9d44ff&#x27;, &#x27;#fe9d44ff&#x27;, &#x27;#fe9c43ff&#x27;, &#x27;#fe9c43ff&#x27;, &#x27;#fe9b43ff&#x27;, &#x27;#fe9a43ff&#x27;, &#x27;#fe9a42ff&#x27;, &#x27;#fe9942ff&#x27;, &#x27;#fe9942ff&#x27;, &#x27;#fe9842ff&#x27;, &#x27;#fe9841ff&#x27;, &#x27;#fe9741ff&#x27;, &#x27;#fe9741ff&#x27;, &#x27;#fe9640ff&#x27;, &#x27;#fe9640ff&#x27;, &#x27;#fe9540ff&#x27;, &#x27;#fe9540ff&#x27;, &#x27;#fe943fff&#x27;, &#x27;#fe943fff&#x27;, &#x27;#fe933fff&#x27;, &#x27;#fe933fff&#x27;, &#x27;#fe923eff&#x27;, &#x27;#fe923eff&#x27;, &#x27;#fe913eff&#x27;, &#x27;#fe913eff&#x27;, &#x27;#fe903dff&#x27;, &#x27;#fe903dff&#x27;, &#x27;#fe8f3dff&#x27;, &#x27;#fe8f3dff&#x27;, &#x27;#fe8e3cff&#x27;, &#x27;#fe8e3cff&#x27;, &#x27;#fd8d3cff&#x27;, &#x27;#fd8d3cff&#x27;, &#x27;#fd8c3bff&#x27;, &#x27;#fd8b3bff&#x27;, &#x27;#fd8b3bff&#x27;, &#x27;#fd8a3bff&#x27;, &#x27;#fd893aff&#x27;, &#x27;#fd893aff&#x27;, &#x27;#fd883aff&#x27;, &#x27;#fd873aff&#x27;, &#x27;#fc873aff&#x27;, &#x27;#fc8639ff&#x27;, &#x27;#fc8539ff&#x27;, &#x27;#fc8539ff&#x27;, &#x27;#fc8439ff&#x27;, &#x27;#fc8338ff&#x27;, &#x27;#fc8338ff&#x27;, &#x27;#fc8238ff&#x27;, &#x27;#fc8238ff&#x27;, &#x27;#fc8138ff&#x27;, &#x27;#fb8037ff&#x27;, &#x27;#fb8037ff&#x27;, &#x27;#fb7f37ff&#x27;, &#x27;#fb7e37ff&#x27;, &#x27;#fb7e36ff&#x27;, &#x27;#fb7d36ff&#x27;, &#x27;#fb7c36ff&#x27;, &#x27;#fb7c36ff&#x27;, &#x27;#fb7b36ff&#x27;, &#x27;#fb7a35ff&#x27;, &#x27;#fa7a35ff&#x27;, &#x27;#fa7935ff&#x27;, &#x27;#fa7835ff&#x27;, &#x27;#fa7834ff&#x27;, &#x27;#fa7734ff&#x27;, &#x27;#fa7634ff&#x27;, &#x27;#fa7634ff&#x27;, &#x27;#fa7534ff&#x27;, &#x27;#fa7433ff&#x27;, &#x27;#f97433ff&#x27;, &#x27;#f97333ff&#x27;, &#x27;#f97233ff&#x27;, &#x27;#f97232ff&#x27;, &#x27;#f97132ff&#x27;, &#x27;#f97032ff&#x27;, &#x27;#f97032ff&#x27;, &#x27;#f96f31ff&#x27;, &#x27;#f96e31ff&#x27;, &#x27;#f96e31ff&#x27;, &#x27;#f86d31ff&#x27;, &#x27;#f86c31ff&#x27;, &#x27;#f86c30ff&#x27;, &#x27;#f86b30ff&#x27;, &#x27;#f86a30ff&#x27;, &#x27;#f86a30ff&#x27;, &#x27;#f8692fff&#x27;, &#x27;#f8682fff&#x27;, &#x27;#f8682fff&#x27;, &#x27;#f7672fff&#x27;, &#x27;#f7662fff&#x27;, &#x27;#f7662eff&#x27;, &#x27;#f7652eff&#x27;, &#x27;#f7642eff&#x27;, &#x27;#f7642eff&#x27;, &#x27;#f7632dff&#x27;, &#x27;#f7622dff&#x27;, &#x27;#f7622dff&#x27;, &#x27;#f7612dff&#x27;, &#x27;#f6612dff&#x27;, &#x27;#f6602cff&#x27;, &#x27;#f65f2cff&#x27;, &#x27;#f65f2cff&#x27;, &#x27;#f65e2cff&#x27;, &#x27;#f65d2bff&#x27;, &#x27;#f65d2bff&#x27;, &#x27;#f65c2bff&#x27;, &#x27;#f65b2bff&#x27;, &#x27;#f55b2aff&#x27;, &#x27;#f55a2aff&#x27;, &#x27;#f5592aff&#x27;, &#x27;#f5592aff&#x27;, &#x27;#f5582aff&#x27;, &#x27;#f55729ff&#x27;, &#x27;#f55729ff&#x27;, &#x27;#f55629ff&#x27;, &#x27;#f55529ff&#x27;, &#x27;#f55528ff&#x27;, &#x27;#f45428ff&#x27;, &#x27;#f45328ff&#x27;, &#x27;#f45328ff&#x27;, &#x27;#f45228ff&#x27;, &#x27;#f45127ff&#x27;, &#x27;#f45127ff&#x27;, &#x27;#f45027ff&#x27;, &#x27;#f44f27ff&#x27;, &#x27;#f44f26ff&#x27;, &#x27;#f44e26ff&#x27;, &#x27;#f34d26ff&#x27;, &#x27;#f34d26ff&#x27;, &#x27;#f34c26ff&#x27;, &#x27;#f34b25ff&#x27;, &#x27;#f34b25ff&#x27;, &#x27;#f34a25ff&#x27;, &#x27;#f34925ff&#x27;, &#x27;#f34924ff&#x27;, &#x27;#f34824ff&#x27;, &#x27;#f24724ff&#x27;, &#x27;#f24724ff&#x27;, &#x27;#f24624ff&#x27;, &#x27;#f24523ff&#x27;, &#x27;#f24523ff&#x27;, &#x27;#f24423ff&#x27;, &#x27;#f24323ff&#x27;, &#x27;#f24322ff&#x27;, &#x27;#f24222ff&#x27;, &#x27;#f24122ff&#x27;, &#x27;#f14122ff&#x27;, &#x27;#f14021ff&#x27;, &#x27;#f14021ff&#x27;, &#x27;#f13f21ff&#x27;, &#x27;#f13e21ff&#x27;, &#x27;#f13e21ff&#x27;, &#x27;#f13d20ff&#x27;, &#x27;#f13c20ff&#x27;, &#x27;#f13c20ff&#x27;, &#x27;#f03b20ff&#x27;, &#x27;#f03a20ff&#x27;, &#x27;#f03a20ff&#x27;, &#x27;#ef3920ff&#x27;, &#x27;#ef3920ff&#x27;, &#x27;#ee3820ff&#x27;, &#x27;#ee3820ff&#x27;, &#x27;#ee3820ff&#x27;, &#x27;#ed3720ff&#x27;, &#x27;#ed3720ff&#x27;, &#x27;#ec3620ff&#x27;, &#x27;#ec3620ff&#x27;, &#x27;#ec3520ff&#x27;, &#x27;#eb3520ff&#x27;, &#x27;#eb3420ff&#x27;, &#x27;#ea3420ff&#x27;, &#x27;#ea3320ff&#x27;, &#x27;#ea3320ff&#x27;, &#x27;#e93220ff&#x27;, &#x27;#e93221ff&#x27;, &#x27;#e83121ff&#x27;, &#x27;#e83121ff&#x27;, &#x27;#e83021ff&#x27;, &#x27;#e73021ff&#x27;, &#x27;#e72f21ff&#x27;, &#x27;#e62f21ff&#x27;, &#x27;#e62f21ff&#x27;, &#x27;#e52e21ff&#x27;, &#x27;#e52e21ff&#x27;, &#x27;#e52d21ff&#x27;, &#x27;#e42d21ff&#x27;, &#x27;#e42c21ff&#x27;, &#x27;#e32c21ff&#x27;, &#x27;#e32b21ff&#x27;, &#x27;#e32b21ff&#x27;, &#x27;#e22a21ff&#x27;, &#x27;#e22a21ff&#x27;, &#x27;#e12921ff&#x27;, &#x27;#e12921ff&#x27;, &#x27;#e12821ff&#x27;, &#x27;#e02822ff&#x27;, &#x27;#e02722ff&#x27;, &#x27;#df2722ff&#x27;, &#x27;#df2622ff&#x27;, &#x27;#de2622ff&#x27;, &#x27;#de2522ff&#x27;, &#x27;#de2522ff&#x27;, &#x27;#dd2522ff&#x27;, &#x27;#dd2422ff&#x27;, &#x27;#dc2422ff&#x27;, &#x27;#dc2322ff&#x27;, &#x27;#dc2322ff&#x27;, &#x27;#db2222ff&#x27;, &#x27;#db2222ff&#x27;, &#x27;#da2122ff&#x27;, &#x27;#da2122ff&#x27;, &#x27;#da2022ff&#x27;, &#x27;#d92022ff&#x27;, &#x27;#d91f22ff&#x27;, &#x27;#d81f22ff&#x27;, &#x27;#d81e23ff&#x27;, &#x27;#d81e23ff&#x27;, &#x27;#d71d23ff&#x27;, &#x27;#d71d23ff&#x27;, &#x27;#d61c23ff&#x27;, &#x27;#d61c23ff&#x27;, &#x27;#d51c23ff&#x27;, &#x27;#d51b23ff&#x27;, &#x27;#d51b23ff&#x27;, &#x27;#d41a23ff&#x27;, &#x27;#d41a23ff&#x27;, &#x27;#d31923ff&#x27;, &#x27;#d31923ff&#x27;, &#x27;#d31823ff&#x27;, &#x27;#d21823ff&#x27;, &#x27;#d21723ff&#x27;, &#x27;#d11723ff&#x27;, &#x27;#d11623ff&#x27;, &#x27;#d11623ff&#x27;, &#x27;#d01523ff&#x27;, &#x27;#d01523ff&#x27;, &#x27;#cf1424ff&#x27;, &#x27;#cf1424ff&#x27;, &#x27;#ce1324ff&#x27;, &#x27;#ce1324ff&#x27;, &#x27;#ce1224ff&#x27;, &#x27;#cd1224ff&#x27;, &#x27;#cd1224ff&#x27;, &#x27;#cc1124ff&#x27;, &#x27;#cc1124ff&#x27;, &#x27;#cc1024ff&#x27;, &#x27;#cb1024ff&#x27;, &#x27;#cb0f24ff&#x27;, &#x27;#ca0f24ff&#x27;, &#x27;#ca0e24ff&#x27;, &#x27;#ca0e24ff&#x27;, &#x27;#c90d24ff&#x27;, &#x27;#c90d24ff&#x27;, &#x27;#c80c24ff&#x27;, &#x27;#c80c24ff&#x27;, &#x27;#c80b24ff&#x27;, &#x27;#c70b24ff&#x27;, &#x27;#c70a25ff&#x27;, &#x27;#c60a25ff&#x27;, &#x27;#c60925ff&#x27;, &#x27;#c50925ff&#x27;, &#x27;#c50925ff&#x27;, &#x27;#c50825ff&#x27;, &#x27;#c40825ff&#x27;, &#x27;#c40725ff&#x27;, &#x27;#c30725ff&#x27;, &#x27;#c30625ff&#x27;, &#x27;#c30625ff&#x27;, &#x27;#c20525ff&#x27;, &#x27;#c20525ff&#x27;, &#x27;#c10425ff&#x27;, &#x27;#c10425ff&#x27;, &#x27;#c10325ff&#x27;, &#x27;#c00325ff&#x27;, &#x27;#c00225ff&#x27;, &#x27;#bf0225ff&#x27;, &#x27;#bf0125ff&#x27;, &#x27;#be0126ff&#x27;, &#x27;#be0026ff&#x27;, &#x27;#be0026ff&#x27;, &#x27;#bd0026ff&#x27;]);
+    
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.x = d3.scale.linear()
+              .domain([74.0, 92.0])
+              .range([0, 450 - 50]);
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.legend = L.control({position: &#x27;topright&#x27;});
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.legend.onAdd = function (map) {var div = L.DomUtil.create(&#x27;div&#x27;, &#x27;legend&#x27;); return div};
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.legend.addTo(map_990a35d62c8538b3c0e2f3ef0e405829);
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.xAxis = d3.svg.axis()
+        .scale(color_map_4dc53dc1de079538bc7d4691d7aa8a2b.x)
+        .orient(&quot;top&quot;)
+        .tickSize(1)
+        .tickValues([74.0, 78.5, 83.0, 87.5, 92.0]);
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.svg = d3.select(&quot;.legend.leaflet-control&quot;).append(&quot;svg&quot;)
+        .attr(&quot;id&quot;, &#x27;legend&#x27;)
+        .attr(&quot;width&quot;, 450)
+        .attr(&quot;height&quot;, 40);
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.g = color_map_4dc53dc1de079538bc7d4691d7aa8a2b.svg.append(&quot;g&quot;)
+        .attr(&quot;class&quot;, &quot;key&quot;)
+        .attr(&quot;fill&quot;, &quot;black&quot;)
+        .attr(&quot;transform&quot;, &quot;translate(25,16)&quot;);
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.g.selectAll(&quot;rect&quot;)
+        .data(color_map_4dc53dc1de079538bc7d4691d7aa8a2b.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_4dc53dc1de079538bc7d4691d7aa8a2b.x(color_map_4dc53dc1de079538bc7d4691d7aa8a2b.color.domain()[i - 1]) : color_map_4dc53dc1de079538bc7d4691d7aa8a2b.x.range()[0],
+            x1: i &lt; color_map_4dc53dc1de079538bc7d4691d7aa8a2b.color.domain().length ? color_map_4dc53dc1de079538bc7d4691d7aa8a2b.x(color_map_4dc53dc1de079538bc7d4691d7aa8a2b.color.domain()[i]) : color_map_4dc53dc1de079538bc7d4691d7aa8a2b.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append(&quot;rect&quot;)
+        .attr(&quot;height&quot;, 40 - 30)
+        .attr(&quot;x&quot;, function(d) { return d.x0; })
+        .attr(&quot;width&quot;, function(d) { return d.x1 - d.x0; })
+        .style(&quot;fill&quot;, function(d) { return d.z; });
+
+    color_map_4dc53dc1de079538bc7d4691d7aa8a2b.g.call(color_map_4dc53dc1de079538bc7d4691d7aa8a2b.xAxis).append(&quot;text&quot;)
+        .attr(&quot;class&quot;, &quot;caption&quot;)
+        .attr(&quot;y&quot;, 21)
+        .attr(&quot;fill&quot;, &quot;black&quot;)
+        .text(&quot;Liveability Score&quot;);
+    
+            var feature_group_84cef34bb9fc6113f8b7d5502bd734b0searchControl = new L.Control.Search({
+                layer: feature_group_84cef34bb9fc6113f8b7d5502bd734b0,
+                
+                propertyName: &#x27;name&#x27;,
+                
+                collapsed: false,
+                textPlaceholder: &#x27;Find neighbourhood...&#x27;,
+                position:&#x27;topright&#x27;,
+            
+                marker: false,
+                moveToLocation: function(latlng, title, map) {
+                var zoom =  14 
+                    map.flyTo(latlng, zoom); // access the zoom
+                }
+            
+                });
+                feature_group_84cef34bb9fc6113f8b7d5502bd734b0searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    feature_group_84cef34bb9fc6113f8b7d5502bd734b0.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                feature_group_84cef34bb9fc6113f8b7d5502bd734b0searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        feature_group_84cef34bb9fc6113f8b7d5502bd734b0.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_990a35d62c8538b3c0e2f3ef0e405829.addControl( feature_group_84cef34bb9fc6113f8b7d5502bd734b0searchControl );
+
+        
+    
+            map_990a35d62c8538b3c0e2f3ef0e405829.fitBounds(
+                [[52.08, 5.06], [52.1, 5.18]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">geojson</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Binnenstad&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">92</span><span class="p">},</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[[[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">]]]},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;West&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">74</span><span class="p">},</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[[[</span><span class="mf">5.06</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.06</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.06</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">]]]},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Oost&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">85</span><span class="p">},</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[[[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.18</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.18</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">]]]},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Neighbourhood Finder&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add the choropleth to a named feature group so it can be searched</span>
+<span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;Neighbourhoods&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_choropleth</span><span class="p">(</span>
+    <span class="n">geojson_data</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span>
+    <span class="n">value_column</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span>
+    <span class="n">key_on</span><span class="o">=</span><span class="s2">&quot;feature.properties.name&quot;</span><span class="p">,</span>
+    <span class="n">legend_name</span><span class="o">=</span><span class="s2">&quot;Liveability Score&quot;</span><span class="p">,</span>
+    <span class="n">hover_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">reset_target</span><span class="p">()</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;Neighbourhoods&quot;</span><span class="p">,</span>
+    <span class="n">property_name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>          <span class="c1"># GeoJSON property to match against</span>
+    <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Find neighbourhood...&quot;</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>                       <span class="c1"># zoom level when a result is selected</span>
+    <span class="n">geom_type</span><span class="o">=</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>           <span class="c1"># use &quot;Polygon&quot; for area features</span>
+<span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><strong><code>layer_name</code></strong> must match the name used in <code>create_feature_group()</code>. <strong><code>property_name</code></strong> is the GeoJSON property to search on — it must exist on your features. Use <code>geom_type="Polygon"</code> when searching polygon or choropleth layers. The control uses <code>folium.plugins.Search</code> internally.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>add_search_control()</code> searches the GeoJSON properties of features in the given feature group. The feature group must contain a GeoJSON layer (e.g. added via <code>add_choropleth</code>) so that property-based search works correctly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../tooltips-popups/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tooltips &amp; Popups">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Tooltips & Popups
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../choropleth/" class="md-footer__link md-footer__link--next" aria-label="Next: Choropleth Maps">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Choropleth Maps
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026 &copy; Mapyta - Enrique García
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/engarcia/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/egarciamendez/mapyta" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.code.copy", "content.code.select", "content.footnote.tooltips", "content.tabs.link", "content.tooltips", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "search.highlight", "search.share", "search.suggest", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+        <script src="../../js/open_in_new_tab.js"></script>
+      
+    
+  </body>
+</html>
