@@ -4032,11 +4032,7 @@ All other columns become GeoJSON Feature properties and are accessible via <code
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2265</span>
-<span class="normal">2266</span>
-<span class="normal">2267</span>
-<span class="normal">2268</span>
-<span class="normal">2269</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2269</span>
 <span class="normal">2270</span>
 <span class="normal">2271</span>
 <span class="normal">2272</span>
@@ -4058,7 +4054,11 @@ All other columns become GeoJSON Feature properties and are accessible via <code
 <span class="normal">2288</span>
 <span class="normal">2289</span>
 <span class="normal">2290</span>
-<span class="normal">2291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_export_button</span><span class="p">(</span>
+<span class="normal">2291</span>
+<span class="normal">2292</span>
+<span class="normal">2293</span>
+<span class="normal">2294</span>
+<span class="normal">2295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_export_button</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Download GeoJSON&quot;</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;export.geojson&quot;</span><span class="p">,</span>
@@ -7544,7 +7544,11 @@ Use <code>"Polygon"</code> when searching choropleth or polygon layers.</p>
 <span class="normal">2100</span>
 <span class="normal">2101</span>
 <span class="normal">2102</span>
-<span class="normal">2103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_tile_layer</span><span class="p">(</span>
+<span class="normal">2103</span>
+<span class="normal">2104</span>
+<span class="normal">2105</span>
+<span class="normal">2106</span>
+<span class="normal">2107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_tile_layer</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">tiles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7568,6 +7572,8 @@ Use <code>"Polygon"</code> when searching choropleth or polygon layers.</p>
 <span class="sd">    -------</span>
 <span class="sd">    Map</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+    <span class="n">max_native_zoom</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">max_native_zoom</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">max_native_zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">max_zoom</span>
     <span class="n">provider</span> <span class="o">=</span> <span class="n">TILE_PROVIDERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
     <span class="n">display_name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">provider</span> <span class="ow">and</span> <span class="n">tiles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -7579,6 +7585,8 @@ Use <code>"Polygon"</code> when searching choropleth or polygon layers.</p>
         <span class="n">name</span><span class="o">=</span><span class="n">display_name</span><span class="p">,</span>
         <span class="n">attr</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
         <span class="n">overlay</span><span class="o">=</span><span class="n">overlay</span><span class="p">,</span>
+        <span class="n">max_zoom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_zoom</span><span class="p">,</span>
+        <span class="n">max_native_zoom</span><span class="o">=</span><span class="n">max_native_zoom</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span>
 </code></pre></div></td></tr></table></div>
@@ -9127,11 +9135,7 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2412</span>
-<span class="normal">2413</span>
-<span class="normal">2414</span>
-<span class="normal">2415</span>
-<span class="normal">2416</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2416</span>
 <span class="normal">2417</span>
 <span class="normal">2418</span>
 <span class="normal">2419</span>
@@ -9158,7 +9162,11 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 <span class="normal">2440</span>
 <span class="normal">2441</span>
 <span class="normal">2442</span>
-<span class="normal">2443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bytesio</span><span class="p">(</span>
+<span class="normal">2443</span>
+<span class="normal">2444</span>
+<span class="normal">2445</span>
+<span class="normal">2446</span>
+<span class="normal">2447</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bytesio</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
@@ -9247,11 +9255,7 @@ resolved output :class:<code>~pathlib.Path</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2243</span>
-<span class="normal">2244</span>
-<span class="normal">2245</span>
-<span class="normal">2246</span>
-<span class="normal">2247</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2247</span>
 <span class="normal">2248</span>
 <span class="normal">2249</span>
 <span class="normal">2250</span>
@@ -9267,7 +9271,11 @@ resolved output :class:<code>~pathlib.Path</code>.</p>
 <span class="normal">2260</span>
 <span class="normal">2261</span>
 <span class="normal">2262</span>
-<span class="normal">2263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">2263</span>
+<span class="normal">2264</span>
+<span class="normal">2265</span>
+<span class="normal">2266</span>
+<span class="normal">2267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Export tracked features as a GeoJSON FeatureCollection.</span>
 
 <span class="sd">    Parameters</span>
@@ -9358,11 +9366,7 @@ output :class:<code>~pathlib.Path</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2211</span>
-<span class="normal">2212</span>
-<span class="normal">2213</span>
-<span class="normal">2214</span>
-<span class="normal">2215</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2215</span>
 <span class="normal">2216</span>
 <span class="normal">2217</span>
 <span class="normal">2218</span>
@@ -9382,7 +9386,11 @@ output :class:<code>~pathlib.Path</code>.</p>
 <span class="normal">2232</span>
 <span class="normal">2233</span>
 <span class="normal">2234</span>
-<span class="normal">2235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">open_in_browser</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">2235</span>
+<span class="normal">2236</span>
+<span class="normal">2237</span>
+<span class="normal">2238</span>
+<span class="normal">2239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">open_in_browser</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Export as standalone HTML.</span>
 
 <span class="sd">    Parameters</span>
@@ -9554,11 +9562,7 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2348</span>
-<span class="normal">2349</span>
-<span class="normal">2350</span>
-<span class="normal">2351</span>
-<span class="normal">2352</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2352</span>
 <span class="normal">2353</span>
 <span class="normal">2354</span>
 <span class="normal">2355</span>
@@ -9616,7 +9620,11 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 <span class="normal">2407</span>
 <span class="normal">2408</span>
 <span class="normal">2409</span>
-<span class="normal">2410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_image</span><span class="p">(</span>
+<span class="normal">2410</span>
+<span class="normal">2411</span>
+<span class="normal">2412</span>
+<span class="normal">2413</span>
+<span class="normal">2414</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_image</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>
@@ -9791,11 +9799,7 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2445</span>
-<span class="normal">2446</span>
-<span class="normal">2447</span>
-<span class="normal">2448</span>
-<span class="normal">2449</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2449</span>
 <span class="normal">2450</span>
 <span class="normal">2451</span>
 <span class="normal">2452</span>
@@ -9822,7 +9826,11 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 <span class="normal">2473</span>
 <span class="normal">2474</span>
 <span class="normal">2475</span>
-<span class="normal">2476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">to_image_async</span><span class="p">(</span>
+<span class="normal">2476</span>
+<span class="normal">2477</span>
+<span class="normal">2478</span>
+<span class="normal">2479</span>
+<span class="normal">2480</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">to_image_async</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>

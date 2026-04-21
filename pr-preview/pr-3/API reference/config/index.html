@@ -2553,9 +2553,10 @@ the provider's limit may show blank tiles unless
             <p>Highest zoom level at which the tile provider actually serves
 tiles.  When set below <code>max_zoom</code>, Leaflet keeps the last
 native-resolution tile visible (upscaled, so it blurs) instead
-of rendering blank placeholders.  <code>None</code> (default) keeps the
-original behaviour where zoom is effectively capped at
-<code>max_zoom</code>.</p>
+of rendering blank placeholders.  <code>None</code> (default) means
+Leaflet will request tiles at every zoom level up to
+<code>max_zoom</code>, which can produce blank or gray tiles if the
+provider does not serve them.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2802,8 +2803,8 @@ original behaviour where zoom is effectively capped at
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>mapyta/config.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
-<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">js</span> <span class="o">=</span> <span class="n">js</span>
 </code></pre></div></td></tr></table></div>
                   </details>
