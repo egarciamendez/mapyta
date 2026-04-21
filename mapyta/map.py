@@ -2088,6 +2088,8 @@ class Map:
         -------
         Map
         """
+        cfg = self._config
+        max_native_zoom = cfg.max_native_zoom if cfg.max_native_zoom is not None else cfg.max_zoom
         provider = TILE_PROVIDERS.get(name.lower())
         display_name = name
         if provider and tiles is None:
@@ -2099,6 +2101,8 @@ class Map:
             name=display_name,
             attr=attribution,
             overlay=overlay,
+            max_zoom=cfg.max_zoom,
+            max_native_zoom=max_native_zoom,
         ).add_to(self._map)
         return self
 

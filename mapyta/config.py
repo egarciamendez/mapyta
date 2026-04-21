@@ -155,9 +155,10 @@ class MapConfig:
         Highest zoom level at which the tile provider actually serves
         tiles.  When set below ``max_zoom``, Leaflet keeps the last
         native-resolution tile visible (upscaled, so it blurs) instead
-        of rendering blank placeholders.  ``None`` (default) keeps the
-        original behaviour where zoom is effectively capped at
-        ``max_zoom``.
+        of rendering blank placeholders.  ``None`` (default) means
+        Leaflet will request tiles at every zoom level up to
+        ``max_zoom``, which can produce blank or gray tiles if the
+        provider does not serve them.
     attribution : str | None
         Custom tile attribution.
     width : str | int

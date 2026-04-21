@@ -376,3 +376,131 @@ class TestStyleDataclasses:
 # ===================================================================
 # Scenarios for the tile provider registry and tile layer management.
 # ===================================================================
+
+
+def _tile_layers(fmap: folium.Map) -> list[folium.TileLayer]:
+    """Return all TileLayer children attached to a Folium map."""
+    return [child for child in fmap._children.values() if isinstance(child, folium.TileLayer)]
+
+
+class TestTileLayerZoom:
+    """Regression scenarios for max_zoom / max_native_zoom wiring on TileLayers."""
+
+    def test_single_layer_defaults_native_zoom_to_max_zoom(self) -> None:
+        """
+        Scenario: Single tile layer with no explicit max_native_zoom.
+
+        Given: A MapConfig using defaults (max_zoom=19, max_native_zoom=None)
+        When: A Map is created
+        Then: The single TileLayer's options expose max_zoom=19 and
+              max_native_zoom=19 (native falls back to max_zoom)
+        """
+        # Act - When
+        m = Map()
+
+        # Assert - Then
+        layers = _tile_layers(m.folium_map)
+        assert len(layers) == 1, "Single-layer config should produce exactly one TileLayer"
+        opts = layers[0].options
+        assert opts["max_zoom"] == 19
+        assert opts["max_native_zoom"] == 19
+
+    def test_single_layer_respects_max_native_zoom(self) -> None:
+        """
+        Scenario: Single tile layer with max_native_zoom below max_zoom.
+
+        Given: A MapConfig with max_zoom=22 and max_native_zoom=19
+        When: A Map is created
+        Then: The TileLayer's options carry max_zoom=22 and
+              max_native_zoom=19 so Leaflet upscales instead of showing
+              gray placeholder tiles beyond zoom 19
+        """
+        # Arrange - Given
+        config = MapConfig(max_zoom=22, max_native_zoom=19)
+
+        # Act - When
+        m = Map(config=config)
+
+        # Assert - Then
+        layers = _tile_layers(m.folium_map)
+        assert len(layers) == 1
+        opts = layers[0].options
+        assert opts["max_zoom"] == 22
+        assert opts["max_native_zoom"] == 19
+
+    def test_multi_layer_propagates_max_native_zoom(self) -> None:
+        """
+        Scenario: Multiple tile layers all receive max_native_zoom.
+
+        Given: A MapConfig with two providers, max_zoom=22, max_native_zoom=19
+        When: A Map is created
+        Then: Every TileLayer exposes the same max_zoom/max_native_zoom
+              options (so toggling layers never regresses to gray tiles)
+        """
+        # Arrange - Given
+        config = MapConfig(
+            tile_layer=["openstreetmap", "cartodb_dark"],
+            max_zoom=22,
+            max_native_zoom=19,
+        )
+
+        # Act - When
+        m = Map(config=config)
+
+        # Assert - Then
+        layers = _tile_layers(m.folium_map)
+        assert len(layers) == 2, "Each listed provider should be added as a TileLayer"
+        for layer in layers:
+            assert layer.options["max_zoom"] == 22
+            assert layer.options["max_native_zoom"] == 19
+
+    def test_custom_tile_url_respects_max_native_zoom(self) -> None:
+        """
+        Scenario: Raw tile URL (not in TILE_PROVIDERS) with max_native_zoom.
+
+        Given: A MapConfig with a custom URL and max_native_zoom=19
+        When: A Map is created
+        Then: The TileLayer built from the custom URL still carries
+              max_zoom=22 and max_native_zoom=19
+        """
+        # Arrange - Given
+        config = MapConfig(
+            tile_layer="https://custom.tiles.example/{z}/{x}/{y}.png",
+            attribution="Custom Tiles © Example",
+            max_zoom=22,
+            max_native_zoom=19,
+        )
+
+        # Act - When
+        m = Map(config=config)
+
+        # Assert - Then
+        layers = _tile_layers(m.folium_map)
+        assert len(layers) == 1
+        opts = layers[0].options
+        assert opts["max_zoom"] == 22
+        assert opts["max_native_zoom"] == 19
+
+    def test_add_tile_layer_propagates_max_native_zoom(self) -> None:
+        """
+        Scenario: Layers added post-construction inherit the zoom config.
+
+        Given: A Map with max_zoom=22 and max_native_zoom=19
+        When: add_tile_layer is called with an additional provider
+        Then: The newly added TileLayer carries the same
+              max_zoom/max_native_zoom options as the base layer, so
+              toggling to it never regresses to blank tiles beyond zoom 19
+        """
+        # Arrange - Given
+        config = MapConfig(max_zoom=22, max_native_zoom=19)
+        m = Map(config=config)
+
+        # Act - When
+        m.add_tile_layer("cartodb_dark")
+
+        # Assert - Then
+        layers = _tile_layers(m.folium_map)
+        assert len(layers) == 2, "Base layer + added layer should both be present"
+        for layer in layers:
+            assert layer.options["max_zoom"] == 22
+            assert layer.options["max_native_zoom"] == 19
