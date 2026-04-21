@@ -104,21 +104,19 @@ serves.
 Pass a list to `tile_layer` and add a layer control so users can switch between base maps:
 
 ```python exec="true" html="true" source="tabbed-right"
-
 from shapely.geometry import Point
 from mapyta import Map, MapConfig
 
 m = Map(
     title="Multiple Tile Layers",
     config=MapConfig(
-        tile_layer=["kartodb_positron", "cartodb_dark", "kadaster_brt"],
+        tile_layer=["cartodb_positron", "cartodb_dark", "kadaster_brt"],
     ),
 )
 m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Utrecht**")
 m.add_layer_control(collapsed=False)
 
 print(m.to_html())  # markdown-exec: hide
-
 ```
 
 The first layer in the list is shown by default. You can also add layers after construction with `add_tile_layer()`:
