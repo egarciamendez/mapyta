@@ -1618,7 +1618,7 @@ Everything below this fold explains each piece step by step.</p>
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_2c95887f970f66866e23dc66c750af8d {
+                #map_60a82d95bfc3553b10b0d6409be2337e {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1664,14 +1664,14 @@ Everything below this fold explains each piece step by step.</p>
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Amsterdam Overview&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_2c95887f970f66866e23dc66c750af8d&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_60a82d95bfc3553b10b0d6409be2337e&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_2c95887f970f66866e23dc66c750af8d = L.map(
-                &quot;map_2c95887f970f66866e23dc66c750af8d&quot;,
+            var map_60a82d95bfc3553b10b0d6409be2337e = L.map(
+                &quot;map_60a82d95bfc3553b10b0d6409be2337e&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1683,13 +1683,13 @@ Everything below this fold explains each piece step by step.</p>
 
                 }
             );
-            L.control.scale().addTo(map_2c95887f970f66866e23dc66c750af8d);
+            L.control.scale().addTo(map_60a82d95bfc3553b10b0d6409be2337e);
 
             
 
         
     
-            var tile_layer_6c86be7d33febbf3331391d03aec2c54 = L.tileLayer(
+            var tile_layer_7dc57aa3987351250e904bbed7904b87 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1706,10 +1706,10 @@ Everything below this fold explains each piece step by step.</p>
             );
         
     
-            tile_layer_6c86be7d33febbf3331391d03aec2c54.addTo(map_2c95887f970f66866e23dc66c750af8d);
+            tile_layer_7dc57aa3987351250e904bbed7904b87.addTo(map_60a82d95bfc3553b10b0d6409be2337e);
         
     
-            var tile_layer_9a8dc75cf397f2f9a59ccd91074302a7 = L.tileLayer(
+            var tile_layer_1bcc93b7da681e7569111a15d8a326ab = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1733,15 +1733,15 @@ Everything below this fold explains each piece step by step.</p>
   &quot;titleCancel&quot;: &quot;Exit Full Screen&quot;,
   &quot;forceSeparateButton&quot;: false,
 }
-            ).addTo(map_2c95887f970f66866e23dc66c750af8d);
+            ).addTo(map_60a82d95bfc3553b10b0d6409be2337e);
         
     
-            var tile_layer_a430e69359254edb8bc5630fa43e0ad3 = L.tileLayer(
+            var tile_layer_b0a6f8df8cfc01a325b4f55bd1e8eabd = L.tileLayer(
                 &quot;https://tile.openstreetmap.org/{z}/{x}/{y}.png&quot;,
                 {&quot;attribution&quot;: &quot;\u0026copy; \u003ca href=\&quot;https://www.openstreetmap.org/copyright\&quot;\u003eOpenStreetMap\u003c/a\u003e contributors&quot;, &quot;detect_retina&quot;: false, &quot;max_native_zoom&quot;: 19, &quot;max_zoom&quot;: 19, &quot;min_zoom&quot;: 0, &quot;no_wrap&quot;: false, &quot;opacity&quot;: 1, &quot;subdomains&quot;: &quot;abc&quot;, &quot;tms&quot;: false}
             );
-            var mini_map_8af2a52a829dbc798ff876aef4e69572 = new L.Control.MiniMap(
-                tile_layer_a430e69359254edb8bc5630fa43e0ad3,
+            var mini_map_318633561fc7593ec5a5e6425919b813 = new L.Control.MiniMap(
+                tile_layer_b0a6f8df8cfc01a325b4f55bd1e8eabd,
                 {
   &quot;position&quot;: &quot;bottomright&quot;,
   &quot;width&quot;: 150,
@@ -1756,10 +1756,10 @@ Everything below this fold explains each piece step by step.</p>
   &quot;minimized&quot;: false,
 }
             );
-            map_2c95887f970f66866e23dc66c750af8d.addControl(mini_map_8af2a52a829dbc798ff876aef4e69572);
+            map_60a82d95bfc3553b10b0d6409be2337e.addControl(mini_map_318633561fc7593ec5a5e6425919b813);
         
     
-            var measure_control_2d0e1229431874b9509aa594670442b1 = new L.Control.Measure(
+            var measure_control_0e26f5d84e4121c02bef613c39509b2c = new L.Control.Measure(
                 {
   &quot;position&quot;: &quot;topright&quot;,
   &quot;primaryLengthUnit&quot;: &quot;meters&quot;,
@@ -1767,7 +1767,7 @@ Everything below this fold explains each piece step by step.</p>
   &quot;primaryAreaUnit&quot;: &quot;sqmeters&quot;,
   &quot;secondaryAreaUnit&quot;: &quot;acres&quot;,
 });
-            map_2c95887f970f66866e23dc66c750af8d.addControl(measure_control_2d0e1229431874b9509aa594670442b1);
+            map_60a82d95bfc3553b10b0d6409be2337e.addControl(measure_control_0e26f5d84e4121c02bef613c39509b2c);
 
             // Workaround for using this plugin with Leaflet&gt;=1.8.0
             // https://github.com/ljagis/leaflet-measure/issues/171
@@ -1786,7 +1786,7 @@ Everything below this fold explains each piece step by step.</p>
 
         
     
-            var mouse_position_92403d4d3b74d5066353c8e147ee0e42 = new L.Control.MousePosition(
+            var mouse_position_cf11aeba71d8314530b30dc704189f71 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1796,27 +1796,27 @@ Everything below this fold explains each piece step by step.</p>
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_92403d4d3b74d5066353c8e147ee0e42.options[&quot;latFormatter&quot;] =
+            mouse_position_cf11aeba71d8314530b30dc704189f71.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_92403d4d3b74d5066353c8e147ee0e42.options[&quot;lngFormatter&quot;] =
+            mouse_position_cf11aeba71d8314530b30dc704189f71.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_2c95887f970f66866e23dc66c750af8d.addControl(mouse_position_92403d4d3b74d5066353c8e147ee0e42);
+            map_60a82d95bfc3553b10b0d6409be2337e.addControl(mouse_position_cf11aeba71d8314530b30dc704189f71);
         
     
-            var feature_group_770d2d33d31505bc00030f8e9ce129ba = L.featureGroup(
+            var feature_group_82da88660cf567456ec0e0d1d9b65113 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_6d67981c73380c0e6452c264618c5868 = L.marker(
+            var marker_f887e23dfcea807f8e0be5219ab55731 = L.marker(
                 [52.3676, 4.9041],
                 {
 }
-            ).addTo(feature_group_770d2d33d31505bc00030f8e9ce129ba);
+            ).addTo(feature_group_82da88660cf567456ec0e0d1d9b65113);
         
     
-            var div_icon_39fe23ae2aefa8299b35f9f24222adaf = L.divIcon({
+            var div_icon_07b11beebb11d9119bb1dd03c644561d = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\ud83c\udfdb\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1824,24 +1824,24 @@ Everything below this fold explains each piece step by step.</p>
 });
         
     
-        var popup_034d54c03b00f1fa48bbf976fa81958d = L.popup({
+        var popup_6ed47eb273a29f586563ff07a8a910ed = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_4ad4ae2e4a2e21d251e3df425f159165 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlJveWFsIFBhbGFjZTwvc3Ryb25nPgpEYW0gU3F1YXJlLCBBbXN0ZXJkYW08YnI+QnVpbHQ6IDE2NjU=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;120&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_034d54c03b00f1fa48bbf976fa81958d.setContent(i_frame_4ad4ae2e4a2e21d251e3df425f159165);
+                var i_frame_cc7c2777d67bd6f2dc5bcfd7416e1bb3 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlJveWFsIFBhbGFjZTwvc3Ryb25nPgpEYW0gU3F1YXJlLCBBbXN0ZXJkYW08YnI+QnVpbHQ6IDE2NjU=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;120&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_6ed47eb273a29f586563ff07a8a910ed.setContent(i_frame_cc7c2777d67bd6f2dc5bcfd7416e1bb3);
             
         
 
-        marker_6d67981c73380c0e6452c264618c5868.bindPopup(popup_034d54c03b00f1fa48bbf976fa81958d)
+        marker_f887e23dfcea807f8e0be5219ab55731.bindPopup(popup_6ed47eb273a29f586563ff07a8a910ed)
         ;
 
         
     
     
-            marker_6d67981c73380c0e6452c264618c5868.bindTooltip(
+            marker_f887e23dfcea807f8e0be5219ab55731.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Royal Palace&lt;/strong&gt;
                  &lt;/div&gt;`,
@@ -1851,17 +1851,17 @@ Everything below this fold explains each piece step by step.</p>
             );
         
     
-                marker_6d67981c73380c0e6452c264618c5868.setIcon(div_icon_39fe23ae2aefa8299b35f9f24222adaf);
+                marker_f887e23dfcea807f8e0be5219ab55731.setIcon(div_icon_07b11beebb11d9119bb1dd03c644561d);
             
     
-            var marker_6ccfde33ae0ef2b8746ece9f36739c31 = L.marker(
+            var marker_471ecc0dc1a70fbce722397312064167 = L.marker(
                 [52.3667, 4.8834],
                 {
 }
-            ).addTo(feature_group_770d2d33d31505bc00030f8e9ce129ba);
+            ).addTo(feature_group_82da88660cf567456ec0e0d1d9b65113);
         
     
-            var div_icon_df4a3f648d129f80a6d72052c8d99a2d = L.divIcon({
+            var div_icon_02dc5a134f82b70643d6e70e63e3692a = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center\&quot;\u003e\ud83d\udcd6\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1869,24 +1869,24 @@ Everything below this fold explains each piece step by step.</p>
 });
         
     
-        var popup_1e01837ee888b335dcb1526fcfbe9e50 = L.popup({
+        var popup_4e27f41bd4ab28038e932904b03e7589 = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_600885896701b164cd947f8ed582065a = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPkFubmUgRnJhbmsgSG91c2U8L3N0cm9uZz4KUHJpbnNlbmdyYWNodCAyNjM8YnI+VmlzaXRvcnMveWVhcjogfjEuMyBtaWxsaW9u&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;120&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_1e01837ee888b335dcb1526fcfbe9e50.setContent(i_frame_600885896701b164cd947f8ed582065a);
+                var i_frame_40be57b26990e3dbb713f79d33a69740 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPkFubmUgRnJhbmsgSG91c2U8L3N0cm9uZz4KUHJpbnNlbmdyYWNodCAyNjM8YnI+VmlzaXRvcnMveWVhcjogfjEuMyBtaWxsaW9u&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;120&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_4e27f41bd4ab28038e932904b03e7589.setContent(i_frame_40be57b26990e3dbb713f79d33a69740);
             
         
 
-        marker_6ccfde33ae0ef2b8746ece9f36739c31.bindPopup(popup_1e01837ee888b335dcb1526fcfbe9e50)
+        marker_471ecc0dc1a70fbce722397312064167.bindPopup(popup_4e27f41bd4ab28038e932904b03e7589)
         ;
 
         
     
     
-            marker_6ccfde33ae0ef2b8746ece9f36739c31.bindTooltip(
+            marker_471ecc0dc1a70fbce722397312064167.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Anne Frank House&lt;/strong&gt;
                  &lt;/div&gt;`,
@@ -1896,17 +1896,17 @@ Everything below this fold explains each piece step by step.</p>
             );
         
     
-                marker_6ccfde33ae0ef2b8746ece9f36739c31.setIcon(div_icon_df4a3f648d129f80a6d72052c8d99a2d);
+                marker_471ecc0dc1a70fbce722397312064167.setIcon(div_icon_02dc5a134f82b70643d6e70e63e3692a);
             
     
-            var marker_de57f3f1bb3764999a3c340a8b8088b4 = L.marker(
+            var marker_951ed952b34d4b07c9d7c6f894567fef = L.marker(
                 [52.36, 4.8795],
                 {
 }
-            ).addTo(feature_group_770d2d33d31505bc00030f8e9ce129ba);
+            ).addTo(feature_group_82da88660cf567456ec0e0d1d9b65113);
         
     
-            var div_icon_689f33b5ea540059c18928c858cb7e35 = L.divIcon({
+            var div_icon_8e8db7183a451382038ac00775cdd933 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;line-height:1;height:24px;\&quot;\u003e\u003ci class=\&quot;fa-solid fa-landmark\&quot; style=\&quot;font-size:24px;color:green;line-height:1;vertical-align:top;\&quot;\u003e\u003c/i\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [24, 24],
   &quot;iconAnchor&quot;: [12, 12],
@@ -1914,24 +1914,24 @@ Everything below this fold explains each piece step by step.</p>
 });
         
     
-        var popup_b9f1ecf13f4177b8046fffc292607794 = L.popup({
+        var popup_a453f42365505d9abcc36d7b19ca9caa = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_eedd9af50ebf27fc8cf28fc17b6f76c0 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlJpamtzbXVzZXVtPC9zdHJvbmc+CkR1dGNoIGFydCBhbmQgaGlzdG9yeSBzaW5jZSAxODAw&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;150&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_b9f1ecf13f4177b8046fffc292607794.setContent(i_frame_eedd9af50ebf27fc8cf28fc17b6f76c0);
+                var i_frame_ebf3c32a82a4335de188c08cbbd65743 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlJpamtzbXVzZXVtPC9zdHJvbmc+CkR1dGNoIGFydCBhbmQgaGlzdG9yeSBzaW5jZSAxODAw&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;150&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_a453f42365505d9abcc36d7b19ca9caa.setContent(i_frame_ebf3c32a82a4335de188c08cbbd65743);
             
         
 
-        marker_de57f3f1bb3764999a3c340a8b8088b4.bindPopup(popup_b9f1ecf13f4177b8046fffc292607794)
+        marker_951ed952b34d4b07c9d7c6f894567fef.bindPopup(popup_a453f42365505d9abcc36d7b19ca9caa)
         ;
 
         
     
     
-            marker_de57f3f1bb3764999a3c340a8b8088b4.bindTooltip(
+            marker_951ed952b34d4b07c9d7c6f894567fef.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Rijksmuseum&lt;/strong&gt;
                  &lt;/div&gt;`,
@@ -1941,42 +1941,42 @@ Everything below this fold explains each piece step by step.</p>
             );
         
     
-                marker_de57f3f1bb3764999a3c340a8b8088b4.setIcon(div_icon_689f33b5ea540059c18928c858cb7e35);
+                marker_951ed952b34d4b07c9d7c6f894567fef.setIcon(div_icon_8e8db7183a451382038ac00775cdd933);
             
     
-            feature_group_770d2d33d31505bc00030f8e9ce129ba.addTo(map_2c95887f970f66866e23dc66c750af8d);
+            feature_group_82da88660cf567456ec0e0d1d9b65113.addTo(map_60a82d95bfc3553b10b0d6409be2337e);
         
     
-            var feature_group_bfeebc5e545891d18ce859c47b67b2ef = L.featureGroup(
+            var feature_group_d55d7657c4cc2e1a46e0737516c962dc = L.featureGroup(
                 {
 }
             );
         
     
-            var polygon_cf5b4af99528f6169b2a446cb2e5bca6 = L.polygon(
+            var polygon_87eb08b62d280a48418e694911b427ab = L.polygon(
                 [[[52.372, 4.876], [52.372, 4.889], [52.38, 4.889], [52.38, 4.876], [52.372, 4.876]]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;green&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;blue&quot;, &quot;fillOpacity&quot;: 0.15, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 2}
-            ).addTo(feature_group_bfeebc5e545891d18ce859c47b67b2ef);
+            ).addTo(feature_group_d55d7657c4cc2e1a46e0737516c962dc);
         
     
-        var popup_face67eaec7af076e406df3848b5a2ae = L.popup({
+        var popup_9389390fe51d0c2a175ca135edb42421 = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_06519e23c1b0d3452f70d661d6c36ccb = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPkRlIEpvcmRhYW48L3N0cm9uZz4KCjx1bD48bGk+TmFycm93IHN0cmVldHM8L2xpPgo8bGk+SW5kZXBlbmRlbnQgZ2FsbGVyaWVzPC9saT4KPGxpPkJyb3duIGNhZsOpczwvbGk+PC91bD4=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;180&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_face67eaec7af076e406df3848b5a2ae.setContent(i_frame_06519e23c1b0d3452f70d661d6c36ccb);
+                var i_frame_d409269edcd8f288a1e31af62e49b2c7 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPkRlIEpvcmRhYW48L3N0cm9uZz4KCjx1bD48bGk+TmFycm93IHN0cmVldHM8L2xpPgo8bGk+SW5kZXBlbmRlbnQgZ2FsbGVyaWVzPC9saT4KPGxpPkJyb3duIGNhZsOpczwvbGk+PC91bD4=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;180&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_9389390fe51d0c2a175ca135edb42421.setContent(i_frame_d409269edcd8f288a1e31af62e49b2c7);
             
         
 
-        polygon_cf5b4af99528f6169b2a446cb2e5bca6.bindPopup(popup_face67eaec7af076e406df3848b5a2ae)
+        polygon_87eb08b62d280a48418e694911b427ab.bindPopup(popup_9389390fe51d0c2a175ca135edb42421)
         ;
 
         
     
     
-            polygon_cf5b4af99528f6169b2a446cb2e5bca6.bindTooltip(
+            polygon_87eb08b62d280a48418e694911b427ab.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;De Jordaan&lt;/strong&gt;
 Historic neighbourhood
@@ -1987,13 +1987,13 @@ Historic neighbourhood
             );
         
     
-            var poly_line_43f80204cb4a460dd45416e5ac1cc4a0 = L.polyline(
+            var poly_line_b4f5c97ff4407205ad5bb2746fb9dabb = L.polyline(
                 [[52.3702, 4.8852], [52.3663, 4.891], [52.3631, 4.8932], [52.3569, 4.884]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;red&quot;, &quot;dashArray&quot;: &quot;10 6&quot;, &quot;dashOffset&quot;: null, &quot;fill&quot;: false, &quot;fillColor&quot;: &quot;red&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 4}
-            ).addTo(feature_group_bfeebc5e545891d18ce859c47b67b2ef);
+            ).addTo(feature_group_d55d7657c4cc2e1a46e0737516c962dc);
         
     
-            poly_line_43f80204cb4a460dd45416e5ac1cc4a0.bindTooltip(
+            poly_line_b4f5c97ff4407205ad5bb2746fb9dabb.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Walking route&lt;/strong&gt;
 &lt;em&gt;Centraal → Leidseplein&lt;/em&gt;
@@ -2004,16 +2004,16 @@ Historic neighbourhood
             );
         
     
-            feature_group_bfeebc5e545891d18ce859c47b67b2ef.addTo(map_2c95887f970f66866e23dc66c750af8d);
+            feature_group_d55d7657c4cc2e1a46e0737516c962dc.addTo(map_60a82d95bfc3553b10b0d6409be2337e);
         
     
-            var circle_marker_4f4adf2799468398c47834190ba4b662 = L.circleMarker(
+            var circle_marker_40ce6c6b87be877fd8eea63656863a18 = L.circleMarker(
                 [52.3584, 4.8812],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;green&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;orange&quot;, &quot;fillOpacity&quot;: 0.5, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;opacity&quot;: 1.0, &quot;radius&quot;: 12, &quot;stroke&quot;: true, &quot;weight&quot;: 2}
-            ).addTo(map_2c95887f970f66866e23dc66c750af8d);
+            ).addTo(map_60a82d95bfc3553b10b0d6409be2337e);
         
     
-            circle_marker_4f4adf2799468398c47834190ba4b662.bindTooltip(
+            circle_marker_40ce6c6b87be877fd8eea63656863a18.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Van Gogh Museum&lt;/strong&gt;
                  &lt;/div&gt;`,
@@ -2023,35 +2023,35 @@ Historic neighbourhood
             );
         
     
-            var layer_control_2bbf8a5c4ca6d189da29b11bc93da5c4_layers = {
+            var layer_control_71731c877442bb7c27a98ab851bd2390_layers = {
                 base_layers : {
-                    &quot;CartoDB Positron&quot; : tile_layer_6c86be7d33febbf3331391d03aec2c54,
-                    &quot;CartoDB Dark&quot; : tile_layer_9a8dc75cf397f2f9a59ccd91074302a7,
+                    &quot;CartoDB Positron&quot; : tile_layer_7dc57aa3987351250e904bbed7904b87,
+                    &quot;CartoDB Dark&quot; : tile_layer_1bcc93b7da681e7569111a15d8a326ab,
                 },
                 overlays :  {
-                    &quot;\ud83c\udfdb\ufe0f Landmarks&quot; : feature_group_770d2d33d31505bc00030f8e9ce129ba,
-                    &quot;\ud83d\udccd Areas of Interest&quot; : feature_group_bfeebc5e545891d18ce859c47b67b2ef,
+                    &quot;\ud83c\udfdb\ufe0f Landmarks&quot; : feature_group_82da88660cf567456ec0e0d1d9b65113,
+                    &quot;\ud83d\udccd Areas of Interest&quot; : feature_group_d55d7657c4cc2e1a46e0737516c962dc,
                 },
             };
-            let layer_control_2bbf8a5c4ca6d189da29b11bc93da5c4 = L.control.layers(
-                layer_control_2bbf8a5c4ca6d189da29b11bc93da5c4_layers.base_layers,
-                layer_control_2bbf8a5c4ca6d189da29b11bc93da5c4_layers.overlays,
+            let layer_control_71731c877442bb7c27a98ab851bd2390 = L.control.layers(
+                layer_control_71731c877442bb7c27a98ab851bd2390_layers.base_layers,
+                layer_control_71731c877442bb7c27a98ab851bd2390_layers.overlays,
                 {
   &quot;position&quot;: &quot;topright&quot;,
   &quot;collapsed&quot;: false,
   &quot;autoZIndex&quot;: true,
 }
-            ).addTo(map_2c95887f970f66866e23dc66c750af8d);
+            ).addTo(map_60a82d95bfc3553b10b0d6409be2337e);
 
         
     
-            map_2c95887f970f66866e23dc66c750af8d.fitBounds(
+            map_60a82d95bfc3553b10b0d6409be2337e.fitBounds(
                 [[52.3519, 4.871], [52.385000000000005, 4.9091]],
                 {}
             );
         
     
-            map_2c95887f970f66866e23dc66c750af8d.fitBounds(
+            map_60a82d95bfc3553b10b0d6409be2337e.fitBounds(
                 [[52.3676, 4.9041], [52.3676, 4.9041], [52.3667, 4.8834], [52.3667, 4.8834], [52.36, 4.8795], [52.36, 4.8795], [52.372, 4.876], [52.38, 4.889], [52.3569, 4.884], [52.3702, 4.8932], [52.3584, 4.8812], [52.3584, 4.8812]],
                 {}
             );
@@ -2158,7 +2158,7 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_b83a718bc34b4c9700199ad3d0ddba54 {
+                #map_4375fcd06203e70800e2ab3ad5248ce2 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2198,14 +2198,14 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Hello Utrecht&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_b83a718bc34b4c9700199ad3d0ddba54&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_4375fcd06203e70800e2ab3ad5248ce2&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_b83a718bc34b4c9700199ad3d0ddba54 = L.map(
-                &quot;map_b83a718bc34b4c9700199ad3d0ddba54&quot;,
+            var map_4375fcd06203e70800e2ab3ad5248ce2 = L.map(
+                &quot;map_4375fcd06203e70800e2ab3ad5248ce2&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2217,13 +2217,13 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
 
                 }
             );
-            L.control.scale().addTo(map_b83a718bc34b4c9700199ad3d0ddba54);
+            L.control.scale().addTo(map_4375fcd06203e70800e2ab3ad5248ce2);
 
             
 
         
     
-            var tile_layer_f6a2d9d6fa16c98f638184f60e912605 = L.tileLayer(
+            var tile_layer_af1042b1a7b70c356487441c2d651fa3 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2240,10 +2240,10 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
             );
         
     
-            tile_layer_f6a2d9d6fa16c98f638184f60e912605.addTo(map_b83a718bc34b4c9700199ad3d0ddba54);
+            tile_layer_af1042b1a7b70c356487441c2d651fa3.addTo(map_4375fcd06203e70800e2ab3ad5248ce2);
         
     
-            var mouse_position_296f7fff30e5863c1b69a36e4f0ea50b = new L.Control.MousePosition(
+            var mouse_position_e4401ce80509f447d5cbaafca7a28e34 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2253,21 +2253,21 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_296f7fff30e5863c1b69a36e4f0ea50b.options[&quot;latFormatter&quot;] =
+            mouse_position_e4401ce80509f447d5cbaafca7a28e34.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_296f7fff30e5863c1b69a36e4f0ea50b.options[&quot;lngFormatter&quot;] =
+            mouse_position_e4401ce80509f447d5cbaafca7a28e34.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_b83a718bc34b4c9700199ad3d0ddba54.addControl(mouse_position_296f7fff30e5863c1b69a36e4f0ea50b);
+            map_4375fcd06203e70800e2ab3ad5248ce2.addControl(mouse_position_e4401ce80509f447d5cbaafca7a28e34);
         
     
-            var marker_6511525b01cb98d7fc1fedab70250c8a = L.marker(
+            var marker_c977b92590c11411be73c80a530a70c1 = L.marker(
                 [52.090648, 5.121311],
                 {
 }
-            ).addTo(map_b83a718bc34b4c9700199ad3d0ddba54);
+            ).addTo(map_4375fcd06203e70800e2ab3ad5248ce2);
         
     
-            var div_icon_a03427cc392a4b9f16abc3eca820515b = L.divIcon({
+            var div_icon_726efe9351b239dace430b296ff30078 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;text-align:center;line-height:1;height:20px;\&quot;\u003e\u003ci class=\&quot;glyphicon glyphicon-arrow-down\&quot; style=\&quot;font-size:20px;color:#002855;line-height:1;vertical-align:top;\&quot;\u003e\u003c/i\u003e\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center\&quot;\u003eUTR\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [100, 40],
   &quot;iconAnchor&quot;: [50, 10],
@@ -2275,24 +2275,24 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
 });
         
     
-        var popup_c8b77392b162cd74483667e7025f85ac = L.popup({
+        var popup_c91f833f592fa89d0e33bf7401215299 = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_4c9f9c175675d84be2132ded43e11819 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlV0cmVjaHQ8L3N0cm9uZz4KQ2l0eSBpbiB0aGUgTmV0aGVybGFuZHM8YnI+UG9wdWxhdGlvbjogfjM1MGs=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;150&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_c8b77392b162cd74483667e7025f85ac.setContent(i_frame_4c9f9c175675d84be2132ded43e11819);
+                var i_frame_cad31993b80c8a70ef9516e927c430a9 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlV0cmVjaHQ8L3N0cm9uZz4KQ2l0eSBpbiB0aGUgTmV0aGVybGFuZHM8YnI+UG9wdWxhdGlvbjogfjM1MGs=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;150&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_c91f833f592fa89d0e33bf7401215299.setContent(i_frame_cad31993b80c8a70ef9516e927c430a9);
             
         
 
-        marker_6511525b01cb98d7fc1fedab70250c8a.bindPopup(popup_c8b77392b162cd74483667e7025f85ac)
+        marker_c977b92590c11411be73c80a530a70c1.bindPopup(popup_c91f833f592fa89d0e33bf7401215299)
         ;
 
         
     
     
-            marker_6511525b01cb98d7fc1fedab70250c8a.bindTooltip(
+            marker_c977b92590c11411be73c80a530a70c1.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Utrecht&lt;/strong&gt;
                  &lt;/div&gt;`,
@@ -2302,22 +2302,22 @@ pip<span class="w"> </span>install<span class="w"> </span>mapyta
             );
         
     
-                marker_6511525b01cb98d7fc1fedab70250c8a.setIcon(div_icon_a03427cc392a4b9f16abc3eca820515b);
+                marker_c977b92590c11411be73c80a530a70c1.setIcon(div_icon_726efe9351b239dace430b296ff30078);
             
     
-            map_b83a718bc34b4c9700199ad3d0ddba54.fitBounds(
+            map_4375fcd06203e70800e2ab3ad5248ce2.fitBounds(
                 [[52.090648, 5.121311], [52.090648, 5.121311]],
                 {}
             );
         
     
-            tile_layer_f6a2d9d6fa16c98f638184f60e912605.addTo(map_b83a718bc34b4c9700199ad3d0ddba54);
+            tile_layer_af1042b1a7b70c356487441c2d651fa3.addTo(map_4375fcd06203e70800e2ab3ad5248ce2);
         
     
-                marker_6511525b01cb98d7fc1fedab70250c8a.setIcon(div_icon_a03427cc392a4b9f16abc3eca820515b);
+                marker_c977b92590c11411be73c80a530a70c1.setIcon(div_icon_726efe9351b239dace430b296ff30078);
             
     
-            map_b83a718bc34b4c9700199ad3d0ddba54.fitBounds(
+            map_4375fcd06203e70800e2ab3ad5248ce2.fitBounds(
                 [[52.090648, 5.121311], [52.090648, 5.121311]],
                 {}
             );
