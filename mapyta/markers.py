@@ -116,11 +116,20 @@ def build_icon_marker(
         icon_class = f"fa-solid {icon}"
     else:
         icon_class = f"glyphicon glyphicon-{icon}"
-    icon_html = f'<div style="text-align:center;"><i class="{icon_class}" style="{style_str}"></i></div>{caption_suffix}'
+    fs = int(merged.get("font-size", "20px").replace("px", ""))
+    icon_html = (
+        f'<div style="text-align:center;line-height:1;height:{fs}px;">'
+        f'<i class="{icon_class}" style="{style_str};line-height:1;vertical-align:top;"></i>'
+        f"</div>"
+        f"{caption_suffix}"
+    )
+    h_icon = fs
+    w = max(fs, 100) if caption else fs
+    h = h_icon + (20 if caption else 0)
     return folium.DivIcon(
         html=icon_html,
-        icon_size=(100, 50),
-        icon_anchor=(50, 15),
+        icon_size=(w, h),
+        icon_anchor=(w // 2, h_icon // 2),
     )
 
 
