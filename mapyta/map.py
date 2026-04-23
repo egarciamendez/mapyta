@@ -203,7 +203,7 @@ class Map:
                 f'font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;">'
                 f"{self._title}</div>"
             )
-            fmap.get_root().html.add_child(folium.Element(title_html))  # type: ignore[union-attr]
+            fmap.get_root().html.add_child(folium.Element(title_html))  # ty: ignore[unresolved-attribute]
 
         # Optional plugins
         if cfg.fullscreen:
@@ -244,7 +244,7 @@ class Map:
             return None
         ps = resolve_style(popup_style, PopupStyle) or PopupStyle()
         html = popup if isinstance(popup, RawHTML) else markdown_to_html(popup)
-        iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # type: ignore[arg-type]
+        iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # ty: ignore[invalid-argument-type]
         return folium.Popup(iframe, max_width=ps.max_width)
 
     def _target(self) -> folium.FeatureGroup | folium.Map:
@@ -444,7 +444,7 @@ class Map:
         # Submit button: runs after DOMContentLoaded (after Folium's <script> block).
         map_var = self._map.get_name()
         drawn_items_var = f"drawnItems_{draw_plugin.get_name()}"
-        self._map.get_root().html.add_child(  # type: ignore[union-attr]
+        self._map.get_root().html.add_child(  # ty: ignore[unresolved-attribute]
             folium.Element(self._build_draw_script(map_var, drawn_items_var))
         )
         self._draw_injected = True
@@ -1374,7 +1374,7 @@ class Map:
             else:
                 heat_data.append(list(p[:3]))
                 self._bounds.append((p[0], p[1]))
-                self._record_feature(Point(p[1], p[0]), {"intensity": p[2]})  # type: ignore[index]
+                self._record_feature(Point(p[1], p[0]), {"intensity": p[2]})  # ty: ignore[index-out-of-bounds]
 
         kwargs: dict[str, Any] = {
             "radius": hs.radius,
@@ -1548,7 +1548,7 @@ class Map:
                     step_points.append([pt.y, pt.x])
                 elif len(p) == 3:
                     self._bounds.append((p[0], p[1]))
-                    step_points.append([p[0], p[1], p[2]])  # type: ignore[index]
+                    step_points.append([p[0], p[1], p[2]])  # ty: ignore[index-out-of-bounds]
                 else:
                     self._bounds.append((p[0], p[1]))
                     step_points.append([p[0], p[1]])
@@ -2188,7 +2188,7 @@ class Map:
         if not self._center:
             self._fit_bounds()
         if self._zoom_controlled_markers and not self._zoom_js_injected:
-            self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # type: ignore[union-attr]
+            self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # ty: ignore[unresolved-attribute]
             self._zoom_js_injected = True
         if self._draw_config and not self._draw_injected:
             self._inject_draw_plugin()
@@ -2337,7 +2337,7 @@ class Map:
             "});\n"
             "</script>\n"
         )
-        self._map.get_root().html.add_child(folium.Element(script))  # type: ignore[union-attr]
+        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
 
     @overload
     def to_image(
