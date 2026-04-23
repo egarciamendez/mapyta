@@ -429,6 +429,167 @@ class TestCaption:
         assert len(m._zoom_controlled_markers) == 1, "Combined marker should be a single entry"
         assert m._zoom_controlled_markers[0]["min_zoom"] == 10
 
+    def test_min_zoom_caption_tracks_caption(self) -> None:
+        """
+        Scenario: min_zoom_caption tracks the caption independently of the marker icon.
+
+        Given: An icon marker with caption and min_zoom_caption=12
+        When: add_point is called
+        Then: The caption is tracked in _zoom_controlled_captions
+              and the marker itself is NOT tracked in _zoom_controlled_markers
+        """
+        m = Map()
+        m.add_point(
+            Point(4.9, 52.37),
+            marker="home",
+            caption="CPT-01",
+            min_zoom_caption=12,
+        )
+        assert len(m._zoom_controlled_captions) == 1
+        assert m._zoom_controlled_captions[0]["min_zoom"] == 12
+        assert m._zoom_controlled_captions[0]["caption_id"].startswith("caption_")
+        assert len(m._zoom_controlled_markers) == 0, "marker icon should stay always-visible"
+
+    def test_min_zoom_caption_emits_id_in_html(self, tmp_path: Path) -> None:
+        """
+        Scenario: The caption's DOM id is emitted in the rendered HTML.
+
+        Given: A marker with caption and min_zoom_caption=12
+        When: to_html is called
+        Then: The DivIcon HTML (JSON-escaped in the JS) contains the id attribute
+              on the caption div, so Leaflet renders it with a targetable DOM id
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="CPT-01", min_zoom_caption=12)
+        out = tmp_path / "caption_id.html"
+        m.to_html(out)
+        html = out.read_text(encoding="utf-8")
+        caption_id = m._zoom_controlled_captions[0]["caption_id"]
+        # Folium serialises the DivIcon HTML into JSON, so quotes appear escaped.
+        assert f'id=\\"{caption_id}\\"' in html
+
+    def test_min_zoom_caption_works_with_emoji_marker(self) -> None:
+        """
+        Scenario: Emoji markers also get caption ids when min_zoom_caption is set.
+
+        Given: An emoji marker with caption and min_zoom_caption=8
+        When: add_point is called
+        Then: _zoom_controlled_captions has one entry
+        """
+        m = Map()
+        m.add_point(
+            Point(4.9, 52.37),
+            marker="\U0001f4cd",
+            caption="Amsterdam",
+            min_zoom_caption=8,
+        )
+        assert len(m._zoom_controlled_captions) == 1
+        assert m._zoom_controlled_captions[0]["min_zoom"] == 8
+
+    def test_min_zoom_caption_none_not_tracked(self) -> None:
+        """
+        Scenario: min_zoom_caption=None means always visible.
+
+        Given: A caption without min_zoom_caption
+        When: add_point is called
+        Then: _zoom_controlled_captions is empty and no caption id is generated
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="Always")
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_zero_not_tracked(self) -> None:
+        """
+        Scenario: min_zoom_caption=0 is treated as always visible.
+
+        Given: A caption with min_zoom_caption=0
+        When: add_point is called
+        Then: _zoom_controlled_captions is empty
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="Always", min_zoom_caption=0)
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_without_caption_is_ignored(self) -> None:
+        """
+        Scenario: min_zoom_caption without a caption text is a no-op.
+
+        Given: A marker with min_zoom_caption=10 but no caption
+        When: add_point is called
+        Then: Nothing is tracked
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", min_zoom_caption=10)
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_and_min_zoom_combine(self) -> None:
+        """
+        Scenario: The icon threshold and the caption threshold are independent.
+
+        Given: A marker with min_zoom=8 and min_zoom_caption=12
+        When: add_point is called
+        Then: The marker is tracked (min_zoom=8) and the caption is tracked
+              separately (min_zoom=12)
+        """
+        m = Map()
+        m.add_point(
+            Point(4.9, 52.37),
+            marker="home",
+            caption="POI",
+            min_zoom=8,
+            min_zoom_caption=12,
+        )
+        assert len(m._zoom_controlled_markers) == 1
+        assert m._zoom_controlled_markers[0]["min_zoom"] == 8
+        assert len(m._zoom_controlled_captions) == 1
+        assert m._zoom_controlled_captions[0]["min_zoom"] == 12
+
+    def test_min_zoom_caption_ids_are_unique(self) -> None:
+        """
+        Scenario: Each caption gets its own unique id.
+
+        Given: Two markers with captions and min_zoom_caption set
+        When: add_point is called twice
+        Then: The two caption ids differ
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="A", min_zoom_caption=10)
+        m.add_point(Point(5.0, 52.38), marker="home", caption="B", min_zoom_caption=10)
+        ids = {entry["caption_id"] for entry in m._zoom_controlled_captions}
+        assert len(ids) == 2, "each caption should have its own DOM id"
+
+    def test_min_zoom_caption_injects_js(self, tmp_path: Path) -> None:
+        """
+        Scenario: The rendered HTML contains the caption visibility JS.
+
+        Given: A marker with min_zoom_caption=12
+        When: to_html is called
+        Then: The generated script includes the caption id and threshold
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="CPT", min_zoom_caption=12)
+        out = tmp_path / "caption_js.html"
+        m.to_html(out)
+        html = out.read_text(encoding="utf-8")
+        caption_id = m._zoom_controlled_captions[0]["caption_id"]
+        assert caption_id in html
+        assert "el.style.display" in html, "caption toggle script should be injected"
+
+    def test_min_zoom_caption_merge(self) -> None:
+        """
+        Scenario: Merging maps combines their caption trackers.
+
+        Given: Two maps with min_zoom_caption markers
+        When: They are merged
+        Then: The merged map contains both entries
+        """
+        a = Map()
+        a.add_point(Point(4.9, 52.37), marker="home", caption="A", min_zoom_caption=10)
+        b = Map()
+        b.add_point(Point(5.0, 52.38), marker="home", caption="B", min_zoom_caption=11)
+        merged = a + b
+        assert len(merged._zoom_controlled_captions) == 2
+
 
 # ===================================================================
 # Scenarios for zoom-dependent marker visibility.

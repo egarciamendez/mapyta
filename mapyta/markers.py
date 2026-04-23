@@ -59,7 +59,7 @@ def classify_marker(s: str) -> Literal["emoji", "icon_class", "icon_name"]:
     return "icon_name"
 
 
-def caption_html(text: str, css: dict[str, str]) -> str:
+def caption_html(text: str, css: dict[str, str], element_id: str | None = None) -> str:
     """Build an HTML snippet for a caption below a marker icon.
 
     Parameters
@@ -68,6 +68,9 @@ def caption_html(text: str, css: dict[str, str]) -> str:
         Caption text.
     css : dict[str, str]
         CSS property dict merged with appropriate defaults by the caller.
+    element_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by zoom-dependent
+        visibility JS to target the caption independently of its marker.
 
     Returns
     -------
@@ -75,7 +78,8 @@ def caption_html(text: str, css: dict[str, str]) -> str:
         HTML ``<div>`` string.
     """
     merged = {**DEFAULT_CAPTION_CSS, **css}
-    return f'<div style="{css_to_style(merged)}">{text}</div>'
+    id_attr = f' id="{element_id}"' if element_id else ""
+    return f'<div{id_attr} style="{css_to_style(merged)}">{text}</div>'
 
 
 def build_icon_marker(
@@ -83,6 +87,7 @@ def build_icon_marker(
     css: dict[str, str],
     caption: str | None,
     caption_css: dict[str, str],
+    caption_id: str | None = None,
 ) -> folium.DivIcon:
     """Build an icon-based DivIcon marker with optional caption.
 
@@ -99,6 +104,9 @@ def build_icon_marker(
         Optional caption text below the icon.
     caption_css : dict[str, str]
         CSS property overrides for the caption.
+    caption_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by zoom-dependent
+        visibility JS to target the caption independently of its marker.
 
     Returns
     -------
@@ -106,7 +114,7 @@ def build_icon_marker(
     """
     merged = {**DEFAULT_ICON_CSS, **css}
     style_str = css_to_style(merged)
-    caption_suffix = caption_html(caption, caption_css) if caption else ""
+    caption_suffix = caption_html(caption, caption_css, caption_id) if caption else ""
     # Full CSS class string (contains a space) → use as-is
     # Bare name starting with "fa-" → FontAwesome 6 (fa-solid prefix)
     # Other bare name → Glyphicon
@@ -138,6 +146,7 @@ def build_text_marker(
     css: dict[str, str],
     caption: str | None,
     caption_css: dict[str, str],
+    caption_id: str | None = None,
 ) -> folium.DivIcon:
     """Build a text/emoji DivIcon marker with optional caption.
 
@@ -151,6 +160,9 @@ def build_text_marker(
         Optional caption text below the text.
     caption_css : dict[str, str]
         CSS property overrides for the caption.
+    caption_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by zoom-dependent
+        visibility JS to target the caption independently of its marker.
 
     Returns
     -------
@@ -159,7 +171,7 @@ def build_text_marker(
     """
     merged = {**DEFAULT_TEXT_CSS, **css}
     style_str = css_to_style(merged) + ";text-align:center"
-    caption_suffix = caption_html(caption, caption_css) if caption else ""
+    caption_suffix = caption_html(caption, caption_css, caption_id) if caption else ""
     inner = f'<div style="{style_str}">{text}</div>'
     html = f'<div style="text-align:center;">{inner}{caption_suffix}</div>'
     # size estimation for icon_size/anchor from font-size

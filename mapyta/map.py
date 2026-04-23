@@ -24,6 +24,7 @@ import io
 import json
 import math
 import tempfile
+import uuid
 import warnings
 import webbrowser
 from pathlib import Path
@@ -52,7 +53,14 @@ from mapyta.coordinates import transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
 from mapyta.markdown import RawHTML, markdown_to_html
-from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker, css_to_style
+from mapyta.markers import (
+    DEFAULT_CAPTION_CSS,
+    DEFAULT_MARKER_CAPTION_CSS,
+    build_icon_marker,
+    build_text_marker,
+    classify_marker,
+    css_to_style,
+)
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
@@ -99,6 +107,7 @@ class Map:
         self._active_group: folium.FeatureGroup | folium.Map = self._map
         self._colormaps: list[cm.LinearColormap | cm.StepColormap] = []
         self._zoom_controlled_markers: list[dict[str, Any]] = []
+        self._zoom_controlled_captions: list[dict[str, Any]] = []
         self._zoom_js_injected: bool = False
         self._draw_config: DrawConfig | None = None
         self._draw_injected: bool = False
@@ -552,7 +561,7 @@ class Map:
     # Adding geometries
     # ------------------------------------------------------------------
 
-    def add_point(
+    def add_point(  # noqa: PLR0913
         self,
         point: Point,
         marker: str | None = None,
@@ -564,6 +573,7 @@ class Map:
         tooltip_style: TooltipStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        min_zoom_caption: int | None = None,
     ) -> Self:
         """Add a location marker.
 
@@ -599,6 +609,11 @@ class Map:
         min_zoom : int | None
             Minimum zoom level at which the marker is visible.
             ``None`` or ``0`` means always visible.
+        min_zoom_caption : int | None
+            Minimum zoom level at which the caption is visible. Works like
+            ``min_zoom`` but applies only to the caption text — the marker
+            icon itself remains visible. ``None`` or ``0`` means always
+            visible. Ignored when ``caption`` is not set.
 
         Returns
         -------
@@ -611,13 +626,17 @@ class Map:
         css = marker_style or {}
         cap_css = {**DEFAULT_MARKER_CAPTION_CSS, **(caption_style or {})}
 
+        caption_id: str | None = None
+        if caption is not None and min_zoom_caption is not None and min_zoom_caption > 0:
+            caption_id = f"caption_{uuid.uuid4().hex[:15]}"
+
         kind = classify_marker(marker) if marker else "icon_name"
         if kind == "emoji":
             assert marker is not None  # guarded by classify_marker above
-            icon = build_text_marker(marker, css, caption, cap_css)
+            icon = build_text_marker(marker, css, caption, cap_css, caption_id)
         else:
             icon_name = marker or "arrow-down"
-            icon = build_icon_marker(icon_name, css, caption, cap_css)
+            icon = build_icon_marker(icon_name, css, caption, cap_css, caption_id)
 
         m = folium.Marker(
             location=[lat, lon],
@@ -635,6 +654,15 @@ class Map:
                 {
                     "var_name": m.get_name(),
                     "min_zoom": min_zoom,
+                }
+            )
+
+        if caption_id is not None:
+            assert min_zoom_caption is not None  # guarded above
+            self._zoom_controlled_captions.append(
+                {
+                    "caption_id": caption_id,
+                    "min_zoom": min_zoom_caption,
                 }
             )
 
@@ -1808,8 +1836,8 @@ class Map:
         est_w = max(len(text) * fs * 0.65 + 16, 20)
         est_h = fs + 12
         icon = folium.DivIcon(
-            html=f'<div style="{css_str}">{text}</div>',
-            icon_size="100%",  # type: ignore[arg-type]  # Let CSS control sizing
+            html=f'<div style="text-align:center;"><div style="{css_str}">{text}</div></div>',
+            icon_size=(int(est_w), int(est_h)),
             icon_anchor=(int(est_w // 2), int(est_h // 2)),
             class_name="",
         )
@@ -2130,6 +2158,7 @@ class Map:
         result._feature_groups.update(other._feature_groups)
         result._colormaps.extend(other._colormaps)
         result._zoom_controlled_markers.extend(other._zoom_controlled_markers)
+        result._zoom_controlled_captions.extend(other._zoom_controlled_captions)
         return result
 
     # ------------------------------------------------------------------
@@ -2142,15 +2171,17 @@ class Map:
         return self._map
 
     def _generate_zoom_javascript(self) -> str:
-        """Generate JavaScript for zoom-dependent marker visibility.
+        """Generate JavaScript for zoom-dependent marker and caption visibility.
 
         Returns
         -------
         str
-            A ``<script>`` block that toggles marker visibility based on zoom.
+            A ``<script>`` block that toggles marker and caption visibility
+            based on the current zoom level.
         """
         ids = ", ".join(f'"{m["var_name"]}"' for m in self._zoom_controlled_markers)
         marker_config = ", ".join(f'{{id: "{m["var_name"]}", minZoom: {m["min_zoom"]}}}' for m in self._zoom_controlled_markers)
+        caption_config = ", ".join(f'{{id: "{c["caption_id"]}", minZoom: {c["min_zoom"]}}}' for c in self._zoom_controlled_captions)
         return (
             "<script>\n"
             "document.addEventListener('DOMContentLoaded', function() {\n"
@@ -2166,6 +2197,7 @@ class Map:
             "            clearInterval(checkInterval);\n"
             "            var map = window[mapContainer.id];\n"
             "            var configs = [" + marker_config + "];\n"
+            "            var captions = [" + caption_config + "];\n"
             "            function update() {\n"
             "                var z = map.getZoom();\n"
             "                configs.forEach(function(c) {\n"
@@ -2173,6 +2205,13 @@ class Map:
             "                    if (!el) { return; }\n"
             "                    if (z >= c.minZoom) { el.addTo(map); }\n"
             "                    else { map.removeLayer(el); }\n"
+            "                });\n"
+            # Re-query captions on each update — the DivIcon DOM is recreated when
+            # a marker is re-added to the map, so any prior display toggle is lost.
+            "                captions.forEach(function(c) {\n"
+            "                    var el = document.getElementById(c.id);\n"
+            "                    if (!el) { return; }\n"
+            "                    el.style.display = z >= c.minZoom ? '' : 'none';\n"
             "                });\n"
             "            }\n"
             "            map.on('zoomend', update);\n"
@@ -2187,7 +2226,7 @@ class Map:
         """Fit bounds and inject zoom JS / draw plugin / export button (idempotent)."""
         if not self._center:
             self._fit_bounds()
-        if self._zoom_controlled_markers and not self._zoom_js_injected:
+        if (self._zoom_controlled_markers or self._zoom_controlled_captions) and not self._zoom_js_injected:
             self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # ty: ignore[unresolved-attribute]
             self._zoom_js_injected = True
         if self._draw_config and not self._draw_injected:

@@ -76,6 +76,29 @@ The check also runs once on load, so layers start hidden if the initial zoom is 
 | `0` | Always visible (treated the same as `None`) |
 | `13` | Hidden below zoom 13, visible at 13 and above |
 
+## Hiding only the caption
+
+On `add_point`, you can hide the caption text while keeping the marker icon visible. Pass `min_zoom_caption` to set a separate zoom threshold for the caption:
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(center=(52.090, 5.120), config=MapConfig(zoom_start=12))
+
+# Icon is always visible; the "Dom Tower" label appears only from zoom 15
+m.add_point(
+    Point(5.1213, 52.0908),
+    marker="🏛️",
+    caption="Dom Tower",
+    min_zoom_caption=15,
+)
+
+print(m.to_html())  # markdown-exec: hide
+```
+
+`min_zoom_caption` is independent of `min_zoom`: if you set both, the icon uses `min_zoom` and the caption uses `min_zoom_caption`. `min_zoom_caption` is ignored when `caption` is not set.
+
 ## Combining with feature groups
 
 `min_zoom` and feature groups are independent. A layer can belong to a group *and* have a zoom threshold. The group toggle controls whether the layer is in the map at all; `min_zoom` controls whether it is rendered at the current zoom within that group.
