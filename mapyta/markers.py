@@ -124,7 +124,7 @@ def build_icon_marker(
         f"{caption_suffix}"
     )
     h_icon = fs
-    w = max(fs, 100 if caption else fs)
+    w = max(fs, 100) if caption else fs
     h = h_icon + (20 if caption else 0)
     return folium.DivIcon(
         html=icon_html,
