@@ -1923,7 +1923,7 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">caption_suffix</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
     <span class="n">h_icon</span> <span class="o">=</span> <span class="n">fs</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="n">fs</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">h_icon</span> <span class="o">+</span> <span class="p">(</span><span class="mi">20</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">(</span>
         <span class="n">html</span><span class="o">=</span><span class="n">icon_html</span><span class="p">,</span>
