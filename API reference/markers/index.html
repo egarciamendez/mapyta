@@ -1436,17 +1436,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#markers.caption_html" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;caption_html
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#markers.classify_marker" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1462,6 +1451,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;css_to_style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#markers.px_to_int" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;px_to_int
       
     </span>
   </a>
@@ -1606,17 +1606,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#markers.caption_html" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;caption_html
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#markers.classify_marker" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1632,6 +1621,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;css_to_style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#markers.px_to_int" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;px_to_int
       
     </span>
   </a>
@@ -1763,6 +1763,7 @@
     <span class="n">css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">caption_css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
+    <span class="n">caption_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="folium.DivIcon">DivIcon</span></span>
 </code></pre></div>
 
@@ -1808,6 +1809,17 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
             <p>CSS property overrides for the caption.</p>
           </div>
         </li>
+        <li class="doc-section-item field-body">
+            <b><code>caption_id</code></b>
+              (<code><span title="str">str</span> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Optional DOM <code>id</code> on the caption <code>&lt;div&gt;</code>, used by zoom-dependent
+visibility JS to target the caption independently of its marker.</p>
+          </div>
+        </li>
     </ul>
 
 
@@ -1825,48 +1837,7 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
@@ -1877,11 +1848,58 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
-<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_icon_marker</span><span class="p">(</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_icon_marker</span><span class="p">(</span>
     <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">caption_css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">caption_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an icon-based DivIcon marker with optional caption.</span>
 
@@ -1898,6 +1916,9 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 <span class="sd">        Optional caption text below the icon.</span>
 <span class="sd">    caption_css : dict[str, str]</span>
 <span class="sd">        CSS property overrides for the caption.</span>
+<span class="sd">    caption_id : str | None</span>
+<span class="sd">        Optional DOM ``id`` on the caption ``&lt;div&gt;``, used by zoom-dependent</span>
+<span class="sd">        visibility JS to target the caption independently of its marker.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1905,7 +1926,6 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_ICON_CSS</span><span class="p">,</span> <span class="o">**</span><span class="n">css</span><span class="p">}</span>
     <span class="n">style_str</span> <span class="o">=</span> <span class="n">css_to_style</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span>
-    <span class="n">caption_suffix</span> <span class="o">=</span> <span class="n">caption_html</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
     <span class="c1"># Full CSS class string (contains a space) → use as-is</span>
     <span class="c1"># Bare name starting with &quot;fa-&quot; → FontAwesome 6 (fa-solid prefix)</span>
     <span class="c1"># Other bare name → Glyphicon</span>
@@ -1915,20 +1935,22 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
         <span class="n">icon_class</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;fa-solid </span><span class="si">{</span><span class="n">icon</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">icon_class</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;glyphicon glyphicon-</span><span class="si">{</span><span class="n">icon</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">fs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;20px&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;px&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-    <span class="n">icon_html</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;text-align:center;line-height:1;height:</span><span class="si">{</span><span class="n">fs</span><span class="si">}</span><span class="s1">px;&quot;&gt;&#39;</span>
-        <span class="sa">f</span><span class="s1">&#39;&lt;i class=&quot;</span><span class="si">{</span><span class="n">icon_class</span><span class="si">}</span><span class="s1">&quot; style=&quot;</span><span class="si">{</span><span class="n">style_str</span><span class="si">}</span><span class="s1">;line-height:1;vertical-align:top;&quot;&gt;&lt;/i&gt;&#39;</span>
-        <span class="sa">f</span><span class="s2">&quot;&lt;/div&gt;&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">caption_suffix</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="p">)</span>
-    <span class="n">h_icon</span> <span class="o">=</span> <span class="n">fs</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="n">fs</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">h_icon</span> <span class="o">+</span> <span class="p">(</span><span class="mi">20</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">px_to_int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;20px&quot;</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">glyph_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;i class=&quot;</span><span class="si">{</span><span class="n">icon_class</span><span class="si">}</span><span class="s1">&quot; style=&quot;</span><span class="si">{</span><span class="n">style_str</span><span class="si">}</span><span class="s1">;line-height:1;vertical-align:top;&quot;&gt;&lt;/i&gt;&#39;</span>
+    <span class="n">caption_html</span> <span class="o">=</span> <span class="n">_absolute_caption_html</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">,</span> <span class="n">top_px</span><span class="o">=</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">element_id</span><span class="o">=</span><span class="n">caption_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># Caption is nested inside the wrapper (not a sibling) so click/hover</span>
+    <span class="c1"># events on it bubble up to the Leaflet marker and still fire the</span>
+    <span class="c1"># marker&#39;s tooltip/popup handlers, even though the caption renders</span>
+    <span class="c1"># outside icon_size via overflow:visible.</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;&quot;&gt;</span><span class="si">{</span><span class="n">glyph_html</span><span class="si">}{</span><span class="n">caption_html</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
+    <span class="c1"># icon_size covers the glyph only; the caption is position:absolute</span>
+    <span class="c1"># and therefore does not shift the anchor off the glyph&#39;s center.</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">fs</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">fs</span>
     <span class="k">return</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">(</span>
-        <span class="n">html</span><span class="o">=</span><span class="n">icon_html</span><span class="p">,</span>
+        <span class="n">html</span><span class="o">=</span><span class="n">html</span><span class="p">,</span>
         <span class="n">icon_size</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span>
-        <span class="n">icon_anchor</span><span class="o">=</span><span class="p">(</span><span class="n">w</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">h_icon</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">icon_anchor</span><span class="o">=</span><span class="p">(</span><span class="n">w</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">h</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1949,6 +1971,7 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
     <span class="n">css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">caption_css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
+    <span class="n">caption_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="folium.DivIcon">DivIcon</span></span>
 </code></pre></div>
 
@@ -1991,6 +2014,17 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
             <p>CSS property overrides for the caption.</p>
           </div>
         </li>
+        <li class="doc-section-item field-body">
+            <b><code>caption_id</code></b>
+              (<code><span title="str">str</span> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Optional DOM <code>id</code> on the caption <code>&lt;div&gt;</code>, used by zoom-dependent
+visibility JS to target the caption independently of its marker.</p>
+          </div>
+        </li>
     </ul>
 
 
@@ -2008,48 +2042,55 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_text_marker</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_text_marker</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">caption_css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">caption_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a text/emoji DivIcon marker with optional caption.</span>
 
@@ -2063,6 +2104,9 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 <span class="sd">        Optional caption text below the text.</span>
 <span class="sd">    caption_css : dict[str, str]</span>
 <span class="sd">        CSS property overrides for the caption.</span>
+<span class="sd">    caption_id : str | None</span>
+<span class="sd">        Optional DOM ``id`` on the caption ``&lt;div&gt;``, used by zoom-dependent</span>
+<span class="sd">        visibility JS to target the caption independently of its marker.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2070,109 +2114,21 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 <span class="sd">        A DivIcon rendering the text and optional caption.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_TEXT_CSS</span><span class="p">,</span> <span class="o">**</span><span class="n">css</span><span class="p">}</span>
-    <span class="n">style_str</span> <span class="o">=</span> <span class="n">css_to_style</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;text-align:center&quot;</span>
-    <span class="n">caption_suffix</span> <span class="o">=</span> <span class="n">caption_html</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">inner</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;</span><span class="si">{</span><span class="n">style_str</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
-    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;text-align:center;&quot;&gt;</span><span class="si">{</span><span class="n">inner</span><span class="si">}{</span><span class="n">caption_suffix</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
-    <span class="c1"># size estimation for icon_size/anchor from font-size</span>
-    <span class="n">fs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;16px&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;px&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="mi">20</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">style_str</span> <span class="o">=</span> <span class="n">css_to_style</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;text-align:center;line-height:1&quot;</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">px_to_int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;16px&quot;</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">glyph_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;</span><span class="si">{</span><span class="n">style_str</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
+    <span class="n">caption_html</span> <span class="o">=</span> <span class="n">_absolute_caption_html</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">,</span> <span class="n">top_px</span><span class="o">=</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">element_id</span><span class="o">=</span><span class="n">caption_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># See build_icon_marker for why the caption is nested inside the</span>
+    <span class="c1"># wrapper (clickability via event bubbling) and why icon_size stays</span>
+    <span class="c1"># glyph-only (anchor stability).</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;&quot;&gt;</span><span class="si">{</span><span class="n">glyph_html</span><span class="si">}{</span><span class="n">caption_html</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span>
     <span class="k">return</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">(</span>
         <span class="n">html</span><span class="o">=</span><span class="n">html</span><span class="p">,</span>
         <span class="n">icon_size</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span>
-        <span class="n">icon_anchor</span><span class="o">=</span><span class="p">(</span><span class="n">w</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">icon_anchor</span><span class="o">=</span><span class="p">(</span><span class="n">w</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">h</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
     <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="markers.caption_html" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">markers.caption_html</span>
-
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">caption_html</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Build an HTML snippet for a caption below a marker icon.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <ul>
-        <li class="doc-section-item field-body">
-            <b><code>text</code></b>
-              (<code><span title="str">str</span></code>)
-          –
-          <div class="doc-md-description">
-            <p>Caption text.</p>
-          </div>
-        </li>
-        <li class="doc-section-item field-body">
-            <b><code>css</code></b>
-              (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>]</code>)
-          –
-          <div class="doc-md-description">
-            <p>CSS property dict merged with appropriate defaults by the caller.</p>
-          </div>
-        </li>
-    </ul>
-
-
-<p><span class="doc-section-title">Returns:</span></p>
-    <ul>
-        <li class="doc-section-item field-body">
-              <code><span title="str">str</span></code>
-          –
-          <div class="doc-md-description">
-            <p>HTML <code>&lt;div&gt;</code> string.</p>
-          </div>
-        </li>
-    </ul>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">caption_html</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an HTML snippet for a caption below a marker icon.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    text : str</span>
-<span class="sd">        Caption text.</span>
-<span class="sd">    css : dict[str, str]</span>
-<span class="sd">        CSS property dict merged with appropriate defaults by the caller.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    str</span>
-<span class="sd">        HTML ``&lt;div&gt;`` string.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_CAPTION_CSS</span><span class="p">,</span> <span class="o">**</span><span class="n">css</span><span class="p">}</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;</span><span class="si">{</span><span class="n">css_to_style</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2223,23 +2179,23 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
-<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classify_marker</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_class&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_name&quot;</span><span class="p">]:</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classify_marker</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_class&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_name&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Classify a marker string.</span>
 
 <span class="sd">    Returns</span>
@@ -2285,6 +2241,51 @@ names (e.g. <code>"home"</code>) get a <code>"glyphicon"</code> prefix.</p>
 <span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">css_to_style</span><span class="p">(</span><span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a CSS property dict to an inline style string.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">css</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="markers.px_to_int" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">markers.px_to_int</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">px_to_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Convert a CSS length string like <code>"12px"</code> or <code>"12.5px"</code> to an int.</p>
+<p>Falls back to <code>default</code> for non-<code>px</code> units (<code>"1em"</code>, <code>"medium"</code>)
+and malformed values so icon size estimation never raises.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>mapyta/markers.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">px_to_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a CSS length string like ``&quot;12px&quot;`` or ``&quot;12.5px&quot;`` to an int.</span>
+
+<span class="sd">    Falls back to ``default`` for non-``px`` units (``&quot;1em&quot;``, ``&quot;medium&quot;``)</span>
+<span class="sd">    and malformed values so icon size estimation never raises.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;px&quot;</span><span class="p">)))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">default</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
