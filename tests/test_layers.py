@@ -382,6 +382,31 @@ class TestMarkerCluster:
         # Verify the icon glyph is rendered inline (single DivIcon, not folium.Icon)
         assert "glyphicon glyphicon-arrow-down" in html, "Icon glyph should be rendered as HTML"
 
+    def test_cluster_with_min_zoom_caption_tracks_captions(self) -> None:
+        """
+        Scenario: Marker cluster with min_zoom_caption tracks each caption.
+
+        Given: A map with clustered markers that have captions and min_zoom_caption=12
+        When: add_marker_cluster is called
+        Then: Each caption gets a unique id tracked in _zoom_controlled_captions,
+              and the marker icons remain always-visible (no min_zoom tracking)
+        """
+        m = Map()
+        points = [Point(4.9, 52.37), Point(4.95, 52.38)]
+
+        m.add_marker_cluster(
+            points,
+            labels=["home", "\U0001f4cd"],
+            captions=["S-01", "S-02"],
+            min_zoom_caption=12,
+        )
+
+        assert len(m._zoom_controlled_captions) == 2
+        assert {entry["min_zoom"] for entry in m._zoom_controlled_captions} == {12}
+        ids = {entry["caption_id"] for entry in m._zoom_controlled_captions}
+        assert len(ids) == 2, "each caption should have its own DOM id"
+        assert len(m._zoom_controlled_markers) == 0, "marker icons remain always-visible"
+
 
 # ===================================================================
 # Scenarios for placing text labels on the map.

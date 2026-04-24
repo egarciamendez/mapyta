@@ -10,7 +10,7 @@ from pathlib import Path
 from shapely import Point, Polygon
 
 from mapyta import CircleStyle, FillStyle, Map, StrokeStyle
-from mapyta.markers import classify_marker
+from mapyta.markers import classify_marker, px_to_int
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.
@@ -212,6 +212,42 @@ class TestClassifyMarker:
         Then: It returns "emoji"
         """
         assert classify_marker("") == "emoji"
+
+
+class TestPxToInt:
+    """Scenarios for the px_to_int CSS length parser."""
+
+    def test_px_value_is_parsed(self) -> None:
+        """
+        Scenario: A plain ``"12px"`` string is parsed to the integer value.
+
+        Given: A CSS length string with a px suffix
+        When: px_to_int is called
+        Then: It returns the numeric value as an int
+        """
+        assert px_to_int("20px", 16) == 20
+        assert px_to_int("12.5px", 16) == 12
+
+    def test_non_px_unit_falls_back_to_default(self) -> None:
+        """
+        Scenario: Non-px units cannot be parsed and return the default.
+
+        Given: A CSS length string without a px unit (e.g. "1em", "medium")
+        When: px_to_int is called
+        Then: It returns the provided default without raising
+        """
+        assert px_to_int("1em", 16) == 16
+        assert px_to_int("medium", 20) == 20
+
+    def test_non_string_value_falls_back_to_default(self) -> None:
+        """
+        Scenario: A non-string value (``None``) returns the default.
+
+        Given: A value that lacks ``.strip`` (not a string)
+        When: px_to_int is called
+        Then: It returns the provided default without raising
+        """
+        assert px_to_int(None, 14) == 14  # type: ignore[arg-type]
 
 
 class TestFullIconClass:
