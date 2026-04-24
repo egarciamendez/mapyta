@@ -27,6 +27,7 @@ import tempfile
 import uuid
 import warnings
 import webbrowser
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Self, cast, overload
 
@@ -1196,7 +1197,7 @@ class Map:
         geojson_data: dict | str | Path,
         value_column: str,
         key_on: str,
-        values: dict[str, float | str] | None = None,
+        values: Mapping[str, float | str] | None = None,
         vmin: float | None = None,
         vmax: float | None = None,
         legend_name: str | None = None,
@@ -1254,7 +1255,7 @@ class Map:
 
         # Extract values if not provided
         if values is None:
-            values = {}
+            extracted: dict[str, float | str] = {}
             key_parts = key_on.split(".")
             for feat in geojson_data.get("features", []):
                 obj = feat
@@ -1263,7 +1264,8 @@ class Map:
                 key = obj if isinstance(obj, str) else str(obj)
                 raw_val = feat.get("properties", {}).get(value_column)
                 if raw_val is not None:
-                    values[key] = raw_val
+                    extracted[key] = raw_val
+            values = extracted
 
         # Determine if categorical
         raw_vals = list(values.values())
