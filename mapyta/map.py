@@ -648,7 +648,15 @@ class Map:
         )
         m.add_to(self._target())
         self._record_feature(
-            point, {"marker": marker, "caption": caption, "tooltip": self._raw_text(tooltip), "popup": self._raw_text(popup), "min_zoom": min_zoom}
+            point,
+            {
+                "marker": marker,
+                "caption": caption,
+                "tooltip": self._raw_text(tooltip),
+                "popup": self._raw_text(popup),
+                "min_zoom": min_zoom,
+                "min_zoom_caption": min_zoom_caption,
+            },
         )
 
         if min_zoom is not None and min_zoom > 0:
