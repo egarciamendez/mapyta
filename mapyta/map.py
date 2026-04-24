@@ -615,7 +615,11 @@ class Map:
             Minimum zoom level at which the caption is visible. Works like
             ``min_zoom`` but applies only to the caption text — the marker
             icon itself remains visible. ``None`` or ``0`` means always
-            visible. Ignored when ``caption`` is not set.
+            visible. Ignored when ``caption`` is not set. Note: caption
+            visibility is also bounded below by ``min_zoom`` — the caption
+            lives inside the marker's DivIcon DOM, which is removed when
+            the marker is hidden, so setting ``min_zoom_caption`` lower
+            than ``min_zoom`` does not reveal the caption at those zooms.
 
         Returns
         -------
@@ -1750,7 +1754,11 @@ class Map:
             Minimum zoom level at which captions are visible. Applies only
             to the caption text — the marker icons remain visible. ``None``
             or ``0`` means always visible. Ignored for entries without a
-            caption.
+            caption. Note: caption visibility is also bounded below by
+            each entry's ``min_zoom`` — the caption lives inside the
+            marker's DivIcon DOM, which is removed when the marker is
+            hidden, so setting ``min_zoom_caption`` lower than ``min_zoom``
+            does not reveal the caption at those zooms.
 
         Returns
         -------

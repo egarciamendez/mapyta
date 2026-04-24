@@ -111,6 +111,10 @@ def _absolute_caption_html(
         "top": f"{top_px}px",
         "transform": "translateX(-50%)",
     }
+    # When zoom-gated (element_id set), start hidden so the caption doesn't
+    # flash before the zoom JS runs its first visibility check.
+    if element_id:
+        merged["display"] = "none"
     id_attr = f' id="{element_id}"' if element_id else ""
     return f'<div{id_attr} style="{css_to_style(merged)}">{text}</div>'
 
