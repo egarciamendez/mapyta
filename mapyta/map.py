@@ -1870,16 +1870,23 @@ class Map:
             self._bounds.append((lat, lon))
 
         css_str = css_to_style(merged)
-        # Estimate icon size from text length and font size so the anchor
-        # centers the marker on the coordinate and Leaflet doesn't render a
-        # phantom shadow from a zero-sized container.
+        # icon_size is a small fixed box around the anchor (depends on
+        # font-size only, not on text length). The text is absolutely
+        # centered on the anchor and overflows via overflow:visible, so
+        # long labels render fully without widening the Leaflet icon box.
         fs = px_to_int(merged.get("font-size", "12px"), 12)
-        est_w = max(len(text) * fs * 0.65 + 16, 20)
-        est_h = fs + 12
+        w = fs + 10
+        h = fs + 10
+        html = (
+            f'<div style="position:relative;width:{w}px;height:{h}px;overflow:visible;">'
+            f'<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);'
+            f'white-space:nowrap;{css_str}">{text}</div>'
+            f"</div>"
+        )
         icon = folium.DivIcon(
-            html=f'<div style="text-align:center;"><div style="{css_str}">{text}</div></div>',
-            icon_size=(int(est_w), int(est_h)),
-            icon_anchor=(int(est_w // 2), int(est_h // 2)),
+            html=html,
+            icon_size=(w, h),
+            icon_anchor=(w // 2, h // 2),
             class_name="",
         )
         marker = folium.Marker(
