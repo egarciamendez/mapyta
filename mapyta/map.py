@@ -24,8 +24,10 @@ import io
 import json
 import math
 import tempfile
+import uuid
 import warnings
 import webbrowser
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Self, cast, overload
 
@@ -52,7 +54,15 @@ from mapyta.coordinates import transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
 from mapyta.markdown import RawHTML, markdown_to_html
-from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_MARKER_CAPTION_CSS, build_icon_marker, build_text_marker, classify_marker, css_to_style
+from mapyta.markers import (
+    DEFAULT_CAPTION_CSS,
+    DEFAULT_MARKER_CAPTION_CSS,
+    build_icon_marker,
+    build_text_marker,
+    classify_marker,
+    css_to_style,
+    px_to_int,
+)
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
@@ -99,6 +109,7 @@ class Map:
         self._active_group: folium.FeatureGroup | folium.Map = self._map
         self._colormaps: list[cm.LinearColormap | cm.StepColormap] = []
         self._zoom_controlled_markers: list[dict[str, Any]] = []
+        self._zoom_controlled_captions: list[dict[str, Any]] = []
         self._zoom_js_injected: bool = False
         self._draw_config: DrawConfig | None = None
         self._draw_injected: bool = False
@@ -203,7 +214,7 @@ class Map:
                 f'font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;">'
                 f"{self._title}</div>"
             )
-            fmap.get_root().html.add_child(folium.Element(title_html))  # type: ignore[union-attr]
+            fmap.get_root().html.add_child(folium.Element(title_html))  # ty: ignore[unresolved-attribute]
 
         # Optional plugins
         if cfg.fullscreen:
@@ -244,7 +255,7 @@ class Map:
             return None
         ps = resolve_style(popup_style, PopupStyle) or PopupStyle()
         html = popup if isinstance(popup, RawHTML) else markdown_to_html(popup)
-        iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # type: ignore[arg-type]
+        iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # ty: ignore[invalid-argument-type]
         return folium.Popup(iframe, max_width=ps.max_width)
 
     def _target(self) -> folium.FeatureGroup | folium.Map:
@@ -444,7 +455,7 @@ class Map:
         # Submit button: runs after DOMContentLoaded (after Folium's <script> block).
         map_var = self._map.get_name()
         drawn_items_var = f"drawnItems_{draw_plugin.get_name()}"
-        self._map.get_root().html.add_child(  # type: ignore[union-attr]
+        self._map.get_root().html.add_child(  # ty: ignore[unresolved-attribute]
             folium.Element(self._build_draw_script(map_var, drawn_items_var))
         )
         self._draw_injected = True
@@ -552,7 +563,7 @@ class Map:
     # Adding geometries
     # ------------------------------------------------------------------
 
-    def add_point(
+    def add_point(  # noqa: PLR0913
         self,
         point: Point,
         marker: str | None = None,
@@ -564,6 +575,7 @@ class Map:
         tooltip_style: TooltipStyle | dict[str, Any] | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
         min_zoom: int | None = None,
+        min_zoom_caption: int | None = None,
     ) -> Self:
         """Add a location marker.
 
@@ -599,6 +611,15 @@ class Map:
         min_zoom : int | None
             Minimum zoom level at which the marker is visible.
             ``None`` or ``0`` means always visible.
+        min_zoom_caption : int | None
+            Minimum zoom level at which the caption is visible. Works like
+            ``min_zoom`` but applies only to the caption text — the marker
+            icon itself remains visible. ``None`` or ``0`` means always
+            visible. Ignored when ``caption`` is not set. Note: caption
+            visibility is also bounded below by ``min_zoom`` — the caption
+            lives inside the marker's DivIcon DOM, which is removed when
+            the marker is hidden, so setting ``min_zoom_caption`` lower
+            than ``min_zoom`` does not reveal the caption at those zooms.
 
         Returns
         -------
@@ -611,13 +632,17 @@ class Map:
         css = marker_style or {}
         cap_css = {**DEFAULT_MARKER_CAPTION_CSS, **(caption_style or {})}
 
+        caption_id: str | None = None
+        if caption is not None and min_zoom_caption is not None and min_zoom_caption > 0:
+            caption_id = f"caption_{uuid.uuid4().hex[:15]}"
+
         kind = classify_marker(marker) if marker else "icon_name"
         if kind == "emoji":
             assert marker is not None  # guarded by classify_marker above
-            icon = build_text_marker(marker, css, caption, cap_css)
+            icon = build_text_marker(marker, css, caption, cap_css, caption_id)
         else:
             icon_name = marker or "arrow-down"
-            icon = build_icon_marker(icon_name, css, caption, cap_css)
+            icon = build_icon_marker(icon_name, css, caption, cap_css, caption_id)
 
         m = folium.Marker(
             location=[lat, lon],
@@ -627,7 +652,15 @@ class Map:
         )
         m.add_to(self._target())
         self._record_feature(
-            point, {"marker": marker, "caption": caption, "tooltip": self._raw_text(tooltip), "popup": self._raw_text(popup), "min_zoom": min_zoom}
+            point,
+            {
+                "marker": marker,
+                "caption": caption,
+                "tooltip": self._raw_text(tooltip),
+                "popup": self._raw_text(popup),
+                "min_zoom": min_zoom,
+                "min_zoom_caption": min_zoom_caption,
+            },
         )
 
         if min_zoom is not None and min_zoom > 0:
@@ -635,6 +668,15 @@ class Map:
                 {
                     "var_name": m.get_name(),
                     "min_zoom": min_zoom,
+                }
+            )
+
+        if caption_id is not None:
+            assert min_zoom_caption is not None  # guarded above
+            self._zoom_controlled_captions.append(
+                {
+                    "caption_id": caption_id,
+                    "min_zoom": min_zoom_caption,
                 }
             )
 
@@ -1167,7 +1209,7 @@ class Map:
         geojson_data: dict | str | Path,
         value_column: str,
         key_on: str,
-        values: dict[str, float | str] | None = None,
+        values: Mapping[str, float | str] | None = None,
         vmin: float | None = None,
         vmax: float | None = None,
         legend_name: str | None = None,
@@ -1225,7 +1267,7 @@ class Map:
 
         # Extract values if not provided
         if values is None:
-            values = {}
+            extracted: dict[str, float | str] = {}
             key_parts = key_on.split(".")
             for feat in geojson_data.get("features", []):
                 obj = feat
@@ -1234,7 +1276,8 @@ class Map:
                 key = obj if isinstance(obj, str) else str(obj)
                 raw_val = feat.get("properties", {}).get(value_column)
                 if raw_val is not None:
-                    values[key] = raw_val
+                    extracted[key] = raw_val
+            values = extracted
 
         # Determine if categorical
         raw_vals = list(values.values())
@@ -1374,7 +1417,7 @@ class Map:
             else:
                 heat_data.append(list(p[:3]))
                 self._bounds.append((p[0], p[1]))
-                self._record_feature(Point(p[1], p[0]), {"intensity": p[2]})  # type: ignore[index]
+                self._record_feature(Point(p[1], p[0]), {"intensity": p[2]})  # ty: ignore[index-out-of-bounds]
 
         kwargs: dict[str, Any] = {
             "radius": hs.radius,
@@ -1548,7 +1591,7 @@ class Map:
                     step_points.append([pt.y, pt.x])
                 elif len(p) == 3:
                     self._bounds.append((p[0], p[1]))
-                    step_points.append([p[0], p[1], p[2]])  # type: ignore[index]
+                    step_points.append([p[0], p[1], p[2]])  # ty: ignore[index-out-of-bounds]
                 else:
                     self._bounds.append((p[0], p[1]))
                     step_points.append([p[0], p[1]])
@@ -1679,6 +1722,7 @@ class Map:
         captions: list[str] | None = None,
         caption_style: dict[str, str] | None = None,
         tooltip_style: TooltipStyle | dict[str, Any] | None = None,
+        min_zoom_caption: int | None = None,
     ) -> Self:
         """Add clustered markers that group at low zoom.
 
@@ -1706,6 +1750,15 @@ class Map:
             CSS property overrides for ``captions``.
         tooltip_style : TooltipStyle | dict[str, Any] | None
             Tooltip appearance (font size, width, etc.).
+        min_zoom_caption : int | None
+            Minimum zoom level at which captions are visible. Applies only
+            to the caption text — the marker icons remain visible. ``None``
+            or ``0`` means always visible. Ignored for entries without a
+            caption. Note: caption visibility is also bounded below by
+            each entry's ``min_zoom`` — the caption lives inside the
+            marker's DivIcon DOM, which is removed when the marker is
+            hidden, so setting ``min_zoom_caption`` lower than ``min_zoom``
+            does not reveal the caption at those zooms.
 
         Returns
         -------
@@ -1714,6 +1767,7 @@ class Map:
         css = marker_style or {}
         cap_css = {**DEFAULT_MARKER_CAPTION_CSS, **(caption_style or {})}
         cluster = folium.plugins.MarkerCluster(name=name)
+        track_captions = min_zoom_caption is not None and min_zoom_caption > 0
 
         for i, point in enumerate(points):
             pt = cast(Point, self._transform(point))
@@ -1725,13 +1779,17 @@ class Map:
             popup = popups[i] if popups and i < len(popups) else None
             txt = captions[i] if captions and i < len(captions) else None
 
+            caption_id: str | None = None
+            if txt is not None and track_captions:
+                caption_id = f"caption_{uuid.uuid4().hex[:15]}"
+
             kind = classify_marker(label) if label else "icon_name"
             if kind == "emoji":
                 assert label is not None  # guarded by classify_marker above
-                icon = build_text_marker(label, css, txt, cap_css)
+                icon = build_text_marker(label, css, txt, cap_css, caption_id)
             else:
                 icon_name = label or "arrow-down"
-                icon = build_icon_marker(icon_name, css, txt, cap_css)
+                icon = build_icon_marker(icon_name, css, txt, cap_css, caption_id)
 
             folium.Marker(
                 location=[lat, lon],
@@ -1739,7 +1797,26 @@ class Map:
                 tooltip=self._make_tooltip(tip, tooltip_style),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
-            self._record_feature(pt, {"marker": label, "caption": txt, "tooltip": tip, "popup": popup, "min_zoom": min_zoom})
+            self._record_feature(
+                pt,
+                {
+                    "marker": label,
+                    "caption": txt,
+                    "tooltip": tip,
+                    "popup": popup,
+                    "min_zoom": min_zoom,
+                    "min_zoom_caption": min_zoom_caption,
+                },
+            )
+
+            if caption_id is not None:
+                assert min_zoom_caption is not None  # guarded by track_captions above
+                self._zoom_controlled_captions.append(
+                    {
+                        "caption_id": caption_id,
+                        "min_zoom": min_zoom_caption,
+                    }
+                )
 
         cluster.add_to(self._target())
         if min_zoom is not None and min_zoom > 0:
@@ -1801,16 +1878,23 @@ class Map:
             self._bounds.append((lat, lon))
 
         css_str = css_to_style(merged)
-        # Estimate icon size from text length and font size so the anchor
-        # centers the marker on the coordinate and Leaflet doesn't render a
-        # phantom shadow from a zero-sized container.
-        fs = int(merged.get("font-size", "12px").replace("px", ""))
-        est_w = max(len(text) * fs * 0.65 + 16, 20)
-        est_h = fs + 12
+        # icon_size is a small fixed box around the anchor (depends on
+        # font-size only, not on text length). The text is absolutely
+        # centered on the anchor and overflows via overflow:visible, so
+        # long labels render fully without widening the Leaflet icon box.
+        fs = px_to_int(merged.get("font-size", "12px"), 12)
+        w = fs + 10
+        h = fs + 10
+        html = (
+            f'<div style="position:relative;width:{w}px;height:{h}px;overflow:visible;">'
+            f'<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);'
+            f'white-space:nowrap;{css_str}">{text}</div>'
+            f"</div>"
+        )
         icon = folium.DivIcon(
-            html=f'<div style="{css_str}">{text}</div>',
-            icon_size="100%",  # type: ignore[arg-type]  # Let CSS control sizing
-            icon_anchor=(int(est_w // 2), int(est_h // 2)),
+            html=html,
+            icon_size=(w, h),
+            icon_anchor=(w // 2, h // 2),
             class_name="",
         )
         marker = folium.Marker(
@@ -2130,6 +2214,7 @@ class Map:
         result._feature_groups.update(other._feature_groups)
         result._colormaps.extend(other._colormaps)
         result._zoom_controlled_markers.extend(other._zoom_controlled_markers)
+        result._zoom_controlled_captions.extend(other._zoom_controlled_captions)
         return result
 
     # ------------------------------------------------------------------
@@ -2142,15 +2227,17 @@ class Map:
         return self._map
 
     def _generate_zoom_javascript(self) -> str:
-        """Generate JavaScript for zoom-dependent marker visibility.
+        """Generate JavaScript for zoom-dependent marker and caption visibility.
 
         Returns
         -------
         str
-            A ``<script>`` block that toggles marker visibility based on zoom.
+            A ``<script>`` block that toggles marker and caption visibility
+            based on the current zoom level.
         """
         ids = ", ".join(f'"{m["var_name"]}"' for m in self._zoom_controlled_markers)
         marker_config = ", ".join(f'{{id: "{m["var_name"]}", minZoom: {m["min_zoom"]}}}' for m in self._zoom_controlled_markers)
+        caption_config = ", ".join(f'{{id: "{c["caption_id"]}", minZoom: {c["min_zoom"]}}}' for c in self._zoom_controlled_captions)
         return (
             "<script>\n"
             "document.addEventListener('DOMContentLoaded', function() {\n"
@@ -2166,6 +2253,7 @@ class Map:
             "            clearInterval(checkInterval);\n"
             "            var map = window[mapContainer.id];\n"
             "            var configs = [" + marker_config + "];\n"
+            "            var captions = [" + caption_config + "];\n"
             "            function update() {\n"
             "                var z = map.getZoom();\n"
             "                configs.forEach(function(c) {\n"
@@ -2173,6 +2261,13 @@ class Map:
             "                    if (!el) { return; }\n"
             "                    if (z >= c.minZoom) { el.addTo(map); }\n"
             "                    else { map.removeLayer(el); }\n"
+            "                });\n"
+            # Re-query captions on each update — the DivIcon DOM is recreated when
+            # a marker is re-added to the map, so any prior display toggle is lost.
+            "                captions.forEach(function(c) {\n"
+            "                    var el = document.getElementById(c.id);\n"
+            "                    if (!el) { return; }\n"
+            "                    el.style.display = z >= c.minZoom ? '' : 'none';\n"
             "                });\n"
             "            }\n"
             "            map.on('zoomend', update);\n"
@@ -2187,8 +2282,8 @@ class Map:
         """Fit bounds and inject zoom JS / draw plugin / export button (idempotent)."""
         if not self._center:
             self._fit_bounds()
-        if self._zoom_controlled_markers and not self._zoom_js_injected:
-            self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # type: ignore[union-attr]
+        if (self._zoom_controlled_markers or self._zoom_controlled_captions) and not self._zoom_js_injected:
+            self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # ty: ignore[unresolved-attribute]
             self._zoom_js_injected = True
         if self._draw_config and not self._draw_injected:
             self._inject_draw_plugin()
@@ -2337,7 +2432,7 @@ class Map:
             "});\n"
             "</script>\n"
         )
-        self._map.get_root().html.add_child(folium.Element(script))  # type: ignore[union-attr]
+        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
 
     @overload
     def to_image(

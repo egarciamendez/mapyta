@@ -6,11 +6,18 @@ docstring and Arrange/Act/Assert comments.
 # ruff: noqa: SLF001
 
 from pathlib import Path
+from typing import cast
 
 from shapely import Point, Polygon
 
 from mapyta import CircleStyle, FillStyle, Map, StrokeStyle
-from mapyta.markers import classify_marker
+from mapyta.markers import (
+    DEFAULT_MARKER_CAPTION_CSS,
+    build_icon_marker,
+    build_text_marker,
+    classify_marker,
+    px_to_int,
+)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.
@@ -214,6 +221,42 @@ class TestClassifyMarker:
         assert classify_marker("") == "emoji"
 
 
+class TestPxToInt:
+    """Scenarios for the px_to_int CSS length parser."""
+
+    def test_px_value_is_parsed(self) -> None:
+        """
+        Scenario: A plain ``"12px"`` string is parsed to the integer value.
+
+        Given: A CSS length string with a px suffix
+        When: px_to_int is called
+        Then: It returns the numeric value as an int
+        """
+        assert px_to_int("20px", 16) == 20
+        assert px_to_int("12.5px", 16) == 12
+
+    def test_non_px_unit_falls_back_to_default(self) -> None:
+        """
+        Scenario: Non-px units cannot be parsed and return the default.
+
+        Given: A CSS length string without a px unit (e.g. "1em", "medium")
+        When: px_to_int is called
+        Then: It returns the provided default without raising
+        """
+        assert px_to_int("1em", 16) == 16
+        assert px_to_int("medium", 20) == 20
+
+    def test_non_string_value_falls_back_to_default(self) -> None:
+        """
+        Scenario: A non-string value (``None``) returns the default.
+
+        Given: A value that lacks ``.strip`` (not a string)
+        When: px_to_int is called
+        Then: It returns the provided default without raising
+        """
+        assert px_to_int(None, 14) == 14  # type: ignore[arg-type]
+
+
 class TestFullIconClass:
     """Scenarios for passing full CSS icon class strings as marker."""
 
@@ -355,6 +398,98 @@ class TestCaption:
         assert "Station" in html
         assert "glyphicon glyphicon-arrow-down" in html
 
+    def test_caption_is_absolutely_centered_regardless_of_length(self, tmp_path: Path) -> None:
+        """
+        Scenario: Captions self-center on the marker glyph, independent of text length.
+
+        Given: Two maps with the same marker but captions of very different widths
+        When: Each map is rendered to HTML
+        Then: Both emit the absolute-centering CSS (``position:absolute``,
+              ``left:50%``, ``transform:translateX(-50%)``) and the caption text,
+              so the caption midpoint stays pinned to the glyph midpoint.
+        """
+        for caption_text in ("A", "CPT000000170466_IMBRO"):
+            m = Map()
+            m.add_point(Point(4.9, 52.37), marker="\U0001f4cd", caption=caption_text)
+            out = tmp_path / f"centered_{len(caption_text)}.html"
+            m.to_html(out)
+            html = out.read_text(encoding="utf-8")
+            assert "position:absolute" in html
+            assert "left:50%" in html
+            assert "transform:translateX(-50%)" in html
+            assert "position:relative" in html
+            assert "overflow:visible" in html
+            assert caption_text in html
+
+    def test_icon_marker_caption_is_absolutely_centered(self, tmp_path: Path) -> None:
+        """
+        Scenario: FontAwesome/Glyphicon markers use the same absolute-centering scheme.
+
+        Given: A map with a Glyphicon marker and a long caption
+        When: The map is rendered to HTML
+        Then: The caption HTML carries the absolute-centering CSS so it stays
+              centered on the icon regardless of its width.
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="A long portal name that overflows")
+        out = tmp_path / "icon_centered.html"
+        m.to_html(out)
+        html = out.read_text(encoding="utf-8")
+        assert "position:absolute" in html
+        assert "left:50%" in html
+        assert "transform:translateX(-50%)" in html
+        assert "glyphicon glyphicon-home" in html
+
+    def test_icon_marker_size_is_independent_of_caption(self) -> None:
+        """
+        Scenario: A caption must never inflate an icon marker's Leaflet box.
+
+        Given: build_icon_marker called with and without a long caption
+        When: The returned DivIcons' ``icon_size`` and ``icon_anchor`` are compared
+        Then: Both values match — proving the caption contributes nothing to
+              the Leaflet bounding box or anchor, so the glyph stays centered
+              on the geographic point regardless of caption length.
+        """
+        no_cap = build_icon_marker("home", {}, None, DEFAULT_MARKER_CAPTION_CSS)
+        with_cap = build_icon_marker("home", {}, "A very long portal name", DEFAULT_MARKER_CAPTION_CSS)
+        assert no_cap.options["icon_size"] == with_cap.options["icon_size"]
+        assert no_cap.options["icon_anchor"] == with_cap.options["icon_anchor"]
+
+    def test_text_marker_size_is_independent_of_caption(self) -> None:
+        """
+        Scenario: Same invariant for emoji/text markers.
+
+        Given: build_text_marker called with and without a long caption
+        When: The returned DivIcons' ``icon_size`` and ``icon_anchor`` are compared
+        Then: Both values match.
+        """
+        no_cap = build_text_marker("\U0001f4cd", {}, None, DEFAULT_MARKER_CAPTION_CSS)
+        with_cap = build_text_marker("\U0001f4cd", {}, "A very long portal name", DEFAULT_MARKER_CAPTION_CSS)
+        assert no_cap.options["icon_size"] == with_cap.options["icon_size"]
+        assert no_cap.options["icon_anchor"] == with_cap.options["icon_anchor"]
+
+    def test_caption_nests_inside_marker_wrapper_for_click_bubbling(self) -> None:
+        """
+        Scenario: Clicks on the caption still fire the marker's tooltip/popup.
+
+        Given: An icon marker built with a caption
+        When: The DivIcon's html is inspected
+        Then: The caption ``<div>`` sits inside the single outer wrapper
+              ``<div>`` rather than as a sibling — so pointer events on the
+              caption bubble through the wrapper to the Leaflet marker
+              element and its handlers fire, preserving clickability even
+              though the caption renders outside ``icon_size``.
+        """
+        icon = build_icon_marker("home", {}, "Clickable caption", DEFAULT_MARKER_CAPTION_CSS)
+        html = cast(str, icon.options["html"])
+        assert html.startswith("<div")
+        assert html.endswith("</div>")
+        # Caption text precedes the final (outer-wrapper) closing tag,
+        # proving it is nested rather than appended as a sibling.
+        assert html.index("Clickable caption") < html.rfind("</div>")
+        # Outer wrapper + inner caption div = at least two `<div` tags.
+        assert html.count("<div") >= 2
+
     def test_caption_with_custom_caption_style(self, tmp_path: Path) -> None:
         """
         Scenario: Caption with custom CSS styling.
@@ -428,6 +563,179 @@ class TestCaption:
         )
         assert len(m._zoom_controlled_markers) == 1, "Combined marker should be a single entry"
         assert m._zoom_controlled_markers[0]["min_zoom"] == 10
+
+    def test_min_zoom_caption_tracks_caption(self) -> None:
+        """
+        Scenario: min_zoom_caption tracks the caption independently of the marker icon.
+
+        Given: An icon marker with caption and min_zoom_caption=12
+        When: add_point is called
+        Then: The caption is tracked in _zoom_controlled_captions
+              and the marker itself is NOT tracked in _zoom_controlled_markers
+        """
+        m = Map()
+        m.add_point(
+            Point(4.9, 52.37),
+            marker="home",
+            caption="CPT-01",
+            min_zoom_caption=12,
+        )
+        assert len(m._zoom_controlled_captions) == 1
+        assert m._zoom_controlled_captions[0]["min_zoom"] == 12
+        assert m._zoom_controlled_captions[0]["caption_id"].startswith("caption_")
+        assert len(m._zoom_controlled_markers) == 0, "marker icon should stay always-visible"
+
+    def test_min_zoom_caption_emits_id_in_html(self, tmp_path: Path) -> None:
+        """
+        Scenario: The caption's DOM id is emitted in the rendered HTML.
+
+        Given: A marker with caption and min_zoom_caption=12
+        When: to_html is called
+        Then: The DivIcon HTML (JSON-escaped in the JS) contains the id attribute
+              on the caption div, so Leaflet renders it with a targetable DOM id
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="CPT-01", min_zoom_caption=12)
+        out = tmp_path / "caption_id.html"
+        m.to_html(out)
+        html = out.read_text(encoding="utf-8")
+        caption_id = m._zoom_controlled_captions[0]["caption_id"]
+        # Folium serialises the DivIcon HTML into JSON, so quotes appear escaped.
+        assert f'id=\\"{caption_id}\\"' in html
+
+    def test_min_zoom_caption_works_with_emoji_marker(self) -> None:
+        """
+        Scenario: Emoji markers also get caption ids when min_zoom_caption is set.
+
+        Given: An emoji marker with caption and min_zoom_caption=8
+        When: add_point is called
+        Then: _zoom_controlled_captions has one entry
+        """
+        m = Map()
+        m.add_point(
+            Point(4.9, 52.37),
+            marker="\U0001f4cd",
+            caption="Amsterdam",
+            min_zoom_caption=8,
+        )
+        assert len(m._zoom_controlled_captions) == 1
+        assert m._zoom_controlled_captions[0]["min_zoom"] == 8
+
+    def test_min_zoom_caption_none_not_tracked(self) -> None:
+        """
+        Scenario: min_zoom_caption=None means always visible.
+
+        Given: A caption without min_zoom_caption
+        When: add_point is called
+        Then: _zoom_controlled_captions is empty and no caption id is generated
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="Always")
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_zero_not_tracked(self) -> None:
+        """
+        Scenario: min_zoom_caption=0 is treated as always visible.
+
+        Given: A caption with min_zoom_caption=0
+        When: add_point is called
+        Then: _zoom_controlled_captions is empty
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="Always", min_zoom_caption=0)
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_negative_not_tracked(self) -> None:
+        """
+        Scenario: A negative min_zoom_caption is treated as always visible.
+
+        Given: A caption with min_zoom_caption=-1
+        When: add_point is called
+        Then: _zoom_controlled_captions is empty, matching the None/0 behavior
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="Always", min_zoom_caption=-1)
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_without_caption_is_ignored(self) -> None:
+        """
+        Scenario: min_zoom_caption without a caption text is a no-op.
+
+        Given: A marker with min_zoom_caption=10 but no caption
+        When: add_point is called
+        Then: Nothing is tracked
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", min_zoom_caption=10)
+        assert len(m._zoom_controlled_captions) == 0
+
+    def test_min_zoom_caption_and_min_zoom_combine(self) -> None:
+        """
+        Scenario: The icon threshold and the caption threshold are independent.
+
+        Given: A marker with min_zoom=8 and min_zoom_caption=12
+        When: add_point is called
+        Then: The marker is tracked (min_zoom=8) and the caption is tracked
+              separately (min_zoom=12)
+        """
+        m = Map()
+        m.add_point(
+            Point(4.9, 52.37),
+            marker="home",
+            caption="POI",
+            min_zoom=8,
+            min_zoom_caption=12,
+        )
+        assert len(m._zoom_controlled_markers) == 1
+        assert m._zoom_controlled_markers[0]["min_zoom"] == 8
+        assert len(m._zoom_controlled_captions) == 1
+        assert m._zoom_controlled_captions[0]["min_zoom"] == 12
+
+    def test_min_zoom_caption_ids_are_unique(self) -> None:
+        """
+        Scenario: Each caption gets its own unique id.
+
+        Given: Two markers with captions and min_zoom_caption set
+        When: add_point is called twice
+        Then: The two caption ids differ
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="A", min_zoom_caption=10)
+        m.add_point(Point(5.0, 52.38), marker="home", caption="B", min_zoom_caption=10)
+        ids = {entry["caption_id"] for entry in m._zoom_controlled_captions}
+        assert len(ids) == 2, "each caption should have its own DOM id"
+
+    def test_min_zoom_caption_injects_js(self, tmp_path: Path) -> None:
+        """
+        Scenario: The rendered HTML contains the caption visibility JS.
+
+        Given: A marker with min_zoom_caption=12
+        When: to_html is called
+        Then: The generated script includes the caption id and threshold
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="CPT", min_zoom_caption=12)
+        out = tmp_path / "caption_js.html"
+        m.to_html(out)
+        html = out.read_text(encoding="utf-8")
+        caption_id = m._zoom_controlled_captions[0]["caption_id"]
+        assert caption_id in html
+        assert "el.style.display" in html, "caption toggle script should be injected"
+
+    def test_min_zoom_caption_merge(self) -> None:
+        """
+        Scenario: Merging maps combines their caption trackers.
+
+        Given: Two maps with min_zoom_caption markers
+        When: They are merged
+        Then: The merged map contains both entries
+        """
+        a = Map()
+        a.add_point(Point(4.9, 52.37), marker="home", caption="A", min_zoom_caption=10)
+        b = Map()
+        b.add_point(Point(5.0, 52.38), marker="home", caption="B", min_zoom_caption=11)
+        merged = a + b
+        assert len(merged._zoom_controlled_captions) == 2
 
 
 # ===================================================================

@@ -3,7 +3,7 @@
 import re
 from pathlib import Path
 
-import mkdocs_gen_files
+import mkdocs_gen_files  # ty: ignore[unresolved-import]
 
 root = Path(__file__).parents[2]
 readme_file = root / "README.md"

@@ -40,6 +40,18 @@ def css_to_style(css: dict[str, str]) -> str:
     return ";".join(f"{k}:{v}" for k, v in css.items())
 
 
+def px_to_int(value: str, default: int) -> int:
+    """Convert a CSS length string like ``"12px"`` or ``"12.5px"`` to an int.
+
+    Falls back to ``default`` for non-``px`` units (``"1em"``, ``"medium"``)
+    and malformed values so icon size estimation never raises.
+    """
+    try:
+        return int(float(value.strip().removesuffix("px")))
+    except (ValueError, AttributeError):
+        return default
+
+
 def classify_marker(s: str) -> Literal["emoji", "icon_class", "icon_name"]:
     """Classify a marker string.
 
@@ -59,23 +71,52 @@ def classify_marker(s: str) -> Literal["emoji", "icon_class", "icon_name"]:
     return "icon_name"
 
 
-def caption_html(text: str, css: dict[str, str]) -> str:
-    """Build an HTML snippet for a caption below a marker icon.
+def _absolute_caption_html(
+    text: str,
+    css: dict[str, str],
+    top_px: int,
+    element_id: str | None = None,
+) -> str:
+    """Build a caption pinned to the horizontal center of its parent.
+
+    The caption is rendered as an absolutely-positioned ``<div>`` so its
+    own midpoint is anchored at ``left:50%`` of the parent, regardless of
+    how wide the caption text grows.  The caller is responsible for
+    giving the parent ``position:relative`` and ``overflow:visible``.
 
     Parameters
     ----------
     text : str
         Caption text.
     css : dict[str, str]
-        CSS property dict merged with appropriate defaults by the caller.
+        CSS property overrides merged onto :data:`DEFAULT_CAPTION_CSS`.
+    top_px : int
+        Vertical offset, in pixels, from the parent's top edge to the
+        caption's top edge.  Typically the glyph height plus a small gap.
+    element_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by
+        zoom-dependent visibility JS to target the caption independently
+        of its marker.
 
     Returns
     -------
     str
         HTML ``<div>`` string.
     """
-    merged = {**DEFAULT_CAPTION_CSS, **css}
-    return f'<div style="{css_to_style(merged)}">{text}</div>'
+    merged = {
+        **DEFAULT_CAPTION_CSS,
+        **css,
+        "position": "absolute",
+        "left": "50%",
+        "top": f"{top_px}px",
+        "transform": "translateX(-50%)",
+    }
+    # When zoom-gated (element_id set), start hidden so the caption doesn't
+    # flash before the zoom JS runs its first visibility check.
+    if element_id:
+        merged["display"] = "none"
+    id_attr = f' id="{element_id}"' if element_id else ""
+    return f'<div{id_attr} style="{css_to_style(merged)}">{text}</div>'
 
 
 def build_icon_marker(
@@ -83,6 +124,7 @@ def build_icon_marker(
     css: dict[str, str],
     caption: str | None,
     caption_css: dict[str, str],
+    caption_id: str | None = None,
 ) -> folium.DivIcon:
     """Build an icon-based DivIcon marker with optional caption.
 
@@ -99,6 +141,9 @@ def build_icon_marker(
         Optional caption text below the icon.
     caption_css : dict[str, str]
         CSS property overrides for the caption.
+    caption_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by zoom-dependent
+        visibility JS to target the caption independently of its marker.
 
     Returns
     -------
@@ -106,7 +151,6 @@ def build_icon_marker(
     """
     merged = {**DEFAULT_ICON_CSS, **css}
     style_str = css_to_style(merged)
-    caption_suffix = caption_html(caption, caption_css) if caption else ""
     # Full CSS class string (contains a space) → use as-is
     # Bare name starting with "fa-" → FontAwesome 6 (fa-solid prefix)
     # Other bare name → Glyphicon
@@ -116,20 +160,22 @@ def build_icon_marker(
         icon_class = f"fa-solid {icon}"
     else:
         icon_class = f"glyphicon glyphicon-{icon}"
-    fs = int(merged.get("font-size", "20px").replace("px", ""))
-    icon_html = (
-        f'<div style="text-align:center;line-height:1;height:{fs}px;">'
-        f'<i class="{icon_class}" style="{style_str};line-height:1;vertical-align:top;"></i>'
-        f"</div>"
-        f"{caption_suffix}"
-    )
-    h_icon = fs
-    w = max(fs, 100) if caption else fs
-    h = h_icon + (20 if caption else 0)
+    fs = px_to_int(merged.get("font-size", "20px"), 20)
+    glyph_html = f'<i class="{icon_class}" style="{style_str};line-height:1;vertical-align:top;"></i>'
+    caption_html = _absolute_caption_html(caption, caption_css, top_px=fs + 2, element_id=caption_id) if caption else ""
+    # Caption is nested inside the wrapper (not a sibling) so click/hover
+    # events on it bubble up to the Leaflet marker and still fire the
+    # marker's tooltip/popup handlers, even though the caption renders
+    # outside icon_size via overflow:visible.
+    html = f'<div style="position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
+    # icon_size covers the glyph only; the caption is position:absolute
+    # and therefore does not shift the anchor off the glyph's center.
+    w = fs
+    h = fs
     return folium.DivIcon(
-        html=icon_html,
+        html=html,
         icon_size=(w, h),
-        icon_anchor=(w // 2, h_icon // 2),
+        icon_anchor=(w // 2, h // 2),
     )
 
 
@@ -138,6 +184,7 @@ def build_text_marker(
     css: dict[str, str],
     caption: str | None,
     caption_css: dict[str, str],
+    caption_id: str | None = None,
 ) -> folium.DivIcon:
     """Build a text/emoji DivIcon marker with optional caption.
 
@@ -151,6 +198,9 @@ def build_text_marker(
         Optional caption text below the text.
     caption_css : dict[str, str]
         CSS property overrides for the caption.
+    caption_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by zoom-dependent
+        visibility JS to target the caption independently of its marker.
 
     Returns
     -------
@@ -158,16 +208,18 @@ def build_text_marker(
         A DivIcon rendering the text and optional caption.
     """
     merged = {**DEFAULT_TEXT_CSS, **css}
-    style_str = css_to_style(merged) + ";text-align:center"
-    caption_suffix = caption_html(caption, caption_css) if caption else ""
-    inner = f'<div style="{style_str}">{text}</div>'
-    html = f'<div style="text-align:center;">{inner}{caption_suffix}</div>'
-    # size estimation for icon_size/anchor from font-size
-    fs = int(merged.get("font-size", "16px").replace("px", ""))
-    w = max(fs + 10, 100 if caption else 0)
-    h = fs + 10 + (20 if caption else 0)
+    style_str = css_to_style(merged) + ";text-align:center;line-height:1"
+    fs = px_to_int(merged.get("font-size", "16px"), 16)
+    glyph_html = f'<div style="{style_str}">{text}</div>'
+    caption_html = _absolute_caption_html(caption, caption_css, top_px=fs + 2, element_id=caption_id) if caption else ""
+    # See build_icon_marker for why the caption is nested inside the
+    # wrapper (clickability via event bubbling) and why icon_size stays
+    # glyph-only (anchor stability).
+    html = f'<div style="position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
+    w = fs + 10
+    h = fs + 10
     return folium.DivIcon(
         html=html,
         icon_size=(w, h),
-        icon_anchor=(w // 2, (fs + 10) // 2),
+        icon_anchor=(w // 2, h // 2),
     )
