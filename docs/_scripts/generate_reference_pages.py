@@ -4,8 +4,8 @@ import logging
 import sys
 from pathlib import Path
 
-import mkdocs_gen_files
-from natsort import natsorted
+import mkdocs_gen_files  # ty: ignore[unresolved-import]
+from natsort import natsorted  # ty: ignore[unresolved-import]
 
 log = logging.getLogger(f"mkdocs.plugins.{__name__}")
 
