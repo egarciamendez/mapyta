@@ -60,6 +60,7 @@ from mapyta.markers import (
     build_text_marker,
     classify_marker,
     css_to_style,
+    px_to_int,
 )
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
@@ -1707,6 +1708,7 @@ class Map:
         captions: list[str] | None = None,
         caption_style: dict[str, str] | None = None,
         tooltip_style: TooltipStyle | dict[str, Any] | None = None,
+        min_zoom_caption: int | None = None,
     ) -> Self:
         """Add clustered markers that group at low zoom.
 
@@ -1734,6 +1736,11 @@ class Map:
             CSS property overrides for ``captions``.
         tooltip_style : TooltipStyle | dict[str, Any] | None
             Tooltip appearance (font size, width, etc.).
+        min_zoom_caption : int | None
+            Minimum zoom level at which captions are visible. Applies only
+            to the caption text — the marker icons remain visible. ``None``
+            or ``0`` means always visible. Ignored for entries without a
+            caption.
 
         Returns
         -------
@@ -1742,6 +1749,7 @@ class Map:
         css = marker_style or {}
         cap_css = {**DEFAULT_MARKER_CAPTION_CSS, **(caption_style or {})}
         cluster = folium.plugins.MarkerCluster(name=name)
+        track_captions = min_zoom_caption is not None and min_zoom_caption > 0
 
         for i, point in enumerate(points):
             pt = cast(Point, self._transform(point))
@@ -1753,13 +1761,17 @@ class Map:
             popup = popups[i] if popups and i < len(popups) else None
             txt = captions[i] if captions and i < len(captions) else None
 
+            caption_id: str | None = None
+            if txt is not None and track_captions:
+                caption_id = f"caption_{uuid.uuid4().hex[:15]}"
+
             kind = classify_marker(label) if label else "icon_name"
             if kind == "emoji":
                 assert label is not None  # guarded by classify_marker above
-                icon = build_text_marker(label, css, txt, cap_css)
+                icon = build_text_marker(label, css, txt, cap_css, caption_id)
             else:
                 icon_name = label or "arrow-down"
-                icon = build_icon_marker(icon_name, css, txt, cap_css)
+                icon = build_icon_marker(icon_name, css, txt, cap_css, caption_id)
 
             folium.Marker(
                 location=[lat, lon],
@@ -1767,7 +1779,26 @@ class Map:
                 tooltip=self._make_tooltip(tip, tooltip_style),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
-            self._record_feature(pt, {"marker": label, "caption": txt, "tooltip": tip, "popup": popup, "min_zoom": min_zoom})
+            self._record_feature(
+                pt,
+                {
+                    "marker": label,
+                    "caption": txt,
+                    "tooltip": tip,
+                    "popup": popup,
+                    "min_zoom": min_zoom,
+                    "min_zoom_caption": min_zoom_caption,
+                },
+            )
+
+            if caption_id is not None:
+                assert min_zoom_caption is not None  # guarded by track_captions above
+                self._zoom_controlled_captions.append(
+                    {
+                        "caption_id": caption_id,
+                        "min_zoom": min_zoom_caption,
+                    }
+                )
 
         cluster.add_to(self._target())
         if min_zoom is not None and min_zoom > 0:
@@ -1832,7 +1863,7 @@ class Map:
         # Estimate icon size from text length and font size so the anchor
         # centers the marker on the coordinate and Leaflet doesn't render a
         # phantom shadow from a zero-sized container.
-        fs = int(merged.get("font-size", "12px").replace("px", ""))
+        fs = px_to_int(merged.get("font-size", "12px"), 12)
         est_w = max(len(text) * fs * 0.65 + 16, 20)
         est_h = fs + 12
         icon = folium.DivIcon(

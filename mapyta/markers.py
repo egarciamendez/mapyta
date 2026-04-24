@@ -40,6 +40,18 @@ def css_to_style(css: dict[str, str]) -> str:
     return ";".join(f"{k}:{v}" for k, v in css.items())
 
 
+def px_to_int(value: str, default: int) -> int:
+    """Convert a CSS length string like ``"12px"`` or ``"12.5px"`` to an int.
+
+    Falls back to ``default`` for non-``px`` units (``"1em"``, ``"medium"``)
+    and malformed values so icon size estimation never raises.
+    """
+    try:
+        return int(float(value.strip().removesuffix("px")))
+    except (ValueError, AttributeError):
+        return default
+
+
 def classify_marker(s: str) -> Literal["emoji", "icon_class", "icon_name"]:
     """Classify a marker string.
 
@@ -124,7 +136,7 @@ def build_icon_marker(
         icon_class = f"fa-solid {icon}"
     else:
         icon_class = f"glyphicon glyphicon-{icon}"
-    fs = int(merged.get("font-size", "20px").replace("px", ""))
+    fs = px_to_int(merged.get("font-size", "20px"), 20)
     icon_html = (
         f'<div style="text-align:center;line-height:1;height:{fs}px;">'
         f'<i class="{icon_class}" style="{style_str};line-height:1;vertical-align:top;"></i>'
@@ -175,7 +187,7 @@ def build_text_marker(
     inner = f'<div style="{style_str}">{text}</div>'
     html = f'<div style="text-align:center;">{inner}{caption_suffix}</div>'
     # size estimation for icon_size/anchor from font-size
-    fs = int(merged.get("font-size", "16px").replace("px", ""))
+    fs = px_to_int(merged.get("font-size", "16px"), 16)
     w = max(fs + 10, 100 if caption else 0)
     h = fs + 10 + (20 if caption else 0)
     return folium.DivIcon(

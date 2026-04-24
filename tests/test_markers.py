@@ -510,6 +510,18 @@ class TestCaption:
         m.add_point(Point(4.9, 52.37), marker="home", caption="Always", min_zoom_caption=0)
         assert len(m._zoom_controlled_captions) == 0
 
+    def test_min_zoom_caption_negative_not_tracked(self) -> None:
+        """
+        Scenario: A negative min_zoom_caption is treated as always visible.
+
+        Given: A caption with min_zoom_caption=-1
+        When: add_point is called
+        Then: _zoom_controlled_captions is empty, matching the None/0 behavior
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="Always", min_zoom_caption=-1)
+        assert len(m._zoom_controlled_captions) == 0
+
     def test_min_zoom_caption_without_caption_is_ignored(self) -> None:
         """
         Scenario: min_zoom_caption without a caption text is a no-op.
