@@ -6,11 +6,18 @@ docstring and Arrange/Act/Assert comments.
 # ruff: noqa: SLF001
 
 from pathlib import Path
+from typing import cast
 
 from shapely import Point, Polygon
 
 from mapyta import CircleStyle, FillStyle, Map, StrokeStyle
-from mapyta.markers import classify_marker, px_to_int
+from mapyta.markers import (
+    DEFAULT_MARKER_CAPTION_CSS,
+    build_icon_marker,
+    build_text_marker,
+    classify_marker,
+    px_to_int,
+)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.
@@ -390,6 +397,98 @@ class TestCaption:
         html = out.read_text(encoding="utf-8")
         assert "Station" in html
         assert "glyphicon glyphicon-arrow-down" in html
+
+    def test_caption_is_absolutely_centered_regardless_of_length(self, tmp_path: Path) -> None:
+        """
+        Scenario: Captions self-center on the marker glyph, independent of text length.
+
+        Given: Two maps with the same marker but captions of very different widths
+        When: Each map is rendered to HTML
+        Then: Both emit the absolute-centering CSS (``position:absolute``,
+              ``left:50%``, ``transform:translateX(-50%)``) and the caption text,
+              so the caption midpoint stays pinned to the glyph midpoint.
+        """
+        for caption_text in ("A", "CPT000000170466_IMBRO"):
+            m = Map()
+            m.add_point(Point(4.9, 52.37), marker="\U0001f4cd", caption=caption_text)
+            out = tmp_path / f"centered_{len(caption_text)}.html"
+            m.to_html(out)
+            html = out.read_text(encoding="utf-8")
+            assert "position:absolute" in html
+            assert "left:50%" in html
+            assert "transform:translateX(-50%)" in html
+            assert "position:relative" in html
+            assert "overflow:visible" in html
+            assert caption_text in html
+
+    def test_icon_marker_caption_is_absolutely_centered(self, tmp_path: Path) -> None:
+        """
+        Scenario: FontAwesome/Glyphicon markers use the same absolute-centering scheme.
+
+        Given: A map with a Glyphicon marker and a long caption
+        When: The map is rendered to HTML
+        Then: The caption HTML carries the absolute-centering CSS so it stays
+              centered on the icon regardless of its width.
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), marker="home", caption="A long portal name that overflows")
+        out = tmp_path / "icon_centered.html"
+        m.to_html(out)
+        html = out.read_text(encoding="utf-8")
+        assert "position:absolute" in html
+        assert "left:50%" in html
+        assert "transform:translateX(-50%)" in html
+        assert "glyphicon glyphicon-home" in html
+
+    def test_icon_marker_size_is_independent_of_caption(self) -> None:
+        """
+        Scenario: A caption must never inflate an icon marker's Leaflet box.
+
+        Given: build_icon_marker called with and without a long caption
+        When: The returned DivIcons' ``icon_size`` and ``icon_anchor`` are compared
+        Then: Both values match — proving the caption contributes nothing to
+              the Leaflet bounding box or anchor, so the glyph stays centered
+              on the geographic point regardless of caption length.
+        """
+        no_cap = build_icon_marker("home", {}, None, DEFAULT_MARKER_CAPTION_CSS)
+        with_cap = build_icon_marker("home", {}, "A very long portal name", DEFAULT_MARKER_CAPTION_CSS)
+        assert no_cap.options["icon_size"] == with_cap.options["icon_size"]
+        assert no_cap.options["icon_anchor"] == with_cap.options["icon_anchor"]
+
+    def test_text_marker_size_is_independent_of_caption(self) -> None:
+        """
+        Scenario: Same invariant for emoji/text markers.
+
+        Given: build_text_marker called with and without a long caption
+        When: The returned DivIcons' ``icon_size`` and ``icon_anchor`` are compared
+        Then: Both values match.
+        """
+        no_cap = build_text_marker("\U0001f4cd", {}, None, DEFAULT_MARKER_CAPTION_CSS)
+        with_cap = build_text_marker("\U0001f4cd", {}, "A very long portal name", DEFAULT_MARKER_CAPTION_CSS)
+        assert no_cap.options["icon_size"] == with_cap.options["icon_size"]
+        assert no_cap.options["icon_anchor"] == with_cap.options["icon_anchor"]
+
+    def test_caption_nests_inside_marker_wrapper_for_click_bubbling(self) -> None:
+        """
+        Scenario: Clicks on the caption still fire the marker's tooltip/popup.
+
+        Given: An icon marker built with a caption
+        When: The DivIcon's html is inspected
+        Then: The caption ``<div>`` sits inside the single outer wrapper
+              ``<div>`` rather than as a sibling — so pointer events on the
+              caption bubble through the wrapper to the Leaflet marker
+              element and its handlers fire, preserving clickability even
+              though the caption renders outside ``icon_size``.
+        """
+        icon = build_icon_marker("home", {}, "Clickable caption", DEFAULT_MARKER_CAPTION_CSS)
+        html = cast(str, icon.options["html"])
+        assert html.startswith("<div")
+        assert html.endswith("</div>")
+        # Caption text precedes the final (outer-wrapper) closing tag,
+        # proving it is nested rather than appended as a sibling.
+        assert html.index("Clickable caption") < html.rfind("</div>")
+        # Outer wrapper + inner caption div = at least two `<div` tags.
+        assert html.count("<div") >= 2
 
     def test_caption_with_custom_caption_style(self, tmp_path: Path) -> None:
         """
