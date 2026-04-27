@@ -175,6 +175,13 @@ class MapConfig:
         Add measure tool.
     mouse_position : bool
         Show cursor coordinates.
+    mouse_position_crs : str | None
+        EPSG code for the CRS displayed in the mouse-position control,
+        e.g. ``"EPSG:28992"`` for Dutch RD New. ``None`` shows WGS84 lat/lng.
+    mouse_position_proj4_def : str | None
+        Proj4 definition string for *mouse_position_crs*. Only required
+        for CRS codes not in the built-in registry. Ignored when
+        *mouse_position_crs* is ``None``.
     """
 
     tile_layer: TileProviderKey | str | list[TileProviderKey | str] = "cartodb_positron"
@@ -190,6 +197,8 @@ class MapConfig:
     minimap: bool = False
     measure_control: bool = False
     mouse_position: bool = True
+    mouse_position_crs: str | None = None
+    mouse_position_proj4_def: str | None = None
 
 
 class RawJS:

@@ -39,7 +39,41 @@ print(m.to_html())  # markdown-exec: hide
 | `fullscreen`      | `False`              | Add fullscreen button                                                                                                                   |
 | `minimap`         | `False`              | Add inset minimap                                                                                                                       |
 | `measure_control` | `False`              | Add distance/area measurement tool                                                                                                      |
-| `mouse_position`  | `True`               | Show cursor coordinates                                                                                                                 |
+| `mouse_position`           | `True`               | Show cursor coordinates                                                                                                                 |
+| `mouse_position_crs`       | `None`               | EPSG code for the mouse-position display, e.g. `"EPSG:28992"` for Dutch RD New. `None` shows WGS84 lat/lng.                            |
+| `mouse_position_proj4_def` | `None`               | Proj4 definition string for `mouse_position_crs`. Only needed for CRS codes not in the built-in registry.                              |
+
+## Cursor coordinates in a different CRS
+
+By default the mouse-position control shows WGS84 latitude/longitude. Set `mouse_position_crs` to an EPSG code to
+display coordinates in that system instead. Dutch RD New (EPSG:28992) is built in:
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(
+    center=(52.090, 5.121),
+    title="RD New cursor coordinates",
+    config=MapConfig(mouse_position_crs="EPSG:28992"),
+)
+m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Dom Tower**")
+
+m.to_html("rd_new.html")
+print(m.to_html())  # markdown-exec: hide
+```
+
+Move the cursor over the Netherlands — the corner now shows RD New metre coordinates (e.g. `136000 | 456000`)
+instead of decimal degrees.
+
+For any other CRS, supply the [proj4 definition string](https://epsg.io/) via `mouse_position_proj4_def`:
+
+```python
+m = Map(config=MapConfig(
+    mouse_position_crs="EPSG:25832",
+    mouse_position_proj4_def="+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs",
+))
+```
 
 ## Available tile providers
 

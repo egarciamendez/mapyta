@@ -14,6 +14,44 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
+PROJ4_DEFINITIONS: dict[str, str] = {
+    "EPSG:28992": (
+        "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 "
+        "+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel "
+        "+towgs84=565.4171,50.3319,465.5524,1.9342,-1.6677,9.1019,4.0725 "
+        "+units=m +no_defs"
+    ),
+}
+
+
+def resolve_proj4_def(epsg_code: str, user_def: str | None = None) -> str:
+    """Return the proj4 definition string for *epsg_code*.
+
+    Parameters
+    ----------
+    epsg_code : str
+        EPSG code, e.g. ``"EPSG:28992"``. Case-insensitive.
+    user_def : str | None
+        If provided, returned as-is (allows custom/unsupported CRS).
+
+    Returns
+    -------
+    str
+        Proj4 definition string.
+
+    Raises
+    ------
+    ValueError
+        If *epsg_code* is not in the built-in registry and *user_def* is ``None``.
+    """
+    if user_def is not None:
+        return user_def
+    key = epsg_code.upper()
+    if key in PROJ4_DEFINITIONS:
+        return PROJ4_DEFINITIONS[key]
+    known = ", ".join(sorted(PROJ4_DEFINITIONS))
+    raise ValueError(f"No built-in proj4 definition for {epsg_code!r}. Known: {known}. Pass mouse_position_proj4_def=<proj4 string>.")
+
 
 def detect_and_transform_coords(
     coords: list[tuple[float, ...]],

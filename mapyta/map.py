@@ -35,6 +35,7 @@ import branca.colormap as cm
 import folium
 import folium.features
 import folium.plugins
+from branca.element import JavascriptLink
 from shapely.geometry import (
     LinearRing,
     LineString,
@@ -50,7 +51,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseGeometry
 
 from mapyta.config import CircleStyle, DrawConfig, DrawTool, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
-from mapyta.coordinates import transform_geometry
+from mapyta.coordinates import resolve_proj4_def, transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
 from mapyta.markdown import RawHTML, markdown_to_html
@@ -66,6 +67,7 @@ from mapyta.markers import (
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
+_PROJ4JS_URL = "https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js"
 LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
 LEAFLET_DRAW_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
 VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "circle"})
@@ -224,8 +226,52 @@ class Map:
         if cfg.measure_control:
             folium.plugins.MeasureControl(primary_length_unit="meters", primary_area_unit="sqmeters").add_to(fmap)
         if cfg.mouse_position:
-            folium.plugins.MousePosition(position="bottomleft", separator=" | ", num_digits=6).add_to(fmap)
+            self._add_mouse_position(fmap)
         return fmap
+
+    def _add_mouse_position(self, fmap: folium.Map) -> None:
+        cfg = self._config
+        crs = cfg.mouse_position_crs
+
+        if crs is None:
+            folium.plugins.MousePosition(position="bottomleft", separator=" | ", num_digits=6).add_to(fmap)
+            return
+
+        proj4_def = resolve_proj4_def(crs.upper(), cfg.mouse_position_proj4_def)
+        safe_crs = crs.upper()
+
+        fmap.get_root().header.add_child(JavascriptLink(_PROJ4JS_URL), name="proj4js")
+
+        map_id = fmap.get_name()
+        cache_var = f"_mp_lng_{map_id}"
+        fmap.get_root().html.add_child(folium.Element(f"<script>proj4.defs('{safe_crs}', '{proj4_def}');</script>"))
+
+        # lng_first=True: lngFormatter runs first, caches lng, returns easting.
+        # latFormatter reads cached lng, projects fully, returns northing.
+        lng_fmt = (
+            f"function(lng) {{"
+            f"  window['{cache_var}'] = lng;"
+            f"  if (typeof proj4 === 'undefined') return lng.toFixed(6);"
+            f"  return Math.round(proj4('EPSG:4326', '{safe_crs}', [lng, 0])[0]).toString();"
+            f"}}"
+        )
+        lat_fmt = (
+            f"function(lat) {{"
+            f"  if (typeof proj4 === 'undefined') return lat.toFixed(6);"
+            f"  var lng = window['{cache_var}'];"
+            f"  if (lng === undefined) return '';"
+            f"  return Math.round(proj4('EPSG:4326', '{safe_crs}', [lng, lat])[1]).toString();"
+            f"}}"
+        )
+
+        folium.plugins.MousePosition(
+            position="bottomleft",
+            separator=" | ",
+            num_digits=0,
+            lng_first=True,
+            lat_formatter=lat_fmt,
+            lng_formatter=lng_fmt,
+        ).add_to(fmap)
 
     def _transform(self, geom: BaseGeometry) -> BaseGeometry:
         """Transform geometry to WGS84."""
