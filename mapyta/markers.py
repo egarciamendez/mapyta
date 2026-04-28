@@ -163,15 +163,20 @@ def build_icon_marker(
     fs = px_to_int(merged.get("font-size", "20px"), 20)
     glyph_html = f'<i class="{icon_class}" style="{style_str};line-height:1;vertical-align:top;"></i>'
     caption_html = _absolute_caption_html(caption, caption_css, top_px=fs + 2, element_id=caption_id) if caption else ""
+    # Wrapper is sized to match icon_size and uses flex centring so the
+    # glyph's visual centre coincides with icon_anchor regardless of the
+    # FontAwesome viewBox aspect ratio (e.g. fa-xmark is 0.75em wide).
     # Caption is nested inside the wrapper (not a sibling) so click/hover
     # events on it bubble up to the Leaflet marker and still fire the
     # marker's tooltip/popup handlers, even though the caption renders
     # outside icon_size via overflow:visible.
-    html = f'<div style="position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
-    # icon_size covers the glyph only; the caption is position:absolute
-    # and therefore does not shift the anchor off the glyph's center.
     w = fs
     h = fs
+    html = (
+        f'<div style="position:relative;display:flex;align-items:center;'
+        f"justify-content:center;width:{w}px;height:{h}px;"
+        f'overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
+    )
     return folium.DivIcon(
         html=html,
         icon_size=(w, h),
@@ -212,12 +217,16 @@ def build_text_marker(
     fs = px_to_int(merged.get("font-size", "16px"), 16)
     glyph_html = f'<div style="{style_str}">{text}</div>'
     caption_html = _absolute_caption_html(caption, caption_css, top_px=fs + 2, element_id=caption_id) if caption else ""
-    # See build_icon_marker for why the caption is nested inside the
-    # wrapper (clickability via event bubbling) and why icon_size stays
-    # glyph-only (anchor stability).
-    html = f'<div style="position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
+    # See build_icon_marker for why the wrapper is flex-centred at icon_size
+    # (anchor stability) and why the caption is nested rather than a sibling
+    # (clickability via event bubbling).
     w = fs + 10
     h = fs + 10
+    html = (
+        f'<div style="position:relative;display:flex;align-items:center;'
+        f"justify-content:center;width:{w}px;height:{h}px;"
+        f'overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
+    )
     return folium.DivIcon(
         html=html,
         icon_size=(w, h),
