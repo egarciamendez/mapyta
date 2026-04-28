@@ -1837,24 +1837,7 @@ visibility JS to target the caption independently of its marker.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
@@ -1894,7 +1877,18 @@ visibility JS to target the caption independently of its marker.</p>
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
-<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_icon_marker</span><span class="p">(</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_icon_marker</span><span class="p">(</span>
     <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -1938,15 +1932,9 @@ visibility JS to target the caption independently of its marker.</p>
     <span class="n">fs</span> <span class="o">=</span> <span class="n">px_to_int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;20px&quot;</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
     <span class="n">glyph_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;i class=&quot;</span><span class="si">{</span><span class="n">icon_class</span><span class="si">}</span><span class="s1">&quot; style=&quot;</span><span class="si">{</span><span class="n">style_str</span><span class="si">}</span><span class="s1">;line-height:1;vertical-align:top;&quot;&gt;&lt;/i&gt;&#39;</span>
     <span class="n">caption_html</span> <span class="o">=</span> <span class="n">_absolute_caption_html</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">,</span> <span class="n">top_px</span><span class="o">=</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">element_id</span><span class="o">=</span><span class="n">caption_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-    <span class="c1"># Caption is nested inside the wrapper (not a sibling) so click/hover</span>
-    <span class="c1"># events on it bubble up to the Leaflet marker and still fire the</span>
-    <span class="c1"># marker&#39;s tooltip/popup handlers, even though the caption renders</span>
-    <span class="c1"># outside icon_size via overflow:visible.</span>
-    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;&quot;&gt;</span><span class="si">{</span><span class="n">glyph_html</span><span class="si">}{</span><span class="n">caption_html</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
-    <span class="c1"># icon_size covers the glyph only; the caption is position:absolute</span>
-    <span class="c1"># and therefore does not shift the anchor off the glyph&#39;s center.</span>
     <span class="n">w</span> <span class="o">=</span> <span class="n">fs</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">fs</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">_marker_wrapper_html</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">glyph_html</span><span class="si">}{</span><span class="n">caption_html</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">(</span>
         <span class="n">html</span><span class="o">=</span><span class="n">html</span><span class="p">,</span>
         <span class="n">icon_size</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span>
@@ -2042,18 +2030,7 @@ visibility JS to target the caption independently of its marker.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">193</span>
 <span class="normal">194</span>
 <span class="normal">195</span>
 <span class="normal">196</span>
@@ -2085,7 +2062,15 @@ visibility JS to target the caption independently of its marker.</p>
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
-<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_text_marker</span><span class="p">(</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_text_marker</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -2118,12 +2103,9 @@ visibility JS to target the caption independently of its marker.</p>
     <span class="n">fs</span> <span class="o">=</span> <span class="n">px_to_int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;16px&quot;</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
     <span class="n">glyph_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;</span><span class="si">{</span><span class="n">style_str</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
     <span class="n">caption_html</span> <span class="o">=</span> <span class="n">_absolute_caption_html</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">,</span> <span class="n">top_px</span><span class="o">=</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">element_id</span><span class="o">=</span><span class="n">caption_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">caption</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-    <span class="c1"># See build_icon_marker for why the caption is nested inside the</span>
-    <span class="c1"># wrapper (clickability via event bubbling) and why icon_size stays</span>
-    <span class="c1"># glyph-only (anchor stability).</span>
-    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;&quot;&gt;</span><span class="si">{</span><span class="n">glyph_html</span><span class="si">}{</span><span class="n">caption_html</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span>
     <span class="n">w</span> <span class="o">=</span> <span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">fs</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">_marker_wrapper_html</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">glyph_html</span><span class="si">}{</span><span class="n">caption_html</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">(</span>
         <span class="n">html</span><span class="o">=</span><span class="n">html</span><span class="p">,</span>
         <span class="n">icon_size</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span>
