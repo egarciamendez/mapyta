@@ -468,6 +468,54 @@ class TestCaption:
         assert no_cap.options["icon_size"] == with_cap.options["icon_size"]
         assert no_cap.options["icon_anchor"] == with_cap.options["icon_anchor"]
 
+    def test_icon_marker_wrapper_is_sized_and_centred_to_match_anchor(self) -> None:
+        """
+        Scenario: The glyph's visual centre coincides with ``icon_anchor``
+                  even when the FontAwesome viewBox is non-square.
+
+        Given: An icon marker built at ``font-size: 35px`` (the size the
+               downstream Mastlocatie view uses for the selected mast)
+        When: The DivIcon's html is inspected
+        Then: The outer wrapper has explicit ``width:35px`` / ``height:35px``
+              and uses ``display:flex`` with ``align-items:center`` and
+              ``justify-content:center`` — so a glyph like ``fa-xmark``
+              (0.75em wide) is actively centred inside the 35×35 Leaflet
+              box rather than sitting at its left edge.
+        """
+        icon = build_icon_marker("fa-xmark", {"font-size": "35px"}, None, DEFAULT_MARKER_CAPTION_CSS)
+        html = cast(str, icon.options["html"])
+        wrapper_open = html[: html.index(">") + 1]
+        assert "display:flex" in wrapper_open
+        assert "align-items:center" in wrapper_open
+        assert "justify-content:center" in wrapper_open
+        assert "width:35px" in wrapper_open
+        assert "height:35px" in wrapper_open
+        assert icon.options["icon_size"] == (35, 35)
+        assert icon.options["icon_anchor"] == (17, 17)
+
+    def test_text_marker_wrapper_is_sized_and_centred_to_match_anchor(self) -> None:
+        """
+        Scenario: Text/emoji markers get the same flex-centred wrapper so
+                  their visual centre coincides with ``icon_anchor``.
+
+        Given: A text marker built at ``font-size: 35px``
+        When: The DivIcon's html is inspected
+        Then: The outer wrapper has explicit ``width:45px`` / ``height:45px``
+              (font-size plus 10px padding) and uses ``display:flex`` with
+              ``align-items:center`` and ``justify-content:center`` —
+              keeping the centring contract identical to ``build_icon_marker``.
+        """
+        text = build_text_marker("\U0001f4cd", {"font-size": "35px"}, None, DEFAULT_MARKER_CAPTION_CSS)
+        html = cast(str, text.options["html"])
+        wrapper_open = html[: html.index(">") + 1]
+        assert "display:flex" in wrapper_open
+        assert "align-items:center" in wrapper_open
+        assert "justify-content:center" in wrapper_open
+        assert "width:45px" in wrapper_open
+        assert "height:45px" in wrapper_open
+        assert text.options["icon_size"] == (45, 45)
+        assert text.options["icon_anchor"] == (22, 22)
+
     def test_caption_nests_inside_marker_wrapper_for_click_bubbling(self) -> None:
         """
         Scenario: Clicks on the caption still fire the marker's tooltip/popup.

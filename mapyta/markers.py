@@ -119,6 +119,23 @@ def _absolute_caption_html(
     return f'<div{id_attr} style="{css_to_style(merged)}">{text}</div>'
 
 
+def _marker_wrapper_html(inner_html: str, width: int, height: int) -> str:
+    """Build the flex-centred outer wrapper shared by both marker builders.
+
+    Sized to match the DivIcon's ``icon_size`` and uses flex centring so the
+    glyph's visual centre coincides with ``icon_anchor`` regardless of the
+    FontAwesome viewBox aspect ratio (e.g. ``fa-xmark`` is 0.75em wide).
+    Captions are nested inside this wrapper (not siblings) so click/hover
+    events bubble up to the Leaflet marker even though they render outside
+    ``icon_size`` via ``overflow:visible``.
+    """
+    return (
+        f'<div style="position:relative;display:flex;align-items:center;'
+        f"justify-content:center;width:{width}px;height:{height}px;"
+        f'overflow:visible;line-height:1;">{inner_html}</div>'
+    )
+
+
 def build_icon_marker(
     icon: str,
     css: dict[str, str],
@@ -163,15 +180,9 @@ def build_icon_marker(
     fs = px_to_int(merged.get("font-size", "20px"), 20)
     glyph_html = f'<i class="{icon_class}" style="{style_str};line-height:1;vertical-align:top;"></i>'
     caption_html = _absolute_caption_html(caption, caption_css, top_px=fs + 2, element_id=caption_id) if caption else ""
-    # Caption is nested inside the wrapper (not a sibling) so click/hover
-    # events on it bubble up to the Leaflet marker and still fire the
-    # marker's tooltip/popup handlers, even though the caption renders
-    # outside icon_size via overflow:visible.
-    html = f'<div style="position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
-    # icon_size covers the glyph only; the caption is position:absolute
-    # and therefore does not shift the anchor off the glyph's center.
     w = fs
     h = fs
+    html = _marker_wrapper_html(f"{glyph_html}{caption_html}", w, h)
     return folium.DivIcon(
         html=html,
         icon_size=(w, h),
@@ -212,12 +223,9 @@ def build_text_marker(
     fs = px_to_int(merged.get("font-size", "16px"), 16)
     glyph_html = f'<div style="{style_str}">{text}</div>'
     caption_html = _absolute_caption_html(caption, caption_css, top_px=fs + 2, element_id=caption_id) if caption else ""
-    # See build_icon_marker for why the caption is nested inside the
-    # wrapper (clickability via event bubbling) and why icon_size stays
-    # glyph-only (anchor stability).
-    html = f'<div style="position:relative;display:inline-block;text-align:center;overflow:visible;line-height:1;">{glyph_html}{caption_html}</div>'
     w = fs + 10
     h = fs + 10
+    html = _marker_wrapper_html(f"{glyph_html}{caption_html}", w, h)
     return folium.DivIcon(
         html=html,
         icon_size=(w, h),
