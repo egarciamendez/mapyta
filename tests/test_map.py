@@ -1929,6 +1929,261 @@ class TestSearchControl:
         html = m._repr_html_()
         assert "Search..." in html
 
+    # ------------------------------------------------------------------
+    # Auto-mode (layer_name=None) — basics
+    # ------------------------------------------------------------------
+
+    def test_auto_mode_returns_self_for_chaining(self) -> None:
+        """
+        Scenario: Zero-config add_search_control is chainable.
+
+        Given: A map with one add_point marker
+        When: add_search_control is called with no arguments
+        Then: The method returns self
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), caption="Amsterdam")
+        result = m.add_search_control()
+        assert result is m
+
+    def test_auto_mode_html_contains_search_placeholder(self) -> None:
+        """
+        Scenario: Zero-config search injects the search plugin HTML.
+
+        Given: A map with one add_point marker
+        When: add_search_control is called with no arguments
+        Then: The rendered HTML contains the default placeholder text
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), caption="Amsterdam")
+        m.add_search_control()
+        html = m._repr_html_()
+        assert "Search..." in html
+
+    def test_auto_mode_empty_features_is_silent_no_op(self) -> None:
+        """
+        Scenario: Zero-config search on a map with no features is a silent no-op.
+
+        Given: A fresh map with no features added
+        When: add_search_control is called with no arguments
+        Then: The method returns self without raising
+        """
+        m = Map()
+        result = m.add_search_control()
+        assert result is m
+
+    def test_auto_mode_does_not_require_feature_group(self) -> None:
+        """
+        Scenario: Zero-config search works without any create_feature_group call.
+
+        Given: A map where add_point was used directly (no feature group)
+        When: add_search_control is called with no arguments
+        Then: The method returns self and does not raise KeyError
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), caption="Amsterdam")
+        result = m.add_search_control()
+        assert result is m
+
+    # ------------------------------------------------------------------
+    # Auto-mode — label inference from different layer types
+    # ------------------------------------------------------------------
+
+    def test_auto_mode_infers_caption_from_add_point(self) -> None:
+        """
+        Scenario: Auto-mode picks up the caption from add_point markers.
+
+        Given: A map with an add_point marker with caption 'Amsterdam'
+        When: add_search_control is called with no arguments
+        Then: The rendered HTML contains 'Amsterdam' (in the hidden search layer)
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), caption="Amsterdam")
+        m.add_search_control()
+        html = m._repr_html_()
+        assert "Amsterdam" in html
+
+    def test_auto_mode_infers_caption_from_cluster_marker(self) -> None:
+        """
+        Scenario: Auto-mode picks up the caption from add_marker_cluster points.
+
+        Given: A map with a cluster marker whose caption is 'Rotterdam'
+        When: add_search_control is called with no arguments
+        Then: The rendered HTML contains 'Rotterdam'
+        """
+        m = Map()
+        m.add_marker_cluster([Point(4.5, 51.9)], captions=["Rotterdam"])
+        m.add_search_control()
+        html = m._repr_html_()
+        assert "Rotterdam" in html
+
+    def test_auto_mode_infers_name_from_geojson_feature(self) -> None:
+        """
+        Scenario: Auto-mode picks up the 'name' property from add_geojson features.
+
+        Given: A map with a GeoJSON point feature with property name='Utrecht'
+        When: add_search_control is called with no arguments
+        Then: The rendered HTML contains 'Utrecht'
+        """
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [5.1, 52.09]},
+                    "properties": {"name": "Utrecht"},
+                }
+            ],
+        }
+        m = Map()
+        m.add_geojson(geojson)
+        m.add_search_control()
+        html = m._repr_html_()
+        assert "Utrecht" in html
+
+    def test_auto_mode_property_name_overrides_inference(self) -> None:
+        """
+        Scenario: Passing property_name to auto-mode uses that property directly.
+
+        Given: A map with a GeoJSON feature with property gemeente='Haarlem'
+        When: add_search_control is called with property_name='gemeente'
+        Then: The rendered HTML contains 'Haarlem'
+        """
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [4.64, 52.38]},
+                    "properties": {"gemeente": "Haarlem", "code": "0392"},
+                }
+            ],
+        }
+        m = Map()
+        m.add_geojson(geojson)
+        m.add_search_control(property_name="gemeente")
+        html = m._repr_html_()
+        assert "Haarlem" in html
+
+    # ------------------------------------------------------------------
+    # Auto-mode — mutation safety
+    # ------------------------------------------------------------------
+
+    def test_auto_mode_does_not_mutate_original_geojson_features(self) -> None:
+        """
+        Scenario: Auto-mode does not modify the internal _geojson_features list.
+
+        Given: A map with one add_point marker
+        When: add_search_control is called with no arguments
+        Then: The properties dict of the stored feature has no '_search_label' key
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), caption="Amsterdam")
+        m.add_search_control()
+        assert all("_search_label" not in (f.get("properties") or {}) for f in m._geojson_features)
+
+    # ------------------------------------------------------------------
+    # _infer_search_label — unit tests via direct invocation
+    # ------------------------------------------------------------------
+
+    def test_infer_prefers_caption_over_text(self) -> None:
+        """
+        Scenario: _infer_search_label returns 'caption' before 'text'.
+
+        Given: Properties dict with both caption and text keys
+        When: _infer_search_label is called
+        Then: The caption value is returned
+        """
+        m = Map()
+        assert m._infer_search_label({"caption": "A", "text": "B"}) == "A"
+
+    def test_infer_falls_back_to_text_when_no_caption(self) -> None:
+        """
+        Scenario: _infer_search_label falls back to 'text' when 'caption' is absent.
+
+        Given: Properties dict with only a text key
+        When: _infer_search_label is called
+        Then: The text value is returned
+        """
+        m = Map()
+        assert m._infer_search_label({"text": "B"}) == "B"
+
+    def test_infer_falls_back_to_naam(self) -> None:
+        """
+        Scenario: _infer_search_label recognises the Dutch 'naam' property.
+
+        Given: Properties dict with only a naam key
+        When: _infer_search_label is called
+        Then: The naam value is returned
+        """
+        m = Map()
+        assert m._infer_search_label({"naam": "Utrecht"}) == "Utrecht"
+
+    def test_infer_uses_first_string_value_when_no_priority_key(self) -> None:
+        """
+        Scenario: _infer_search_label falls back to the first string property value.
+
+        Given: Properties dict with no priority keys
+        When: _infer_search_label is called
+        Then: The first non-empty string value is returned
+        """
+        m = Map()
+        assert m._infer_search_label({"code": "0363", "score": 42}) == "0363"
+
+    def test_infer_skips_whitespace_only_strings(self) -> None:
+        """
+        Scenario: _infer_search_label skips values that are only whitespace.
+
+        Given: Properties dict where caption is whitespace-only and text has content
+        When: _infer_search_label is called
+        Then: The text value is returned (whitespace caption is skipped)
+        """
+        m = Map()
+        assert m._infer_search_label({"caption": "   ", "text": "Valid"}) == "Valid"
+
+    def test_infer_returns_empty_string_when_no_values(self) -> None:
+        """
+        Scenario: _infer_search_label returns empty string for an empty properties dict.
+
+        Given: An empty properties dict
+        When: _infer_search_label is called
+        Then: An empty string is returned
+        """
+        m = Map()
+        assert m._infer_search_label({}) == ""
+
+    # ------------------------------------------------------------------
+    # Backwards compatibility — named-group path unchanged
+    # ------------------------------------------------------------------
+
+    def test_existing_named_group_path_unchanged(self) -> None:
+        """
+        Scenario: Calling add_search_control with layer_name and property_name still works.
+
+        Given: A map with a named feature group containing a choropleth layer
+        When: add_search_control is called with both layer_name and property_name
+        Then: The method returns self (existing behaviour preserved)
+        """
+        geojson = self._make_search_geojson()
+        m = Map()
+        m.create_feature_group("stations")
+        m.add_choropleth(geojson, value_column="score", key_on="feature.properties.name")
+        m.reset_target()
+        result = m.add_search_control(layer_name="stations", property_name="name")
+        assert result is m
+
+    def test_unknown_group_still_raises_key_error(self) -> None:
+        """
+        Scenario: Passing an unknown layer_name still raises KeyError.
+
+        Given: A map with no feature groups
+        When: add_search_control is called with layer_name='ghost'
+        Then: A KeyError is raised mentioning the group name
+        """
+        m = Map()
+        with pytest.raises(KeyError, match="ghost"):
+            m.add_search_control(layer_name="ghost", property_name="name")
+
 
 # ===================================================================
 # Scenarios for heatmap layers.

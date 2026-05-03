@@ -205,6 +205,8 @@ class Map:
                 max_native_zoom=max_native_zoom,
             ).add_to(fmap)
 
+        fmap.get_root().header.add_child(folium.Element('<meta name="referrer" content="origin">'))  # ty: ignore[unresolved-attribute]
+
         # Title overlay
         if self._title:
             title_html = (
@@ -2091,10 +2093,63 @@ class Map:
         folium.LayerControl(collapsed=collapsed, position=position).add_to(self._map)
         return self
 
+    _SEARCH_LABEL_PRIORITY = ("caption", "label", "text", "name", "naam", "title")
+
+    def _infer_search_label(self, props: dict[str, Any]) -> str:
+        """Return the best human-readable label for a feature's properties dict.
+
+        Parameters
+        ----------
+        props : dict[str, Any]
+            The GeoJSON feature's ``properties`` dict.
+
+        Returns
+        -------
+        str
+            The inferred label, or an empty string if no suitable value is found.
+        """
+        for key in self._SEARCH_LABEL_PRIORITY:
+            val = props.get(key)
+            if val is not None and str(val).strip():
+                return str(val).strip()
+        for val in props.values():
+            if val is not None and str(val).strip():
+                return str(val).strip()
+        return ""
+
+    def _build_hidden_search_layer(self, property_name: str | None) -> folium.GeoJson:
+        """Build an invisible GeoJson layer with a ``_search_label`` property on each feature.
+
+        Parameters
+        ----------
+        property_name : str | None
+            If provided, use this GeoJSON property value directly as the search label.
+            If ``None``, the label is inferred via :meth:`_infer_search_label`.
+
+        Returns
+        -------
+        folium.GeoJson
+            An invisible layer suitable for use with ``folium.plugins.Search``.
+        """
+        features = []
+        for raw in self._geojson_features:
+            feature_copy = {**raw}
+            props_copy = dict(raw.get("properties") or {})
+            label = str(props_copy.get(property_name, "")) if property_name is not None else self._infer_search_label(props_copy)
+            props_copy["_search_label"] = label
+            feature_copy["properties"] = props_copy
+            features.append(feature_copy)
+        collection = {"type": "FeatureCollection", "features": features}
+        return folium.GeoJson(
+            collection,
+            style_function=lambda _: {"opacity": 0, "fillOpacity": 0, "weight": 0},
+            show=True,
+        )
+
     def add_search_control(
         self,
-        layer_name: str,
-        property_name: str,
+        layer_name: str | None = None,
+        property_name: str | None = None,
         placeholder: str = "Search...",
         position: str = "topright",
         zoom: int | None = None,
@@ -2103,15 +2158,25 @@ class Map:
         """Add a search control to find features by property value.
 
         Users can type in the search box to locate and zoom to a matching feature.
-        The layer being searched must have been added to a feature group with the
-        given ``layer_name``.
+
+        When ``layer_name`` is ``None`` (the default), the search runs over **all** features
+        added to the map — markers, GeoJSON, choropleth, and cluster layers — without
+        requiring a feature group. Labels are inferred automatically from the feature's
+        properties (``caption``, ``name``, ``naam``, etc.), or taken from ``property_name``
+        if supplied. If no features have been added yet, the call is a silent no-op.
+
+        When ``layer_name`` is provided, the search targets only that named feature group,
+        preserving the original behaviour.
 
         Parameters
         ----------
-        layer_name : str
+        layer_name : str | None
             Name of the feature group to search (as passed to ``create_feature_group``).
-        property_name : str
-            GeoJSON property name to search on (e.g. ``"name"``, ``"gemeente"``).
+            Pass ``None`` (the default) to search all features on the map automatically.
+        property_name : str | None
+            GeoJSON property name to use as the search label (e.g. ``"name"``, ``"gemeente"``).
+            When ``None`` and ``layer_name`` is also ``None``, the label is inferred from
+            common property names (``caption``, ``label``, ``text``, ``name``, ``naam``, ``title``).
         placeholder : str
             Placeholder text in the search input box.
         position : str
@@ -2129,18 +2194,26 @@ class Map:
         Raises
         ------
         KeyError
-            If ``layer_name`` is not found in the map's feature groups.
+            If ``layer_name`` is provided but not found in the map's feature groups.
         """
-        if layer_name not in self._feature_groups:
-            available = ", ".join(f'"{n}"' for n in self._feature_groups) or "(none)"
-            raise KeyError(f"Feature group {layer_name!r} not found. Available groups: {available}")
-        layer = self._feature_groups[layer_name]
+        if layer_name is not None:
+            if layer_name not in self._feature_groups:
+                available = ", ".join(f'"{n}"' for n in self._feature_groups) or "(none)"
+                raise KeyError(f"Feature group {layer_name!r} not found. Available groups: {available}")
+            layer: folium.FeatureGroup | folium.GeoJson = self._feature_groups[layer_name]
+            search_label = property_name
+        else:
+            if not self._geojson_features:
+                return self
+            layer = self._build_hidden_search_layer(property_name)
+            layer.add_to(self._map)
+            search_label = "_search_label"
         search_kwargs: dict[str, Any] = {
             "layer": layer,
             "geom_type": geom_type,
             "placeholder": placeholder,
             "collapsed": False,
-            "search_label": property_name,
+            "search_label": search_label,
             "position": position,
         }
         if zoom is not None:
