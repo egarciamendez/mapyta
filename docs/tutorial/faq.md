@@ -213,17 +213,22 @@ m.add_choropleth(geojson, value_column="score", key_on="feature.properties.id", 
 
 **How do I add a search box to the map?**
 
-Use `add_search_control()`. The layer must be in a feature group:
+Call `add_search_control()` with no arguments — it searches all features on the map automatically, inferring the label from `caption`, `name`, `naam`, or the first string property it finds:
 
 ```python
-geojson = {
-    "type": "FeatureCollection",
-    "features": [
-        {"type": "Feature", "properties": {"name": "Amsterdam", "score": 1}, "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}},
-        {"type": "Feature", "properties": {"name": "Utrecht", "score": 2}, "geometry": {"type": "Point", "coordinates": [5.12, 52.09]}},
-    ],
-}
+from shapely.geometry import Point
+from mapyta import Map
 
+m = Map()
+m.add_point(Point(4.9, 52.37), caption="Amsterdam")
+m.add_point(Point(5.12, 52.09), caption="Utrecht")
+
+m.add_search_control()  # searches captions automatically
+```
+
+For a choropleth or GeoJSON layer in a named feature group, pass `layer_name` and `property_name` to target that layer explicitly:
+
+```python
 m.create_feature_group("Places")
 m.add_choropleth(geojson, value_column="score", key_on="feature.properties.name")
 m.reset_target()
