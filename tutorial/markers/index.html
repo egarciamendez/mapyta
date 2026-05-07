@@ -428,6 +428,8 @@
       
         
       
+        
+      
     
     
     
@@ -670,6 +672,34 @@
     
   
     Feature Groups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search Control
   
 
     
@@ -1591,7 +1621,7 @@
 
 <h1 id="markers">Markers</h1>
 <p>The default marker is a down-arrow pin, but you can swap it for emojis, <a href="https://fontawesome.com/">Font Awesome icons</a>, or fixed-size circles. Marker styling uses plain CSS dicts, no special imports needed.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-35--__tabbed_1_1" name="exec-35--__tabbed_1" type="radio" /><input id="exec-35--__tabbed_1_2" name="exec-35--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-35--__tabbed_1_1">Result</label><label for="exec-35--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-34--__tabbed_1_1" name="exec-34--__tabbed_1" type="radio" /><input id="exec-34--__tabbed_1_2" name="exec-34--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-34--__tabbed_1_1">Result</label><label for="exec-34--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1599,6 +1629,7 @@
 &lt;head&gt;
     
     &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
@@ -1613,7 +1644,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_3fadbf7c862c80b0793d5d0f1b2853a1 {
+                #map_e8f99dd7e8c4c0da4bd75c512ab2f80f {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1653,14 +1684,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Marker Styles&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_3fadbf7c862c80b0793d5d0f1b2853a1&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_e8f99dd7e8c4c0da4bd75c512ab2f80f&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_3fadbf7c862c80b0793d5d0f1b2853a1 = L.map(
-                &quot;map_3fadbf7c862c80b0793d5d0f1b2853a1&quot;,
+            var map_e8f99dd7e8c4c0da4bd75c512ab2f80f = L.map(
+                &quot;map_e8f99dd7e8c4c0da4bd75c512ab2f80f&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1672,13 +1703,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_3fadbf7c862c80b0793d5d0f1b2853a1);
+            L.control.scale().addTo(map_e8f99dd7e8c4c0da4bd75c512ab2f80f);
 
             
 
         
     
-            var tile_layer_5dc351ad3f9bce7e10dd7924d45cda2d = L.tileLayer(
+            var tile_layer_b5ce521f42d73821fa5702399d409b19 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1695,10 +1726,10 @@
             );
         
     
-            tile_layer_5dc351ad3f9bce7e10dd7924d45cda2d.addTo(map_3fadbf7c862c80b0793d5d0f1b2853a1);
+            tile_layer_b5ce521f42d73821fa5702399d409b19.addTo(map_e8f99dd7e8c4c0da4bd75c512ab2f80f);
         
     
-            var mouse_position_aed2e557e04fe57a3a1bd20c24429ce8 = new L.Control.MousePosition(
+            var mouse_position_8fffb516112290fbc5ff9d12017f2d76 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1708,21 +1739,21 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_aed2e557e04fe57a3a1bd20c24429ce8.options[&quot;latFormatter&quot;] =
+            mouse_position_8fffb516112290fbc5ff9d12017f2d76.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_aed2e557e04fe57a3a1bd20c24429ce8.options[&quot;lngFormatter&quot;] =
+            mouse_position_8fffb516112290fbc5ff9d12017f2d76.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_3fadbf7c862c80b0793d5d0f1b2853a1.addControl(mouse_position_aed2e557e04fe57a3a1bd20c24429ce8);
+            map_e8f99dd7e8c4c0da4bd75c512ab2f80f.addControl(mouse_position_8fffb516112290fbc5ff9d12017f2d76);
         
     
-            var marker_41ea85c02893fee702aecb519bebc5fe = L.marker(
+            var marker_7cf341af87953f93ae00593fce06a76c = L.marker(
                 [52.0908, 5.1213],
                 {
 }
-            ).addTo(map_3fadbf7c862c80b0793d5d0f1b2853a1);
+            ).addTo(map_e8f99dd7e8c4c0da4bd75c512ab2f80f);
         
     
-            var div_icon_dc16a728e7c120fe23b6a8ff5c93a179 = L.divIcon({
+            var div_icon_79b4115bbc079e49bb58c7c1306d163d = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfdb\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1730,7 +1761,7 @@
 });
         
     
-            marker_41ea85c02893fee702aecb519bebc5fe.bindTooltip(
+            marker_7cf341af87953f93ae00593fce06a76c.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Dom Tower&lt;/strong&gt; (emoji marker)
                  &lt;/div&gt;`,
@@ -1740,17 +1771,17 @@
             );
         
     
-                marker_41ea85c02893fee702aecb519bebc5fe.setIcon(div_icon_dc16a728e7c120fe23b6a8ff5c93a179);
+                marker_7cf341af87953f93ae00593fce06a76c.setIcon(div_icon_79b4115bbc079e49bb58c7c1306d163d);
             
     
-            var marker_543d8c6bf0a864e9b8b839c3d72e1d56 = L.marker(
+            var marker_565ba1f223f33aa60688b1ec230e8b03 = L.marker(
                 [52.0865, 5.1178],
                 {
 }
-            ).addTo(map_3fadbf7c862c80b0793d5d0f1b2853a1);
+            ).addTo(map_e8f99dd7e8c4c0da4bd75c512ab2f80f);
         
     
-            var div_icon_02430be684711962445aa8881c557983 = L.divIcon({
+            var div_icon_740262ff9e120a307c0bcc4588af0212 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:24px;height:24px;overflow:visible;line-height:1;\&quot;\u003e\u003ci class=\&quot;fa-solid fa-house\&quot; style=\&quot;font-size:24px;color:green;line-height:1;vertical-align:top;\&quot;\u003e\u003c/i\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [24, 24],
   &quot;iconAnchor&quot;: [12, 12],
@@ -1758,7 +1789,7 @@
 });
         
     
-            marker_543d8c6bf0a864e9b8b839c3d72e1d56.bindTooltip(
+            marker_565ba1f223f33aa60688b1ec230e8b03.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Centraal Museum&lt;/strong&gt; (Font Awesome marker)
                  &lt;/div&gt;`,
@@ -1768,16 +1799,16 @@
             );
         
     
-                marker_543d8c6bf0a864e9b8b839c3d72e1d56.setIcon(div_icon_02430be684711962445aa8881c557983);
+                marker_565ba1f223f33aa60688b1ec230e8b03.setIcon(div_icon_740262ff9e120a307c0bcc4588af0212);
             
     
-            var circle_marker_87f939b501883b82ff8e511e8d3e0f84 = L.circleMarker(
+            var circle_marker_cc3d84545b393290a1ee981fe701f870 = L.circleMarker(
                 [52.0871, 5.1378],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;#8e44ad&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#8e44ad&quot;, &quot;fillOpacity&quot;: 0.5, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;opacity&quot;: 1.0, &quot;radius&quot;: 12, &quot;stroke&quot;: true, &quot;weight&quot;: 2}
-            ).addTo(map_3fadbf7c862c80b0793d5d0f1b2853a1);
+            ).addTo(map_e8f99dd7e8c4c0da4bd75c512ab2f80f);
         
     
-            circle_marker_87f939b501883b82ff8e511e8d3e0f84.bindTooltip(
+            circle_marker_cc3d84545b393290a1ee981fe701f870.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Rietveld Schröder House&lt;/strong&gt; (circle marker)
                  &lt;/div&gt;`,
@@ -1787,22 +1818,22 @@
             );
         
     
-            map_3fadbf7c862c80b0793d5d0f1b2853a1.fitBounds(
+            map_e8f99dd7e8c4c0da4bd75c512ab2f80f.fitBounds(
                 [[52.0908, 5.1213], [52.0908, 5.1213], [52.0865, 5.1178], [52.0865, 5.1178], [52.0871, 5.1378], [52.0871, 5.1378]],
                 {}
             );
         
     
-            tile_layer_5dc351ad3f9bce7e10dd7924d45cda2d.addTo(map_3fadbf7c862c80b0793d5d0f1b2853a1);
+            tile_layer_b5ce521f42d73821fa5702399d409b19.addTo(map_e8f99dd7e8c4c0da4bd75c512ab2f80f);
         
     
-                marker_41ea85c02893fee702aecb519bebc5fe.setIcon(div_icon_dc16a728e7c120fe23b6a8ff5c93a179);
+                marker_7cf341af87953f93ae00593fce06a76c.setIcon(div_icon_79b4115bbc079e49bb58c7c1306d163d);
             
     
-                marker_543d8c6bf0a864e9b8b839c3d72e1d56.setIcon(div_icon_02430be684711962445aa8881c557983);
+                marker_565ba1f223f33aa60688b1ec230e8b03.setIcon(div_icon_740262ff9e120a307c0bcc4588af0212);
             
     
-            map_3fadbf7c862c80b0793d5d0f1b2853a1.fitBounds(
+            map_e8f99dd7e8c4c0da4bd75c512ab2f80f.fitBounds(
                 [[52.0908, 5.1213], [52.0908, 5.1213], [52.0865, 5.1178], [52.0865, 5.1178], [52.0871, 5.1378], [52.0871, 5.1378]],
                 {}
             );

@@ -428,6 +428,8 @@
       
         
       
+        
+      
     
     
     
@@ -612,6 +614,34 @@
     
   
     Feature Groups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search Control
   
 
     
@@ -1942,16 +1972,18 @@
 <hr />
 <h2 id="search">Search</h2>
 <p><strong>How do I add a search box to the map?</strong></p>
-<p>Use <code>add_search_control()</code>. The layer must be in a feature group:</p>
-<div class="highlight"><pre><span></span><code><span class="n">geojson</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Amsterdam&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.9</span><span class="p">,</span> <span class="mf">52.37</span><span class="p">]}},</span>
-        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Utrecht&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">52.09</span><span class="p">]}},</span>
-    <span class="p">],</span>
-<span class="p">}</span>
+<p>Call <code>add_search_control()</code> with no arguments — it searches all features on the map automatically, inferring the label from <code>caption</code>, <code>name</code>, <code>naam</code>, or the first string property it finds:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
 
-<span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;Places&quot;</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9</span><span class="p">,</span> <span class="mf">52.37</span><span class="p">),</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Amsterdam&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">52.09</span><span class="p">),</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Utrecht&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">()</span>  <span class="c1"># searches captions automatically</span>
+</code></pre></div>
+<p>For a choropleth or GeoJSON layer in a named feature group, pass <code>layer_name</code> and <code>property_name</code> to target that layer explicitly:</p>
+<div class="highlight"><pre><span></span><code><span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;Places&quot;</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">add_choropleth</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="n">value_column</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">key_on</span><span class="o">=</span><span class="s2">&quot;feature.properties.name&quot;</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">reset_target</span><span class="p">()</span>
 
