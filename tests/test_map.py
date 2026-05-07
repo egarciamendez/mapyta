@@ -2184,6 +2184,31 @@ class TestSearchControl:
         with pytest.raises(KeyError, match="ghost"):
             m.add_search_control(layer_name="ghost", property_name="name")
 
+    def test_property_name_with_null_value_produces_empty_label_not_none_string(self) -> None:
+        """
+        Scenario: A feature whose property_name key exists but holds None does not produce the string 'None'.
+
+        Given: A GeoJSON feature where the requested property_name key is present but its value is None
+        When: add_search_control is called with that property_name
+        Then: The rendered HTML does not contain the literal string 'None' as a search label
+        """
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [4.9, 52.37]},
+                    "properties": {"gemeente": None, "code": "0363"},
+                }
+            ],
+        }
+        m = Map()
+        m.add_geojson(geojson)
+        m.add_search_control(property_name="gemeente")
+        html = m._repr_html_()
+        assert '"None"' not in html
+        assert "'None'" not in html
+
 
 # ===================================================================
 # Scenarios for heatmap layers.

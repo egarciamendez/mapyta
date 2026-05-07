@@ -2135,7 +2135,11 @@ class Map:
         for raw in self._geojson_features:
             feature_copy = {**raw}
             props_copy = dict(raw.get("properties") or {})
-            label = str(props_copy.get(property_name, "")) if property_name is not None else self._infer_search_label(props_copy)
+            if property_name is not None:
+                value = props_copy.get(property_name)
+                label = str(value) if value is not None else ""
+            else:
+                label = self._infer_search_label(props_copy)
             props_copy["_search_label"] = label
             feature_copy["properties"] = props_copy
             features.append(feature_copy)
