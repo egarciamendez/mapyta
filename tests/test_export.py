@@ -352,7 +352,7 @@ class TestBackendSelection:
         original_exists = Path.exists
 
         def fake_exists(self: Path) -> bool:
-            return str(self) == edge_install or original_exists(self)
+            return self == Path(edge_install) or original_exists(self)
 
         with (
             patch("shutil.which", return_value=None),
@@ -367,7 +367,7 @@ class TestBackendSelection:
         original_exists = Path.exists
 
         def fake_exists(self: Path) -> bool:
-            return str(self) == chrome_install or original_exists(self)
+            return self == Path(chrome_install) or original_exists(self)
 
         with (
             patch("shutil.which", return_value=None),
@@ -375,6 +375,36 @@ class TestBackendSelection:
             patch.object(Path, "exists", fake_exists),
         ):
             assert _detect_chrome() is True
+
+    def test_detect_chrome_via_macos_install_path(self) -> None:
+        """On macOS, Chrome is detected via /Applications even when not on PATH."""
+        chrome_install = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        original_exists = Path.exists
+
+        def fake_exists(self: Path) -> bool:
+            return self == Path(chrome_install) or original_exists(self)
+
+        with (
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "darwin"),
+            patch.object(Path, "exists", fake_exists),
+        ):
+            assert _detect_chrome() is True
+
+    def test_detect_edge_via_macos_install_path(self) -> None:
+        """On macOS, Edge is detected via /Applications even when not on PATH."""
+        edge_install = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+        original_exists = Path.exists
+
+        def fake_exists(self: Path) -> bool:
+            return self == Path(edge_install) or original_exists(self)
+
+        with (
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "darwin"),
+            patch.object(Path, "exists", fake_exists),
+        ):
+            assert _detect_edge() is True
 
     def test_capture_screenshot_returns_png_bytes(self, tmp_path: Path) -> None:
         """
