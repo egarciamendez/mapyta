@@ -106,7 +106,7 @@ def _build_chrome_driver(width: int, height: int, scale: float) -> "Chrome":
     from selenium.webdriver.chrome.options import Options  # noqa: PLC0415  # ty: ignore[unresolved-import]
 
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
@@ -121,7 +121,7 @@ def _build_edge_driver(width: int, height: int, scale: float) -> "Edge":
     from selenium.webdriver.edge.options import Options  # noqa: PLC0415  # ty: ignore[unresolved-import]
 
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
@@ -172,7 +172,6 @@ def capture_screenshot(
     driver = None
     try:
         driver = builder(width, height, scale)
-        driver.set_window_size(width, height)
         driver.get(f"file://{html_path}")
         time.sleep(delay)
         return driver.get_screenshot_as_png()

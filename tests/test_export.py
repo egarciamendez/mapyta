@@ -449,8 +449,11 @@ class TestBackendSelection:
         assert result == fake_png, "Should return the PNG bytes from the driver"
         mock_driver.get_screenshot_as_png.assert_called_once()
         mock_driver.quit.assert_called_once()
-        mock_driver.set_window_size.assert_called_once_with(800, 600)
+        mock_driver.set_window_size.assert_not_called()
         assert mock_options_instance.add_argument.call_count == 5
+        headless_call = [c for c in mock_options_instance.add_argument.call_args_list if "headless" in str(c)]
+        assert len(headless_call) == 1
+        assert "--headless=new" in str(headless_call[0])
 
     def test_capture_screenshot_scale_2x(self, tmp_path: Path) -> None:
         """
@@ -493,7 +496,7 @@ class TestBackendSelection:
 
         # Assert - Then
         assert result == fake_png
-        mock_driver.set_window_size.assert_called_once_with(800, 600)
+        mock_driver.set_window_size.assert_not_called()
         # 5 base args + 1 --force-device-scale-factor
         assert mock_options_instance.add_argument.call_count == 6
         scale_call = [c for c in mock_options_instance.add_argument.call_args_list if "force-device-scale-factor" in str(c)]
@@ -538,12 +541,15 @@ class TestBackendSelection:
         assert result == fake_png
         mock_selenium.webdriver.Edge.assert_called_once()
         mock_selenium.webdriver.Chrome.assert_not_called()
-        mock_driver.set_window_size.assert_called_once_with(800, 600)
+        mock_driver.set_window_size.assert_not_called()
         mock_driver.quit.assert_called_once()
         # 5 base args + 1 scale arg, same as Chrome
         assert mock_options_instance.add_argument.call_count == 6
         scale_call = [c for c in mock_options_instance.add_argument.call_args_list if "force-device-scale-factor" in str(c)]
         assert len(scale_call) == 1
+        headless_call = [c for c in mock_options_instance.add_argument.call_args_list if "headless" in str(c)]
+        assert len(headless_call) == 1
+        assert "--headless=new" in str(headless_call[0])
 
     def test_capture_screenshot_invalid_scale_raises(self, tmp_path: Path) -> None:
         """
