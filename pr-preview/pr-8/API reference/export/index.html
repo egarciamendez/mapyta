@@ -1852,8 +1852,7 @@ map layout identical to <code>scale=1.0</code>.</p>
 <span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">capture_screenshot</span><span class="p">(</span>
+<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">capture_screenshot</span><span class="p">(</span>
     <span class="n">html_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
@@ -1894,7 +1893,6 @@ map layout identical to <code>scale=1.0</code>.</p>
     <span class="n">driver</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">driver</span> <span class="o">=</span> <span class="n">builder</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
-        <span class="n">driver</span><span class="o">.</span><span class="n">set_window_size</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
         <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file://</span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">driver</span><span class="o">.</span><span class="n">get_screenshot_as_png</span><span class="p">()</span>
