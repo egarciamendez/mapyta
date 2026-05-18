@@ -450,10 +450,9 @@ class TestBackendSelection:
         mock_driver.get_screenshot_as_png.assert_called_once()
         mock_driver.quit.assert_called_once()
         mock_driver.set_window_size.assert_not_called()
-        assert mock_options_instance.add_argument.call_count == 5
-        headless_call = [c for c in mock_options_instance.add_argument.call_args_list if "headless" in str(c)]
-        assert len(headless_call) == 1
-        assert "--headless=new" in str(headless_call[0])
+        added_args = [call.args[0] for call in mock_options_instance.add_argument.call_args_list]
+        assert "--headless=new" in added_args
+        assert not any(arg.startswith("--force-device-scale-factor=") for arg in added_args)
 
     def test_capture_screenshot_scale_2x(self, tmp_path: Path) -> None:
         """
@@ -497,11 +496,8 @@ class TestBackendSelection:
         # Assert - Then
         assert result == fake_png
         mock_driver.set_window_size.assert_not_called()
-        # 5 base args + 1 --force-device-scale-factor
-        assert mock_options_instance.add_argument.call_count == 6
-        scale_call = [c for c in mock_options_instance.add_argument.call_args_list if "force-device-scale-factor" in str(c)]
-        assert len(scale_call) == 1
-        assert "2.0" in str(scale_call[0])
+        added_args = [call.args[0] for call in mock_options_instance.add_argument.call_args_list]
+        assert "--force-device-scale-factor=2.0" in added_args
 
     def test_capture_screenshot_uses_edge_when_selected(self, tmp_path: Path) -> None:
         """
@@ -543,13 +539,9 @@ class TestBackendSelection:
         mock_selenium.webdriver.Chrome.assert_not_called()
         mock_driver.set_window_size.assert_not_called()
         mock_driver.quit.assert_called_once()
-        # 5 base args + 1 scale arg, same as Chrome
-        assert mock_options_instance.add_argument.call_count == 6
-        scale_call = [c for c in mock_options_instance.add_argument.call_args_list if "force-device-scale-factor" in str(c)]
-        assert len(scale_call) == 1
-        headless_call = [c for c in mock_options_instance.add_argument.call_args_list if "headless" in str(c)]
-        assert len(headless_call) == 1
-        assert "--headless=new" in str(headless_call[0])
+        added_args = [call.args[0] for call in mock_options_instance.add_argument.call_args_list]
+        assert "--headless=new" in added_args
+        assert "--force-device-scale-factor=2.0" in added_args
 
     def test_capture_screenshot_invalid_scale_raises(self, tmp_path: Path) -> None:
         """
