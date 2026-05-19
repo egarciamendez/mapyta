@@ -1756,12 +1756,12 @@
 <h2 id="png-image">PNG image</h2>
 <div class="admonition warning">
 <p class="admonition-title">Requires the <code>export</code> optional dependency</p>
-<p>PNG and SVG export use Selenium with headless Chrome. Install the extra:</p>
+<p>PNG and SVG export use Selenium with a headless browser. Install the extra:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mapyta<span class="o">[</span>export<span class="o">]</span>
 <span class="c1"># or</span>
 uv<span class="w"> </span>add<span class="w"> </span>mapyta<span class="o">[</span>export<span class="o">]</span>
 </code></pre></div>
-<p>Chrome or Chromium must also be installed. <code>chromedriver-autoinstaller</code> will attempt to install <code>chromedriver</code> automatically if it's not found on your PATH.</p>
+<p>A Chromium-based browser must also be installed, Chrome, Chromium, or Microsoft Edge all work. Edge ships by default on Windows, so most machines already have a supported browser available. Mapyta will try to fetch the matching driver automatically.</p>
 </div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Save to file</span>
 <span class="n">m</span><span class="o">.</span><span class="n">to_image</span><span class="p">(</span><span class="s2">&quot;map.png&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
