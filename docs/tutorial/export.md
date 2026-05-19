@@ -27,7 +27,7 @@ Writes a standalone HTML file. No server needed, just open in any browser. Usefu
     uv add mapyta[export]
     ```
 
-    A Chromium-based browser must also be installed — Chrome, Chromium, or Microsoft Edge all work. Edge ships by default on Windows, so most machines already have a supported browser available. Selenium ≥ 4.6 fetches the matching driver automatically — no manual `chromedriver`/`msedgedriver` setup required.
+    A Chromium-based browser must also be installed, Chrome, Chromium, or Microsoft Edge all work. Edge ships by default on Windows, so most machines already have a supported browser available. Mapyta will try to fetch the matching driver automatically.
 
 ```python
 # Save to file
