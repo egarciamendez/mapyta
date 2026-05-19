@@ -8,8 +8,7 @@ docstring and Arrange/Act/Assert comments.
 import asyncio
 import contextlib
 import io
-import shutil
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from pathlib import Path
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -18,7 +17,13 @@ import pytest
 from shapely import Point
 
 from mapyta import Map
-from mapyta.export import capture_screenshot, check_selenium
+from mapyta.export import (
+    _detect_chrome,
+    _detect_edge,
+    _select_backend,
+    capture_screenshot,
+    check_selenium,
+)
 
 # ===================================================================
 # Scenarios for creating and configuring a Map.
@@ -256,91 +261,150 @@ class TestExport:
         with patch.dict("sys.modules", {"selenium": None, "selenium.webdriver": None}), pytest.raises(ImportError, match="selenium"):
             check_selenium()
 
-    def test_check_selenium_calls_chromedriver_autoinstaller_when_no_chrome(self) -> None:
+    def test_check_selenium_no_browser_raises_runtime_error(self) -> None:
         """
-        Scenario: chromedriver_autoinstaller.install() is called when Chrome is not on PATH.
+        Scenario: selenium is installed but no supported browser is found.
 
-        Given: selenium is importable, Chrome is not found, chromedriver_autoinstaller is installed
+        Given: selenium is importable, no Chrome/Chromium/Edge binary on PATH, non-Windows/non-macOS
         When: check_selenium is called
-        Then: install() is called, then RuntimeError is raised because chromedriver still not found
-        """
-        mock_installer = MagicMock()
-
-        with (
-            patch(target="shutil.which", return_value=None),
-            patch.dict(
-                "sys.modules",
-                {
-                    "selenium": MagicMock(),
-                    "selenium.webdriver": MagicMock(),
-                    "chromedriver_autoinstaller": mock_installer,
-                },
-            ),
-            pytest.raises(RuntimeError, match="Chrome"),
-        ):
-            check_selenium()
-
-        mock_installer.install.assert_called_once()
-
-    def test_check_selenium_missing_chrome_and_chromedriver(self) -> None:
-        """
-        Scenario: Neither Chrome nor chromedriver is found on PATH.
-
-        Given: shutil.which returns None for all browser/driver lookups
-        When: _check_selenium is called
-        Then: A RuntimeError is raised with install instructions
+        Then: A RuntimeError mentions Chrome, Chromium, and Edge install paths
         """
         with (
-            patch(target="shutil.which", return_value=None),
-            patch.dict("sys.modules", {"selenium": MagicMock(), "selenium.webdriver": MagicMock(), "chromedriver_autoinstaller": None}),
-            pytest.raises(RuntimeError, match="Chrome"),
-        ):
-            check_selenium()
-
-    def test_missing_chromedriver_raises_runtime_error(self) -> None:
-        """
-        Scenario: Chrome is found but chromedriver is not on PATH.
-
-        Given: selenium is installed and Chrome exists
-        When: _check_selenium is called but chromedriver is missing
-        Then: A RuntimeError is raised mentioning chromedriver
-
-        """
-        # Arrange - Given
-        original_which = shutil.which
-
-        def mock_which(name: str) -> str | None:
-            """Return a fake path for Chrome, None for chromedriver."""
-            if "chrome" in name and "driver" not in name:
-                return "/usr/bin/google-chrome"
-            if name == "chromedriver":
-                return None
-            return original_which(name)
-
-        # Act & Assert - When/Then
-        with (
-            patch("shutil.which", side_effect=mock_which),
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "linux"),
             patch.dict("sys.modules", {"selenium": MagicMock(), "selenium.webdriver": MagicMock()}),
-            pytest.raises(RuntimeError, match="chromedriver"),
+            pytest.raises(RuntimeError, match="No supported browser"),
         ):
             check_selenium()
 
-    def test_missing_chrome_raises_runtime_error(self) -> None:
-        """
-        Scenario: selenium is installed but Chrome/Chromium is not found.
 
-        Given: selenium is importable but no Chrome binary on PATH
-        When: _check_selenium is called
-        Then: A RuntimeError is raised mentioning Chrome
+class TestBackendSelection:
+    """Scenarios for picking between Chrome and Edge."""
 
+    @staticmethod
+    def _which_factory(*available: str) -> Callable[[str], str | None]:
+        """Build a shutil.which mock that returns paths only for ``available`` binaries."""
+
+        def fake_which(name: str) -> str | None:
+            return f"/usr/bin/{name}" if name in available else None
+
+        return fake_which
+
+    def test_prefers_chrome_when_both_present(self) -> None:
         """
-        # Act & Assert - When/Then
+        Scenario: With both Chrome and Edge installed, Chrome wins.
+
+        Given: shutil.which returns paths for both google-chrome and microsoft-edge
+        When: _select_backend is called
+        Then: 'chrome' is returned (preserves historical default)
+        """
+        which_mock = self._which_factory("google-chrome", "microsoft-edge")
+        with patch("shutil.which", side_effect=which_mock), patch("mapyta.export.sys.platform", "linux"):
+            assert _select_backend() == "chrome"
+
+    def test_picks_edge_when_only_edge(self) -> None:
+        """
+        Scenario: Edge is the only browser available.
+
+        Given: shutil.which returns a path only for microsoft-edge
+        When: _select_backend is called
+        Then: 'edge' is returned
+        """
+        with patch("shutil.which", side_effect=self._which_factory("microsoft-edge")), patch("mapyta.export.sys.platform", "linux"):
+            assert _select_backend() == "edge"
+
+    def test_neither_browser_raises_with_install_hints(self) -> None:
+        """
+        Scenario: No Chromium browser is installed.
+
+        Given: shutil.which returns None for every binary, non-Windows/non-macOS platform
+        When: _select_backend is called
+        Then: RuntimeError mentions Chrome and Edge with install URLs
+        """
         with (
-            patch(target="shutil.which", return_value=None),
-            patch.dict("sys.modules", {"selenium": MagicMock(), "selenium.webdriver": MagicMock()}),
-            pytest.raises(RuntimeError, match="Chrome"),
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "linux"),
+            pytest.raises(RuntimeError, match=r"(?s)Chrome.*Edge"),
         ):
-            check_selenium()
+            _select_backend()
+
+    def test_detect_chrome_via_path(self) -> None:
+        """Detection finds Chrome via shutil.which when binary is on PATH."""
+        with patch("shutil.which", side_effect=self._which_factory("chromium")), patch("mapyta.export.sys.platform", "linux"):
+            assert _detect_chrome() is True
+        with patch("shutil.which", return_value=None), patch("mapyta.export.sys.platform", "linux"):
+            assert _detect_chrome() is False
+
+    def test_detect_edge_via_path(self) -> None:
+        """Detection finds Edge via shutil.which when binary is on PATH."""
+        with patch("shutil.which", side_effect=self._which_factory("msedge")), patch("mapyta.export.sys.platform", "linux"):
+            assert _detect_edge() is True
+        with patch("shutil.which", return_value=None), patch("mapyta.export.sys.platform", "linux"):
+            assert _detect_edge() is False
+
+    def test_detect_edge_via_windows_install_path(self) -> None:
+        """On Windows, Edge is detected via its standard install path even when not on PATH.
+
+        Why: Edge ships with every Windows install but is not on PATH by default,
+        so PATH lookup alone misses it.
+        """
+        edge_install = r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+        original_exists = Path.exists
+
+        def fake_exists(self: Path) -> bool:
+            return self == Path(edge_install) or original_exists(self)
+
+        with (
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "win32"),
+            patch.object(Path, "exists", fake_exists),
+        ):
+            assert _detect_edge() is True
+
+    def test_detect_chrome_via_windows_install_path(self) -> None:
+        """On Windows, Chrome is detected via its standard install path even when not on PATH."""
+        chrome_install = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+        original_exists = Path.exists
+
+        def fake_exists(self: Path) -> bool:
+            return self == Path(chrome_install) or original_exists(self)
+
+        with (
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "win32"),
+            patch.object(Path, "exists", fake_exists),
+        ):
+            assert _detect_chrome() is True
+
+    def test_detect_chrome_via_macos_install_path(self) -> None:
+        """On macOS, Chrome is detected via /Applications even when not on PATH."""
+        chrome_install = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        original_exists = Path.exists
+
+        def fake_exists(self: Path) -> bool:
+            return self == Path(chrome_install) or original_exists(self)
+
+        with (
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "darwin"),
+            patch.object(Path, "exists", fake_exists),
+        ):
+            assert _detect_chrome() is True
+
+    def test_detect_edge_via_macos_install_path(self) -> None:
+        """On macOS, Edge is detected via /Applications even when not on PATH."""
+        edge_install = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+        original_exists = Path.exists
+
+        def fake_exists(self: Path) -> bool:
+            return self == Path(edge_install) or original_exists(self)
+
+        with (
+            patch("shutil.which", return_value=None),
+            patch("mapyta.export.sys.platform", "darwin"),
+            patch.object(Path, "exists", fake_exists),
+        ):
+            assert _detect_edge() is True
 
     def test_capture_screenshot_returns_png_bytes(self, tmp_path: Path) -> None:
         """
@@ -368,6 +432,7 @@ class TestExport:
         # Act - When: patch the lazy imports inside _capture_screenshot
         with (
             patch("mapyta.export.check_selenium"),
+            patch("mapyta.export._select_backend", return_value="chrome"),
             patch.dict(
                 "sys.modules",
                 {
@@ -384,8 +449,10 @@ class TestExport:
         assert result == fake_png, "Should return the PNG bytes from the driver"
         mock_driver.get_screenshot_as_png.assert_called_once()
         mock_driver.quit.assert_called_once()
-        mock_driver.set_window_size.assert_called_once_with(800, 600)
-        assert mock_options_instance.add_argument.call_count == 5
+        mock_driver.set_window_size.assert_not_called()
+        added_args = [call.args[0] for call in mock_options_instance.add_argument.call_args_list]
+        assert "--headless=new" in added_args
+        assert not any(arg.startswith("--force-device-scale-factor=") for arg in added_args)
 
     def test_capture_screenshot_scale_2x(self, tmp_path: Path) -> None:
         """
@@ -413,6 +480,7 @@ class TestExport:
         # Act - When
         with (
             patch("mapyta.export.check_selenium"),
+            patch("mapyta.export._select_backend", return_value="chrome"),
             patch.dict(
                 "sys.modules",
                 {
@@ -427,12 +495,53 @@ class TestExport:
 
         # Assert - Then
         assert result == fake_png
-        mock_driver.set_window_size.assert_called_once_with(800, 600)
-        # 5 base args + 1 --force-device-scale-factor
-        assert mock_options_instance.add_argument.call_count == 6
-        scale_call = [c for c in mock_options_instance.add_argument.call_args_list if "force-device-scale-factor" in str(c)]
-        assert len(scale_call) == 1
-        assert "2.0" in str(scale_call[0])
+        mock_driver.set_window_size.assert_not_called()
+        added_args = [call.args[0] for call in mock_options_instance.add_argument.call_args_list]
+        assert "--force-device-scale-factor=2.0" in added_args
+
+    def test_capture_screenshot_uses_edge_when_selected(self, tmp_path: Path) -> None:
+        """
+        Scenario: With Edge selected as backend, webdriver.Edge is built with the same flags as Chrome.
+
+        Given: _select_backend returns 'edge' and Edge WebDriver is mocked
+        When: capture_screenshot is called
+        Then: webdriver.Edge is invoked (not Chrome) with identical option flags
+        """
+        html_file = tmp_path / "test.html"
+        html_file.write_text("<html><body>Hello</body></html>")
+
+        fake_png = b"\x89PNG_edge_bytes"
+        mock_driver = MagicMock()
+        mock_driver.get_screenshot_as_png.return_value = fake_png
+        mock_options_instance = MagicMock()
+
+        mock_selenium = MagicMock()
+        mock_selenium.webdriver.Edge.return_value = mock_driver
+        mock_selenium.webdriver.edge.options.Options.return_value = mock_options_instance
+
+        with (
+            patch("mapyta.export.check_selenium"),
+            patch("mapyta.export._select_backend", return_value="edge"),
+            patch.dict(
+                "sys.modules",
+                {
+                    "selenium": mock_selenium,
+                    "selenium.webdriver": mock_selenium.webdriver,
+                    "selenium.webdriver.edge": mock_selenium.webdriver.edge,
+                    "selenium.webdriver.edge.options": mock_selenium.webdriver.edge.options,
+                },
+            ),
+        ):
+            result = capture_screenshot(str(html_file), 800, 600, 0.1, scale=2.0)
+
+        assert result == fake_png
+        mock_selenium.webdriver.Edge.assert_called_once()
+        mock_selenium.webdriver.Chrome.assert_not_called()
+        mock_driver.set_window_size.assert_not_called()
+        mock_driver.quit.assert_called_once()
+        added_args = [call.args[0] for call in mock_options_instance.add_argument.call_args_list]
+        assert "--headless=new" in added_args
+        assert "--force-device-scale-factor=2.0" in added_args
 
     def test_capture_screenshot_invalid_scale_raises(self, tmp_path: Path) -> None:
         """

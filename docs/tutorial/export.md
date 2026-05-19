@@ -19,7 +19,7 @@ Writes a standalone HTML file. No server needed, just open in any browser. Usefu
 
 !!! warning "Requires the `export` optional dependency"
 
-    PNG and SVG export use Selenium with headless Chrome. Install the extra:
+    PNG and SVG export use Selenium with a headless browser. Install the extra:
 
     ```bash
     pip install mapyta[export]
@@ -27,7 +27,7 @@ Writes a standalone HTML file. No server needed, just open in any browser. Usefu
     uv add mapyta[export]
     ```
 
-    Chrome or Chromium must also be installed. `chromedriver-autoinstaller` will attempt to install `chromedriver` automatically if it's not found on your PATH.
+    A Chromium-based browser must also be installed, Chrome, Chromium, or Microsoft Edge all work. Edge ships by default on Windows, so most machines already have a supported browser available. Mapyta will try to fetch the matching driver automatically.
 
 ```python
 # Save to file
