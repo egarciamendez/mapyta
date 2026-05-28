@@ -375,6 +375,8 @@ class Map:
         submit_label: str = "Submit",
         draw_style: dict[str, Any] | None = None,
         edit: bool = True,
+        draw_locale: dict[str, str] | None = None,
+        enable_handles_on_create: bool = False,
     ) -> Self:
         """Enable drawing controls on the map.
 
@@ -396,7 +398,24 @@ class Map:
         draw_style : dict[str, Any] | None
             ``shapeOptions`` override for drawn shapes.
         edit : bool
-            Whether edit/delete controls are active.
+            Whether edit/delete controls are active.  When ``False``,
+            both the edit and delete buttons are disabled and Leaflet.Draw
+            suppresses the Edit-layers toolbar entirely.
+        draw_locale : dict[str, str] | None
+            Override Leaflet.Draw tooltip / button strings.  Keys are
+            dotted paths under ``L.drawLocal`` (e.g.
+            ``"draw.toolbar.buttons.polyline"``); values are the
+            replacement strings.  The mutation is injected before the
+            Leaflet.Draw control is constructed.
+        enable_handles_on_create : bool
+            When ``True``, attach a ``draw:created`` listener that calls
+            ``layer.editing.enable()`` on each new shape so vertex/drag
+            handles appear immediately, without the user clicking Edit
+            first.  Note: this is *not* full Edit mode — there is no
+            Save/Cancel UX and behaviour differs per shape type
+            (polygons/lines/rectangles get vertex handles, markers
+            become draggable, circles get a radius handle).  Edits are
+            committed live to the layer; the user cannot revert.
 
         Returns
         -------
@@ -422,6 +441,8 @@ class Map:
             submit_label=submit_label,
             draw_style=draw_style,
             edit=edit,
+            draw_locale=draw_locale,
+            enable_handles_on_create=enable_handles_on_create,
         )
         self._draw_injected = False
         return self
@@ -440,7 +461,23 @@ class Map:
             elif cfg.draw_style:
                 draw_options[tool] = {"shapeOptions": cfg.draw_style}
 
-        edit_options: dict[str, Any] = {"remove": cfg.edit}
+        # edit=False forces both flags off; Leaflet.Draw skips the edit-toolbar
+        # entirely when no modes are enabled (see L.EditToolbar.addToolbar).
+        edit_options: dict[str, Any] = {"edit": cfg.edit, "remove": cfg.edit}
+
+        # L.drawLocal mutation must run AFTER leaflet.draw.js loads but BEFORE
+        # `new L.Control.Draw(options)`. The naive "inject into <head>" approach
+        # is broken: Folium's JSCSSMixin appends leaflet.draw.js to figure.header
+        # during render(), so any header element added beforehand renders first
+        # — meaning L.drawLocal is undefined when our script executes.
+        # Body-level injection (figure.html) is the only correct placement:
+        # the <head>'s synchronous <script src="leaflet.draw.js"> finishes
+        # before body parsing starts, and Folium emits the Draw constructor
+        # into the trailing <script> at end-of-body, which runs after our tag.
+        if cfg.draw_locale:
+            self._map.get_root().html.add_child(  # ty: ignore[unresolved-attribute]
+                folium.Element(self._build_locale_script(cfg.draw_locale))
+            )
 
         # Folium's built-in Draw plugin loads leaflet.draw CSS/JS via JSCSSMixin
         # (placed in <head>), guaranteeing correct load order in both standalone
@@ -462,6 +499,13 @@ class Map:
         )
         self._draw_injected = True
 
+    @staticmethod
+    def _build_locale_script(locale: dict[str, str]) -> str:
+        """Build a ``<script>`` block that mutates ``L.drawLocal``."""
+        lines = [f"    L.drawLocal.{path} = {json.dumps(value)};" for path, value in locale.items()]
+        body = "\n".join(lines)
+        return f"<script>\n(function() {{\n    if (typeof L === 'undefined' || !L.drawLocal) return;\n{body}\n}})();\n</script>"
+
     def _build_draw_script(self, map_var: str, drawn_items_var: str) -> str:
         """Build the submit button ``<script>`` block.
 
@@ -474,12 +518,28 @@ class Map:
 
         callback_js = self._build_draw_callback_js()
 
+        # enable_handles_on_create: handler is registered after Folium's
+        # draw:created handler (DOMContentLoaded fires after the trailing
+        # <script> block runs), so the layer is already in drawnItems by the
+        # time we enable editing.
+        handles_js = (
+            "\n    map.on('draw:created', function(e) {\n"
+            "        var layer = e.layer;\n"
+            "        if (layer && layer.editing && layer.editing.enable) {\n"
+            "            layer.editing.enable();\n"
+            "        }\n"
+            "    });\n"
+            if cfg.enable_handles_on_create
+            else ""
+        )
+
         return (
             "<script>\n"
             "document.addEventListener('DOMContentLoaded', function() {\n"
             f"    var map = window['{map_var}'];\n"
             f"    var drawnItems = window['{drawn_items_var}'];\n"
             "    if (!map || !drawnItems) return;\n"
+            f"{handles_js}"
             "\n"
             "    var submitControl = L.control({position: 'bottomright'});\n"
             "    submitControl.onAdd = function() {\n"

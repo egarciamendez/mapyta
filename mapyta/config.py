@@ -228,7 +228,15 @@ class DrawConfig:
     draw_style : dict[str, Any] | None
         ``shapeOptions`` override for drawn shapes.
     edit : bool
-        Whether edit/delete controls are active.
+        Whether edit/delete controls are active.  When False, the entire
+        Edit-layers toolbar is suppressed (both flags forced off).
+    draw_locale : dict[str, str] | None
+        Mapping of ``L.drawLocal`` dotted paths to localized strings (e.g.
+        ``{"draw.toolbar.buttons.polyline": "Teken lijn"}``).
+    enable_handles_on_create : bool
+        When True, newly drawn layers get vertex/drag handles immediately
+        via ``layer.editing.enable()``. This is not full Edit mode (no
+        Save/Cancel UX); edits are committed live to the layer.
     """
 
     tools: list[DrawTool] = field(default_factory=lambda: ["polyline", "polygon", "marker"])
@@ -237,3 +245,5 @@ class DrawConfig:
     submit_label: str = "Submit"
     draw_style: dict[str, Any] | None = None
     edit: bool = True
+    draw_locale: dict[str, str] | None = None
+    enable_handles_on_create: bool = False

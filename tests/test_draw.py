@@ -395,3 +395,181 @@ class TestEnableDraw:
         # Assert - Then
         content = out.read_text(encoding="utf-8")
         assert "L.Control.Draw" in content
+
+    # --- 26. edit=False suppresses entire toolbar ---
+
+    def test_edit_false_disables_both_flags(self, tmp_path: Path) -> None:
+        """
+        Scenario: edit=False forces both edit and remove off (toolbar hidden).
+
+        Given: A map with edit=False
+        When: HTML is saved to a file
+        Then: Both edit and remove flags appear as false in the serialized config
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=False)
+        out = tmp_path / "no_edit_toolbar.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert '"edit": false' in html
+        assert '"remove": false' in html
+
+    def test_edit_true_enables_both_flags(self, tmp_path: Path) -> None:
+        """
+        Scenario: edit=True enables both edit and remove buttons.
+
+        Given: A map with edit=True (default)
+        When: HTML is saved to a file
+        Then: Both edit and remove flags appear as true in the serialized config
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=True)
+        out = tmp_path / "edit_on.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert '"edit": true' in html
+        assert '"remove": true' in html
+
+    # --- 27. draw_locale mutates L.drawLocal before Draw control ---
+
+    def test_draw_locale_injects_mutation_before_draw_control(self, tmp_path: Path) -> None:
+        """
+        Scenario: draw_locale strings appear in HTML before L.Control.Draw.
+
+        Given: A map with draw_locale overriding tooltip strings
+        When: HTML is saved to a file
+        Then: The L.drawLocal mutation appears, and it precedes the
+              `new L.Control.Draw` constructor call
+        """
+        # Arrange - Given
+        m = Map().enable_draw(
+            draw_locale={
+                "draw.toolbar.buttons.polyline": "Teken/bewerk lijn",
+                "draw.handlers.polyline.tooltip.start": "Klik om te beginnen",
+            }
+        )
+        out = tmp_path / "locale.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert "L.drawLocal.draw.toolbar.buttons.polyline" in html
+        assert '"Teken/bewerk lijn"' in html
+        assert "L.drawLocal.draw.handlers.polyline.tooltip.start" in html
+        locale_idx = html.find("L.drawLocal.draw.toolbar.buttons.polyline")
+        draw_ctor_idx = html.find("new L.Control.Draw")
+        assert 0 <= locale_idx < draw_ctor_idx, "locale mutation must precede L.Control.Draw constructor"
+
+    def test_draw_locale_is_in_body_not_head(self, tmp_path: Path) -> None:
+        """
+        Scenario: locale mutation lives in <body>, never in <head>.
+
+        Given: A map with draw_locale set
+        When: HTML is saved to a file
+        Then: The L.drawLocal mutation appears between <body> and </body>,
+              and NOT inside the <head> section (where leaflet.draw.js has
+              not yet loaded when an inline <script> would run).
+        """
+        # Arrange - Given
+        m = Map().enable_draw(draw_locale={"draw.toolbar.buttons.polyline": "X"})
+        out = tmp_path / "locale_position.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        body_start = html.find("<body>")
+        body_end = html.find("</body>")
+        head_start = html.find("<head>")
+        head_end = html.find("</head>")
+        locale_idx = html.find("L.drawLocal.draw.toolbar.buttons.polyline")
+        assert body_start < locale_idx < body_end, "locale must be inside <body>"
+        assert not (head_start < locale_idx < head_end), "locale must NOT be inside <head>"
+
+    # --- 28. enable_handles_on_create attaches draw:created listener ---
+
+    def test_enable_handles_on_create_attaches_editing_listener(self, tmp_path: Path) -> None:
+        """
+        Scenario: enable_handles_on_create wires a draw:created → editing.enable listener.
+
+        Given: A map with enable_handles_on_create=True
+        When: HTML is saved to a file
+        Then: A map.on('draw:created', ...) handler that calls
+              layer.editing.enable() appears in the HTML
+        """
+        # Arrange - Given
+        m = Map().enable_draw(enable_handles_on_create=True)
+        out = tmp_path / "handles_on.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert "map.on('draw:created'" in html
+        assert "layer.editing.enable()" in html
+
+    def test_enable_handles_on_create_off_by_default(self, tmp_path: Path) -> None:
+        """
+        Scenario: enable_handles_on_create defaults to False — listener is absent.
+
+        Given: A map with drawing enabled and no enable_handles_on_create
+        When: HTML is saved to a file
+        Then: layer.editing.enable() does NOT appear in the HTML
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+        out = tmp_path / "handles_off.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert "layer.editing.enable()" not in html
+
+    # --- 29. Combined snapshot: all three flags active ---
+
+    def test_combined_extensions_snapshot(self, tmp_path: Path) -> None:
+        """
+        Scenario: All three new flags emit the expected artefacts together.
+
+        Given: A map with edit=False, draw_locale set, enable_handles_on_create=True
+        When: HTML is saved to a file
+        Then: edit_options forces both flags off, the L.drawLocal mutation
+              appears before the Draw constructor, and the draw:created
+              listener calling editing.enable is present
+        """
+        # Arrange - Given
+        m = Map().enable_draw(
+            edit=False,
+            draw_locale={"draw.toolbar.buttons.polyline": "Teken/bewerk lijn"},
+            enable_handles_on_create=True,
+        )
+        out = tmp_path / "combined.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert '"edit": false' in html
+        assert '"remove": false' in html
+
+        locale_idx = html.find("L.drawLocal.draw.toolbar.buttons.polyline")
+        draw_ctor_idx = html.find("new L.Control.Draw")
+        assert 0 <= locale_idx < draw_ctor_idx
+
+        assert "map.on('draw:created'" in html
+        assert "layer.editing.enable()" in html
