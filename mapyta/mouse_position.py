@@ -8,6 +8,19 @@ from folium.elements import JSCSSMixin
 from folium.template import Template
 from pyproj import CRS
 
+# proj4js needs +towgs84 to apply the Bessel→WGS84 datum shift; without it
+# the result is ~100 m off in NL. pyproj's CRS.to_proj4() deliberately drops
+# +towgs84 (modern PROJ uses grid-based shifts), so for proj4js we ship the
+# legacy strings published by proj4js itself. Add CRSs here as needed.
+_PROJ4_DEFS_WITH_TOWGS84: dict[str, str] = {
+    "EPSG:28992": (
+        "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 "
+        "+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel "
+        "+towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 "
+        "+units=m +no_defs"
+    ),
+}
+
 
 class MousePositionProjected(JSCSSMixin, MacroElement):
     """Show the cursor coordinates transformed to a projected CRS.
@@ -70,12 +83,19 @@ class MousePositionProjected(JSCSSMixin, MacroElement):
         self._name = "MousePositionProjected"
 
         parsed = CRS.from_user_input(crs)
-        with warnings.catch_warnings():
-            # pyproj warns that round-tripping through a proj4 string loses
-            # info — true in general, but proj4js needs proj4 syntax and the
-            # round trip is good enough for client-side cursor display.
-            warnings.simplefilter("ignore", UserWarning)
-            self.proj4_def = parsed.to_proj4()
+        authority = parsed.to_authority()
+        auth_key = f"{authority[0]}:{authority[1]}" if authority else None
+        canonical = _PROJ4_DEFS_WITH_TOWGS84.get(auth_key) if auth_key else None
+        if canonical is not None:
+            self.proj4_def = canonical
+        else:
+            with warnings.catch_warnings():
+                # pyproj's to_proj4() drops +towgs84; for CRSs not in the
+                # curated table the readout may be tens to hundreds of m off
+                # the official transformation. Acceptable fallback for
+                # display-only purposes.
+                warnings.simplefilter("ignore", UserWarning)
+                self.proj4_def = parsed.to_proj4()
 
         self.crs = crs
         self.position = position

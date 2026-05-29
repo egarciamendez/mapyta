@@ -157,7 +157,9 @@ class TestMapCreation:
 
         Given: A MapConfig with mouse_position_crs="EPSG:28992"
         When: The map is rendered to HTML
-        Then: proj4js, the EPSG:28992 def, and bottomleft positioning are emitted
+        Then: proj4js, the EPSG:28992 def including the +towgs84 datum-shift,
+              and bottomleft positioning are emitted.  Without +towgs84 the
+              readout is ~100 m off in the Netherlands, so it must be present.
         """
         # Arrange - Given
         m = Map(config=MapConfig(mouse_position=True, mouse_position_crs="EPSG:28992"))
@@ -169,7 +171,28 @@ class TestMapCreation:
         assert "proj4" in html, "proj4js script should be loaded"
         assert "EPSG:28992" in html, "Target CRS should be embedded"
         assert "+proj=sterea" in html, "RD New proj4 def should be embedded"
+        assert "+towgs84=565.417" in html, "Bessel->WGS84 Helmert params must be embedded"
         assert "bottomleft" in html
+
+    def test_mouse_position_projected_falls_back_for_unknown_crs(self) -> None:
+        """
+        Scenario: A CRS not in the curated +towgs84 table still renders.
+
+        Given: A MapConfig with mouse_position_crs="EPSG:3857" (Web Mercator,
+               no datum shift needed)
+        When: The map is rendered to HTML
+        Then: pyproj's to_proj4() output is embedded (no towgs84 in this case
+              because Web Mercator and WGS84 share the same datum)
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(mouse_position=True, mouse_position_crs="EPSG:3857"))
+
+        # Act - When
+        html = m.folium_map.get_root().render()
+
+        # Assert - Then
+        assert "+proj=merc" in html, "Web Mercator proj4 def should be embedded"
+        assert "EPSG:3857" in html
 
     def test_mouse_position_disabled_overrides_crs(self) -> None:
         """
