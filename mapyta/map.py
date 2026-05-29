@@ -63,6 +63,7 @@ from mapyta.markers import (
     css_to_style,
     px_to_int,
 )
+from mapyta.mouse_position import MousePositionProjected
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
@@ -226,7 +227,10 @@ class Map:
         if cfg.measure_control:
             folium.plugins.MeasureControl(primary_length_unit="meters", primary_area_unit="sqmeters").add_to(fmap)
         if cfg.mouse_position:
-            folium.plugins.MousePosition(position="bottomleft", separator=" | ", num_digits=6).add_to(fmap)
+            if cfg.mouse_position_crs:
+                MousePositionProjected(crs=cfg.mouse_position_crs, position="bottomleft").add_to(fmap)
+            else:
+                folium.plugins.MousePosition(position="bottomleft", separator=" | ", num_digits=6).add_to(fmap)
         return fmap
 
     def _transform(self, geom: BaseGeometry) -> BaseGeometry:
