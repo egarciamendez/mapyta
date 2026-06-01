@@ -173,6 +173,9 @@ class TestMapCreation:
         assert "+proj=sterea" in html, "RD New proj4 def should be embedded"
         assert "+towgs84=565.417" in html, "Bessel->WGS84 Helmert params must be embedded"
         assert "bottomleft" in html
+        # Styling is inlined so the control has no external/unpinned CSS dependency.
+        assert ".leaflet-control-mouseposition {" in html, "Control CSS should be inlined"
+        assert "ardhi/Leaflet.MousePosition" not in html, "No unpinned third-party CDN CSS should be loaded"
 
     def test_mouse_position_projected_falls_back_for_unknown_crs(self) -> None:
         """

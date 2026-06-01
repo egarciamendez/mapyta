@@ -42,6 +42,17 @@ class MousePositionProjected(JSCSSMixin, MacroElement):
 
     _template = Template(
         """
+        {% macro header(this, kwargs) %}
+            <style>
+                .leaflet-control-mouseposition {
+                    background-color: rgba(255, 255, 255, 0.7);
+                    box-shadow: 0 0 5px #bbb;
+                    padding: 0 5px;
+                    color: #333;
+                    font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+                }
+            </style>
+        {% endmacro %}
         {% macro script(this, kwargs) %}
             proj4.defs({{ this.crs|tojson }}, {{ this.proj4_def|tojson }});
             var {{ this.get_name() }} = L.control({position: {{ this.position|tojson }}});
@@ -68,12 +79,6 @@ class MousePositionProjected(JSCSSMixin, MacroElement):
 
     default_js: ClassVar = [
         ("proj4_js", "https://cdn.jsdelivr.net/npm/proj4@2.11.0/dist/proj4.min.js"),
-    ]
-    default_css: ClassVar = [
-        (
-            "Control_MousePosition_css",
-            "https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css",
-        ),
     ]
 
     def __init__(
