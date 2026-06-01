@@ -40,6 +40,7 @@ print(m.to_html())  # markdown-exec: hide
 | `minimap`         | `False`              | Add inset minimap                                                                                                                       |
 | `measure_control` | `False`              | Add distance/area measurement tool                                                                                                      |
 | `mouse_position`  | `True`               | Show cursor coordinates                                                                                                                 |
+| `mouse_position_crs` | `None`            | CRS for the cursor readout, e.g. `"EPSG:28992"` for RD New. `None` shows WGS84 lat/lon. Ignored when `mouse_position` is `False`.       |
 
 ## Available tile providers
 
@@ -127,3 +128,32 @@ m.add_tile_layer(name="esri_satellite")
 m.add_tile_layer(name="cartodb_dark")
 m.add_layer_control(collapsed=False)
 ```
+
+## Cursor coordinates in a projected CRS
+
+By default the bottom-left readout shows the cursor position as WGS84 latitude/longitude. Set `mouse_position_crs` to
+display the coordinates in a projected CRS instead, such as Dutch RD New (EPSG:28992):
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(
+    center=(52.090, 5.121),
+    title="RD New cursor readout",
+    config=MapConfig(mouse_position_crs="EPSG:28992"),
+)
+m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Dom Tower**")
+
+print(m.to_html())  # markdown-exec: hide
+```
+
+Hover over the map: the readout now shows RD New `X | Y` in metres (near the Dom tower, roughly `136150 | 455900`)
+instead of lat/lon. Any CRS that `pyproj` recognises is accepted. The number of decimals is picked automatically — `0`
+for projected CRSs (metres), `6` for geographic ones.
+
+!!! note "Accuracy"
+    The transform runs client-side with [proj4js](http://proj4js.org/), which only supports the 7-parameter Helmert
+    datum shift rather than the official RDNAPTRANS™ correction grid used by [rdinfo.nl](https://www.rdinfo.nl/). For
+    RD New this means the readout can differ from the authoritative value by up to ~25 cm across the Netherlands —
+    negligible for a hover readout, but don't use it as a source of survey-grade coordinates.
