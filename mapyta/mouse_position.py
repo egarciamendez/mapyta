@@ -49,8 +49,12 @@ class MousePositionProjected(JSCSSMixin, MacroElement):
                 var div = L.DomUtil.create('div', 'leaflet-control-mouseposition');
                 div.innerHTML = {{ this.empty_string|tojson }};
                 map.on('mousemove', function(e) {
-                    var p = proj4("EPSG:4326", {{ this.crs|tojson }}, [e.latlng.lng, e.latlng.lat]);
-                    div.innerHTML = p[0].toFixed({{ this.num_digits }}) + {{ this.separator|tojson }} + p[1].toFixed({{ this.num_digits }});
+                    try {
+                        var p = proj4("EPSG:4326", {{ this.crs|tojson }}, [e.latlng.lng, e.latlng.lat]);
+                        div.innerHTML = p[0].toFixed({{ this.num_digits }}) + {{ this.separator|tojson }} + p[1].toFixed({{ this.num_digits }});
+                    } catch (_) {
+                        div.innerHTML = {{ this.empty_string|tojson }};
+                    }
                 });
                 map.on('mouseout', function() {
                     div.innerHTML = {{ this.empty_string|tojson }};
