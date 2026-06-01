@@ -133,6 +133,88 @@ class TestMapCreation:
         # Assert - Then
         assert m._source_crs == crs, "Source CRS should be stored"
 
+    def test_mouse_position_default_uses_wgs84(self) -> None:
+        """
+        Scenario: Default cursor-readout uses Folium's WGS84 lat/lon control.
+
+        Given: A MapConfig with mouse_position=True and no mouse_position_crs
+        When: The map is rendered to HTML
+        Then: The Leaflet.MousePosition plugin is loaded and no proj4js is injected
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(mouse_position=True))
+
+        # Act - When
+        html = m.folium_map.get_root().render()
+
+        # Assert - Then
+        assert "L.Control.MousePosition" in html
+        assert "proj4" not in html
+
+    def test_mouse_position_projected_injects_proj4(self) -> None:
+        """
+        Scenario: Set a projected CRS for the cursor readout.
+
+        Given: A MapConfig with mouse_position_crs="EPSG:28992"
+        When: The map is rendered to HTML
+        Then: proj4js, the EPSG:28992 def including the +towgs84 datum-shift,
+              and bottomleft positioning are emitted.  Without +towgs84 the
+              readout is ~100 m off in the Netherlands, so it must be present.
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(mouse_position=True, mouse_position_crs="EPSG:28992"))
+
+        # Act - When
+        html = m.folium_map.get_root().render()
+
+        # Assert - Then
+        assert "proj4" in html, "proj4js script should be loaded"
+        assert "EPSG:28992" in html, "Target CRS should be embedded"
+        assert "+proj=sterea" in html, "RD New proj4 def should be embedded"
+        assert "+towgs84=565.417" in html, "Bessel->WGS84 Helmert params must be embedded"
+        assert "bottomleft" in html
+        # Styling is inlined so the control has no external/unpinned CSS dependency.
+        assert ".leaflet-control-mouseposition {" in html, "Control CSS should be inlined"
+        assert "ardhi/Leaflet.MousePosition" not in html, "No unpinned third-party CDN CSS should be loaded"
+
+    def test_mouse_position_projected_falls_back_for_unknown_crs(self) -> None:
+        """
+        Scenario: A CRS not in the curated +towgs84 table still renders.
+
+        Given: A MapConfig with mouse_position_crs="EPSG:3857" (Web Mercator,
+               no datum shift needed)
+        When: The map is rendered to HTML
+        Then: pyproj's to_proj4() output is embedded (no towgs84 in this case
+              because Web Mercator and WGS84 share the same datum)
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(mouse_position=True, mouse_position_crs="EPSG:3857"))
+
+        # Act - When
+        html = m.folium_map.get_root().render()
+
+        # Assert - Then
+        assert "+proj=merc" in html, "Web Mercator proj4 def should be embedded"
+        assert "EPSG:3857" in html
+
+    def test_mouse_position_disabled_overrides_crs(self) -> None:
+        """
+        Scenario: mouse_position=False suppresses the readout regardless of CRS.
+
+        Given: A MapConfig with mouse_position=False and a CRS set
+        When: The map is rendered to HTML
+        Then: Neither the WGS84 nor the projected control is emitted
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(mouse_position=False, mouse_position_crs="EPSG:28992"))
+
+        # Act - When
+        html = m.folium_map.get_root().render()
+
+        # Assert - Then
+        assert "L.Control.MousePosition" not in html
+        assert "+proj=sterea" not in html
+
     def test_map_repr_shows_metadata(self) -> None:
         """
         Scenario: Inspect a map's string representation.

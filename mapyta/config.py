@@ -175,6 +175,10 @@ class MapConfig:
         Add measure tool.
     mouse_position : bool
         Show cursor coordinates.
+    mouse_position_crs : str | None
+        CRS for the cursor-coordinate readout, e.g. ``"EPSG:28992"`` for
+        Dutch RD New.  ``None`` (default) shows WGS84 lat/lon.  Ignored
+        when ``mouse_position`` is ``False``.
     """
 
     tile_layer: TileProviderKey | str | list[TileProviderKey | str] = "cartodb_positron"
@@ -190,6 +194,7 @@ class MapConfig:
     minimap: bool = False
     measure_control: bool = False
     mouse_position: bool = True
+    mouse_position_crs: str | None = None
 
 
 class RawJS:
