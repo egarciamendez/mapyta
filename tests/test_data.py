@@ -789,6 +789,98 @@ class TestExportButton:
         assert html2.count("exportControl.addTo") == 1
 
 
+class TestHomeButton:
+    """Scenarios for add_home_button and _inject_home_button."""
+
+    def test_add_home_button_returns_self(self) -> None:
+        """
+        Scenario: add_home_button returns the map for chaining.
+
+        Given: An empty map
+        When: add_home_button is called
+        Then: The map is returned and _home_button_config is set
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        result = m.add_home_button()
+
+        # Assert - Then
+        assert result is m
+        assert m._home_button_config is not None
+
+    def test_home_button_script_injected_on_render(self) -> None:
+        """
+        Scenario: Rendering a map with add_home_button injects the reset-view script.
+
+        Given: A map with a point and a home button
+        When: to_html is called
+        Then: The rendered HTML captures the initial view and restores it on click
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+        m.add_home_button(title="Reset view")
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "homeControl" in html
+        assert "map.getCenter()" in html
+        assert "map.setView(_home.center, _home.zoom)" in html
+        assert "Reset view" in html
+
+    def test_home_button_position_is_applied(self) -> None:
+        """
+        Scenario: The configured control position reaches the injected script.
+
+        Given: A map with a home button at bottomright
+        When: the standalone HTML is rendered
+        Then: The control is created with that position
+
+        Notes
+        -----
+        Asserts against the standalone render rather than the embeddable
+        ``to_html()`` output: the latter wraps the whole document in an
+        ``<iframe srcdoc>`` attribute, so single quotes are HTML-escaped
+        (``&#x27;``) and decoded by the browser only when the iframe loads.
+        The standalone document carries the live, raw-quoted script.
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+        m.add_home_button(position="bottomright")
+
+        # Act - When
+        html = m._get_standalone_html()
+
+        # Assert - Then
+        assert "L.control({position: 'bottomright'})" in html
+
+    def test_home_button_not_injected_twice(self) -> None:
+        """
+        Scenario: Calling to_html twice does not inject the button script twice.
+
+        Given: A map with a home button
+        When: to_html is called twice
+        Then: The script appears exactly once each render
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+        m.add_home_button()
+
+        # Act - When
+        html1 = m.to_html()
+        html2 = m.to_html()
+
+        # Assert - Then — script injected once, same count on re-render
+        assert html1.count("homeControl.addTo") == 1
+        assert html2.count("homeControl.addTo") == 1
+
+
 # ===================================================================
 # Scenarios for heatmap layers.
 # ===================================================================

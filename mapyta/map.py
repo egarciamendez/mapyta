@@ -117,6 +117,8 @@ class Map:
         self._geojson_features: list[dict] = []
         self._export_button_config: dict[str, Any] | None = None
         self._export_button_injected: bool = False
+        self._home_button_config: dict[str, Any] | None = None
+        self._home_button_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -2371,6 +2373,9 @@ class Map:
         if self._export_button_config and not self._export_button_injected:
             self._inject_export_button()
             self._export_button_injected = True
+        if self._home_button_config and not self._home_button_injected:
+            self._inject_home_button()
+            self._home_button_injected = True
 
     def _get_html(self) -> str:
         """Render map to an embeddable HTML string (Jupyter/inline)."""
@@ -2510,6 +2515,72 @@ class Map:
             "        return div;\n"
             "    };\n"
             "    exportControl.addTo(map);\n"
+            "});\n"
+            "</script>\n"
+        )
+        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
+
+    def add_home_button(self, position: str = "topleft", title: str = "Reset view") -> Self:
+        """Add a button that returns the map to its initial center and zoom.
+
+        The "home" view is the map's opening state — the explicit ``center``
+        and ``zoom_start`` when provided, or the auto-fitted data bounds
+        otherwise. It is captured in the browser after the map loads, so a
+        single button works for both cases.
+
+        Parameters
+        ----------
+        position : str
+            Leaflet control position: ``"topleft"``, ``"topright"``,
+            ``"bottomleft"``, or ``"bottomright"``.
+        title : str
+            Tooltip text shown on hover.
+
+        Returns
+        -------
+        Map
+        """
+        self._home_button_config = {"position": position, "title": title}
+        return self
+
+    def _inject_home_button(self) -> None:
+        """Inject the reset-view button as a Leaflet control.
+
+        The initial view is read with ``getCenter()`` / ``getZoom()`` inside a
+        ``DOMContentLoaded`` handler. Folium renders the map's ``fitBounds`` /
+        ``setView`` call in a ``<script>`` that runs synchronously at parse
+        time, before that event fires, so the captured view already reflects
+        the settled opening state regardless of how it was set.
+        """
+        cfg = self._home_button_config
+        assert cfg is not None
+        map_var = self._map.get_name()
+        position = cfg["position"]
+        title = cfg["title"]
+
+        script = (
+            "<script>\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{map_var}'];\n"
+            "    if (!map) return;\n"
+            "    var _home = {center: map.getCenter(), zoom: map.getZoom()};\n"
+            f"    var homeControl = L.control({{position: '{position}'}});\n"
+            "    homeControl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        var btn = L.DomUtil.create('a', '', div);\n"
+            "        btn.href = '#';\n"
+            f"        btn.title = '{title}';\n"
+            "        btn.innerHTML = '\\u2302';\n"
+            "        btn.style.cssText = 'font-size:18px;text-align:center;line-height:26px;cursor:pointer;';\n"
+            "        btn.onclick = function(e) {\n"
+            "            e.preventDefault();\n"
+            "            e.stopPropagation();\n"
+            "            map.setView(_home.center, _home.zoom);\n"
+            "        };\n"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        return div;\n"
+            "    };\n"
+            "    homeControl.addTo(map);\n"
             "});\n"
             "</script>\n"
         )

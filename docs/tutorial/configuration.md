@@ -129,6 +129,31 @@ m.add_tile_layer(name="cartodb_dark")
 m.add_layer_control(collapsed=False)
 ```
 
+## Reset-view button
+
+A map opens at a fixed view: either the `center` and `zoom_start` you pass, or the bounds Mapyta auto-fits to your
+data. Once the user pans and zooms away, `add_home_button()` gives them a one-click way back to that opening view.
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(
+    center=(52.090, 5.121),
+    title="Reset view",
+    config=MapConfig(zoom_start=14),
+)
+m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Dom Tower**")
+m.add_home_button(position="topleft")
+
+m.to_html("home_button.html")
+print(m.to_html())  # markdown-exec: hide
+```
+
+The ⌂ button captures the opening view in the browser after the map loads, so a single button works whether the view
+came from an explicit `center` or from auto-fitted data bounds. Clicking it restores that center and zoom. Place it with
+`position` (`"topleft"`, `"topright"`, `"bottomleft"`, `"bottomright"`) and set the hover tooltip with `title`.
+
 ## Cursor coordinates in a projected CRS
 
 By default the bottom-left readout shows the cursor position as WGS84 latitude/longitude. Set `mouse_position_crs` to
