@@ -35,7 +35,8 @@ import branca.colormap as cm
 import folium
 import folium.features
 import folium.plugins
-from branca.element import MacroElement, Template
+from branca.element import MacroElement
+from folium.template import Template
 from shapely.geometry import (
     LinearRing,
     LineString,
@@ -105,12 +106,12 @@ class _HomeButtonControl(MacroElement):
 
     _template = Template(
         "{% macro script(this, kwargs) %}\n"
-        "    var {{ this.get_name() }} = L.control({position: '{{ this.position }}'});\n"
+        "    var {{ this.get_name() }} = L.control({position: {{ this.position|tojson }}});\n"
         "    {{ this.get_name() }}.onAdd = function() {\n"
         "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
         "        var btn = L.DomUtil.create('a', '', div);\n"
         "        btn.href = '#';\n"
-        "        btn.title = '{{ this.title }}';\n"
+        "        btn.title = {{ this.title|tojson }};\n"
         "        btn.innerHTML = '\\u2302';\n"
         "        btn.style.cssText = 'font-size:18px;text-align:center;line-height:26px;cursor:pointer;';\n"
         "        btn.onclick = function(e) {\n"
@@ -712,10 +713,16 @@ class Map:
             # Keep the trashbin pinned to the last vertex while it moves. The
             # layer fires 'edit' on each vertex drag-end (PolyVerticesEdit
             # ._fireEdit); 'editdrag' is bound too in case the build re-fires it.
-            "        layer.on('edit editdrag', function() {\n"
-            "            var nl = ddLastVertex(layer);\n"
-            "            if (nl && layer._ddTrash) { layer._ddTrash.setLatLng(nl); }\n"
-            "        });\n"
+            # Bind once per layer: ddAddTrash runs again on every re-edit and
+            # this handler outlives the trash marker (it null-checks
+            # layer._ddTrash), so re-binding would stack duplicate listeners.
+            "        if (!layer._ddPinBound) {\n"
+            "            layer._ddPinBound = true;\n"
+            "            layer.on('edit editdrag', function() {\n"
+            "                var nl = ddLastVertex(layer);\n"
+            "                if (nl && layer._ddTrash) { layer._ddTrash.setLatLng(nl); }\n"
+            "            });\n"
+            "        }\n"
             "    }\n"
             "    function ddConfirmDelete(layer, latlng) {\n"
             "        var box = L.DomUtil.create('div', 'dd-delete-confirm');\n"

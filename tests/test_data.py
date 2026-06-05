@@ -810,7 +810,7 @@ class TestHomeButton:
 
         # Assert - Then
         assert "home_button_control_" in html
-        assert "L.control({position: 'topright'})" in html
+        assert 'L.control({position: "topright"})' in html
         assert "_mapytaHome" in html
         assert ".getCenter()" in html
         assert "setView(home.center, home.zoom)" in html
