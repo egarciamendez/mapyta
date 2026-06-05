@@ -451,6 +451,9 @@ class Map:
         submit_label: str = "Submit",
         draw_style: dict[str, Any] | None = None,
         edit: bool = True,
+        delete_confirm_message: str = "Delete this line?",
+        delete_confirm_yes: str = "Delete",
+        delete_confirm_no: str = "Cancel",
     ) -> Self:
         """Enable drawing controls on the map.
 
@@ -472,9 +475,18 @@ class Map:
         draw_style : dict[str, Any] | None
             ``shapeOptions`` override for drawn shapes.
         edit : bool
-            Whether edit/delete controls are active. When ``True``, clicking a
-            drawn shape also makes its vertices editable in place (click empty
-            map space to stop editing).
+            Whether per-shape editing/deletion is active. When ``True``,
+            clicking a drawn shape makes its vertices editable in place (click
+            empty map space to stop editing) and shows a trashbin at its last
+            vertex; clicking the trashbin and confirming deletes that shape.
+            No global edit/delete toolbar buttons are rendered. When ``False``,
+            clicking a shape stays inert.
+        delete_confirm_message : str
+            Text shown in the in-map deletion confirmation popup.
+        delete_confirm_yes : str
+            Label of the confirm (delete) button in that popup.
+        delete_confirm_no : str
+            Label of the cancel button in that popup.
 
         Returns
         -------
@@ -500,6 +512,9 @@ class Map:
             submit_label=submit_label,
             draw_style=draw_style,
             edit=edit,
+            delete_confirm_message=delete_confirm_message,
+            delete_confirm_yes=delete_confirm_yes,
+            delete_confirm_no=delete_confirm_no,
         )
         self._draw_injected = False
         return self
@@ -518,7 +533,15 @@ class Map:
             elif cfg.draw_style:
                 draw_options[tool] = {"shapeOptions": cfg.draw_style}
 
-        edit_options: dict[str, Any] = {"remove": cfg.edit}
+        # Disable both edit-toolbar modes explicitly. Leaflet.draw's EditToolbar
+        # prototype defaults ``edit`` to a truthy object, so omitting the key would
+        # still render the pencil button — only an explicit ``false`` shadows it.
+        # With both modes off, ``L.Toolbar.addToolbar`` early-returns (no buttons),
+        # so no edit/delete toolbar appears. folium still wires
+        # ``options.edit.featureGroup = drawnItems`` and adds drawn shapes via
+        # ``draw:created``, so click-to-edit (and the per-shape trashbin) stays
+        # intact. Per-shape editing/deletion replaces the global toolbar buttons.
+        edit_options: dict[str, Any] = {"edit": False, "remove": False}
 
         # Folium's built-in Draw plugin loads leaflet.draw CSS/JS via JSCSSMixin
         # (placed in <head>), guaranteeing correct load order in both standalone
@@ -584,23 +607,31 @@ class Map:
             "</script>"
         )
 
-    @staticmethod
-    def _build_click_to_edit_js() -> str:
-        """Build the click-a-shape-to-edit-its-vertices ``<script>`` fragment.
+    def _build_click_to_edit_js(self) -> str:
+        """Build the click-to-edit + per-shape trashbin ``<script>`` fragment.
 
         Leaflet.draw only exposes vertex editing through the toolbar pencil,
-        which toggles *every* shape at once and needs an explicit Save. Drawn
-        shapes are interactive (the cursor turns into a pointer on hover), so
-        users reasonably expect clicking one to edit it — but nothing is bound
-        to that click by default. This fragment binds a per-layer ``click``
-        handler that calls the layer's Leaflet.draw ``editing.enable()`` so a
-        single shape becomes editable in place (drag vertices, add midpoints);
-        clicking empty map space disables editing again. It is wired to every
-        layer already in ``drawnItems`` and, via ``layeradd``, to any added
-        later — whether drawn by the user or pre-seeded programmatically.
+        which toggles *every* shape at once and needs an explicit Save, and
+        deletion through a global trashcan button. mapyta hides both (see
+        ``_inject_draw_plugin``) in favour of per-shape, in-place interaction:
+
+        - **Edit:** drawn shapes are interactive (the cursor turns into a
+          pointer on hover), so users reasonably expect clicking one to edit
+          it. ``ddEnableClickEdit`` binds a per-layer ``click`` handler that
+          calls the layer's Leaflet.draw ``editing.enable()`` so a single shape
+          becomes editable in place (drag vertices, add midpoints); clicking
+          empty map space disables editing again. It is wired to every layer
+          already in ``drawnItems`` and, via ``layeradd``, to any added later —
+          whether drawn by the user or pre-seeded programmatically.
+        - **Delete:** while a shape is being edited, ``ddAddTrash`` drops a small
+          trashbin marker at its last vertex. Clicking it opens an in-map
+          Leaflet popup (``ddConfirmDelete``) with Delete/Cancel buttons;
+          confirming calls ``ddDeleteLine`` which removes that single shape. A
+          DOM popup is used rather than ``window.confirm()`` because the latter
+          is silently dropped inside sandboxed iframe embeds.
 
         Only emitted when ``edit`` is enabled; if the caller turned edit
-        controls off, clicking a shape stays inert.
+        controls off, clicking a shape stays inert and no trashbin appears.
 
         Leaflet.draw's vertex-edit ``addHooks`` reads ``layer.options.editing``
         and ``layer.options.original`` unconditionally; its own edit toolbar
@@ -610,8 +641,98 @@ class Map:
         ``Cannot read properties of undefined (reading 'className')`` on the SVG
         renderer and no vertex handles appear. Seeded in the same order
         Leaflet.draw uses (``original`` snapshots the live style first).
+
+        User-facing strings (the confirm message and button labels) are encoded
+        with :func:`json.dumps` so they become safe JS string literals.
         """
+        cfg = self._draw_config
+        assert cfg is not None
+
+        # Inline SVG trash glyph (no font dependency), inside a white rounded
+        # badge for contrast against any basemap. json.dumps turns the whole
+        # markup into a safe JS string literal for L.divIcon's ``html`` option.
+        trash_html = (
+            '<div style="background:#fff;border:1px solid #ccc;border-radius:4px;'
+            "width:22px;height:22px;display:flex;align-items:center;justify-content:center;"
+            'box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;">'
+            "<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' "
+            "fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' "
+            "stroke-linejoin='round'><polyline points='3 6 5 6 21 6'></polyline>"
+            "<path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'></path>"
+            "<line x1='10' y1='11' x2='10' y2='17'></line>"
+            "<line x1='14' y1='11' x2='14' y2='17'></line></svg></div>"
+        )
+        trash_html_js = json.dumps(trash_html)
+        confirm_msg_js = json.dumps(cfg.delete_confirm_message)
+        confirm_yes_js = json.dumps(cfg.delete_confirm_yes)
+        confirm_no_js = json.dumps(cfg.delete_confirm_no)
+
         return (
+            f"    var ddTrashHtml = {trash_html_js};\n"
+            f"    var ddDeleteMsg = {confirm_msg_js};\n"
+            f"    var ddDeleteYes = {confirm_yes_js};\n"
+            f"    var ddDeleteNo = {confirm_no_js};\n"
+            # Last vertex of a shape, or null for layers we don't support
+            # (markers have no getLatLngs; polygons/rectangles nest one ring).
+            "    function ddLastVertex(layer) {\n"
+            "        if (!layer.getLatLngs) return null;\n"
+            "        var lls = layer.getLatLngs();\n"
+            "        if (!lls || !lls.length) return null;\n"
+            "        var last = lls[lls.length - 1];\n"
+            "        if (Array.isArray(last)) {\n"
+            "            if (!last.length) return null;\n"
+            "            last = last[last.length - 1];\n"
+            "        }\n"
+            "        if (!last || typeof last.lat !== 'number') return null;\n"
+            "        return last;\n"
+            "    }\n"
+            "    function ddRemoveTrash(layer) {\n"
+            "        if (layer._ddTrash) { map.removeLayer(layer._ddTrash); layer._ddTrash = null; }\n"
+            "    }\n"
+            "    function ddAddTrash(layer) {\n"
+            "        if (layer._ddTrash) return;\n"
+            "        var last = ddLastVertex(layer);\n"
+            "        if (!last) return;\n"
+            "        var trash = L.marker(last, {\n"
+            "            icon: L.divIcon({className: 'dd-trash-icon', html: ddTrashHtml, iconSize: [22, 22], iconAnchor: [-6, 28]}),\n"
+            "            interactive: true, keyboard: false, zIndexOffset: 1000\n"
+            "        }).addTo(map);\n"
+            "        layer._ddTrash = trash;\n"
+            "        trash.on('click', function(e) {\n"
+            "            L.DomEvent.stopPropagation(e);\n"
+            "            ddConfirmDelete(layer, trash.getLatLng());\n"
+            "        });\n"
+            # Keep the trashbin pinned to the last vertex while it moves. The
+            # layer fires 'edit' on each vertex drag-end (PolyVerticesEdit
+            # ._fireEdit); 'editdrag' is bound too in case the build re-fires it.
+            "        layer.on('edit editdrag', function() {\n"
+            "            var nl = ddLastVertex(layer);\n"
+            "            if (nl && layer._ddTrash) { layer._ddTrash.setLatLng(nl); }\n"
+            "        });\n"
+            "    }\n"
+            "    function ddConfirmDelete(layer, latlng) {\n"
+            "        var box = L.DomUtil.create('div', 'dd-delete-confirm');\n"
+            "        var msg = L.DomUtil.create('div', '', box);\n"
+            "        msg.innerHTML = ddDeleteMsg;\n"
+            "        msg.style.cssText = 'margin-bottom:8px;font-size:13px;';\n"
+            "        var del = L.DomUtil.create('a', '', box);\n"
+            "        del.href = '#'; del.innerHTML = ddDeleteYes;\n"
+            "        del.style.cssText = 'display:inline-block;padding:4px 10px;margin-right:6px;background:#d11;' +\n"
+            "            'color:#fff;text-decoration:none;font-weight:bold;font-size:12px;border-radius:3px;cursor:pointer;';\n"
+            "        var cancel = L.DomUtil.create('a', '', box);\n"
+            "        cancel.href = '#'; cancel.innerHTML = ddDeleteNo;\n"
+            "        cancel.style.cssText = 'display:inline-block;padding:4px 10px;background:#eee;color:#333;' +\n"
+            "            'text-decoration:none;font-size:12px;border-radius:3px;cursor:pointer;';\n"
+            "        L.DomEvent.disableClickPropagation(box);\n"
+            "        del.onclick = function(e) { e.preventDefault(); ddDeleteLine(layer); map.closePopup(); };\n"
+            "        cancel.onclick = function(e) { e.preventDefault(); map.closePopup(); };\n"
+            "        L.popup({closeButton: false, className: 'dd-delete-confirm'}).setLatLng(latlng).setContent(box).openOn(map);\n"
+            "    }\n"
+            "    function ddDeleteLine(layer) {\n"
+            "        if (layer.editing && layer.editing.enabled()) { layer.editing.disable(); }\n"
+            "        ddRemoveTrash(layer);\n"
+            "        drawnItems.removeLayer(layer);\n"
+            "    }\n"
             "    function ddEnableClickEdit(layer) {\n"
             "        if (!layer || !layer.editing) return;\n"
             "        layer.on('click', function(e) {\n"
@@ -622,6 +743,7 @@ class Map:
             "                    if (!layer.options.editing) { layer.options.editing = {}; }\n"
             "                }\n"
             "                layer.editing.enable();\n"
+            "                ddAddTrash(layer);\n"
             "            }\n"
             "        });\n"
             "    }\n"
@@ -629,7 +751,10 @@ class Map:
             "    drawnItems.on('layeradd', function(e) { ddEnableClickEdit(e.layer); });\n"
             "    map.on('click', function() {\n"
             "        drawnItems.eachLayer(function(layer) {\n"
-            "            if (layer.editing && layer.editing.enabled()) { layer.editing.disable(); }\n"
+            "            if (layer.editing && layer.editing.enabled()) {\n"
+            "                layer.editing.disable();\n"
+            "                ddRemoveTrash(layer);\n"
+            "            }\n"
             "        });\n"
             "    });\n"
             "\n"

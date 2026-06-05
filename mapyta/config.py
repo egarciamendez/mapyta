@@ -239,9 +239,18 @@ class DrawConfig:
     draw_style : dict[str, Any] | None
         ``shapeOptions`` override for drawn shapes.
     edit : bool
-        Whether edit/delete controls are active. When ``True``, clicking a
-        drawn shape also makes its vertices editable in place (click empty
-        map space to stop editing).
+        Whether per-shape editing/deletion is active. When ``True``, clicking a
+        drawn shape makes its vertices editable in place (click empty map space
+        to stop editing) and shows a trashbin at its last vertex; clicking the
+        trashbin and confirming deletes that shape. No global edit/delete
+        toolbar buttons are rendered. When ``False``, clicking a shape stays
+        inert.
+    delete_confirm_message : str
+        Text shown in the in-map deletion confirmation popup.
+    delete_confirm_yes : str
+        Label of the confirm (delete) button in that popup.
+    delete_confirm_no : str
+        Label of the cancel button in that popup.
     """
 
     tools: list[DrawTool] = field(default_factory=lambda: ["polyline", "polygon", "marker"])
@@ -250,3 +259,6 @@ class DrawConfig:
     submit_label: str = "Submit"
     draw_style: dict[str, Any] | None = None
     edit: bool = True
+    delete_confirm_message: str = "Delete this line?"
+    delete_confirm_yes: str = "Delete"
+    delete_confirm_no: str = "Cancel"
