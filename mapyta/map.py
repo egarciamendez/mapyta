@@ -601,13 +601,28 @@ class Map:
 
         Only emitted when ``edit`` is enabled; if the caller turned edit
         controls off, clicking a shape stays inert.
+
+        Leaflet.draw's vertex-edit ``addHooks`` reads ``layer.options.editing``
+        and ``layer.options.original`` unconditionally; its own edit toolbar
+        seeds both in ``_enableLayerEdit`` before calling ``editing.enable()``.
+        We enable editing directly (bypassing that toolbar), so we must seed
+        them ourselves — otherwise ``addHooks`` throws
+        ``Cannot read properties of undefined (reading 'className')`` on the SVG
+        renderer and no vertex handles appear. Seeded in the same order
+        Leaflet.draw uses (``original`` snapshots the live style first).
         """
         return (
             "    function ddEnableClickEdit(layer) {\n"
             "        if (!layer || !layer.editing) return;\n"
             "        layer.on('click', function(e) {\n"
             "            L.DomEvent.stopPropagation(e);\n"
-            "            if (!layer.editing.enabled()) { layer.editing.enable(); }\n"
+            "            if (!layer.editing.enabled()) {\n"
+            "                if (layer.options) {\n"
+            "                    if (!layer.options.original) { layer.options.original = L.extend({}, layer.options); }\n"
+            "                    if (!layer.options.editing) { layer.options.editing = {}; }\n"
+            "                }\n"
+            "                layer.editing.enable();\n"
+            "            }\n"
             "        });\n"
             "    }\n"
             "    drawnItems.eachLayer(ddEnableClickEdit);\n"

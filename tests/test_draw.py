@@ -356,6 +356,31 @@ class TestEnableDraw:
         assert "ddEnableClickEdit" in html
         assert "layer.editing.enable()" in html
 
+    # --- 23b-2. click-to-edit seeds Leaflet.draw edit options ---
+
+    def test_click_to_edit_seeds_edit_options(self) -> None:
+        """
+        Scenario: Clicking a shape seeds the options Leaflet.draw's edit hooks need.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is rendered
+        Then: The click handler seeds ``layer.options.original`` and
+              ``layer.options.editing`` before ``editing.enable()`` — the edit
+              toolbar normally sets these in ``_enableLayerEdit``; enabling
+              editing directly without them makes Leaflet.draw's ``addHooks``
+              throw on ``options.editing.className`` and no vertex handles
+              appear (SVG renderer).
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "layer.options.original = L.extend({}, layer.options)" in html
+        assert "layer.options.editing = {}" in html
+
     # --- 23c. edit=False omits click-to-edit ---
 
     def test_edit_false_omits_click_to_edit(self) -> None:
