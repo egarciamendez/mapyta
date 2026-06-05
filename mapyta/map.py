@@ -628,7 +628,10 @@ class Map:
           Leaflet popup (``ddConfirmDelete``) with Delete/Cancel buttons;
           confirming calls ``ddDeleteLine`` which removes that single shape. A
           DOM popup is used rather than ``window.confirm()`` because the latter
-          is silently dropped inside sandboxed iframe embeds.
+          is silently dropped inside sandboxed iframe embeds. As a shortcut,
+          pressing the keyboard **Delete** key removes the shape currently being
+          edited immediately, without the confirmation popup (ignored while a
+          form field is focused).
 
         Only emitted when ``edit`` is enabled; if the caller turned edit
         controls off, clicking a shape stays inert and no trashbin appears.
@@ -672,6 +675,10 @@ class Map:
             f"    var ddDeleteMsg = {confirm_msg_js};\n"
             f"    var ddDeleteYes = {confirm_yes_js};\n"
             f"    var ddDeleteNo = {confirm_no_js};\n"
+            # Most recently focused (clicked-to-edit) layer; target of the
+            # keyboard Delete shortcut. Cleared when editing stops or it is
+            # deleted.
+            "    var ddActiveLayer = null;\n"
             # Last vertex of a shape, or null for layers we don't support
             # (markers have no getLatLngs; polygons/rectangles nest one ring).
             "    function ddLastVertex(layer) {\n"
@@ -732,6 +739,7 @@ class Map:
             "        if (layer.editing && layer.editing.enabled()) { layer.editing.disable(); }\n"
             "        ddRemoveTrash(layer);\n"
             "        drawnItems.removeLayer(layer);\n"
+            "        if (ddActiveLayer === layer) { ddActiveLayer = null; }\n"
             "    }\n"
             "    function ddEnableClickEdit(layer) {\n"
             "        if (!layer || !layer.editing) return;\n"
@@ -745,6 +753,7 @@ class Map:
             "                layer.editing.enable();\n"
             "                ddAddTrash(layer);\n"
             "            }\n"
+            "            ddActiveLayer = layer;\n"
             "        });\n"
             "    }\n"
             "    drawnItems.eachLayer(ddEnableClickEdit);\n"
@@ -756,6 +765,19 @@ class Map:
             "                ddRemoveTrash(layer);\n"
             "            }\n"
             "        });\n"
+            "        ddActiveLayer = null;\n"
+            "    });\n"
+            # Keyboard shortcut: pressing Delete while a shape is being edited
+            # removes it immediately, bypassing the trashbin's confirmation
+            # popup. Ignored while typing in a form field. Other interactions
+            # (click-to-edit, trashbin + confirm) are unaffected.
+            "    document.addEventListener('keydown', function(e) {\n"
+            "        if (e.key !== 'Delete') return;\n"
+            "        var t = e.target;\n"
+            "        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;\n"
+            "        if (ddActiveLayer && ddActiveLayer.editing && ddActiveLayer.editing.enabled()) {\n"
+            "            ddDeleteLine(ddActiveLayer);\n"
+            "        }\n"
             "    });\n"
             "\n"
         )

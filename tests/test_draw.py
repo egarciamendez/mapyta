@@ -472,6 +472,49 @@ class TestEnableDraw:
         assert "ddConfirmDelete" not in html
         assert "ddDeleteLine" not in html
 
+    # --- 23h. Delete-key shortcut ---
+
+    def test_edit_enabled_binds_delete_key_shortcut(self, tmp_path: Path) -> None:
+        """
+        Scenario: Pressing Delete removes the shape being edited, no popup.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is saved to a file
+        Then: A keydown handler keyed on the Delete key calls ddDeleteLine on
+              the active layer, bypassing the confirmation popup
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+        out = tmp_path / "delete_key_map.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert "keydown" in html
+        assert "e.key !== 'Delete'" in html
+        assert "ddDeleteLine(ddActiveLayer)" in html
+
+    # --- 23i. Delete-key shortcut omitted when edit off ---
+
+    def test_edit_false_omits_delete_key_shortcut(self) -> None:
+        """
+        Scenario: With editing off, the Delete-key shortcut is not wired.
+
+        Given: A map with drawing enabled and edit=False
+        When: HTML is rendered
+        Then: No keydown handler / active-layer tracking is injected
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=False)
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddActiveLayer" not in html
+
     # --- 23g. Custom delete labels ---
 
     def test_custom_delete_labels(self) -> None:
