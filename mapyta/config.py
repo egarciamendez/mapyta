@@ -173,6 +173,11 @@ class MapConfig:
         Add minimap inset.
     measure_control : bool
         Add measure tool.
+    home_button : bool
+        Add a reset-view button (⌂) that returns the map to its opening
+        center and zoom — the explicit ``center`` and ``zoom_start`` when
+        given, otherwise the auto-fitted data bounds. Rendered at the
+        top-right, above the measure control when both are enabled.
     mouse_position : bool
         Show cursor coordinates.
     mouse_position_crs : str | None
@@ -193,6 +198,7 @@ class MapConfig:
     fullscreen: bool = False
     minimap: bool = False
     measure_control: bool = False
+    home_button: bool = False
     mouse_position: bool = True
     mouse_position_crs: str | None = None
 

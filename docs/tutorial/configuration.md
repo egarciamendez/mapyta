@@ -39,6 +39,7 @@ print(m.to_html())  # markdown-exec: hide
 | `fullscreen`      | `False`              | Add fullscreen button                                                                                                                   |
 | `minimap`         | `False`              | Add inset minimap                                                                                                                       |
 | `measure_control` | `False`              | Add distance/area measurement tool                                                                                                      |
+| `home_button`     | `False`              | Add a ⌂ reset-view button (top-right, above the measure control) that returns the map to its opening center/zoom                        |
 | `mouse_position`  | `True`               | Show cursor coordinates                                                                                                                 |
 | `mouse_position_crs` | `None`            | CRS for the cursor readout, e.g. `"EPSG:28992"` for RD New. `None` shows WGS84 lat/lon. Ignored when `mouse_position` is `False`.       |
 
@@ -132,7 +133,8 @@ m.add_layer_control(collapsed=False)
 ## Reset-view button
 
 A map opens at a fixed view: either the `center` and `zoom_start` you pass, or the bounds Mapyta auto-fits to your
-data. Once the user pans and zooms away, `add_home_button()` gives them a one-click way back to that opening view.
+data. Once the user pans and zooms away, set `home_button=True` to give them a one-click ⌂ button back to that opening
+view.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
@@ -141,18 +143,17 @@ from mapyta import Map, MapConfig
 m = Map(
     center=(52.090, 5.121),
     title="Reset view",
-    config=MapConfig(zoom_start=14),
+    config=MapConfig(zoom_start=14, home_button=True, measure_control=True),
 )
 m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Dom Tower**")
-m.add_home_button(position="topleft")
 
 m.to_html("home_button.html")
 print(m.to_html())  # markdown-exec: hide
 ```
 
-The ⌂ button captures the opening view in the browser after the map loads, so a single button works whether the view
-came from an explicit `center` or from auto-fitted data bounds. Clicking it restores that center and zoom. Place it with
-`position` (`"topleft"`, `"topright"`, `"bottomleft"`, `"bottomright"`) and set the hover tooltip with `title`.
+The opening view is captured in the browser after the map loads, so a single button works whether the view came from an
+explicit `center` or from auto-fitted data bounds. Clicking ⌂ restores that center and zoom. The button renders at the
+top-right, above the measure control when both are enabled.
 
 ## Cursor coordinates in a projected CRS
 

@@ -35,6 +35,7 @@ import branca.colormap as cm
 import folium
 import folium.features
 import folium.plugins
+from branca.element import MacroElement, Template
 from shapely.geometry import (
     LinearRing,
     LineString,
@@ -70,6 +71,56 @@ from mapyta.tiles import TILE_PROVIDERS
 LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
 LEAFLET_DRAW_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
 VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "circle"})
+
+
+class _HomeButtonControl(MacroElement):
+    """A reset-view button rendered in the map's main script block.
+
+    Unlike a post-construction injected ``<script>``, this control's
+    ``addTo`` runs inline with Folium's map setup. Adding it to the map
+    *before* the other plugin controls means Leaflet stacks it on top of
+    its corner (e.g. above the measure control), with no DOM reordering.
+
+    The opening view is captured on ``DOMContentLoaded`` — after Folium's
+    synchronous ``fitBounds`` / ``setView`` has run — and stashed on the map
+    as ``_mapytaHome``, so a single button restores the correct view whether
+    it came from an explicit ``center`` or from auto-fitted data bounds.
+    """
+
+    _template = Template(
+        "{% macro script(this, kwargs) %}\n"
+        "    var {{ this.get_name() }} = L.control({position: '{{ this.position }}'});\n"
+        "    {{ this.get_name() }}.onAdd = function() {\n"
+        "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+        "        var btn = L.DomUtil.create('a', '', div);\n"
+        "        btn.href = '#';\n"
+        "        btn.title = '{{ this.title }}';\n"
+        "        btn.innerHTML = '\\u2302';\n"
+        "        btn.style.cssText = 'font-size:18px;text-align:center;line-height:26px;cursor:pointer;';\n"
+        "        btn.onclick = function(e) {\n"
+        "            e.preventDefault();\n"
+        "            e.stopPropagation();\n"
+        "            var home = {{ this._parent.get_name() }}._mapytaHome;\n"
+        "            if (home) { {{ this._parent.get_name() }}.setView(home.center, home.zoom); }\n"
+        "        };\n"
+        "        L.DomEvent.disableClickPropagation(div);\n"
+        "        return div;\n"
+        "    };\n"
+        "    {{ this.get_name() }}.addTo({{ this._parent.get_name() }});\n"
+        "    document.addEventListener('DOMContentLoaded', function() {\n"
+        "        {{ this._parent.get_name() }}._mapytaHome = {\n"
+        "            center: {{ this._parent.get_name() }}.getCenter(),\n"
+        "            zoom: {{ this._parent.get_name() }}.getZoom()\n"
+        "        };\n"
+        "    });\n"
+        "{% endmacro %}"
+    )
+
+    def __init__(self, position: str = "topright", title: str = "Reset view") -> None:
+        super().__init__()
+        self._name = "HomeButtonControl"
+        self.position = position
+        self.title = title
 
 
 class Map:
@@ -117,8 +168,6 @@ class Map:
         self._geojson_features: list[dict] = []
         self._export_button_config: dict[str, Any] | None = None
         self._export_button_injected: bool = False
-        self._home_button_config: dict[str, Any] | None = None
-        self._home_button_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -222,6 +271,10 @@ class Map:
             fmap.get_root().html.add_child(folium.Element(title_html))  # ty: ignore[unresolved-attribute]
 
         # Optional plugins
+        # Added first so its control sits at the top of its corner — Leaflet stacks
+        # same-corner controls in add order, so this lands above the measure control.
+        if cfg.home_button:
+            _HomeButtonControl(position="topright", title="Reset view").add_to(fmap)
         if cfg.fullscreen:
             folium.plugins.Fullscreen().add_to(fmap)
         if cfg.minimap:
@@ -2373,16 +2426,13 @@ class Map:
         if self._export_button_config and not self._export_button_injected:
             self._inject_export_button()
             self._export_button_injected = True
-        if self._home_button_config and not self._home_button_injected:
-            self._inject_home_button()
-            self._home_button_injected = True
 
     def _get_html(self) -> str:
         """Render map to an embeddable HTML string (Jupyter/inline)."""
         self._ensure_rendered()
         return self._map._repr_html_()
 
-    def _get_standalone_html(self) -> str:
+    def get_standalone_html(self) -> str:
         """Render map to a full standalone HTML document."""
         self._ensure_rendered()
         return self._map.get_root().render()
@@ -2414,7 +2464,7 @@ class Map:
         if path is None:
             return self._get_html()
         out = Path(path)
-        out.write_text(self._get_standalone_html(), encoding="utf-8")
+        out.write_text(self.get_standalone_html(), encoding="utf-8")
         if open_in_browser:
             webbrowser.open(out.resolve().as_uri())
         return out
@@ -2515,72 +2565,6 @@ class Map:
             "        return div;\n"
             "    };\n"
             "    exportControl.addTo(map);\n"
-            "});\n"
-            "</script>\n"
-        )
-        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
-
-    def add_home_button(self, position: str = "topleft", title: str = "Reset view") -> Self:
-        """Add a button that returns the map to its initial center and zoom.
-
-        The "home" view is the map's opening state — the explicit ``center``
-        and ``zoom_start`` when provided, or the auto-fitted data bounds
-        otherwise. It is captured in the browser after the map loads, so a
-        single button works for both cases.
-
-        Parameters
-        ----------
-        position : str
-            Leaflet control position: ``"topleft"``, ``"topright"``,
-            ``"bottomleft"``, or ``"bottomright"``.
-        title : str
-            Tooltip text shown on hover.
-
-        Returns
-        -------
-        Map
-        """
-        self._home_button_config = {"position": position, "title": title}
-        return self
-
-    def _inject_home_button(self) -> None:
-        """Inject the reset-view button as a Leaflet control.
-
-        The initial view is read with ``getCenter()`` / ``getZoom()`` inside a
-        ``DOMContentLoaded`` handler. Folium renders the map's ``fitBounds`` /
-        ``setView`` call in a ``<script>`` that runs synchronously at parse
-        time, before that event fires, so the captured view already reflects
-        the settled opening state regardless of how it was set.
-        """
-        cfg = self._home_button_config
-        assert cfg is not None
-        map_var = self._map.get_name()
-        position = cfg["position"]
-        title = cfg["title"]
-
-        script = (
-            "<script>\n"
-            "document.addEventListener('DOMContentLoaded', function() {\n"
-            f"    var map = window['{map_var}'];\n"
-            "    if (!map) return;\n"
-            "    var _home = {center: map.getCenter(), zoom: map.getZoom()};\n"
-            f"    var homeControl = L.control({{position: '{position}'}});\n"
-            "    homeControl.onAdd = function() {\n"
-            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            "        var btn = L.DomUtil.create('a', '', div);\n"
-            "        btn.href = '#';\n"
-            f"        btn.title = '{title}';\n"
-            "        btn.innerHTML = '\\u2302';\n"
-            "        btn.style.cssText = 'font-size:18px;text-align:center;line-height:26px;cursor:pointer;';\n"
-            "        btn.onclick = function(e) {\n"
-            "            e.preventDefault();\n"
-            "            e.stopPropagation();\n"
-            "            map.setView(_home.center, _home.zoom);\n"
-            "        };\n"
-            "        L.DomEvent.disableClickPropagation(div);\n"
-            "        return div;\n"
-            "    };\n"
-            "    homeControl.addTo(map);\n"
             "});\n"
             "</script>\n"
         )

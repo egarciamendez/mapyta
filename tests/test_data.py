@@ -790,95 +790,94 @@ class TestExportButton:
 
 
 class TestHomeButton:
-    """Scenarios for add_home_button and _inject_home_button."""
+    """Scenarios for the ``MapConfig.home_button`` reset-view control."""
 
-    def test_add_home_button_returns_self(self) -> None:
+    def test_home_button_renders_when_enabled(self) -> None:
         """
-        Scenario: add_home_button returns the map for chaining.
+        Scenario: Enabling home_button injects the reset-view control.
 
-        Given: An empty map
-        When: add_home_button is called
-        Then: The map is returned and _home_button_config is set
+        Given: A map configured with home_button=True
+        When: the standalone HTML is rendered
+        Then: The control is created at top-right, captures the opening view,
+            and restores it on click
         """
         # Arrange - Given
-        m = Map()
+        m = Map(config=MapConfig(home_button=True))
+        m.add_point(Point(4.9, 52.37))
 
         # Act - When
-        result = m.add_home_button()
+        html = m.get_standalone_html()
 
         # Assert - Then
-        assert result is m
-        assert m._home_button_config is not None
+        assert "home_button_control_" in html
+        assert "L.control({position: 'topright'})" in html
+        assert "_mapytaHome" in html
+        assert ".getCenter()" in html
+        assert "setView(home.center, home.zoom)" in html
 
-    def test_home_button_script_injected_on_render(self) -> None:
+    def test_home_button_absent_when_disabled(self) -> None:
         """
-        Scenario: Rendering a map with add_home_button injects the reset-view script.
+        Scenario: The control is not present unless explicitly enabled.
 
-        Given: A map with a point and a home button
-        When: to_html is called
-        Then: The rendered HTML captures the initial view and restores it on click
+        Given: A map with default config (home_button defaults to False)
+        When: the standalone HTML is rendered
+        Then: No reset-view control is injected
         """
         # Arrange - Given
         m = Map()
         m.add_point(Point(4.9, 52.37))
-        m.add_home_button(title="Reset view")
 
         # Act - When
-        html = m.to_html()
+        html = m.get_standalone_html()
 
         # Assert - Then
-        assert "homeControl" in html
-        assert "map.getCenter()" in html
-        assert "map.setView(_home.center, _home.zoom)" in html
-        assert "Reset view" in html
+        assert "_mapytaHome" not in html
+        assert "home_button_control_" not in html
 
-    def test_home_button_position_is_applied(self) -> None:
+    def test_home_button_added_before_measure_control(self) -> None:
         """
-        Scenario: The configured control position reaches the injected script.
+        Scenario: The home button stacks above the measure control.
 
-        Given: A map with a home button at bottomright
+        Given: A map with both the measure control and the home button enabled
         When: the standalone HTML is rendered
-        Then: The control is created with that position
+        Then: The home control is added to the map before the measure control,
+            so Leaflet stacks it on top of the shared top-right corner
 
         Notes
         -----
-        Asserts against the standalone render rather than the embeddable
-        ``to_html()`` output: the latter wraps the whole document in an
-        ``<iframe srcdoc>`` attribute, so single quotes are HTML-escaped
-        (``&#x27;``) and decoded by the browser only when the iframe loads.
-        The standalone document carries the live, raw-quoted script.
+        Leaflet stacks same-corner controls in add order. Asserting the home
+        control is created before the measure control in the rendered script is
+        a direct, browser-free check of that ordering.
         """
         # Arrange - Given
-        m = Map()
+        m = Map(config=MapConfig(measure_control=True, home_button=True))
         m.add_point(Point(4.9, 52.37))
-        m.add_home_button(position="bottomright")
 
         # Act - When
-        html = m._get_standalone_html()
+        html = m.get_standalone_html()
 
         # Assert - Then
-        assert "L.control({position: 'bottomright'})" in html
+        assert html.index("home_button_control_") < html.index("new L.Control.Measure")
 
-    def test_home_button_not_injected_twice(self) -> None:
+    def test_home_button_rendered_once_on_re_render(self) -> None:
         """
-        Scenario: Calling to_html twice does not inject the button script twice.
+        Scenario: Rendering twice does not duplicate the control.
 
-        Given: A map with a home button
-        When: to_html is called twice
-        Then: The script appears exactly once each render
+        Given: A map with the home button enabled
+        When: the standalone HTML is rendered twice
+        Then: The control's addTo appears exactly once each render
         """
         # Arrange - Given
-        m = Map()
+        m = Map(config=MapConfig(home_button=True))
         m.add_point(Point(4.9, 52.37))
-        m.add_home_button()
 
         # Act - When
-        html1 = m.to_html()
-        html2 = m.to_html()
+        html1 = m.get_standalone_html()
+        html2 = m.get_standalone_html()
 
-        # Assert - Then — script injected once, same count on re-render
-        assert html1.count("homeControl.addTo") == 1
-        assert html2.count("homeControl.addTo") == 1
+        # Assert - Then
+        assert html1.count("_mapytaHome = {") == 1
+        assert html2.count("_mapytaHome = {") == 1
 
 
 # ===================================================================
