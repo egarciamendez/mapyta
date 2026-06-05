@@ -72,6 +72,22 @@ LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/le
 LEAFLET_DRAW_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
 VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "circle"})
 
+# Normalise the size of every corner control button. Leaflet renders the layer
+# and measure toggles at 36px (44px on touch), while the zoom, draw, home and
+# fullscreen buttons sit at 26px (30px on touch). Shrink the two odd ones out so
+# every control button matches. ``!important`` is required because the plugin
+# rules ship from CDNs at equal-or-higher specificity.
+CONTROL_SIZE_CSS = (
+    "<style>"
+    ".leaflet-control-layers-toggle,"
+    ".leaflet-control-measure .leaflet-control-measure-toggle{"
+    "width:26px!important;height:26px!important;background-size:16px 16px!important;}"
+    ".leaflet-touch .leaflet-control-layers-toggle,"
+    ".leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{"
+    "width:30px!important;height:30px!important;background-size:18px 18px!important;}"
+    "</style>"
+)
+
 
 class _HomeButtonControl(MacroElement):
     """A reset-view button rendered in the map's main script block.
@@ -258,6 +274,7 @@ class Map:
             ).add_to(fmap)
 
         fmap.get_root().header.add_child(folium.Element('<meta name="referrer" content="origin">'))  # ty: ignore[unresolved-attribute]
+        fmap.get_root().header.add_child(folium.Element(CONTROL_SIZE_CSS))  # ty: ignore[unresolved-attribute]
 
         # Title overlay
         if self._title:
