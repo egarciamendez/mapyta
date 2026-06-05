@@ -335,6 +335,46 @@ class TestEnableDraw:
         # Assert - Then
         assert '"remove": false' in html
 
+    # --- 23b. edit=True binds click-to-edit ---
+
+    def test_edit_enabled_binds_click_to_edit(self) -> None:
+        """
+        Scenario: With editing on, clicking a drawn shape edits it in place.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is rendered
+        Then: The click-to-edit binding that enables per-layer vertex editing
+              is present in the script
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddEnableClickEdit" in html
+        assert "layer.editing.enable()" in html
+
+    # --- 23c. edit=False omits click-to-edit ---
+
+    def test_edit_false_omits_click_to_edit(self) -> None:
+        """
+        Scenario: With editing off, clicking a drawn shape stays inert.
+
+        Given: A map with drawing enabled and edit=False
+        When: HTML is rendered
+        Then: No click-to-edit binding is injected
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=False)
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddEnableClickEdit" not in html
+
     # --- 24. Custom draw_style ---
 
     def test_custom_draw_style(self) -> None:

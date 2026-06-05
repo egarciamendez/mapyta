@@ -239,7 +239,9 @@ class DrawConfig:
     draw_style : dict[str, Any] | None
         ``shapeOptions`` override for drawn shapes.
     edit : bool
-        Whether edit/delete controls are active.
+        Whether edit/delete controls are active. When ``True``, clicking a
+        drawn shape also makes its vertices editable in place (click empty
+        map space to stop editing).
     """
 
     tools: list[DrawTool] = field(default_factory=lambda: ["polyline", "polygon", "marker"])

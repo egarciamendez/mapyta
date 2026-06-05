@@ -23,6 +23,8 @@ Use the toolbar in the **top-left corner** of the map to draw:
 - Click on the map to add points; double-click to finish a shape
 - Click **Submit** (bottom-right) to download a GeoJSON file with all drawn shapes
 
+When editing is enabled (the default, `edit=True`), **click any drawn shape to edit its vertices in place** — drag the vertices to reshape it, drag a midpoint marker to add one. Click empty map space to stop editing. This is a shortcut for the toolbar's pencil button, which instead toggles editing for *all* shapes at once.
+
 ## Custom tools
 
 Pick only the tools you need:

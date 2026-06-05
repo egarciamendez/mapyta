@@ -455,7 +455,9 @@ class Map:
         draw_style : dict[str, Any] | None
             ``shapeOptions`` override for drawn shapes.
         edit : bool
-            Whether edit/delete controls are active.
+            Whether edit/delete controls are active. When ``True``, clicking a
+            drawn shape also makes its vertices editable in place (click empty
+            map space to stop editing).
 
         Returns
         -------
@@ -532,6 +534,7 @@ class Map:
         assert cfg is not None
 
         callback_js = self._build_draw_callback_js()
+        click_edit_js = self._build_click_to_edit_js() if cfg.edit else ""
 
         return (
             "<script>\n"
@@ -540,6 +543,7 @@ class Map:
             f"    var drawnItems = window['{drawn_items_var}'];\n"
             "    if (!map || !drawnItems) return;\n"
             "\n"
+            f"{click_edit_js}"
             "    var submitControl = L.control({position: 'bottomright'});\n"
             "    submitControl.onAdd = function() {\n"
             "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
@@ -561,6 +565,42 @@ class Map:
             "    submitControl.addTo(map);\n"
             "});\n"
             "</script>"
+        )
+
+    @staticmethod
+    def _build_click_to_edit_js() -> str:
+        """Build the click-a-shape-to-edit-its-vertices ``<script>`` fragment.
+
+        Leaflet.draw only exposes vertex editing through the toolbar pencil,
+        which toggles *every* shape at once and needs an explicit Save. Drawn
+        shapes are interactive (the cursor turns into a pointer on hover), so
+        users reasonably expect clicking one to edit it — but nothing is bound
+        to that click by default. This fragment binds a per-layer ``click``
+        handler that calls the layer's Leaflet.draw ``editing.enable()`` so a
+        single shape becomes editable in place (drag vertices, add midpoints);
+        clicking empty map space disables editing again. It is wired to every
+        layer already in ``drawnItems`` and, via ``layeradd``, to any added
+        later — whether drawn by the user or pre-seeded programmatically.
+
+        Only emitted when ``edit`` is enabled; if the caller turned edit
+        controls off, clicking a shape stays inert.
+        """
+        return (
+            "    function ddEnableClickEdit(layer) {\n"
+            "        if (!layer || !layer.editing) return;\n"
+            "        layer.on('click', function(e) {\n"
+            "            L.DomEvent.stopPropagation(e);\n"
+            "            if (!layer.editing.enabled()) { layer.editing.enable(); }\n"
+            "        });\n"
+            "    }\n"
+            "    drawnItems.eachLayer(ddEnableClickEdit);\n"
+            "    drawnItems.on('layeradd', function(e) { ddEnableClickEdit(e.layer); });\n"
+            "    map.on('click', function() {\n"
+            "        drawnItems.eachLayer(function(layer) {\n"
+            "            if (layer.editing && layer.editing.enabled()) { layer.editing.disable(); }\n"
+            "        });\n"
+            "    });\n"
+            "\n"
         )
 
     def _build_draw_callback_js(self) -> str:
