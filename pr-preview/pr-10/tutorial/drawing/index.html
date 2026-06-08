@@ -1765,7 +1765,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_10a66b71951c017ce83b5a360f139fa8 {
+                #map_00fbd7017e0c822a701127a38939939b {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1808,12 +1808,12 @@
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Drawing demo&lt;/div&gt;
     &lt;script&gt;
 document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
-    var map = window[&#x27;map_10a66b71951c017ce83b5a360f139fa8&#x27;];
-    var drawnItems = window[&#x27;drawnItems_draw_control_7b910b989ae5d9c27fe43f4d8b53d116&#x27;];
+    var map = window[&#x27;map_00fbd7017e0c822a701127a38939939b&#x27;];
+    var drawnItems = window[&#x27;drawnItems_draw_control_1da4d03a8f883ba6b733b3fc19886094&#x27;];
     if (!map || !drawnItems) return;
 
     var ddTrashHtml = &quot;&lt;div style=\&quot;background:#fff;border:1px solid #ccc;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;\&quot;&gt;&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;14&#x27; height=&#x27;14&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;currentColor&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;polyline points=&#x27;3 6 5 6 21 6&#x27;&gt;&lt;/polyline&gt;&lt;path d=&#x27;M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2&#x27;&gt;&lt;/path&gt;&lt;line x1=&#x27;10&#x27; y1=&#x27;11&#x27; x2=&#x27;10&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;line x1=&#x27;14&#x27; y1=&#x27;11&#x27; x2=&#x27;14&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;/svg&gt;&lt;/div&gt;&quot;;
-    var ddDeleteMsg = &quot;Delete this line?&quot;;
+    var ddDeleteMsg = &quot;Delete this shape?&quot;;
     var ddDeleteYes = &quot;Delete&quot;;
     var ddDeleteNo = &quot;Cancel&quot;;
     var ddActiveLayer = null;
@@ -1938,7 +1938,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 });
 &lt;/script&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_10a66b71951c017ce83b5a360f139fa8&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_00fbd7017e0c822a701127a38939939b&quot; &gt;&lt;/div&gt;
         
     
             
@@ -1947,8 +1947,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 &lt;script&gt;
     
     
-            var map_10a66b71951c017ce83b5a360f139fa8 = L.map(
-                &quot;map_10a66b71951c017ce83b5a360f139fa8&quot;,
+            var map_00fbd7017e0c822a701127a38939939b = L.map(
+                &quot;map_00fbd7017e0c822a701127a38939939b&quot;,
                 {
                     center: [52.0907, 5.1214],
                     crs: L.CRS.EPSG3857,
@@ -1960,13 +1960,13 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 
                 }
             );
-            L.control.scale().addTo(map_10a66b71951c017ce83b5a360f139fa8);
+            L.control.scale().addTo(map_00fbd7017e0c822a701127a38939939b);
 
             
 
         
     
-            var tile_layer_4979df45b316b2a218b951d78da7bd9a = L.tileLayer(
+            var tile_layer_d735a90e5bd01beed53f997c2a8f42d7 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1983,10 +1983,10 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             );
         
     
-            tile_layer_4979df45b316b2a218b951d78da7bd9a.addTo(map_10a66b71951c017ce83b5a360f139fa8);
+            tile_layer_d735a90e5bd01beed53f997c2a8f42d7.addTo(map_00fbd7017e0c822a701127a38939939b);
         
     
-            var mouse_position_51434256bd6baf6a364e16461c370439 = new L.Control.MousePosition(
+            var mouse_position_14a950cbaa0d16823cdecba2c2265a82 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1996,11 +1996,11 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_51434256bd6baf6a364e16461c370439.options[&quot;latFormatter&quot;] =
+            mouse_position_14a950cbaa0d16823cdecba2c2265a82.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_51434256bd6baf6a364e16461c370439.options[&quot;lngFormatter&quot;] =
+            mouse_position_14a950cbaa0d16823cdecba2c2265a82.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_10a66b71951c017ce83b5a360f139fa8.addControl(mouse_position_51434256bd6baf6a364e16461c370439);
+            map_00fbd7017e0c822a701127a38939939b.addControl(mouse_position_14a950cbaa0d16823cdecba2c2265a82);
         
     
             var options = {
@@ -2009,29 +2009,29 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
               edit: {&quot;edit&quot;: false, &quot;remove&quot;: false},
             }
                 // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_7b910b989ae5d9c27fe43f4d8b53d116 =
+                var drawnItems_draw_control_1da4d03a8f883ba6b733b3fc19886094 =
                     new L.featureGroup().addTo(
-                        map_10a66b71951c017ce83b5a360f139fa8
+                        map_00fbd7017e0c822a701127a38939939b
                     );
 
-            options.edit.featureGroup = drawnItems_draw_control_7b910b989ae5d9c27fe43f4d8b53d116;
-            var draw_control_7b910b989ae5d9c27fe43f4d8b53d116 = new L.Control.Draw(
+            options.edit.featureGroup = drawnItems_draw_control_1da4d03a8f883ba6b733b3fc19886094;
+            var draw_control_1da4d03a8f883ba6b733b3fc19886094 = new L.Control.Draw(
                 options
-            ).addTo( map_10a66b71951c017ce83b5a360f139fa8 );
-            map_10a66b71951c017ce83b5a360f139fa8.on(L.Draw.Event.CREATED, function(e) {
+            ).addTo( map_00fbd7017e0c822a701127a38939939b );
+            map_00fbd7017e0c822a701127a38939939b.on(L.Draw.Event.CREATED, function(e) {
                 var layer = e.layer,
                     type = e.layerType;
                 var coords = JSON.stringify(layer.toGeoJSON());
-                drawnItems_draw_control_7b910b989ae5d9c27fe43f4d8b53d116.addLayer(layer);
+                drawnItems_draw_control_1da4d03a8f883ba6b733b3fc19886094.addLayer(layer);
             });
-            map_10a66b71951c017ce83b5a360f139fa8.on(&#x27;draw:created&#x27;, function(e) {
-                drawnItems_draw_control_7b910b989ae5d9c27fe43f4d8b53d116.addLayer(e.layer);
+            map_00fbd7017e0c822a701127a38939939b.on(&#x27;draw:created&#x27;, function(e) {
+                drawnItems_draw_control_1da4d03a8f883ba6b733b3fc19886094.addLayer(e.layer);
             });
 
             
         
     
-            tile_layer_4979df45b316b2a218b951d78da7bd9a.addTo(map_10a66b71951c017ce83b5a360f139fa8);
+            tile_layer_d735a90e5bd01beed53f997c2a8f42d7.addTo(map_00fbd7017e0c822a701127a38939939b);
         
 &lt;/script&gt;
 &lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
@@ -2086,7 +2086,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_18334f7969186b141e26014b7188c91b {
+                #map_be65279b512d39f0d765371e82d3bf85 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2129,12 +2129,12 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Polygons only&lt;/div&gt;
     &lt;script&gt;
 document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
-    var map = window[&#x27;map_18334f7969186b141e26014b7188c91b&#x27;];
-    var drawnItems = window[&#x27;drawnItems_draw_control_52109d2b0f74e181fe4fe385b30c61f9&#x27;];
+    var map = window[&#x27;map_be65279b512d39f0d765371e82d3bf85&#x27;];
+    var drawnItems = window[&#x27;drawnItems_draw_control_e213dfe1d6634c63a4400b283bafdd37&#x27;];
     if (!map || !drawnItems) return;
 
     var ddTrashHtml = &quot;&lt;div style=\&quot;background:#fff;border:1px solid #ccc;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;\&quot;&gt;&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;14&#x27; height=&#x27;14&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;currentColor&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;polyline points=&#x27;3 6 5 6 21 6&#x27;&gt;&lt;/polyline&gt;&lt;path d=&#x27;M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2&#x27;&gt;&lt;/path&gt;&lt;line x1=&#x27;10&#x27; y1=&#x27;11&#x27; x2=&#x27;10&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;line x1=&#x27;14&#x27; y1=&#x27;11&#x27; x2=&#x27;14&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;/svg&gt;&lt;/div&gt;&quot;;
-    var ddDeleteMsg = &quot;Delete this line?&quot;;
+    var ddDeleteMsg = &quot;Delete this shape?&quot;;
     var ddDeleteYes = &quot;Delete&quot;;
     var ddDeleteNo = &quot;Cancel&quot;;
     var ddActiveLayer = null;
@@ -2259,7 +2259,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 });
 &lt;/script&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_18334f7969186b141e26014b7188c91b&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_be65279b512d39f0d765371e82d3bf85&quot; &gt;&lt;/div&gt;
         
     
             
@@ -2268,8 +2268,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 &lt;script&gt;
     
     
-            var map_18334f7969186b141e26014b7188c91b = L.map(
-                &quot;map_18334f7969186b141e26014b7188c91b&quot;,
+            var map_be65279b512d39f0d765371e82d3bf85 = L.map(
+                &quot;map_be65279b512d39f0d765371e82d3bf85&quot;,
                 {
                     center: [52.0907, 5.1214],
                     crs: L.CRS.EPSG3857,
@@ -2281,13 +2281,13 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 
                 }
             );
-            L.control.scale().addTo(map_18334f7969186b141e26014b7188c91b);
+            L.control.scale().addTo(map_be65279b512d39f0d765371e82d3bf85);
 
             
 
         
     
-            var tile_layer_c9b976ed086437ac246dbb265cbba0e7 = L.tileLayer(
+            var tile_layer_f822338f19f48529bb2dc687de95fda1 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2304,10 +2304,10 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             );
         
     
-            tile_layer_c9b976ed086437ac246dbb265cbba0e7.addTo(map_18334f7969186b141e26014b7188c91b);
+            tile_layer_f822338f19f48529bb2dc687de95fda1.addTo(map_be65279b512d39f0d765371e82d3bf85);
         
     
-            var mouse_position_c7382e11e153fc91461fef3e07a75d43 = new L.Control.MousePosition(
+            var mouse_position_58b8a2d4fe9e080e06f1b32fbb045cb4 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2317,11 +2317,11 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_c7382e11e153fc91461fef3e07a75d43.options[&quot;latFormatter&quot;] =
+            mouse_position_58b8a2d4fe9e080e06f1b32fbb045cb4.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_c7382e11e153fc91461fef3e07a75d43.options[&quot;lngFormatter&quot;] =
+            mouse_position_58b8a2d4fe9e080e06f1b32fbb045cb4.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_18334f7969186b141e26014b7188c91b.addControl(mouse_position_c7382e11e153fc91461fef3e07a75d43);
+            map_be65279b512d39f0d765371e82d3bf85.addControl(mouse_position_58b8a2d4fe9e080e06f1b32fbb045cb4);
         
     
             var options = {
@@ -2330,23 +2330,23 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
               edit: {&quot;edit&quot;: false, &quot;remove&quot;: false},
             }
                 // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_52109d2b0f74e181fe4fe385b30c61f9 =
+                var drawnItems_draw_control_e213dfe1d6634c63a4400b283bafdd37 =
                     new L.featureGroup().addTo(
-                        map_18334f7969186b141e26014b7188c91b
+                        map_be65279b512d39f0d765371e82d3bf85
                     );
 
-            options.edit.featureGroup = drawnItems_draw_control_52109d2b0f74e181fe4fe385b30c61f9;
-            var draw_control_52109d2b0f74e181fe4fe385b30c61f9 = new L.Control.Draw(
+            options.edit.featureGroup = drawnItems_draw_control_e213dfe1d6634c63a4400b283bafdd37;
+            var draw_control_e213dfe1d6634c63a4400b283bafdd37 = new L.Control.Draw(
                 options
-            ).addTo( map_18334f7969186b141e26014b7188c91b );
-            map_18334f7969186b141e26014b7188c91b.on(L.Draw.Event.CREATED, function(e) {
+            ).addTo( map_be65279b512d39f0d765371e82d3bf85 );
+            map_be65279b512d39f0d765371e82d3bf85.on(L.Draw.Event.CREATED, function(e) {
                 var layer = e.layer,
                     type = e.layerType;
                 var coords = JSON.stringify(layer.toGeoJSON());
-                drawnItems_draw_control_52109d2b0f74e181fe4fe385b30c61f9.addLayer(layer);
+                drawnItems_draw_control_e213dfe1d6634c63a4400b283bafdd37.addLayer(layer);
             });
-            map_18334f7969186b141e26014b7188c91b.on(&#x27;draw:created&#x27;, function(e) {
-                drawnItems_draw_control_52109d2b0f74e181fe4fe385b30c61f9.addLayer(e.layer);
+            map_be65279b512d39f0d765371e82d3bf85.on(&#x27;draw:created&#x27;, function(e) {
+                drawnItems_draw_control_e213dfe1d6634c63a4400b283bafdd37.addLayer(e.layer);
             });
 
             
@@ -2396,7 +2396,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_0a1487056769745a86720c2cddae206f {
+                #map_2765c32668c353b768c24312621b0ad0 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2439,12 +2439,12 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Custom callback, check console (F12)&lt;/div&gt;
     &lt;script&gt;
 document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
-    var map = window[&#x27;map_0a1487056769745a86720c2cddae206f&#x27;];
-    var drawnItems = window[&#x27;drawnItems_draw_control_57374f57c0a7f910e577bb888064507e&#x27;];
+    var map = window[&#x27;map_2765c32668c353b768c24312621b0ad0&#x27;];
+    var drawnItems = window[&#x27;drawnItems_draw_control_2947695bdd304ce35b5fb8e2c233cc69&#x27;];
     if (!map || !drawnItems) return;
 
     var ddTrashHtml = &quot;&lt;div style=\&quot;background:#fff;border:1px solid #ccc;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;\&quot;&gt;&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;14&#x27; height=&#x27;14&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;currentColor&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;polyline points=&#x27;3 6 5 6 21 6&#x27;&gt;&lt;/polyline&gt;&lt;path d=&#x27;M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2&#x27;&gt;&lt;/path&gt;&lt;line x1=&#x27;10&#x27; y1=&#x27;11&#x27; x2=&#x27;10&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;line x1=&#x27;14&#x27; y1=&#x27;11&#x27; x2=&#x27;14&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;/svg&gt;&lt;/div&gt;&quot;;
-    var ddDeleteMsg = &quot;Delete this line?&quot;;
+    var ddDeleteMsg = &quot;Delete this shape?&quot;;
     var ddDeleteYes = &quot;Delete&quot;;
     var ddDeleteNo = &quot;Cancel&quot;;
     var ddActiveLayer = null;
@@ -2565,7 +2565,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 });
 &lt;/script&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_0a1487056769745a86720c2cddae206f&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_2765c32668c353b768c24312621b0ad0&quot; &gt;&lt;/div&gt;
         
     
             
@@ -2574,8 +2574,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 &lt;script&gt;
     
     
-            var map_0a1487056769745a86720c2cddae206f = L.map(
-                &quot;map_0a1487056769745a86720c2cddae206f&quot;,
+            var map_2765c32668c353b768c24312621b0ad0 = L.map(
+                &quot;map_2765c32668c353b768c24312621b0ad0&quot;,
                 {
                     center: [52.0907, 5.1214],
                     crs: L.CRS.EPSG3857,
@@ -2587,13 +2587,13 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 
                 }
             );
-            L.control.scale().addTo(map_0a1487056769745a86720c2cddae206f);
+            L.control.scale().addTo(map_2765c32668c353b768c24312621b0ad0);
 
             
 
         
     
-            var tile_layer_af4c2d456031ccac807aff7932e81d18 = L.tileLayer(
+            var tile_layer_682091370a79704b8b4d9ede05ac97cc = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2610,10 +2610,10 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             );
         
     
-            tile_layer_af4c2d456031ccac807aff7932e81d18.addTo(map_0a1487056769745a86720c2cddae206f);
+            tile_layer_682091370a79704b8b4d9ede05ac97cc.addTo(map_2765c32668c353b768c24312621b0ad0);
         
     
-            var mouse_position_702fa41ce1df98f9b1cfca980adbd16b = new L.Control.MousePosition(
+            var mouse_position_a26346feb4170658b6f42421c1d689c3 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2623,11 +2623,11 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_702fa41ce1df98f9b1cfca980adbd16b.options[&quot;latFormatter&quot;] =
+            mouse_position_a26346feb4170658b6f42421c1d689c3.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_702fa41ce1df98f9b1cfca980adbd16b.options[&quot;lngFormatter&quot;] =
+            mouse_position_a26346feb4170658b6f42421c1d689c3.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_0a1487056769745a86720c2cddae206f.addControl(mouse_position_702fa41ce1df98f9b1cfca980adbd16b);
+            map_2765c32668c353b768c24312621b0ad0.addControl(mouse_position_a26346feb4170658b6f42421c1d689c3);
         
     
             var options = {
@@ -2636,23 +2636,23 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
               edit: {&quot;edit&quot;: false, &quot;remove&quot;: false},
             }
                 // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_57374f57c0a7f910e577bb888064507e =
+                var drawnItems_draw_control_2947695bdd304ce35b5fb8e2c233cc69 =
                     new L.featureGroup().addTo(
-                        map_0a1487056769745a86720c2cddae206f
+                        map_2765c32668c353b768c24312621b0ad0
                     );
 
-            options.edit.featureGroup = drawnItems_draw_control_57374f57c0a7f910e577bb888064507e;
-            var draw_control_57374f57c0a7f910e577bb888064507e = new L.Control.Draw(
+            options.edit.featureGroup = drawnItems_draw_control_2947695bdd304ce35b5fb8e2c233cc69;
+            var draw_control_2947695bdd304ce35b5fb8e2c233cc69 = new L.Control.Draw(
                 options
-            ).addTo( map_0a1487056769745a86720c2cddae206f );
-            map_0a1487056769745a86720c2cddae206f.on(L.Draw.Event.CREATED, function(e) {
+            ).addTo( map_2765c32668c353b768c24312621b0ad0 );
+            map_2765c32668c353b768c24312621b0ad0.on(L.Draw.Event.CREATED, function(e) {
                 var layer = e.layer,
                     type = e.layerType;
                 var coords = JSON.stringify(layer.toGeoJSON());
-                drawnItems_draw_control_57374f57c0a7f910e577bb888064507e.addLayer(layer);
+                drawnItems_draw_control_2947695bdd304ce35b5fb8e2c233cc69.addLayer(layer);
             });
-            map_0a1487056769745a86720c2cddae206f.on(&#x27;draw:created&#x27;, function(e) {
-                drawnItems_draw_control_57374f57c0a7f910e577bb888064507e.addLayer(e.layer);
+            map_2765c32668c353b768c24312621b0ad0.on(&#x27;draw:created&#x27;, function(e) {
+                drawnItems_draw_control_2947695bdd304ce35b5fb8e2c233cc69.addLayer(e.layer);
             });
 
             
@@ -2717,7 +2717,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 </tr>
 <tr>
 <td><code>delete_confirm_message</code></td>
-<td><code>"Delete this line?"</code></td>
+<td><code>"Delete this shape?"</code></td>
 <td>Text in the delete confirmation popup</td>
 </tr>
 <tr>
