@@ -789,6 +789,97 @@ class TestExportButton:
         assert html2.count("exportControl.addTo") == 1
 
 
+class TestHomeButton:
+    """Scenarios for the ``MapConfig.home_button`` reset-view control."""
+
+    def test_home_button_renders_when_enabled(self) -> None:
+        """
+        Scenario: Enabling home_button injects the reset-view control.
+
+        Given: A map configured with home_button=True
+        When: the standalone HTML is rendered
+        Then: The control is created at top-right, captures the opening view,
+            and restores it on click
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(home_button=True))
+        m.add_point(Point(4.9, 52.37))
+
+        # Act - When
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "home_button_control_" in html
+        assert 'L.control({position: "topright"})' in html
+        assert "_mapytaHome" in html
+        assert ".getCenter()" in html
+        assert "setView(home.center, home.zoom)" in html
+
+    def test_home_button_absent_when_disabled(self) -> None:
+        """
+        Scenario: The control is not present unless explicitly enabled.
+
+        Given: A map with default config (home_button defaults to False)
+        When: the standalone HTML is rendered
+        Then: No reset-view control is injected
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+
+        # Act - When
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "_mapytaHome" not in html
+        assert "home_button_control_" not in html
+
+    def test_home_button_added_before_measure_control(self) -> None:
+        """
+        Scenario: The home button stacks above the measure control.
+
+        Given: A map with both the measure control and the home button enabled
+        When: the standalone HTML is rendered
+        Then: The home control is added to the map before the measure control,
+            so Leaflet stacks it on top of the shared top-right corner
+
+        Notes
+        -----
+        Leaflet stacks same-corner controls in add order. Asserting the home
+        control is created before the measure control in the rendered script is
+        a direct, browser-free check of that ordering.
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(measure_control=True, home_button=True))
+        m.add_point(Point(4.9, 52.37))
+
+        # Act - When
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert html.index("home_button_control_") < html.index("new L.Control.Measure")
+
+    def test_home_button_rendered_once_on_re_render(self) -> None:
+        """
+        Scenario: Rendering twice does not duplicate the control.
+
+        Given: A map with the home button enabled
+        When: the standalone HTML is rendered twice
+        Then: The control's addTo appears exactly once each render
+        """
+        # Arrange - Given
+        m = Map(config=MapConfig(home_button=True))
+        m.add_point(Point(4.9, 52.37))
+
+        # Act - When
+        html1 = m.get_standalone_html()
+        html2 = m.get_standalone_html()
+
+        # Assert - Then
+        assert html1.count("_mapytaHome = {") == 1
+        assert html2.count("_mapytaHome = {") == 1
+
+
 # ===================================================================
 # Scenarios for heatmap layers.
 # ===================================================================

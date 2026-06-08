@@ -39,6 +39,7 @@ print(m.to_html())  # markdown-exec: hide
 | `fullscreen`      | `False`              | Add fullscreen button                                                                                                                   |
 | `minimap`         | `False`              | Add inset minimap                                                                                                                       |
 | `measure_control` | `False`              | Add distance/area measurement tool                                                                                                      |
+| `home_button`     | `False`              | Add a ⌂ reset-view button (top-right, above the measure control) that returns the map to its opening center/zoom                        |
 | `mouse_position`  | `True`               | Show cursor coordinates                                                                                                                 |
 | `mouse_position_crs` | `None`            | CRS for the cursor readout, e.g. `"EPSG:28992"` for RD New. `None` shows WGS84 lat/lon. Ignored when `mouse_position` is `False`.       |
 
@@ -128,6 +129,28 @@ m.add_tile_layer(name="esri_satellite")
 m.add_tile_layer(name="cartodb_dark")
 m.add_layer_control(collapsed=False)
 ```
+
+## Reset-view button
+
+Adding `home_button=True` gives the user a ⌂ button back to the map's opening view — the `center`/`zoom_start` you set,
+or the data bounds Mapyta auto-fitted.
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, MapConfig
+
+m = Map(
+    center=(52.090, 5.121),
+    title="Reset view",
+    config=MapConfig(zoom_start=14, home_button=True, measure_control=True),
+)
+m.add_point(Point(5.1213, 52.0908), marker="📍", tooltip="**Dom Tower**")
+
+m.to_html("home_button.html")
+print(m.to_html())  # markdown-exec: hide
+```
+
+The button renders at the top-right, above the measure control when both are enabled.
 
 ## Cursor coordinates in a projected CRS
 

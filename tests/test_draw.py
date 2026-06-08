@@ -335,6 +335,212 @@ class TestEnableDraw:
         # Assert - Then
         assert '"remove": false' in html
 
+    # --- 23b. edit=True binds click-to-edit ---
+
+    def test_edit_enabled_binds_click_to_edit(self) -> None:
+        """
+        Scenario: With editing on, clicking a drawn shape edits it in place.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is rendered
+        Then: The click-to-edit binding that enables per-layer vertex editing
+              is present in the script
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddEnableClickEdit" in html
+        assert "layer.editing.enable()" in html
+
+    # --- 23b-2. click-to-edit seeds Leaflet.draw edit options ---
+
+    def test_click_to_edit_seeds_edit_options(self) -> None:
+        """
+        Scenario: Clicking a shape seeds the options Leaflet.draw's edit hooks need.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is rendered
+        Then: The click handler seeds ``layer.options.original`` and
+              ``layer.options.editing`` before ``editing.enable()`` — the edit
+              toolbar normally sets these in ``_enableLayerEdit``; enabling
+              editing directly without them makes Leaflet.draw's ``addHooks``
+              throw on ``options.editing.className`` and no vertex handles
+              appear (SVG renderer).
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "layer.options.original = L.extend({}, layer.options)" in html
+        assert "layer.options.editing = {}" in html
+
+    # --- 23c. edit=False omits click-to-edit ---
+
+    def test_edit_false_omits_click_to_edit(self) -> None:
+        """
+        Scenario: With editing off, clicking a drawn shape stays inert.
+
+        Given: A map with drawing enabled and edit=False
+        When: HTML is rendered
+        Then: No click-to-edit binding is injected
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=False)
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddEnableClickEdit" not in html
+
+    # --- 23d. edit toolbar buttons suppressed ---
+
+    def test_edit_toolbar_buttons_suppressed(self, tmp_path: Path) -> None:
+        """
+        Scenario: No global edit/delete toolbar buttons are rendered.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is saved to a file
+        Then: Both the edit and remove modes are disabled in the draw options,
+              so Leaflet.draw's addToolbar early-returns and renders neither the
+              pencil nor the trashcan button
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+        out = tmp_path / "edit_toolbar_map.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert '"edit": false' in html
+        assert '"remove": false' in html
+        assert '"remove": true' not in html
+
+    # --- 23e. edit=True injects trash/delete helpers ---
+
+    def test_edit_enabled_injects_trash_delete_helpers(self, tmp_path: Path) -> None:
+        """
+        Scenario: With editing on, a per-shape trashbin + confirm popup is wired.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is saved to a file
+        Then: The trashbin/confirm/delete helpers, the inline SVG glyph, and the
+              default confirmation message are present in the script
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+        out = tmp_path / "trash_map.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert "ddAddTrash" in html
+        assert "ddConfirmDelete" in html
+        assert "ddDeleteLine" in html
+        assert "<svg" in html
+        assert "Delete this shape?" in html
+
+    # --- 23f. edit=False omits trash/delete helpers ---
+
+    def test_edit_false_omits_trash_delete_helpers(self) -> None:
+        """
+        Scenario: With editing off, no trashbin/confirm/delete helpers appear.
+
+        Given: A map with drawing enabled and edit=False
+        When: HTML is rendered
+        Then: None of the per-shape trash/delete helpers are injected
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=False)
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddAddTrash" not in html
+        assert "ddConfirmDelete" not in html
+        assert "ddDeleteLine" not in html
+
+    # --- 23h. Delete-key shortcut ---
+
+    def test_edit_enabled_binds_delete_key_shortcut(self, tmp_path: Path) -> None:
+        """
+        Scenario: Pressing Delete removes the shape being edited, no popup.
+
+        Given: A map with drawing enabled (edit defaults to True)
+        When: HTML is saved to a file
+        Then: A keydown handler keyed on the Delete key calls ddDeleteLine on
+              the active layer, bypassing the confirmation popup
+        """
+        # Arrange - Given
+        m = Map().enable_draw()
+        out = tmp_path / "delete_key_map.html"
+
+        # Act - When
+        m.to_html(str(out))
+        html = out.read_text(encoding="utf-8")
+
+        # Assert - Then
+        assert "keydown" in html
+        assert "e.key !== 'Delete'" in html
+        assert "ddDeleteLine(ddActiveLayer)" in html
+
+    # --- 23i. Delete-key shortcut omitted when edit off ---
+
+    def test_edit_false_omits_delete_key_shortcut(self) -> None:
+        """
+        Scenario: With editing off, the Delete-key shortcut is not wired.
+
+        Given: A map with drawing enabled and edit=False
+        When: HTML is rendered
+        Then: No keydown handler / active-layer tracking is injected
+        """
+        # Arrange - Given
+        m = Map().enable_draw(edit=False)
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "ddActiveLayer" not in html
+        assert "keydown" not in html
+
+    # --- 23g. Custom delete labels ---
+
+    def test_custom_delete_labels(self) -> None:
+        """
+        Scenario: Custom deletion confirmation strings appear in HTML.
+
+        Given: A map with drawing enabled and custom delete-confirm strings
+        When: HTML is rendered
+        Then: The custom message and both button labels appear in the HTML
+        """
+        # Arrange - Given
+        m = Map().enable_draw(
+            delete_confirm_message="Verwijder deze lijn?",
+            delete_confirm_yes="Verwijder",
+            delete_confirm_no="Annuleer",
+        )
+
+        # Act - When
+        html = m.to_html()
+
+        # Assert - Then
+        assert "Verwijder deze lijn?" in html
+        assert "Verwijder" in html
+        assert "Annuleer" in html
+
     # --- 24. Custom draw_style ---
 
     def test_custom_draw_style(self) -> None:
