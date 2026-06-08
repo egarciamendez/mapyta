@@ -452,7 +452,7 @@ class Map:
         submit_label: str = "Submit",
         draw_style: dict[str, Any] | None = None,
         edit: bool = True,
-        delete_confirm_message: str = "Delete this line?",
+        delete_confirm_message: str = "Delete this shape?",
         delete_confirm_yes: str = "Delete",
         delete_confirm_no: str = "Cancel",
     ) -> Self:

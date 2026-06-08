@@ -88,6 +88,6 @@ This generates `window["myGlobalHandler"](geojson)`.
 | `submit_label` | `"Submit"` | Submit button text |
 | `draw_style` | `None` | `shapeOptions` override |
 | `edit` | `True` | Per-shape in-place editing + trashbin delete (no global toolbar) |
-| `delete_confirm_message` | `"Delete this line?"` | Text in the delete confirmation popup |
+| `delete_confirm_message` | `"Delete this shape?"` | Text in the delete confirmation popup |
 | `delete_confirm_yes` | `"Delete"` | Confirm (delete) button label |
 | `delete_confirm_no` | `"Cancel"` | Cancel button label |

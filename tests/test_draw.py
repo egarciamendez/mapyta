@@ -449,7 +449,7 @@ class TestEnableDraw:
         assert "ddConfirmDelete" in html
         assert "ddDeleteLine" in html
         assert "<svg" in html
-        assert "Delete this line?" in html
+        assert "Delete this shape?" in html
 
     # --- 23f. edit=False omits trash/delete helpers ---
 
@@ -514,6 +514,7 @@ class TestEnableDraw:
 
         # Assert - Then
         assert "ddActiveLayer" not in html
+        assert "keydown" not in html
 
     # --- 23g. Custom delete labels ---
 
