@@ -2208,6 +2208,9 @@
     <span class="n">submit_label</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;Submit&quot;</span><span class="p">,</span>
     <span class="n">draw_style</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">edit</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">delete_confirm_message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;Delete this shape?&quot;</span><span class="p">,</span>
+    <span class="n">delete_confirm_yes</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;Delete&quot;</span><span class="p">,</span>
+    <span class="n">delete_confirm_no</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2284,7 +2287,42 @@ string = function name, <code>RawJS</code> = inline JS.</p>
 )
           –
           <div class="doc-md-description">
-            <p>Whether edit/delete controls are active.</p>
+            <p>Whether per-shape editing/deletion is active. When <code>True</code>, clicking a
+drawn shape makes its vertices editable in place (click empty map space
+to stop editing) and shows a trashbin at its last vertex; clicking the
+trashbin and confirming deletes that shape. No global edit/delete
+toolbar buttons are rendered. When <code>False</code>, clicking a shape stays
+inert.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>delete_confirm_message</code></b>
+              (<code><span title="str">str</span></code>, default:
+                  <code>&#39;Delete this shape?&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Text shown in the in-map deletion confirmation popup.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>delete_confirm_yes</code></b>
+              (<code><span title="str">str</span></code>, default:
+                  <code>&#39;Delete&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Label of the confirm (delete) button in that popup.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>delete_confirm_no</code></b>
+              (<code><span title="str">str</span></code>, default:
+                  <code>&#39;Cancel&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Label of the cancel button in that popup.</p>
           </div>
         </li>
     </ul>
@@ -2540,6 +2578,7 @@ string = function name, <code>RawJS</code> = inline JS.</p>
     <span class="n">fullscreen</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">minimap</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">measure_control</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">home_button</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">mouse_position</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">mouse_position_crs</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
@@ -2688,6 +2727,19 @@ provider does not serve them.</p>
           –
           <div class="doc-md-description">
             <p>Add measure tool.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>home_button</code></b>
+              (<code><span title="bool">bool</span></code>, default:
+                  <code>False</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Add a reset-view button (⌂) that returns the map to its opening
+center and zoom — the explicit <code>center</code> and <code>zoom_start</code> when
+given, otherwise the auto-fitted data bounds. Rendered at the
+top-right, above the measure control when both are enabled.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2876,8 +2928,8 @@ when <code>mouse_position</code> is <code>False</code>.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>mapyta/config.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
-<span class="normal">211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">js</span> <span class="o">=</span> <span class="n">js</span>
 </code></pre></div></td></tr></table></div>
                   </details>

@@ -1651,7 +1651,7 @@
 
 <h1 id="coordinate-detection">Coordinate Detection</h1>
 <p>Working with Dutch RD New coordinates (EPSG:28992)? Just pass them in. Map detects the coordinate range and transforms to WGS84 automatically.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-19--__tabbed_1_1" name="exec-19--__tabbed_1" type="radio" /><input id="exec-19--__tabbed_1_2" name="exec-19--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-19--__tabbed_1_1">Result</label><label for="exec-19--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-20--__tabbed_1_1" name="exec-20--__tabbed_1" type="radio" /><input id="exec-20--__tabbed_1_2" name="exec-20--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-20--__tabbed_1_1">Result</label><label for="exec-20--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1660,6 +1660,7 @@
     
     &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
     &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}&lt;/style&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
@@ -1674,7 +1675,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_d69db2e082b57c9bdd847f5344e49d4b {
+                #map_5f3e3f72bcecd620f9deee2de0eb92dd {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1714,14 +1715,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;RD New Auto-Detection&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_d69db2e082b57c9bdd847f5344e49d4b&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_5f3e3f72bcecd620f9deee2de0eb92dd&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_d69db2e082b57c9bdd847f5344e49d4b = L.map(
-                &quot;map_d69db2e082b57c9bdd847f5344e49d4b&quot;,
+            var map_5f3e3f72bcecd620f9deee2de0eb92dd = L.map(
+                &quot;map_5f3e3f72bcecd620f9deee2de0eb92dd&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1733,13 +1734,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_d69db2e082b57c9bdd847f5344e49d4b);
+            L.control.scale().addTo(map_5f3e3f72bcecd620f9deee2de0eb92dd);
 
             
 
         
     
-            var tile_layer_f82899c831d2e39d92edea20bad1f3df = L.tileLayer(
+            var tile_layer_92ab5287671eaf2411617f924c64a5c0 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1756,10 +1757,10 @@
             );
         
     
-            tile_layer_f82899c831d2e39d92edea20bad1f3df.addTo(map_d69db2e082b57c9bdd847f5344e49d4b);
+            tile_layer_92ab5287671eaf2411617f924c64a5c0.addTo(map_5f3e3f72bcecd620f9deee2de0eb92dd);
         
     
-            var mouse_position_e93c8ccea274c98d3beb4a4812d7de9a = new L.Control.MousePosition(
+            var mouse_position_2ce425666b68fadd0290a75d667341b2 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1769,21 +1770,21 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_e93c8ccea274c98d3beb4a4812d7de9a.options[&quot;latFormatter&quot;] =
+            mouse_position_2ce425666b68fadd0290a75d667341b2.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_e93c8ccea274c98d3beb4a4812d7de9a.options[&quot;lngFormatter&quot;] =
+            mouse_position_2ce425666b68fadd0290a75d667341b2.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_d69db2e082b57c9bdd847f5344e49d4b.addControl(mouse_position_e93c8ccea274c98d3beb4a4812d7de9a);
+            map_5f3e3f72bcecd620f9deee2de0eb92dd.addControl(mouse_position_2ce425666b68fadd0290a75d667341b2);
         
     
-            var marker_e5c31027eb894c761f5bc0cdbd17be56 = L.marker(
+            var marker_8ca4d079b7b972f6abdc5da17fd6f717 = L.marker(
                 [52.0910353572348, 5.111421299018581],
                 {
 }
-            ).addTo(map_d69db2e082b57c9bdd847f5344e49d4b);
+            ).addTo(map_5f3e3f72bcecd620f9deee2de0eb92dd);
         
     
-            var div_icon_c3f7cda02518e38815c8586cdf577d78 = L.divIcon({
+            var div_icon_ba0f0da6a86319eaa56d9b880ff20121 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83d\udccd\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1791,7 +1792,7 @@
 });
         
     
-            marker_e5c31027eb894c761f5bc0cdbd17be56.bindTooltip(
+            marker_8ca4d079b7b972f6abdc5da17fd6f717.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Utrecht&lt;/strong&gt; (from RD New coordinates)
                  &lt;/div&gt;`,
@@ -1801,22 +1802,22 @@
             );
         
     
-                marker_e5c31027eb894c761f5bc0cdbd17be56.setIcon(div_icon_c3f7cda02518e38815c8586cdf577d78);
+                marker_8ca4d079b7b972f6abdc5da17fd6f717.setIcon(div_icon_ba0f0da6a86319eaa56d9b880ff20121);
             
     
-            map_d69db2e082b57c9bdd847f5344e49d4b.fitBounds(
+            map_5f3e3f72bcecd620f9deee2de0eb92dd.fitBounds(
                 [[52.0910353572348, 5.111421299018581], [52.0910353572348, 5.111421299018581]],
                 {}
             );
         
     
-            tile_layer_f82899c831d2e39d92edea20bad1f3df.addTo(map_d69db2e082b57c9bdd847f5344e49d4b);
+            tile_layer_92ab5287671eaf2411617f924c64a5c0.addTo(map_5f3e3f72bcecd620f9deee2de0eb92dd);
         
     
-                marker_e5c31027eb894c761f5bc0cdbd17be56.setIcon(div_icon_c3f7cda02518e38815c8586cdf577d78);
+                marker_8ca4d079b7b972f6abdc5da17fd6f717.setIcon(div_icon_ba0f0da6a86319eaa56d9b880ff20121);
             
     
-            map_d69db2e082b57c9bdd847f5344e49d4b.fitBounds(
+            map_5f3e3f72bcecd620f9deee2de0eb92dd.fitBounds(
                 [[52.0910353572348, 5.111421299018581], [52.0910353572348, 5.111421299018581]],
                 {}
             );
