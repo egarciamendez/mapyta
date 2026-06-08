@@ -132,9 +132,8 @@ m.add_layer_control(collapsed=False)
 
 ## Reset-view button
 
-A map opens at a fixed view: either the `center` and `zoom_start` you pass, or the bounds Mapyta auto-fits to your
-data. Once the user pans and zooms away, set `home_button=True` to give them a one-click ⌂ button back to that opening
-view.
+Adding `home_button=True` gives the user a ⌂ button back to the map's opening view — the `center`/`zoom_start` you set,
+or the data bounds Mapyta auto-fitted.
 
 ```python exec="true" html="true" source="tabbed-right"
 from shapely.geometry import Point
@@ -151,9 +150,7 @@ m.to_html("home_button.html")
 print(m.to_html())  # markdown-exec: hide
 ```
 
-The opening view is captured in the browser after the map loads, so a single button works whether the view came from an
-explicit `center` or from auto-fitted data bounds. Clicking ⌂ restores that center and zoom. The button renders at the
-top-right, above the measure control when both are enabled.
+The button renders at the top-right, above the measure control when both are enabled.
 
 ## Cursor coordinates in a projected CRS
 
