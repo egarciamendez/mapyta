@@ -1563,11 +1563,11 @@ class Map:
 
     @staticmethod
     def _format_legend_value(value: float) -> str:
-        """Format a colorbar tick: a thousands-separated integer, else two decimals."""
+        """Format a colorbar tick: a plain integer when whole, else two decimals (no thousands separator)."""
         rounded = round(value, 2)
         if rounded.is_integer():
-            return f"{int(rounded):,}"
-        return f"{rounded:,.2f}"
+            return f"{int(rounded)}"
+        return f"{rounded:.2f}"
 
     def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str) -> None:
         """Render the HTML colorbar legend (gradient bar + caption + ticks) bottom-right.

@@ -5526,15 +5526,16 @@ class TestAddColorbar:
 
     def test_legend_ticks_format_integers_and_decimals(self) -> None:
         """
-        Scenario: Tick labels are thousands-separated integers or two-decimal floats.
+        Scenario: Tick labels are plain integers or two-decimal floats, without a thousands separator.
 
         Given: A colorbar whose range yields both integer and fractional ticks
         When: The map is rendered
-        Then: Whole values show as separated integers and fractional values as 2-decimals
+        Then: Whole values show as plain integers and fractional values as 2-decimals (no commas)
         """
         m = Map()
         m.add_colorbar(colors="blues", vmin=1000.0, vmax=1001.0, legend_name="x")
         html = m.get_standalone_html()
 
-        assert "1,000" in html, "whole tick values render thousands-separated"
-        assert "1,000.25" in html, "fractional tick values render with two decimals"
+        assert "1000" in html, "whole tick values render as plain integers"
+        assert "1000.25" in html, "fractional tick values render with two decimals"
+        assert "1,000" not in html, "tick values must not carry a thousands separator"
