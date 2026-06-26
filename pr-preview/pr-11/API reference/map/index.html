@@ -3970,7 +3970,8 @@ the default palette. Same handling as :meth:<code>add_choropleth</code>.</p>
 <span class="normal">1559</span>
 <span class="normal">1560</span>
 <span class="normal">1561</span>
-<span class="normal">1562</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_colorbar</span><span class="p">(</span>
+<span class="normal">1562</span>
+<span class="normal">1563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_colorbar</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">colors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">vmin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -4009,9 +4010,10 @@ the default palette. Same handling as :meth:<code>add_choropleth</code>.</p>
 <span class="sd">        The colormap added to the map. Call it with a value to get a colour.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">color_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_colors</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
-    <span class="n">colormap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">LinearColormap</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">color_list</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="n">legend_name</span><span class="p">)</span>
-    <span class="c1"># Track the colormap (for merge), but render our own HTML legend rather than</span>
-    <span class="c1"># branca&#39;s SVG colorbar via ``_register_colormap`` — see the method docstring.</span>
+    <span class="n">colormap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_colormap</span><span class="p">(</span><span class="n">color_list</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">legend_name</span><span class="p">)</span>
+    <span class="c1"># Track the colormap in ``self._colormaps`` for consistency with the other</span>
+    <span class="c1"># colormap methods, but skip ``_register_colormap``: it calls ``colormap.add_to``,</span>
+    <span class="c1"># which would emit branca&#39;s SVG colorbar. We render our own HTML legend instead.</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_colormaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_add_html_colorbar</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">color_list</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">legend_name</span><span class="o">=</span><span class="n">legend_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">colormap</span>
