@@ -1491,12 +1491,17 @@ class Map:
             color_list = PALETTES["ylrd"]
         return cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=caption)
 
+    def _register_colormap(self, colormap: cm.LinearColormap | cm.StepColormap) -> None:
+        """Add ``colormap`` to the folium map and track it so legends merge correctly."""
+        colormap.add_to(self._map)
+        self._colormaps.append(colormap)
+
     def add_colorbar(
         self,
         colors: list[str] | str | None,
         vmin: float,
         vmax: float,
-        caption: str,
+        legend_name: str,
     ) -> cm.LinearColormap:
         """Add a standalone color-scale legend (colorbar) to the map.
 
@@ -1514,7 +1519,7 @@ class Map:
             the default palette. Same handling as :meth:`add_choropleth`.
         vmin, vmax : float
             Color scale range.
-        caption : str
+        legend_name : str
             Legend label.
 
         Returns
@@ -1522,9 +1527,8 @@ class Map:
         branca.colormap.LinearColormap
             The colormap added to the map. Call it with a value to get a colour.
         """
-        colormap = self._build_colormap(colors=colors, vmin=vmin, vmax=vmax, caption=caption)
-        colormap.add_to(self._map)
-        self._colormaps.append(colormap)
+        colormap = self._build_colormap(colors=colors, vmin=vmin, vmax=vmax, caption=legend_name)
+        self._register_colormap(colormap)
         return colormap
 
     def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
@@ -1689,8 +1693,7 @@ class Map:
             tooltip=tooltip,
         )
         layer.add_to(self._target())
-        colormap.add_to(self._map)
-        self._colormaps.append(colormap)
+        self._register_colormap(colormap)
 
         try:
             layer_bounds = layer.get_bounds()
@@ -2340,8 +2343,7 @@ class Map:
                     vmax=vmax,
                     caption=legend_name or color_column,
                 )
-                colormap.add_to(m._map)
-                m._colormaps.append(colormap)
+                m._register_colormap(colormap)
 
         # Iterate rows
         for idx, row in gdf.iterrows():

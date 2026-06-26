@@ -5432,7 +5432,7 @@ class TestAddColorbar:
         m = Map()
 
         # Act - When
-        colormap = m.add_colorbar(colors=None, vmin=0.0, vmax=100.0, caption="Capacity [kN]")
+        colormap = m.add_colorbar(colors=None, vmin=0.0, vmax=100.0, legend_name="Capacity [kN]")
 
         # Assert - Then
         assert len(m._colormaps) == 1, "Colormap should be registered for merge/standalone tracking"
@@ -5450,7 +5450,7 @@ class TestAddColorbar:
         m = Map()
 
         # Act - When
-        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, caption="MyLegend")
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name="MyLegend")
         html = m._repr_html_()
 
         # Assert - Then
@@ -5465,7 +5465,7 @@ class TestAddColorbar:
         Then: One colormap is registered
         """
         m = Map()
-        m.add_colorbar(colors="blues", vmin=0.0, vmax=1.0, caption="x")
+        m.add_colorbar(colors="blues", vmin=0.0, vmax=1.0, legend_name="x")
         assert len(m._colormaps) == 1
 
     def test_unknown_palette_raises_value_error(self) -> None:
@@ -5478,7 +5478,7 @@ class TestAddColorbar:
         """
         m = Map()
         with pytest.raises(ValueError, match="Unknown palette"):
-            m.add_colorbar(colors="nonexistent", vmin=0.0, vmax=1.0, caption="x")
+            m.add_colorbar(colors="nonexistent", vmin=0.0, vmax=1.0, legend_name="x")
 
     def test_colormap_endpoints_differ(self) -> None:
         """
@@ -5489,5 +5489,5 @@ class TestAddColorbar:
         Then: The endpoint colours differ
         """
         m = Map()
-        colormap = m.add_colorbar(colors=["#ff0000", "#0000ff"], vmin=0.0, vmax=100.0, caption="x")
+        colormap = m.add_colorbar(colors=["#ff0000", "#0000ff"], vmin=0.0, vmax=100.0, legend_name="x")
         assert colormap(0.0) != colormap(100.0), "vmin and vmax should resolve to different colours"
