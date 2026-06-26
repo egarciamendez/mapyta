@@ -5410,3 +5410,84 @@ class TestCSSMarkerStyle:
         m.to_html(out)
         html = out.read_text(encoding="utf-8")
         assert "font-size:20px" in html
+
+
+# ===================================================================
+# Scenarios for add_colorbar (standalone color-scale legend).
+# ===================================================================
+
+
+class TestAddColorbar:
+    """Tests for the standalone ``add_colorbar`` color-scale legend."""
+
+    def test_registers_and_returns_callable_colormap(self) -> None:
+        """
+        Scenario: A standalone colorbar is added to a map.
+
+        Given: An empty map
+        When: add_colorbar is called with a value range
+        Then: The returned colormap is callable and is registered on the map
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        colormap = m.add_colorbar(colors=None, vmin=0.0, vmax=100.0, caption="Capacity [kN]")
+
+        # Assert - Then
+        assert len(m._colormaps) == 1, "Colormap should be registered for merge/standalone tracking"
+        assert isinstance(colormap(50.0), str), "Returned colormap must be callable and yield a colour string"
+
+    def test_legend_caption_renders_in_html(self) -> None:
+        """
+        Scenario: The colorbar legend appears in the rendered map.
+
+        Given: A map with a colorbar whose caption is set
+        When: The map is rendered to HTML
+        Then: The caption text appears in the output
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, caption="MyLegend")
+        html = m._repr_html_()
+
+        # Assert - Then
+        assert "MyLegend" in html, "Legend caption should be rendered in the HTML"
+
+    def test_named_palette(self) -> None:
+        """
+        Scenario: A colorbar built from a named palette.
+
+        Given: An empty map
+        When: add_colorbar is called with colors="blues"
+        Then: One colormap is registered
+        """
+        m = Map()
+        m.add_colorbar(colors="blues", vmin=0.0, vmax=1.0, caption="x")
+        assert len(m._colormaps) == 1
+
+    def test_unknown_palette_raises_value_error(self) -> None:
+        """
+        Scenario: A colorbar with an unknown palette name.
+
+        Given: An empty map
+        When: add_colorbar is called with an unknown palette
+        Then: A ValueError is raised with a helpful message
+        """
+        m = Map()
+        with pytest.raises(ValueError, match="Unknown palette"):
+            m.add_colorbar(colors="nonexistent", vmin=0.0, vmax=1.0, caption="x")
+
+    def test_colormap_endpoints_differ(self) -> None:
+        """
+        Scenario: The colorbar maps the value range across distinct colours.
+
+        Given: A colorbar over a non-degenerate range
+        When: The colormap is evaluated at vmin and vmax
+        Then: The endpoint colours differ
+        """
+        m = Map()
+        colormap = m.add_colorbar(colors=["#ff0000", "#0000ff"], vmin=0.0, vmax=100.0, caption="x")
+        assert colormap(0.0) != colormap(100.0), "vmin and vmax should resolve to different colours"

@@ -1491,6 +1491,42 @@ class Map:
             color_list = PALETTES["ylrd"]
         return cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=caption)
 
+    def add_colorbar(
+        self,
+        colors: list[str] | str | None,
+        vmin: float,
+        vmax: float,
+        caption: str,
+    ) -> cm.LinearColormap:
+        """Add a standalone color-scale legend (colorbar) to the map.
+
+        Unlike :meth:`add_choropleth` and :meth:`from_geodataframe`, this adds a
+        legend on its own — for maps whose features are coloured by hand (e.g.
+        :meth:`add_circle` / :meth:`add_point` with per-feature styles). The
+        returned colormap is callable: ``colormap(value)`` yields the hex colour
+        for ``value``, so callers colour their own features consistently with
+        the legend without rebuilding the scale.
+
+        Parameters
+        ----------
+        colors : list[str] | str | None
+            Palette name (e.g. ``"blues"``), list of hex colors, or ``None`` for
+            the default palette. Same handling as :meth:`add_choropleth`.
+        vmin, vmax : float
+            Color scale range.
+        caption : str
+            Legend label.
+
+        Returns
+        -------
+        branca.colormap.LinearColormap
+            The colormap added to the map. Call it with a value to get a colour.
+        """
+        colormap = self._build_colormap(colors=colors, vmin=vmin, vmax=vmax, caption=caption)
+        colormap.add_to(self._map)
+        self._colormaps.append(colormap)
+        return colormap
+
     def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
         self,
         geojson_data: dict | str | Path,
