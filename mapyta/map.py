@@ -1554,9 +1554,10 @@ class Map:
             The colormap added to the map. Call it with a value to get a colour.
         """
         color_list = self._resolve_colors(colors)
-        colormap = cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=legend_name)
-        # Track the colormap (for merge), but render our own HTML legend rather than
-        # branca's SVG colorbar via ``_register_colormap`` — see the method docstring.
+        colormap = self._build_colormap(color_list, vmin, vmax, legend_name)
+        # Track the colormap in ``self._colormaps`` for consistency with the other
+        # colormap methods, but skip ``_register_colormap``: it calls ``colormap.add_to``,
+        # which would emit branca's SVG colorbar. We render our own HTML legend instead.
         self._colormaps.append(colormap)
         self._add_html_colorbar(colors=color_list, vmin=vmin, vmax=vmax, legend_name=legend_name)
         return colormap
@@ -1582,9 +1583,8 @@ class Map:
         legend_name : str
             Legend label; inline HTML is preserved (e.g. ``<sub>``).
         """
-        last = len(colors) - 1
-        stops = ", ".join(f"{color} {index / last * 100:.0f}%" for index, color in enumerate(colors))
-        gradient = f"linear-gradient(to right, {stops})"
+        # CSS spreads position-less stops evenly from 0% to 100%, matching the ramp's order.
+        gradient = f"linear-gradient(to right, {', '.join(colors)})"
         tick_count = 5
         ticks = "".join(f"<span>{self._format_legend_value(vmin + (vmax - vmin) * step / (tick_count - 1))}</span>" for step in range(tick_count))
         legend_html = (
