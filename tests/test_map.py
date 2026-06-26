@@ -5491,3 +5491,50 @@ class TestAddColorbar:
         m = Map()
         colormap = m.add_colorbar(colors=["#ff0000", "#0000ff"], vmin=0.0, vmax=100.0, legend_name="x")
         assert colormap(0.0) != colormap(100.0), "vmin and vmax should resolve to different colours"
+
+    def test_legend_is_html_gradient_not_branca_svg(self) -> None:
+        """
+        Scenario: The colorbar is a readable HTML legend, not branca's SVG colorbar.
+
+        Given: A map with a multi-colour colorbar
+        When: The map is rendered
+        Then: An HTML gradient legend is pinned bottom-centre and no branca SVG/topright
+              control is emitted (so it cannot overlap the top-centre title)
+        """
+        m = Map(title="B1")
+        m.add_colorbar(colors=["#d73027", "#fee08b", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
+        html = m.get_standalone_html()
+
+        assert "linear-gradient(to right" in html, "Legend should be a CSS gradient bar"
+        assert "bottom:14px;right:14px" in html, "Legend should sit bottom-right, clear of the title"
+        assert "color_map_" not in html, "branca's SVG colorbar must not be emitted"
+        assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
+
+    def test_legend_caption_preserves_inline_html(self) -> None:
+        """
+        Scenario: A caption with inline markup renders as HTML, not literal text.
+
+        Given: A colorbar whose legend_name contains a ``<sub>`` tag
+        When: The map is rendered
+        Then: The ``<sub>`` markup is preserved in the legend (so it renders as a subscript)
+        """
+        m = Map()
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name="R<sub>c;cal</sub>")
+        html = m.get_standalone_html()
+
+        assert "R<sub>c;cal</sub>" in html, "inline HTML in the caption must be preserved, not escaped"
+
+    def test_legend_ticks_format_integers_and_decimals(self) -> None:
+        """
+        Scenario: Tick labels are thousands-separated integers or two-decimal floats.
+
+        Given: A colorbar whose range yields both integer and fractional ticks
+        When: The map is rendered
+        Then: Whole values show as separated integers and fractional values as 2-decimals
+        """
+        m = Map()
+        m.add_colorbar(colors="blues", vmin=1000.0, vmax=1001.0, legend_name="x")
+        html = m.get_standalone_html()
+
+        assert "1,000" in html, "whole tick values render thousands-separated"
+        assert "1,000.25" in html, "fractional tick values render with two decimals"

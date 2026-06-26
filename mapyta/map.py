@@ -1477,19 +1477,38 @@ class Map:
         -------
         branca.colormap.LinearColormap
         """
+        return cm.LinearColormap(colors=self._resolve_colors(colors), vmin=vmin, vmax=vmax, caption=caption)
+
+    def _resolve_colors(self, colors: list[str] | str | None) -> list[str]:
+        """Resolve a palette name, explicit color list, or ``None`` to a concrete low→high ramp.
+
+        Parameters
+        ----------
+        colors : list[str] | str | None
+            Palette name (e.g. ``"blues"``), list of hex colors, or ``None`` for the
+            default palette.
+
+        Returns
+        -------
+        list[str]
+            The resolved low→high color ramp.
+
+        Raises
+        ------
+        ValueError
+            If ``colors`` names an unknown palette or is an empty list.
+        """
         if isinstance(colors, str):
             palette = PALETTES.get(colors)
             if palette is None:
                 valid = ", ".join(f'"{k}"' for k in sorted(PALETTES))
                 raise ValueError(f"Unknown palette {colors!r}. Available palettes: {valid}")
-            color_list = palette
-        elif colors is not None:
+            return palette
+        if colors is not None:
             if not colors:
                 raise ValueError("colors list must not be empty")
-            color_list = colors
-        else:
-            color_list = PALETTES["ylrd"]
-        return cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=caption)
+            return colors
+        return PALETTES["ylrd"]
 
     def _register_colormap(self, colormap: cm.LinearColormap | cm.StepColormap) -> None:
         """Add ``colormap`` to the folium map and track it so legends merge correctly."""
@@ -1512,6 +1531,13 @@ class Map:
         for ``value``, so callers colour their own features consistently with
         the legend without rebuilding the scale.
 
+        The legend is a readable HTML ``<div>`` pinned to the bottom-right of the
+        map (a horizontal gradient bar with the ``legend_name`` above and evenly
+        spaced value ticks below), rather than branca's default SVG colorbar. Two
+        consequences follow: ``legend_name`` may contain inline HTML such as
+        ``<sub>``/``<sup>`` (rendered, not shown literally), and the legend sits
+        clear of the top-centre :paramref:`title` instead of overlapping it.
+
         Parameters
         ----------
         colors : list[str] | str | None
@@ -1520,16 +1546,58 @@ class Map:
         vmin, vmax : float
             Color scale range.
         legend_name : str
-            Legend label.
+            Legend label. May contain inline HTML (e.g. ``"R<sub>c;cal</sub>"``).
 
         Returns
         -------
         branca.colormap.LinearColormap
             The colormap added to the map. Call it with a value to get a colour.
         """
-        colormap = self._build_colormap(colors=colors, vmin=vmin, vmax=vmax, caption=legend_name)
-        self._register_colormap(colormap)
+        color_list = self._resolve_colors(colors)
+        colormap = cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=legend_name)
+        # Track the colormap (for merge), but render our own HTML legend rather than
+        # branca's SVG colorbar via ``_register_colormap`` — see the method docstring.
+        self._colormaps.append(colormap)
+        self._add_html_colorbar(colors=color_list, vmin=vmin, vmax=vmax, legend_name=legend_name)
         return colormap
+
+    @staticmethod
+    def _format_legend_value(value: float) -> str:
+        """Format a colorbar tick: a thousands-separated integer, else two decimals."""
+        rounded = round(value, 2)
+        if rounded.is_integer():
+            return f"{int(rounded):,}"
+        return f"{rounded:,.2f}"
+
+    def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str) -> None:
+        """Render the HTML colorbar legend (gradient bar + caption + ticks) bottom-right.
+
+        Parameters
+        ----------
+        colors : list[str]
+            The resolved low→high color ramp. Always holds at least two colours
+            (branca's ``LinearColormap`` rejects fewer in :meth:`add_colorbar`).
+        vmin, vmax : float
+            Color scale range, used for the five evenly spaced value ticks.
+        legend_name : str
+            Legend label; inline HTML is preserved (e.g. ``<sub>``).
+        """
+        last = len(colors) - 1
+        stops = ", ".join(f"{color} {index / last * 100:.0f}%" for index, color in enumerate(colors))
+        gradient = f"linear-gradient(to right, {stops})"
+        tick_count = 5
+        ticks = "".join(f"<span>{self._format_legend_value(vmin + (vmax - vmin) * step / (tick_count - 1))}</span>" for step in range(tick_count))
+        legend_html = (
+            '<div style="position:fixed;bottom:14px;right:14px;'
+            "z-index:1000;background:rgba(255,255,255,0.92);padding:6px 12px;border-radius:6px;"
+            "box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;"
+            'color:#333;pointer-events:none;">'
+            f'<div style="text-align:center;font-weight:bold;margin-bottom:4px;">{legend_name}</div>'
+            f'<div style="width:260px;height:12px;border-radius:2px;background:{gradient};"></div>'
+            f'<div style="display:flex;justify-content:space-between;margin-top:3px;">{ticks}</div>'
+            "</div>"
+        )
+        self._map.get_root().html.add_child(folium.Element(legend_html))  # ty: ignore[unresolved-attribute]
 
     def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
         self,
