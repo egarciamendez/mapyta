@@ -1620,8 +1620,10 @@ class Map:
         # (a ``str`` subclass) opts into verbatim rendering, mirroring tooltips/popups.
         caption = legend_name if isinstance(legend_name, RawHTML) else html_escape(legend_name)
         # ``to top`` puts the first colour (low) at the bottom and the last (high) at the top,
-        # so the vertical bar reads low→high bottom-up like Plotly's colorbar.
-        gradient = f"linear-gradient(to top, {', '.join(colors)})"
+        # so the vertical bar reads low→high bottom-up like Plotly's colorbar. Escape the
+        # caller-supplied colours so a value with a quote can't break out of the ``style`` attribute.
+        safe_colors = [html_escape(color, quote=True) for color in colors]
+        gradient = f"linear-gradient(to top, {', '.join(safe_colors)})"
         tick_count = 5
         span = vmax - vmin
         # Ticks run high→low top-to-bottom to line up with the bottom-up gradient.
@@ -2556,6 +2558,24 @@ class Map:
         self._layer_dropdown_injected = False
         return self
 
+    @staticmethod
+    def _json_for_script(value: object) -> str:
+        """Serialise ``value`` to JSON that is safe to embed inside an inline ``<script>`` block.
+
+        ``json.dumps`` leaves ``<``/``>``/``&`` unescaped, so a string containing
+        ``</script>`` would close the script element. Escaping those (plus the
+        line/paragraph separators that break JS string literals) keeps the embedded
+        data from terminating the script or injecting markup.
+        """
+        return (
+            json.dumps(value)
+            .replace("<", "\\u003c")
+            .replace(">", "\\u003e")
+            .replace("&", "\\u0026")
+            .replace("\u2028", "\\u2028")
+            .replace("\u2029", "\\u2029")
+        )
+
     def _inject_layer_dropdown(self) -> None:
         """Inject the single-select feature-group dropdown as a Leaflet control.
 
@@ -2577,15 +2597,19 @@ class Map:
         for name, group in pairs:
             group.control = False
             options.append([name, group.get_name()])
-        options_json = json.dumps(options)
+        # Escape for embedding in the inline ``<script>``: group names are caller-controlled,
+        # so a name containing ``</script>`` must not close the script block.
+        options_json = self._json_for_script(options)
 
         map_var = self._map.get_name()
-        position = cfg["position"]
+        # JSON-encode the position too so it can't break out of the JS string literal.
+        position_json = self._json_for_script(cfg["position"])
         label = cfg["label"]
         if label:
             label_js = (
                 "        var lbl = L.DomUtil.create('div', '', div);\n"
-                f"        lbl.innerHTML = {json.dumps(label)};\n"
+                # ``textContent`` (not ``innerHTML``) so the label renders as literal text.
+                f"        lbl.textContent = {self._json_for_script(label)};\n"
                 "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
             )
         else:
@@ -2610,7 +2634,7 @@ class Map:
             "            else if (map.hasLayer(g.layer)) { map.removeLayer(g.layer); }\n"
             "        });\n"
             "    }\n"
-            f"    var ddControl = L.control({{position: '{position}'}});\n"
+            f"    var ddControl = L.control({{position: {position_json}}});\n"
             "    ddControl.onAdd = function() {\n"
             "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
             "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"

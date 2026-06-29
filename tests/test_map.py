@@ -1034,6 +1034,49 @@ class TestFeatureGroups:
         # Assert - Then
         assert "showOnly" not in html, "no dropdown script should be emitted without feature groups"
 
+    def test_add_layer_dropdown_group_name_cannot_close_script(self) -> None:
+        """
+        Scenario: A group name containing ``</script>`` cannot terminate the inline script.
+
+        Given: A feature group whose name embeds a ``</script>`` sequence with markup
+        When: add_layer_dropdown is called and the map is rendered
+        Then: The closing tag's angle brackets are escaped, so the script block stays intact
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("</script><img src=x onerror=alert(1)>").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "</script><img src=x onerror=alert(1)>" not in html, "the group name must not close the script block"
+        assert "\\u003c/script\\u003e" in html, "the group name's angle brackets must be escaped for the script context"
+
+    def test_add_layer_dropdown_label_rendered_as_text(self) -> None:
+        """
+        Scenario: The dropdown label renders as literal text, never as active markup.
+
+        Given: A dropdown whose label contains an HTML/script payload
+        When: The map is rendered
+        Then: The label is assigned via ``textContent`` and its ``<`` is escaped for the script
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown(label="<script>alert(1)</script>")
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "lbl.textContent =" in html, "the label must be assigned via textContent, not innerHTML"
+        assert "lbl.innerHTML" not in html, "the label must not be assigned via innerHTML"
+        assert "<script>alert(1)</script>" not in html, "the label must not become active markup"
+
 
 # ===================================================================
 # Scenarios for adding GeoJSON data layers.
@@ -5638,3 +5681,27 @@ class TestAddColorbar:
         assert "1000" in html, "whole tick values render as plain integers"
         assert "1000.25" in html, "fractional tick values render with two decimals"
         assert "1,000" not in html, "tick values must not carry a thousands separator"
+
+    def test_legend_escapes_color_stops(self) -> None:
+        """
+        Scenario: A color stop containing a quote cannot break out of the style attribute.
+
+        Given: A colorbar whose color list holds a value with a double quote and markup
+        When: The HTML legend is rendered
+        Then: The quote is HTML-escaped, so it stays inside the ``style="..."`` attribute
+
+        ``add_colorbar`` runs the colors through branca's ``LinearColormap`` first, which
+        rejects non-colors, so this exercises ``_add_html_colorbar`` directly to cover the
+        escaping as defence-in-depth.
+        """
+        m = Map()
+        m._add_html_colorbar(
+            colors=["#ff0000", '#00ff00"></div><script>alert(1)</script>'],
+            vmin=0.0,
+            vmax=10.0,
+            legend_name="x",
+        )
+        html = m.get_standalone_html()
+
+        assert "<script>alert(1)</script>" not in html, "a quote in a color stop must not break out into active markup"
+        assert "&quot;" in html, "the quote in the color stop must be HTML-escaped"
