@@ -1531,9 +1531,10 @@ class Map:
         for ``value``, so callers colour their own features consistently with
         the legend without rebuilding the scale.
 
-        The legend is a readable HTML ``<div>`` pinned to the bottom-right of the
-        map (a horizontal gradient bar with the ``legend_name`` above and evenly
-        spaced value ticks below), rather than branca's default SVG colorbar. Two
+        The legend is a readable HTML ``<div>`` pinned to the right edge of the
+        map, spanning ~90% of its height (5% clear at top and bottom): a vertical
+        gradient bar with the ``legend_name`` above and evenly spaced value ticks
+        alongside, high at the top, rather than branca's default SVG colorbar. Two
         consequences follow: ``legend_name`` may contain inline HTML such as
         ``<sub>``/``<sup>`` (rendered, not shown literally), and the legend sits
         clear of the top-centre :paramref:`title` instead of overlapping it.
@@ -1571,7 +1572,7 @@ class Map:
         return f"{rounded:.2f}"
 
     def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str) -> None:
-        """Render the HTML colorbar legend (gradient bar + caption + ticks) bottom-right.
+        """Render the HTML colorbar legend (gradient bar + caption + ticks) vertically on the right.
 
         Parameters
         ----------
@@ -1583,18 +1584,26 @@ class Map:
         legend_name : str
             Legend label; inline HTML is preserved (e.g. ``<sub>``).
         """
-        # CSS spreads position-less stops evenly from 0% to 100%, matching the ramp's order.
-        gradient = f"linear-gradient(to right, {', '.join(colors)})"
+        # ``to top`` puts the first colour (low) at the bottom and the last (high) at the top,
+        # so the vertical bar reads low→high bottom-up like Plotly's colorbar.
+        gradient = f"linear-gradient(to top, {', '.join(colors)})"
         tick_count = 5
-        ticks = "".join(f"<span>{self._format_legend_value(vmin + (vmax - vmin) * step / (tick_count - 1))}</span>" for step in range(tick_count))
+        # Ticks run high→low top-to-bottom to line up with the bottom-up gradient.
+        ticks = "".join(
+            f"<span>{self._format_legend_value(vmin + (vmax - vmin) * step / (tick_count - 1))}</span>" for step in reversed(range(tick_count))
+        )
+        # ``top:5%;bottom:5%`` makes the card span 90% of the map height (5% clear at each end)
+        # regardless of map size; the bar row flex-fills whatever remains below the caption.
         legend_html = (
-            '<div style="position:fixed;bottom:14px;right:14px;'
-            "z-index:1000;background:rgba(255,255,255,0.92);padding:6px 12px;border-radius:6px;"
+            '<div style="position:fixed;top:5%;bottom:5%;right:14px;'
+            "z-index:1000;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:6px;"
             "box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;"
-            'color:#333;pointer-events:none;">'
-            f'<div style="text-align:center;font-weight:bold;margin-bottom:4px;">{legend_name}</div>'
-            f'<div style="width:260px;height:12px;border-radius:2px;background:{gradient};"></div>'
-            f'<div style="display:flex;justify-content:space-between;margin-top:3px;">{ticks}</div>'
+            'color:#333;pointer-events:none;display:flex;flex-direction:column;">'
+            f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{legend_name}</div>'
+            '<div style="display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;">'
+            f'<div style="width:14px;border-radius:2px;background:{gradient};"></div>'
+            f'<div style="display:flex;flex-direction:column;justify-content:space-between;margin-left:6px;">{ticks}</div>'
+            "</div>"
             "</div>"
         )
         self._map.get_root().html.add_child(folium.Element(legend_html))  # ty: ignore[unresolved-attribute]

@@ -5498,15 +5498,15 @@ class TestAddColorbar:
 
         Given: A map with a multi-colour colorbar
         When: The map is rendered
-        Then: An HTML gradient legend is pinned bottom-centre and no branca SVG/topright
-              control is emitted (so it cannot overlap the top-centre title)
+        Then: A vertical HTML gradient legend is pinned to the right edge spanning most of the
+              map height, and no branca SVG/topright control is emitted (so it cannot overlap the title)
         """
         m = Map(title="B1")
         m.add_colorbar(colors=["#d73027", "#fee08b", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
         html = m.get_standalone_html()
 
-        assert "linear-gradient(to right" in html, "Legend should be a CSS gradient bar"
-        assert "bottom:14px;right:14px" in html, "Legend should sit bottom-right, clear of the title"
+        assert "linear-gradient(to top" in html, "Legend should be a vertical CSS gradient bar"
+        assert "top:5%;bottom:5%;right:14px" in html, "Legend should hug the right edge, spanning most of the map height"
         assert "color_map_" not in html, "branca's SVG colorbar must not be emitted"
         assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
 
