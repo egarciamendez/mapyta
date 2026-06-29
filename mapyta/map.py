@@ -2570,23 +2570,26 @@ class Map:
         pairs = [(name, self._feature_groups[name]) for name in names if name in self._feature_groups]
         if not pairs:
             return
-        # The dropdown owns these groups: clear their ``control`` flag so the checkbox
-        # LayerControl (rendered after this) leaves them out and lists only base/tile layers.
-        for _, group in pairs:
+        # [[display_name, leaflet_var], ...], preserving the requested order. In the same pass,
+        # clear each group's ``control`` flag so the checkbox LayerControl (rendered after this)
+        # leaves the dropdown-owned groups out and lists only base/tile layers.
+        options = []
+        for name, group in pairs:
             group.control = False
+            options.append([name, group.get_name()])
+        options_json = json.dumps(options)
 
         map_var = self._map.get_name()
-        # [[display_name, leaflet_var], ...], preserving the requested order.
-        options_json = json.dumps([[name, group.get_name()] for name, group in pairs])
         position = cfg["position"]
         label = cfg["label"]
-        label_js = (
-            "        var lbl = L.DomUtil.create('div', '', div);\n"
-            f"        lbl.innerHTML = {json.dumps(label)};\n"
-            "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
-            if label
-            else ""
-        )
+        if label:
+            label_js = (
+                "        var lbl = L.DomUtil.create('div', '', div);\n"
+                f"        lbl.innerHTML = {json.dumps(label)};\n"
+                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
+            )
+        else:
+            label_js = ""
 
         # DOMContentLoaded so the map and feature-group variables (declared at the
         # top of Folium's synchronous script block) are defined, mirroring the
