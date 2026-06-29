@@ -28,6 +28,7 @@ import uuid
 import warnings
 import webbrowser
 from collections.abc import Mapping
+from html import escape as html_escape
 from pathlib import Path
 from typing import Any, Self, cast, overload
 
@@ -78,6 +79,18 @@ VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "cir
 # fullscreen buttons sit at 26px (30px on touch). Shrink the two odd ones out so
 # every control button matches. ``!important`` is required because the plugin
 # rules ship from CDNs at equal-or-higher specificity.
+#
+# The measure plugin's toggle is also styled differently: it paints a multi-icon
+# sprite (``rulers.png``) that, once force-scaled to 16px, collapses into a dark
+# block. Swap in a clean single line-art ruler on a white background so it matches
+# the zoom/draw/home/fullscreen icons.
+_MEASURE_TOGGLE_ICON = (
+    'url("data:image/svg+xml,'
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' "
+    "stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"
+    "<rect x='2' y='7' width='20' height='10' rx='1'/>"
+    "<path d='M7 7v4M12 7v5M17 7v4'/></svg>\")"
+)
 CONTROL_SIZE_CSS = (
     "<style>"
     ".leaflet-control-layers-toggle,"
@@ -86,6 +99,17 @@ CONTROL_SIZE_CSS = (
     ".leaflet-touch .leaflet-control-layers-toggle,"
     ".leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{"
     "width:30px!important;height:30px!important;background-size:18px 18px!important;}"
+    ".leaflet-control-measure .leaflet-control-measure-toggle{"
+    f"background-color:#fff!important;background-image:{_MEASURE_TOGGLE_ICON}!important;}}"
+    # Box parity with the layers control (``.leaflet-control-layers``), which has the same
+    # shape (an icon toggle in a rounded container) and which renders correctly. Mirror its
+    # shadow/radius and, crucially, its touch styling: drop the shadow and use the crisp 2px
+    # grey border, otherwise the measure box keeps a faint shadow halo instead of a sharp
+    # border like the other controls.
+    ".leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}"
+    ".leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}"
+    ".leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;"
+    "background-clip:padding-box!important;}"
     "</style>"
 )
 
@@ -185,6 +209,8 @@ class Map:
         self._geojson_features: list[dict] = []
         self._export_button_config: dict[str, Any] | None = None
         self._export_button_injected: bool = False
+        self._layer_dropdown_config: dict[str, Any] | None = None
+        self._layer_dropdown_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -1520,7 +1546,7 @@ class Map:
         colors: list[str] | str | None,
         vmin: float,
         vmax: float,
-        legend_name: str,
+        legend_name: str | RawHTML,
     ) -> cm.LinearColormap:
         """Add a standalone color-scale legend (colorbar) to the map.
 
@@ -1534,10 +1560,9 @@ class Map:
         The legend is a readable HTML ``<div>`` pinned to the right edge of the
         map, spanning ~90% of its height (5% clear at top and bottom): a vertical
         gradient bar with the ``legend_name`` above and evenly spaced value ticks
-        alongside, high at the top, rather than branca's default SVG colorbar. Two
-        consequences follow: ``legend_name`` may contain inline HTML such as
-        ``<sub>``/``<sup>`` (rendered, not shown literally), and the legend sits
-        clear of the top-centre :paramref:`title` instead of overlapping it.
+        alongside, high at the top, rather than branca's default SVG colorbar. The
+        legend sits clear of the top-centre :paramref:`title` instead of
+        overlapping it.
 
         Parameters
         ----------
@@ -1546,8 +1571,10 @@ class Map:
             the default palette. Same handling as :meth:`add_choropleth`.
         vmin, vmax : float
             Color scale range.
-        legend_name : str
-            Legend label. May contain inline HTML (e.g. ``"R<sub>c;cal</sub>"``).
+        legend_name : str | RawHTML
+            Legend label. Plain strings are HTML-escaped and shown literally; wrap
+            in :class:`~mapyta.markdown.RawHTML` to render inline markup such as
+            ``<sub>``/``<sup>`` (e.g. ``RawHTML("R<sub>c;cal</sub>")``).
 
         Returns
         -------
@@ -1555,7 +1582,9 @@ class Map:
             The colormap added to the map. Call it with a value to get a colour.
         """
         color_list = self._resolve_colors(colors)
-        colormap = self._build_colormap(color_list, vmin, vmax, legend_name)
+        # Build the colormap from the already-resolved ramp (don't route back through
+        # ``_build_colormap``, which would resolve a second time).
+        colormap = cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=legend_name)
         # Track the colormap in ``self._colormaps`` for consistency with the other
         # colormap methods, but skip ``_register_colormap``: it calls ``colormap.add_to``,
         # which would emit branca's SVG colorbar. We render our own HTML legend instead.
@@ -1571,7 +1600,7 @@ class Map:
             return f"{int(rounded)}"
         return f"{rounded:.2f}"
 
-    def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str) -> None:
+    def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str | RawHTML) -> None:
         """Render the HTML colorbar legend (gradient bar + caption + ticks) vertically on the right.
 
         Parameters
@@ -1581,17 +1610,23 @@ class Map:
             (branca's ``LinearColormap`` rejects fewer in :meth:`add_colorbar`).
         vmin, vmax : float
             Color scale range, used for the five evenly spaced value ticks.
-        legend_name : str
-            Legend label; inline HTML is preserved (e.g. ``<sub>``).
+        legend_name : str | RawHTML
+            Legend label. Plain strings are HTML-escaped before being injected
+            into the legend; only :class:`~mapyta.markdown.RawHTML` is rendered
+            verbatim (e.g. ``<sub>``). This keeps untrusted text from becoming
+            active markup, matching how tooltips/popups treat their text.
         """
+        # Escape plain strings so untrusted captions can't inject markup; ``RawHTML``
+        # (a ``str`` subclass) opts into verbatim rendering, mirroring tooltips/popups.
+        caption = legend_name if isinstance(legend_name, RawHTML) else html_escape(legend_name)
         # ``to top`` puts the first colour (low) at the bottom and the last (high) at the top,
         # so the vertical bar reads low→high bottom-up like Plotly's colorbar.
         gradient = f"linear-gradient(to top, {', '.join(colors)})"
         tick_count = 5
+        span = vmax - vmin
         # Ticks run high→low top-to-bottom to line up with the bottom-up gradient.
-        ticks = "".join(
-            f"<span>{self._format_legend_value(vmin + (vmax - vmin) * step / (tick_count - 1))}</span>" for step in reversed(range(tick_count))
-        )
+        tick_values = [vmin + span * step / (tick_count - 1) for step in reversed(range(tick_count))]
+        ticks = "".join(f"<span>{self._format_legend_value(v)}</span>" for v in tick_values)
         # ``top:5%;bottom:5%`` makes the card span 90% of the map height (5% clear at each end)
         # regardless of map size; the bar row flex-fills whatever remains below the caption.
         legend_html = (
@@ -1599,7 +1634,7 @@ class Map:
             "z-index:1000;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:6px;"
             "box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;"
             'color:#333;pointer-events:none;display:flex;flex-direction:column;">'
-            f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{legend_name}</div>'
+            f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{caption}</div>'
             '<div style="display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;">'
             f'<div style="width:14px;border-radius:2px;background:{gradient};"></div>'
             f'<div style="display:flex;flex-direction:column;justify-content:space-between;margin-left:6px;">{ticks}</div>'
@@ -1692,18 +1727,7 @@ class Map:
         if is_categorical:
             # Build discrete color mapping per unique category
             categories = list(dict.fromkeys(str(v) for v in raw_vals))
-            palette_colors: list[str]
-            if isinstance(colors, str):
-                palette_colors = PALETTES.get(colors) or []
-                if not palette_colors:
-                    valid = ", ".join(f'"{k}"' for k in sorted(PALETTES))
-                    raise ValueError(f"Unknown palette {colors!r}. Available palettes: {valid}")
-            elif colors is not None:
-                if not colors:
-                    raise ValueError("colors list must not be empty")
-                palette_colors = colors
-            else:
-                palette_colors = PALETTES["ylrd"]
+            palette_colors = self._resolve_colors(colors)
             # Cycle colors if more categories than palette entries
             cat_color_map: dict[str, str] = {cat: palette_colors[i % len(palette_colors)] for i, cat in enumerate(categories)}
 
@@ -2493,6 +2517,120 @@ class Map:
         folium.LayerControl(collapsed=collapsed, position=position).add_to(self._map)
         return self
 
+    def add_layer_dropdown(
+        self,
+        names: list[str] | None = None,
+        position: str = "topleft",
+        label: str | None = None,
+    ) -> Self:
+        """Add a single-select dropdown that switches between feature groups.
+
+        Where :meth:`add_layer_control` lists feature groups as checkboxes (any
+        number visible at once), this renders a single ``<select>`` whose options
+        are feature groups: choosing one shows that group and hides the others, so
+        exactly one is visible and the dropdown displays the active group's name.
+
+        The chosen groups are removed from :meth:`add_layer_control`'s overlay
+        list (their ``control`` flag is cleared at render time), so a group shows
+        up in either the dropdown or the checkbox control, never both. Base/tile
+        layers are untouched and keep their radio control. Use the two together to
+        get radio tile layers plus a single-select overlay switcher.
+
+        Parameters
+        ----------
+        names : list[str] | None
+            Feature group names to include, in display order. ``None`` (the
+            default) uses every feature group created so far, in creation order.
+            Unknown names are ignored; if none match, the call is a no-op.
+        position : str
+            Leaflet control position: ``"topleft"``, ``"topright"``,
+            ``"bottomleft"``, or ``"bottomright"``.
+        label : str | None
+            Optional caption rendered above the dropdown.
+
+        Returns
+        -------
+        Map
+        """
+        self._layer_dropdown_config = {"names": names, "position": position, "label": label}
+        self._layer_dropdown_injected = False
+        return self
+
+    def _inject_layer_dropdown(self) -> None:
+        """Inject the single-select feature-group dropdown as a Leaflet control.
+
+        Runs from :meth:`_ensure_rendered`, i.e. before ``folium.LayerControl``
+        renders, so clearing each managed group's ``control`` flag here is what
+        keeps those groups out of the checkbox control.
+        """
+        cfg = self._layer_dropdown_config
+        assert cfg is not None
+        requested: list[str] | None = cfg["names"]
+        names = requested if requested is not None else list(self._feature_groups)
+        pairs = [(name, self._feature_groups[name]) for name in names if name in self._feature_groups]
+        if not pairs:
+            return
+        # The dropdown owns these groups: clear their ``control`` flag so the checkbox
+        # LayerControl (rendered after this) leaves them out and lists only base/tile layers.
+        for _, group in pairs:
+            group.control = False
+
+        map_var = self._map.get_name()
+        # [[display_name, leaflet_var], ...], preserving the requested order.
+        options_json = json.dumps([[name, group.get_name()] for name, group in pairs])
+        position = cfg["position"]
+        label = cfg["label"]
+        label_js = (
+            "        var lbl = L.DomUtil.create('div', '', div);\n"
+            f"        lbl.innerHTML = {json.dumps(label)};\n"
+            "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
+            if label
+            else ""
+        )
+
+        # DOMContentLoaded so the map and feature-group variables (declared at the
+        # top of Folium's synchronous script block) are defined, mirroring the
+        # export button. The groups are added to the map at creation, so the initial
+        # ``showOnly`` removes all but the first to enforce single-select.
+        script = (
+            "<script>\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{map_var}'];\n"
+            "    if (!map) return;\n"
+            f"    var _ddOpts = {options_json};\n"
+            "    var groups = _ddOpts.map(function(o) { return {name: o[0], layer: window[o[1]]}; })\n"
+            "        .filter(function(g) { return g.layer; });\n"
+            "    if (!groups.length) return;\n"
+            "    function showOnly(name) {\n"
+            "        groups.forEach(function(g) {\n"
+            "            if (g.name === name) { if (!map.hasLayer(g.layer)) { map.addLayer(g.layer); } }\n"
+            "            else if (map.hasLayer(g.layer)) { map.removeLayer(g.layer); }\n"
+            "        });\n"
+            "    }\n"
+            f"    var ddControl = L.control({{position: '{position}'}});\n"
+            "    ddControl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
+            f"{label_js}"
+            "        var select = L.DomUtil.create('select', '', div);\n"
+            "        select.style.cssText = 'border:none;background:#fff;font-size:13px;cursor:pointer;max-width:220px;';\n"
+            "        groups.forEach(function(g) {\n"
+            "            var opt = document.createElement('option');\n"
+            "            opt.value = g.name; opt.text = g.name;\n"
+            "            select.appendChild(opt);\n"
+            "        });\n"
+            "        select.onchange = function() { showOnly(this.value); };\n"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        L.DomEvent.disableScrollPropagation(div);\n"
+            "        return div;\n"
+            "    };\n"
+            "    ddControl.addTo(map);\n"
+            "    showOnly(groups[0].name);\n"
+            "});\n"
+            "</script>\n"
+        )
+        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
+
     _SEARCH_LABEL_PRIORITY = ("caption", "label", "text", "name", "naam", "title")
 
     def _infer_search_label(self, props: dict[str, Any]) -> str:
@@ -2756,7 +2894,7 @@ class Map:
         )
 
     def _ensure_rendered(self) -> None:
-        """Fit bounds and inject zoom JS / draw plugin / export button (idempotent)."""
+        """Fit bounds and inject zoom JS / draw plugin / layer dropdown / export button (idempotent)."""
         if not self._center:
             self._fit_bounds()
         if (self._zoom_controlled_markers or self._zoom_controlled_captions) and not self._zoom_js_injected:
@@ -2764,6 +2902,12 @@ class Map:
             self._zoom_js_injected = True
         if self._draw_config and not self._draw_injected:
             self._inject_draw_plugin()
+        # Before the export button (irrelevant) but, crucially, before the final render:
+        # clearing the managed groups' ``control`` flag here is what drops them from
+        # the checkbox LayerControl.
+        if self._layer_dropdown_config and not self._layer_dropdown_injected:
+            self._inject_layer_dropdown()
+            self._layer_dropdown_injected = True
         if self._export_button_config and not self._export_button_injected:
             self._inject_export_button()
             self._export_button_injected = True

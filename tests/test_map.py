@@ -950,6 +950,90 @@ class TestFeatureGroups:
         # Assert - Then
         assert result is m
 
+    def test_add_layer_dropdown_returns_self(self) -> None:
+        """
+        Scenario: The dropdown call is chainable.
+
+        Given: A map with a feature group
+        When: add_layer_dropdown is called
+        Then: It returns self
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+
+        # Act - When
+        result = m.add_layer_dropdown()
+
+        # Assert - Then
+        assert result is m
+
+    def test_add_layer_dropdown_renders_select_with_options(self) -> None:
+        """
+        Scenario: The dropdown renders a single-select control listing the groups.
+
+        Given: A map with two feature groups
+        When: add_layer_dropdown is called and the map is rendered
+        Then: A <select> control is built with both group names and exclusive toggling
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("PPN -10.0 [m NAP]").add_point(Point(4.9, 52.37))
+        m.reset_target()
+        m.create_feature_group("PPN -9.5 [m NAP]").add_point(Point(5.1, 52.09))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "L.DomUtil.create('select'" in html, "a <select> control should be created"
+        assert "PPN -10.0 [m NAP]" in html, "the first group should be an option"
+        assert "PPN -9.5 [m NAP]" in html, "the second group should be an option"
+        assert "showOnly(groups[0].name)" in html, "exactly one group is shown initially"
+
+    def test_add_layer_dropdown_excludes_groups_from_checkbox_control(self) -> None:
+        """
+        Scenario: Dropdown-managed groups drop out of the checkbox layer control.
+
+        Given: A map whose feature groups are placed in the dropdown
+        When: add_layer_dropdown and add_layer_control are both used
+        Then: The managed groups' control flag is cleared, so LayerControl lists no overlays
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown().add_layer_control()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert all(fg.control is False for fg in m._feature_groups.values()), "managed groups must be excluded from the checkbox control"
+        compact = "".join(html.split())  # collapse folium's irregular whitespace
+        assert "overlays:{}" in compact, "LayerControl should list no overlays"
+
+    def test_add_layer_dropdown_without_groups_is_noop(self) -> None:
+        """
+        Scenario: With no feature groups, the dropdown emits nothing.
+
+        Given: A map with only base layers and no feature groups
+        When: add_layer_dropdown is called and the map is rendered
+        Then: No dropdown script is emitted
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "showOnly" not in html, "no dropdown script should be emitted without feature groups"
+
 
 # ===================================================================
 # Scenarios for adding GeoJSON data layers.
@@ -5510,19 +5594,34 @@ class TestAddColorbar:
         assert "color_map_" not in html, "branca's SVG colorbar must not be emitted"
         assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
 
-    def test_legend_caption_preserves_inline_html(self) -> None:
+    def test_legend_caption_preserves_raw_html(self) -> None:
         """
-        Scenario: A caption with inline markup renders as HTML, not literal text.
+        Scenario: A RawHTML caption renders as markup, not literal text.
 
-        Given: A colorbar whose legend_name contains a ``<sub>`` tag
+        Given: A colorbar whose legend_name is RawHTML containing a ``<sub>`` tag
         When: The map is rendered
         Then: The ``<sub>`` markup is preserved in the legend (so it renders as a subscript)
         """
         m = Map()
-        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name="R<sub>c;cal</sub>")
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name=RawHTML("R<sub>c;cal</sub>"))
         html = m.get_standalone_html()
 
-        assert "R<sub>c;cal</sub>" in html, "inline HTML in the caption must be preserved, not escaped"
+        assert "R<sub>c;cal</sub>" in html, "RawHTML in the caption must be rendered verbatim, not escaped"
+
+    def test_legend_caption_escapes_plain_string(self) -> None:
+        """
+        Scenario: A plain-string caption is escaped so it cannot inject markup.
+
+        Given: A colorbar whose legend_name is a plain string with HTML/script content
+        When: The map is rendered
+        Then: The markup is HTML-escaped (shown literally), never emitted as active HTML
+        """
+        m = Map()
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name="<script>alert(1)</script>")
+        html = m.get_standalone_html()
+
+        assert "<script>alert(1)</script>" not in html, "plain-string captions must not become active markup"
+        assert "&lt;script&gt;alert(1)&lt;/script&gt;" in html, "plain-string captions must be HTML-escaped"
 
     def test_legend_ticks_format_integers_and_decimals(self) -> None:
         """
