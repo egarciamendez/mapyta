@@ -43,6 +43,44 @@ print(m.to_html()) # markdown-exec: hide
     m.create_feature_group("🔵 Boreholes", show=False)
     ```
 
+## Single-select dropdown
+
+`add_layer_control()` lists every group as a checkbox, so users can show any combination at once. When the groups are mutually exclusive, one band of a graduated layer, one scenario, one year, that gets noisy and lets users tick contradictory combinations. `add_layer_dropdown()` replaces the checkboxes with a single `<select>`: exactly one group is visible at a time, and the dropdown shows which one.
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map
+
+m = Map(title="Noise levels by scenario")
+
+m.create_feature_group("2020 baseline")
+m.add_point(point=Point(5.1213, 52.0908), marker="🔇", tooltip="**42 dB**")
+
+m.create_feature_group("2030 growth")
+m.add_point(point=Point(5.1213, 52.0908), marker="🔉", tooltip="**51 dB**")
+
+m.create_feature_group("2030 + screen")
+m.add_point(point=Point(5.1213, 52.0908), marker="🔈", tooltip="**47 dB**")
+
+m.add_layer_dropdown(label="Scenario")
+
+m.to_html("layer_dropdown.html")
+
+print(m.to_html()) # markdown-exec: hide
+```
+
+### How it works
+
+**`names`** picks which groups appear, in display order. Leave it out (the default) to include every feature group in creation order. Unknown names are ignored; if none match, the call does nothing.
+
+**`label`** is an optional caption above the dropdown. **`position`** takes any Leaflet corner (`"topleft"`, `"topright"`, `"bottomleft"`, `"bottomright"`).
+
+On load, only the first group is shown. Selecting an option hides the others.
+
+!!! note "Mixing with `add_layer_control()`"
+
+    A group handled by the dropdown is automatically removed from `add_layer_control()`'s checkbox list, so it never appears in both. Base/tile layers are untouched, so you can combine the two: keep radio-button tile layers in `add_layer_control()` while a dropdown switches the overlay groups.
+
 ## Search control
 
 Add a search box to any map with `add_search_control()`. See the [Search Control](search.md) tutorial for full details and examples.

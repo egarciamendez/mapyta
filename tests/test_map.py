@@ -950,6 +950,133 @@ class TestFeatureGroups:
         # Assert - Then
         assert result is m
 
+    def test_add_layer_dropdown_returns_self(self) -> None:
+        """
+        Scenario: The dropdown call is chainable.
+
+        Given: A map with a feature group
+        When: add_layer_dropdown is called
+        Then: It returns self
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+
+        # Act - When
+        result = m.add_layer_dropdown()
+
+        # Assert - Then
+        assert result is m
+
+    def test_add_layer_dropdown_renders_select_with_options(self) -> None:
+        """
+        Scenario: The dropdown renders a single-select control listing the groups.
+
+        Given: A map with two feature groups
+        When: add_layer_dropdown is called and the map is rendered
+        Then: A <select> control is built with both group names and exclusive toggling
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("PPN -10.0 [m NAP]").add_point(Point(4.9, 52.37))
+        m.reset_target()
+        m.create_feature_group("PPN -9.5 [m NAP]").add_point(Point(5.1, 52.09))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "L.DomUtil.create('select'" in html, "a <select> control should be created"
+        assert "PPN -10.0 [m NAP]" in html, "the first group should be an option"
+        assert "PPN -9.5 [m NAP]" in html, "the second group should be an option"
+        assert "showOnly(groups[0].name)" in html, "exactly one group is shown initially"
+
+    def test_add_layer_dropdown_excludes_groups_from_checkbox_control(self) -> None:
+        """
+        Scenario: Dropdown-managed groups drop out of the checkbox layer control.
+
+        Given: A map whose feature groups are placed in the dropdown
+        When: add_layer_dropdown and add_layer_control are both used
+        Then: The managed groups' control flag is cleared, so LayerControl lists no overlays
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown().add_layer_control()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert all(fg.control is False for fg in m._feature_groups.values()), "managed groups must be excluded from the checkbox control"
+        compact = "".join(html.split())  # collapse folium's irregular whitespace
+        assert "overlays:{}" in compact, "LayerControl should list no overlays"
+
+    def test_add_layer_dropdown_without_groups_is_noop(self) -> None:
+        """
+        Scenario: With no feature groups, the dropdown emits nothing.
+
+        Given: A map with only base layers and no feature groups
+        When: add_layer_dropdown is called and the map is rendered
+        Then: No dropdown script is emitted
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(4.9, 52.37))
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "showOnly" not in html, "no dropdown script should be emitted without feature groups"
+
+    def test_add_layer_dropdown_group_name_cannot_close_script(self) -> None:
+        """
+        Scenario: A group name containing ``</script>`` cannot terminate the inline script.
+
+        Given: A feature group whose name embeds a ``</script>`` sequence with markup
+        When: add_layer_dropdown is called and the map is rendered
+        Then: The closing tag's angle brackets are escaped, so the script block stays intact
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("</script><img src=x onerror=alert(1)>").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "</script><img src=x onerror=alert(1)>" not in html, "the group name must not close the script block"
+        assert "\\u003c/script\\u003e" in html, "the group name's angle brackets must be escaped for the script context"
+
+    def test_add_layer_dropdown_label_rendered_as_text(self) -> None:
+        """
+        Scenario: The dropdown label renders as literal text, never as active markup.
+
+        Given: A dropdown whose label contains an HTML/script payload
+        When: The map is rendered
+        Then: The label is assigned via ``textContent`` and its ``<`` is escaped for the script
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown(label="<script>alert(1)</script>")
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "lbl.textContent =" in html, "the label must be assigned via textContent, not innerHTML"
+        assert "lbl.innerHTML" not in html, "the label must not be assigned via innerHTML"
+        assert "<script>alert(1)</script>" not in html, "the label must not become active markup"
+
 
 # ===================================================================
 # Scenarios for adding GeoJSON data layers.
@@ -5410,3 +5537,171 @@ class TestCSSMarkerStyle:
         m.to_html(out)
         html = out.read_text(encoding="utf-8")
         assert "font-size:20px" in html
+
+
+# ===================================================================
+# Scenarios for add_colorbar (standalone color-scale legend).
+# ===================================================================
+
+
+class TestAddColorbar:
+    """Tests for the standalone ``add_colorbar`` color-scale legend."""
+
+    def test_registers_and_returns_callable_colormap(self) -> None:
+        """
+        Scenario: A standalone colorbar is added to a map.
+
+        Given: An empty map
+        When: add_colorbar is called with a value range
+        Then: The returned colormap is callable and is registered on the map
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        colormap = m.add_colorbar(colors=None, vmin=0.0, vmax=100.0, legend_name="Capacity [kN]")
+
+        # Assert - Then
+        assert len(m._colormaps) == 1, "Colormap should be registered for merge/standalone tracking"
+        assert isinstance(colormap(50.0), str), "Returned colormap must be callable and yield a colour string"
+
+    def test_legend_caption_renders_in_html(self) -> None:
+        """
+        Scenario: The colorbar legend appears in the rendered map.
+
+        Given: A map with a colorbar whose caption is set
+        When: The map is rendered to HTML
+        Then: The caption text appears in the output
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name="MyLegend")
+        html = m._repr_html_()
+
+        # Assert - Then
+        assert "MyLegend" in html, "Legend caption should be rendered in the HTML"
+
+    def test_named_palette(self) -> None:
+        """
+        Scenario: A colorbar built from a named palette.
+
+        Given: An empty map
+        When: add_colorbar is called with colors="blues"
+        Then: One colormap is registered
+        """
+        m = Map()
+        m.add_colorbar(colors="blues", vmin=0.0, vmax=1.0, legend_name="x")
+        assert len(m._colormaps) == 1
+
+    def test_unknown_palette_raises_value_error(self) -> None:
+        """
+        Scenario: A colorbar with an unknown palette name.
+
+        Given: An empty map
+        When: add_colorbar is called with an unknown palette
+        Then: A ValueError is raised with a helpful message
+        """
+        m = Map()
+        with pytest.raises(ValueError, match="Unknown palette"):
+            m.add_colorbar(colors="nonexistent", vmin=0.0, vmax=1.0, legend_name="x")
+
+    def test_colormap_endpoints_differ(self) -> None:
+        """
+        Scenario: The colorbar maps the value range across distinct colours.
+
+        Given: A colorbar over a non-degenerate range
+        When: The colormap is evaluated at vmin and vmax
+        Then: The endpoint colours differ
+        """
+        m = Map()
+        colormap = m.add_colorbar(colors=["#ff0000", "#0000ff"], vmin=0.0, vmax=100.0, legend_name="x")
+        assert colormap(0.0) != colormap(100.0), "vmin and vmax should resolve to different colours"
+
+    def test_legend_is_html_gradient_not_branca_svg(self) -> None:
+        """
+        Scenario: The colorbar is a readable HTML legend, not branca's SVG colorbar.
+
+        Given: A map with a multi-colour colorbar
+        When: The map is rendered
+        Then: A vertical HTML gradient legend is pinned to the right edge spanning most of the
+              map height, and no branca SVG/topright control is emitted (so it cannot overlap the title)
+        """
+        m = Map(title="B1")
+        m.add_colorbar(colors=["#d73027", "#fee08b", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
+        html = m.get_standalone_html()
+
+        assert "linear-gradient(to top" in html, "Legend should be a vertical CSS gradient bar"
+        assert "top:5%;bottom:5%;right:14px" in html, "Legend should hug the right edge, spanning most of the map height"
+        assert "color_map_" not in html, "branca's SVG colorbar must not be emitted"
+        assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
+
+    def test_legend_caption_preserves_raw_html(self) -> None:
+        """
+        Scenario: A RawHTML caption renders as markup, not literal text.
+
+        Given: A colorbar whose legend_name is RawHTML containing a ``<sub>`` tag
+        When: The map is rendered
+        Then: The ``<sub>`` markup is preserved in the legend (so it renders as a subscript)
+        """
+        m = Map()
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name=RawHTML("R<sub>c;cal</sub>"))
+        html = m.get_standalone_html()
+
+        assert "R<sub>c;cal</sub>" in html, "RawHTML in the caption must be rendered verbatim, not escaped"
+
+    def test_legend_caption_escapes_plain_string(self) -> None:
+        """
+        Scenario: A plain-string caption is escaped so it cannot inject markup.
+
+        Given: A colorbar whose legend_name is a plain string with HTML/script content
+        When: The map is rendered
+        Then: The markup is HTML-escaped (shown literally), never emitted as active HTML
+        """
+        m = Map()
+        m.add_colorbar(colors=["#ff0000", "#00ff00"], vmin=0.0, vmax=10.0, legend_name="<script>alert(1)</script>")
+        html = m.get_standalone_html()
+
+        assert "<script>alert(1)</script>" not in html, "plain-string captions must not become active markup"
+        assert "&lt;script&gt;alert(1)&lt;/script&gt;" in html, "plain-string captions must be HTML-escaped"
+
+    def test_legend_ticks_format_integers_and_decimals(self) -> None:
+        """
+        Scenario: Tick labels are plain integers or two-decimal floats, without a thousands separator.
+
+        Given: A colorbar whose range yields both integer and fractional ticks
+        When: The map is rendered
+        Then: Whole values show as plain integers and fractional values as 2-decimals (no commas)
+        """
+        m = Map()
+        m.add_colorbar(colors="blues", vmin=1000.0, vmax=1001.0, legend_name="x")
+        html = m.get_standalone_html()
+
+        assert "1000" in html, "whole tick values render as plain integers"
+        assert "1000.25" in html, "fractional tick values render with two decimals"
+        assert "1,000" not in html, "tick values must not carry a thousands separator"
+
+    def test_legend_escapes_color_stops(self) -> None:
+        """
+        Scenario: A color stop containing a quote cannot break out of the style attribute.
+
+        Given: A colorbar whose color list holds a value with a double quote and markup
+        When: The HTML legend is rendered
+        Then: The quote is HTML-escaped, so it stays inside the ``style="..."`` attribute
+
+        ``add_colorbar`` runs the colors through branca's ``LinearColormap`` first, which
+        rejects non-colors, so this exercises ``_add_html_colorbar`` directly to cover the
+        escaping as defence-in-depth.
+        """
+        m = Map()
+        m._add_html_colorbar(
+            colors=["#ff0000", '#00ff00"></div><script>alert(1)</script>'],
+            vmin=0.0,
+            vmax=10.0,
+            legend_name="x",
+        )
+        html = m.get_standalone_html()
+
+        assert "<script>alert(1)</script>" not in html, "a quote in a color stop must not break out into active markup"
+        assert "&quot;" in html, "the quote in the color stop must be HTML-escaped"
