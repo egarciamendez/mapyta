@@ -214,3 +214,60 @@ m.add_choropleth(
 
 print(m.to_html())  # markdown-exec: hide
 ```
+
+## Standalone colorbar legend
+
+`add_choropleth` draws its own legend, but sometimes you colour features by hand, for example `add_circle` or `add_point` markers whose fill comes from a per-feature value, and still want a shared color scale. `add_colorbar()` adds that legend on its own.
+
+Unlike the other `add_*` methods, it returns the **colormap** rather than the map. The colormap is callable: `colormap(value)` gives back the hex color for that value, so your markers stay consistent with the legend without you rebuilding the scale.
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, CircleStyle, StrokeStyle, FillStyle
+
+# Air-quality sensors, each placed by hand and coloured from a shared 0–100 scale.
+readings = [
+    (5.10, 52.090, 12),
+    (5.12, 52.100, 45),
+    (5.14, 52.085, 78),
+    (5.16, 52.105, 95),
+]
+
+m = Map(title="Air quality sensors")
+
+# Returns the colormap (not the map). Call it to colour each marker.
+colormap = m.add_colorbar(colors="blues", vmin=0, vmax=100, legend_name="PM2.5 (µg/m³)")
+
+for lon, lat, value in readings:
+    m.add_circle(
+        point=Point(lon, lat),
+        tooltip=f"{value} µg/m³",
+        style=CircleStyle(
+            radius=12,
+            stroke=StrokeStyle(color="#333", weight=1),
+            fill=FillStyle(color=colormap(value), opacity=0.9),
+        ),
+    )
+
+m.to_html("colorbar.html")
+
+print(m.to_html())  # markdown-exec: hide
+```
+
+### How it works
+
+**`colors`**, **`vmin`**, **`vmax`** define the scale exactly like `add_choropleth`: a [palette name](#custom-color-palettes), a list of hex colors (low → high), or `None` for the default `"ylrd"` ramp, mapped across the `vmin`–`vmax` range.
+
+**`legend_name`** is the caption above the bar. Plain strings are HTML-escaped and shown literally; wrap the text in `RawHTML` to render inline markup such as `<sub>` or `<sup>`:
+
+```python
+from mapyta import RawHTML
+
+m.add_colorbar(colors="viridis", vmin=0, vmax=50, legend_name=RawHTML("R<sub>c;cal</sub>"))
+```
+
+The legend is a vertical gradient bar pinned to the right edge of the map, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals.
+
+!!! tip "Reuse the same scale everywhere"
+
+    Because `colormap` is just a callable, you can pass `colormap(value)` to any styled feature, circles, polygons (`add_polygon`), or DataFrame rows, so every layer on the map reads against one legend.
