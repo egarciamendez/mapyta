@@ -1,0 +1,63 @@
+# CodeRabbit configuration — https://docs.coderabbit.ai/reference/yaml-template
+language: en-US
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  sequence_diagrams: true
+  changed_files_summary: true
+
+  path_filters:
+    - "!**/*.lock"
+    - "!**/*.html"          # generated Folium/Leaflet map outputs
+    - "!site/**"            # mkdocs production build
+    - "!plan/**"            # scratch / planning notes
+    - "!**/__pycache__/**"
+    - "!venv/**"
+    - "!.venv/**"
+
+  path_instructions:
+    - path: "mapyta/**"
+      instructions: |
+        Public API is the single `Map` class in map.py; the config dataclasses in config.py
+        (MapConfig, StrokeStyle, FillStyle, CircleStyle, HeatmapStyle, PopupStyle, TooltipStyle);
+        and the names re-exported from __init__.py. Everything else is internal.
+
+        DOCUMENTATION GATE — apply on every PR that adds or changes public API:
+        - If a public method, parameter, default, return type, or config field is added,
+          renamed, removed, or changes behaviour, the PR MUST also update documentation.
+          If it does not touch docs/, flag it and say exactly which doc is missing/stale.
+        - New user-facing feature (e.g. a new `add_*` method or style option) → expect a new
+          or updated page under docs/tutorial/, not only a docstring change.
+        - The API reference is generated from docstrings, so every public symbol needs an
+          accurate NumPy-convention docstring (Parameters / Returns / Raises). Flag added or
+          changed public symbols whose docstring is missing or no longer matches the signature.
+    - path: "tests/**"
+      instructions: |
+        pytest. Test public behaviour (the `Map` API).
+        Check assertions are meaningful and fixtures/temp files are cleaned up.
+    - path: "docs/tutorial/**"
+      instructions: |
+        Tutorial pages. When docs ARE included in a PR, hold them to the existing house style
+        so they read consistently with the rest of docs/tutorial/:
+        - Structure: an H1 title, a one- to two-sentence intro, a runnable example fenced as
+          ```python exec="true" html="true" source="tabbed-right"``` ending in
+          `print(m.to_html()) # markdown-exec: hide`, then a `## How it works` section.
+        - Examples must use the current public API and run as written; flag any drift from
+          the real signatures, removed parameters, or renamed methods.
+        - Match the surrounding tone, heading depth, and Markdown conventions of sibling pages.
+    - path: "docs/**"
+      instructions: |
+        Documentation prose. Flag code samples and prose that drift from the current public API.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: auto
