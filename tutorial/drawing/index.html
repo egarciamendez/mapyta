@@ -1741,7 +1741,7 @@
 <p>Let users draw markers, lines, and polygons on the map and submit the results.</p>
 <h2 id="basic-drawing">Basic drawing</h2>
 <p>Enable the default drawing tools (polyline, polygon, marker) with a download-on-submit fallback:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-24--__tabbed_1_1" name="exec-24--__tabbed_1" type="radio" /><input id="exec-24--__tabbed_1_2" name="exec-24--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-24--__tabbed_1_1">Result</label><label for="exec-24--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-25--__tabbed_1_1" name="exec-25--__tabbed_1" type="radio" /><input id="exec-25--__tabbed_1_2" name="exec-25--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-25--__tabbed_1_1">Result</label><label for="exec-25--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1750,7 +1750,7 @@
     
     &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
     &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
-    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}&lt;/style&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
@@ -1765,7 +1765,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_40f22136ca157cab5d1aed7841810c6b {
+                #map_055828bf2745706279c2b9c610dacc89 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1808,8 +1808,8 @@
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Drawing demo&lt;/div&gt;
     &lt;script&gt;
 document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
-    var map = window[&#x27;map_40f22136ca157cab5d1aed7841810c6b&#x27;];
-    var drawnItems = window[&#x27;drawnItems_draw_control_8cba01666954c9f5b1476195827b1b6e&#x27;];
+    var map = window[&#x27;map_055828bf2745706279c2b9c610dacc89&#x27;];
+    var drawnItems = window[&#x27;drawnItems_draw_control_58adde08b8e4dae921cd4f2a2167a204&#x27;];
     if (!map || !drawnItems) return;
 
     var ddTrashHtml = &quot;&lt;div style=\&quot;background:#fff;border:1px solid #ccc;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;\&quot;&gt;&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;14&#x27; height=&#x27;14&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;currentColor&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;polyline points=&#x27;3 6 5 6 21 6&#x27;&gt;&lt;/polyline&gt;&lt;path d=&#x27;M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2&#x27;&gt;&lt;/path&gt;&lt;line x1=&#x27;10&#x27; y1=&#x27;11&#x27; x2=&#x27;10&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;line x1=&#x27;14&#x27; y1=&#x27;11&#x27; x2=&#x27;14&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;/svg&gt;&lt;/div&gt;&quot;;
@@ -1938,7 +1938,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 });
 &lt;/script&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_40f22136ca157cab5d1aed7841810c6b&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_055828bf2745706279c2b9c610dacc89&quot; &gt;&lt;/div&gt;
         
     
             
@@ -1947,8 +1947,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 &lt;script&gt;
     
     
-            var map_40f22136ca157cab5d1aed7841810c6b = L.map(
-                &quot;map_40f22136ca157cab5d1aed7841810c6b&quot;,
+            var map_055828bf2745706279c2b9c610dacc89 = L.map(
+                &quot;map_055828bf2745706279c2b9c610dacc89&quot;,
                 {
                     center: [52.0907, 5.1214],
                     crs: L.CRS.EPSG3857,
@@ -1960,13 +1960,13 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 
                 }
             );
-            L.control.scale().addTo(map_40f22136ca157cab5d1aed7841810c6b);
+            L.control.scale().addTo(map_055828bf2745706279c2b9c610dacc89);
 
             
 
         
     
-            var tile_layer_2dd64ac76b1217ddb083c85493ca95be = L.tileLayer(
+            var tile_layer_668df9d0fb837696aa805fe79a1cb5e6 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1983,10 +1983,10 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             );
         
     
-            tile_layer_2dd64ac76b1217ddb083c85493ca95be.addTo(map_40f22136ca157cab5d1aed7841810c6b);
+            tile_layer_668df9d0fb837696aa805fe79a1cb5e6.addTo(map_055828bf2745706279c2b9c610dacc89);
         
     
-            var mouse_position_a8ef5e49d54becf2a6066725c7b327fb = new L.Control.MousePosition(
+            var mouse_position_53fb65076b8961591564df670043a858 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1996,11 +1996,11 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_a8ef5e49d54becf2a6066725c7b327fb.options[&quot;latFormatter&quot;] =
+            mouse_position_53fb65076b8961591564df670043a858.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_a8ef5e49d54becf2a6066725c7b327fb.options[&quot;lngFormatter&quot;] =
+            mouse_position_53fb65076b8961591564df670043a858.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_40f22136ca157cab5d1aed7841810c6b.addControl(mouse_position_a8ef5e49d54becf2a6066725c7b327fb);
+            map_055828bf2745706279c2b9c610dacc89.addControl(mouse_position_53fb65076b8961591564df670043a858);
         
     
             var options = {
@@ -2009,29 +2009,29 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
               edit: {&quot;edit&quot;: false, &quot;remove&quot;: false},
             }
                 // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_8cba01666954c9f5b1476195827b1b6e =
+                var drawnItems_draw_control_58adde08b8e4dae921cd4f2a2167a204 =
                     new L.featureGroup().addTo(
-                        map_40f22136ca157cab5d1aed7841810c6b
+                        map_055828bf2745706279c2b9c610dacc89
                     );
 
-            options.edit.featureGroup = drawnItems_draw_control_8cba01666954c9f5b1476195827b1b6e;
-            var draw_control_8cba01666954c9f5b1476195827b1b6e = new L.Control.Draw(
+            options.edit.featureGroup = drawnItems_draw_control_58adde08b8e4dae921cd4f2a2167a204;
+            var draw_control_58adde08b8e4dae921cd4f2a2167a204 = new L.Control.Draw(
                 options
-            ).addTo( map_40f22136ca157cab5d1aed7841810c6b );
-            map_40f22136ca157cab5d1aed7841810c6b.on(L.Draw.Event.CREATED, function(e) {
+            ).addTo( map_055828bf2745706279c2b9c610dacc89 );
+            map_055828bf2745706279c2b9c610dacc89.on(L.Draw.Event.CREATED, function(e) {
                 var layer = e.layer,
                     type = e.layerType;
                 var coords = JSON.stringify(layer.toGeoJSON());
-                drawnItems_draw_control_8cba01666954c9f5b1476195827b1b6e.addLayer(layer);
+                drawnItems_draw_control_58adde08b8e4dae921cd4f2a2167a204.addLayer(layer);
             });
-            map_40f22136ca157cab5d1aed7841810c6b.on(&#x27;draw:created&#x27;, function(e) {
-                drawnItems_draw_control_8cba01666954c9f5b1476195827b1b6e.addLayer(e.layer);
+            map_055828bf2745706279c2b9c610dacc89.on(&#x27;draw:created&#x27;, function(e) {
+                drawnItems_draw_control_58adde08b8e4dae921cd4f2a2167a204.addLayer(e.layer);
             });
 
             
         
     
-            tile_layer_2dd64ac76b1217ddb083c85493ca95be.addTo(map_40f22136ca157cab5d1aed7841810c6b);
+            tile_layer_668df9d0fb837696aa805fe79a1cb5e6.addTo(map_055828bf2745706279c2b9c610dacc89);
         
 &lt;/script&gt;
 &lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
@@ -2062,7 +2062,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 <p>Set <code>edit=False</code> to make drawn shapes inert (no in-place editing, no trashbin). The confirmation popup text is configurable via <code>delete_confirm_message</code>, <code>delete_confirm_yes</code>, and <code>delete_confirm_no</code> (English by default) — pass your own strings for other languages.</p>
 <h2 id="custom-tools">Custom tools</h2>
 <p>Pick only the tools you need:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-25--__tabbed_1_1" name="exec-25--__tabbed_1" type="radio" /><input id="exec-25--__tabbed_1_2" name="exec-25--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-25--__tabbed_1_1">Result</label><label for="exec-25--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-26--__tabbed_1_1" name="exec-26--__tabbed_1" type="radio" /><input id="exec-26--__tabbed_1_2" name="exec-26--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-26--__tabbed_1_1">Result</label><label for="exec-26--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2071,7 +2071,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
     
     &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
     &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
-    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}&lt;/style&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
@@ -2086,7 +2086,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_9ceb51ae8ddddc79eec072ac5811faef {
+                #map_51efcf41d73a27509de9c3b8a72a087e {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2129,8 +2129,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Polygons only&lt;/div&gt;
     &lt;script&gt;
 document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
-    var map = window[&#x27;map_9ceb51ae8ddddc79eec072ac5811faef&#x27;];
-    var drawnItems = window[&#x27;drawnItems_draw_control_8642558bbbd14cd0c69e6b37bd062d0e&#x27;];
+    var map = window[&#x27;map_51efcf41d73a27509de9c3b8a72a087e&#x27;];
+    var drawnItems = window[&#x27;drawnItems_draw_control_95d53d9efd92d358a4469102de261189&#x27;];
     if (!map || !drawnItems) return;
 
     var ddTrashHtml = &quot;&lt;div style=\&quot;background:#fff;border:1px solid #ccc;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;\&quot;&gt;&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;14&#x27; height=&#x27;14&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;currentColor&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;polyline points=&#x27;3 6 5 6 21 6&#x27;&gt;&lt;/polyline&gt;&lt;path d=&#x27;M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2&#x27;&gt;&lt;/path&gt;&lt;line x1=&#x27;10&#x27; y1=&#x27;11&#x27; x2=&#x27;10&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;line x1=&#x27;14&#x27; y1=&#x27;11&#x27; x2=&#x27;14&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;/svg&gt;&lt;/div&gt;&quot;;
@@ -2259,7 +2259,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 });
 &lt;/script&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_9ceb51ae8ddddc79eec072ac5811faef&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_51efcf41d73a27509de9c3b8a72a087e&quot; &gt;&lt;/div&gt;
         
     
             
@@ -2268,8 +2268,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 &lt;script&gt;
     
     
-            var map_9ceb51ae8ddddc79eec072ac5811faef = L.map(
-                &quot;map_9ceb51ae8ddddc79eec072ac5811faef&quot;,
+            var map_51efcf41d73a27509de9c3b8a72a087e = L.map(
+                &quot;map_51efcf41d73a27509de9c3b8a72a087e&quot;,
                 {
                     center: [52.0907, 5.1214],
                     crs: L.CRS.EPSG3857,
@@ -2281,13 +2281,13 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 
                 }
             );
-            L.control.scale().addTo(map_9ceb51ae8ddddc79eec072ac5811faef);
+            L.control.scale().addTo(map_51efcf41d73a27509de9c3b8a72a087e);
 
             
 
         
     
-            var tile_layer_47f2e2d7ff08d1d54fc2fd96a0805e52 = L.tileLayer(
+            var tile_layer_b492b03929f3ee198d38bdb1b9db6533 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2304,10 +2304,10 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             );
         
     
-            tile_layer_47f2e2d7ff08d1d54fc2fd96a0805e52.addTo(map_9ceb51ae8ddddc79eec072ac5811faef);
+            tile_layer_b492b03929f3ee198d38bdb1b9db6533.addTo(map_51efcf41d73a27509de9c3b8a72a087e);
         
     
-            var mouse_position_ebd669ad04c62a022a3bc9b8a1c75b06 = new L.Control.MousePosition(
+            var mouse_position_5e54e77794bd0339c4e1b229b31c4b30 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2317,11 +2317,11 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_ebd669ad04c62a022a3bc9b8a1c75b06.options[&quot;latFormatter&quot;] =
+            mouse_position_5e54e77794bd0339c4e1b229b31c4b30.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_ebd669ad04c62a022a3bc9b8a1c75b06.options[&quot;lngFormatter&quot;] =
+            mouse_position_5e54e77794bd0339c4e1b229b31c4b30.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_9ceb51ae8ddddc79eec072ac5811faef.addControl(mouse_position_ebd669ad04c62a022a3bc9b8a1c75b06);
+            map_51efcf41d73a27509de9c3b8a72a087e.addControl(mouse_position_5e54e77794bd0339c4e1b229b31c4b30);
         
     
             var options = {
@@ -2330,23 +2330,23 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
               edit: {&quot;edit&quot;: false, &quot;remove&quot;: false},
             }
                 // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_8642558bbbd14cd0c69e6b37bd062d0e =
+                var drawnItems_draw_control_95d53d9efd92d358a4469102de261189 =
                     new L.featureGroup().addTo(
-                        map_9ceb51ae8ddddc79eec072ac5811faef
+                        map_51efcf41d73a27509de9c3b8a72a087e
                     );
 
-            options.edit.featureGroup = drawnItems_draw_control_8642558bbbd14cd0c69e6b37bd062d0e;
-            var draw_control_8642558bbbd14cd0c69e6b37bd062d0e = new L.Control.Draw(
+            options.edit.featureGroup = drawnItems_draw_control_95d53d9efd92d358a4469102de261189;
+            var draw_control_95d53d9efd92d358a4469102de261189 = new L.Control.Draw(
                 options
-            ).addTo( map_9ceb51ae8ddddc79eec072ac5811faef );
-            map_9ceb51ae8ddddc79eec072ac5811faef.on(L.Draw.Event.CREATED, function(e) {
+            ).addTo( map_51efcf41d73a27509de9c3b8a72a087e );
+            map_51efcf41d73a27509de9c3b8a72a087e.on(L.Draw.Event.CREATED, function(e) {
                 var layer = e.layer,
                     type = e.layerType;
                 var coords = JSON.stringify(layer.toGeoJSON());
-                drawnItems_draw_control_8642558bbbd14cd0c69e6b37bd062d0e.addLayer(layer);
+                drawnItems_draw_control_95d53d9efd92d358a4469102de261189.addLayer(layer);
             });
-            map_9ceb51ae8ddddc79eec072ac5811faef.on(&#x27;draw:created&#x27;, function(e) {
-                drawnItems_draw_control_8642558bbbd14cd0c69e6b37bd062d0e.addLayer(e.layer);
+            map_51efcf41d73a27509de9c3b8a72a087e.on(&#x27;draw:created&#x27;, function(e) {
+                drawnItems_draw_control_95d53d9efd92d358a4469102de261189.addLayer(e.layer);
             });
 
             
@@ -2372,7 +2372,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 <p>This sends a <code>POST</code> request with the GeoJSON FeatureCollection as the body.</p>
 <h2 id="custom-javascript-callback">Custom JavaScript callback</h2>
 <p>For full control, pass a <code>RawJS</code> function expression:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-26--__tabbed_1_1" name="exec-26--__tabbed_1" type="radio" /><input id="exec-26--__tabbed_1_2" name="exec-26--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-26--__tabbed_1_1">Result</label><label for="exec-26--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-27--__tabbed_1_1" name="exec-27--__tabbed_1" type="radio" /><input id="exec-27--__tabbed_1_2" name="exec-27--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-27--__tabbed_1_1">Result</label><label for="exec-27--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2381,7 +2381,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
     
     &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
     &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
-    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}&lt;/style&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
@@ -2396,7 +2396,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_29a3a1062c703dbd833cca36d08ae92d {
+                #map_3b54bbe024008bb09357b6059e4a7b67 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2439,8 +2439,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Custom callback, check console (F12)&lt;/div&gt;
     &lt;script&gt;
 document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
-    var map = window[&#x27;map_29a3a1062c703dbd833cca36d08ae92d&#x27;];
-    var drawnItems = window[&#x27;drawnItems_draw_control_6744841df0ba8a26551f2a41e1a803ea&#x27;];
+    var map = window[&#x27;map_3b54bbe024008bb09357b6059e4a7b67&#x27;];
+    var drawnItems = window[&#x27;drawnItems_draw_control_3012a97fca0e5e6c521336896515ee9c&#x27;];
     if (!map || !drawnItems) return;
 
     var ddTrashHtml = &quot;&lt;div style=\&quot;background:#fff;border:1px solid #ccc;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);color:#d11;cursor:pointer;\&quot;&gt;&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;14&#x27; height=&#x27;14&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;currentColor&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;polyline points=&#x27;3 6 5 6 21 6&#x27;&gt;&lt;/polyline&gt;&lt;path d=&#x27;M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2&#x27;&gt;&lt;/path&gt;&lt;line x1=&#x27;10&#x27; y1=&#x27;11&#x27; x2=&#x27;10&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;line x1=&#x27;14&#x27; y1=&#x27;11&#x27; x2=&#x27;14&#x27; y2=&#x27;17&#x27;&gt;&lt;/line&gt;&lt;/svg&gt;&lt;/div&gt;&quot;;
@@ -2565,7 +2565,7 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 });
 &lt;/script&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_29a3a1062c703dbd833cca36d08ae92d&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_3b54bbe024008bb09357b6059e4a7b67&quot; &gt;&lt;/div&gt;
         
     
             
@@ -2574,8 +2574,8 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 &lt;script&gt;
     
     
-            var map_29a3a1062c703dbd833cca36d08ae92d = L.map(
-                &quot;map_29a3a1062c703dbd833cca36d08ae92d&quot;,
+            var map_3b54bbe024008bb09357b6059e4a7b67 = L.map(
+                &quot;map_3b54bbe024008bb09357b6059e4a7b67&quot;,
                 {
                     center: [52.0907, 5.1214],
                     crs: L.CRS.EPSG3857,
@@ -2587,13 +2587,13 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
 
                 }
             );
-            L.control.scale().addTo(map_29a3a1062c703dbd833cca36d08ae92d);
+            L.control.scale().addTo(map_3b54bbe024008bb09357b6059e4a7b67);
 
             
 
         
     
-            var tile_layer_9eac50c462d8949094d22650c065ef03 = L.tileLayer(
+            var tile_layer_eb40ccac9b4cd1f57199463a3a2fece2 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2610,10 +2610,10 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
             );
         
     
-            tile_layer_9eac50c462d8949094d22650c065ef03.addTo(map_29a3a1062c703dbd833cca36d08ae92d);
+            tile_layer_eb40ccac9b4cd1f57199463a3a2fece2.addTo(map_3b54bbe024008bb09357b6059e4a7b67);
         
     
-            var mouse_position_0149a8956f6cf4c00443c846424c8b77 = new L.Control.MousePosition(
+            var mouse_position_794aca4fc93110c8e663fe83ba53f009 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2623,11 +2623,11 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_0149a8956f6cf4c00443c846424c8b77.options[&quot;latFormatter&quot;] =
+            mouse_position_794aca4fc93110c8e663fe83ba53f009.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_0149a8956f6cf4c00443c846424c8b77.options[&quot;lngFormatter&quot;] =
+            mouse_position_794aca4fc93110c8e663fe83ba53f009.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_29a3a1062c703dbd833cca36d08ae92d.addControl(mouse_position_0149a8956f6cf4c00443c846424c8b77);
+            map_3b54bbe024008bb09357b6059e4a7b67.addControl(mouse_position_794aca4fc93110c8e663fe83ba53f009);
         
     
             var options = {
@@ -2636,23 +2636,23 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, function() {
               edit: {&quot;edit&quot;: false, &quot;remove&quot;: false},
             }
                 // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_6744841df0ba8a26551f2a41e1a803ea =
+                var drawnItems_draw_control_3012a97fca0e5e6c521336896515ee9c =
                     new L.featureGroup().addTo(
-                        map_29a3a1062c703dbd833cca36d08ae92d
+                        map_3b54bbe024008bb09357b6059e4a7b67
                     );
 
-            options.edit.featureGroup = drawnItems_draw_control_6744841df0ba8a26551f2a41e1a803ea;
-            var draw_control_6744841df0ba8a26551f2a41e1a803ea = new L.Control.Draw(
+            options.edit.featureGroup = drawnItems_draw_control_3012a97fca0e5e6c521336896515ee9c;
+            var draw_control_3012a97fca0e5e6c521336896515ee9c = new L.Control.Draw(
                 options
-            ).addTo( map_29a3a1062c703dbd833cca36d08ae92d );
-            map_29a3a1062c703dbd833cca36d08ae92d.on(L.Draw.Event.CREATED, function(e) {
+            ).addTo( map_3b54bbe024008bb09357b6059e4a7b67 );
+            map_3b54bbe024008bb09357b6059e4a7b67.on(L.Draw.Event.CREATED, function(e) {
                 var layer = e.layer,
                     type = e.layerType;
                 var coords = JSON.stringify(layer.toGeoJSON());
-                drawnItems_draw_control_6744841df0ba8a26551f2a41e1a803ea.addLayer(layer);
+                drawnItems_draw_control_3012a97fca0e5e6c521336896515ee9c.addLayer(layer);
             });
-            map_29a3a1062c703dbd833cca36d08ae92d.on(&#x27;draw:created&#x27;, function(e) {
-                drawnItems_draw_control_6744841df0ba8a26551f2a41e1a803ea.addLayer(e.layer);
+            map_3b54bbe024008bb09357b6059e4a7b67.on(&#x27;draw:created&#x27;, function(e) {
+                drawnItems_draw_control_3012a97fca0e5e6c521336896515ee9c.addLayer(e.layer);
             });
 
             
