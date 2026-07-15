@@ -23,20 +23,24 @@ Perfect for geotechnical site plans, infrastructure overviews, or any spatial da
 Pythonic for users who are already familiar with Shapely and GeoPandas. It's not trying to replace a full GIS, 
 but rather to provide a simple way to create interactive maps without needing to learn a whole new set of tools.*
 
+👉 **[See the Showcase](docs/showcase.md)** — every feature as a live, interactive map on a single page.
+
 ---
 
 **Key features:**
 
-- 🗺️ **Shapely-native** — pass `Point`, `Polygon`, `LineString` directly, including multi-geometries
-- 📝 **Markdown/HTML hover and popup text** — bold, italic, links, lists, and code in tooltips
-- 📌 **Emoji & icon markers** — any text or Font Awesome icons as markers
-- 🎨 **Choropleth & heatmaps** — color-coded maps from numeric data
-- 📊 **GeoPandas integration** — `Map.from_geodataframe()` one-liner
-- 🗂️ **DataFrame support** — `add_dataframe()` works with any Pandas or Polars DataFrame with a WKT geometry column
-- 🌐 **Auto CRS detection** — RD New (EPSG:28992) coordinates transform automatically
-- 📤 **Export anywhere** — HTML, PNG, SVG, GeoJSON, async variants, and `BytesIO` buffers
-- 🧩 **Feature groups** — toggleable layers with a built-in layer control
-- 🔌 **Set of tile providers** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
+<!-- grid-cards-start -->
+- 🗺️ **[Shapely-native](docs/tutorial/geometries.md)** — pass `Point`, `Polygon`, `LineString` directly, including multi-geometries
+- 📝 **[Markdown/HTML hover and popup text](docs/tutorial/tooltips-popups.md)** — bold, italic, links, lists, and code in tooltips
+- 📌 **[Emoji & icon markers](docs/tutorial/markers.md)** — any text or Font Awesome icons as markers
+- 🎨 **[Choropleth & heatmaps](docs/tutorial/choropleth.md)** — color-coded maps from numeric data
+- 📊 **[GeoPandas integration](docs/tutorial/geodataframe.md)** — `Map.from_geodataframe()` one-liner
+- 🗂️ **[DataFrame support](docs/tutorial/dataframe.md)** — `add_dataframe()` works with any Pandas or Polars DataFrame with a WKT geometry column
+- 🌐 **[Auto CRS detection](docs/tutorial/coordinates.md)** — RD New (EPSG:28992) coordinates transform automatically
+- 📤 **[Export anywhere](docs/tutorial/export.md)** — HTML, PNG, SVG, GeoJSON, async variants, and `BytesIO` buffers
+- 🧩 **[Feature groups](docs/tutorial/layers.md)** — toggleable layers with a built-in layer control
+- 🔌 **[Set of tile providers](docs/tutorial/configuration.md)** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
+<!-- grid-cards-end -->
 
 ---
 
