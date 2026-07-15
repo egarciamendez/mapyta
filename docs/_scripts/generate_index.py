@@ -10,10 +10,28 @@ readme_file = root / "README.md"
 
 
 def replace_links(readme_content: str) -> str:
-    """Replace the relative links to the overview page by removing the .md extension."""
-    readme_content = readme_content.replace("docs/", "")
-    # replace the relative links to the overview page by removing the .md extension
-    return re.sub(r"/\w+\.md", lambda match: match.group(0)[:-3], readme_content)
+    """Rebase the README's ``docs/`` relative links onto the docs root.
+
+    The README links into ``docs/`` (so they resolve on GitHub); on the docs
+    site the index lives at that root, so the prefix is dropped. The ``.md``
+    extension is kept — MkDocs rewrites those to the correct page URLs.
+    """
+    return readme_content.replace("docs/", "")
+
+
+def wrap_grid_cards(readme_content: str) -> str:
+    """Turn the marked feature list into an mkdocs-material grid of cards.
+
+    The README keeps a plain bullet list (which renders cleanly on GitHub);
+    the markers are HTML comments there. On the docs site the same list is
+    wrapped in a ``grid cards`` container so it renders as clickable cards.
+    """
+    return re.sub(
+        r"<!-- grid-cards-start -->\n(.*?)\n<!-- grid-cards-end -->",
+        lambda match: f'<div class="grid cards" markdown>\n\n{match.group(1)}\n\n</div>',
+        readme_content,
+        flags=re.DOTALL,
+    )
 
 
 LOGO_LINES = (
@@ -24,6 +42,7 @@ LOGO_LINES = (
 with open(readme_file, encoding="utf-8") as fd:
     readme_content = fd.read()
     readme_content = replace_links(readme_content)
+    readme_content = wrap_grid_cards(readme_content)
     # Replace lines 1-5 (the HTML logo block) with MkDocs-style image tags
     lines = readme_content.splitlines(keepends=True)
     readme_content = LOGO_LINES + "".join(lines[5:])
