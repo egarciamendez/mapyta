@@ -25,7 +25,7 @@ pip install mapyta
 - 🗺️ **[Your first map](#your-first-map)**
 - 📐 **[Geometries](#shapely-native-geometry)**
 - 📌 **[Markers](#markers-your-way)**
-- 💬 **[Tooltips & popups](#markdown-tooltips-popups)**
+- 💬 **[Tooltips & popups](#markdown-tooltips-and-popups)**
 - 🎨 **[Choropleth](#choropleth)**
 - 🔥 **[Heatmap](#heatmap)**
 - 🔵 **[Clusters](#marker-clusters)**
@@ -124,7 +124,7 @@ print(m.to_html())  # markdown-exec: hide
 
 ---
 
-## Markdown tooltips & popups
+## Markdown tooltips and popups
 
 Tooltips and popups take **Markdown** — bold, italic, links, lists, and code —
 so hover and click text stays readable without hand-written HTML.
