@@ -1,6 +1,9 @@
 <p align="center">
     <a href="https://egarciamendez.github.io/mapyta">
-    <img src="https://egarciamendez.github.io/mapyta/_overrides/assets/images/mapyta-logo-light-mode.svg" alt="Mapyta">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/egarciamendez/mapyta/main/docs/_overrides/assets/images/mapyta-logo-dark-mode.png">
+        <img src="https://raw.githubusercontent.com/egarciamendez/mapyta/main/docs/_overrides/assets/images/mapyta-logo-light-mode.png" alt="Mapyta" width="320">
+    </picture>
     </a>
 </p>
 
