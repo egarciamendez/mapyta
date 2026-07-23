@@ -58,7 +58,7 @@ m.add_point(
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Your First Map](tutorial/first-map.md)
+[→ Full tutorial: Your First Map](tutorial/first-map.md)
 
 ---
 
@@ -89,7 +89,7 @@ m.set_bounds(padding=0.005)
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Lines & Polygons](tutorial/geometries.md)
+[→ Full tutorial: Lines & Polygons](tutorial/geometries.md)
 
 ---
 
@@ -120,7 +120,7 @@ m.set_bounds(padding=0.005)
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Markers](tutorial/markers.md)
+[→ Full tutorial: Markers](tutorial/markers.md)
 
 ---
 
@@ -145,7 +145,7 @@ m.add_point(
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Tooltips & Popups](tutorial/tooltips-popups.md)
+[→ Full tutorial: Tooltips & Popups](tutorial/tooltips-popups.md)
 
 ---
 
@@ -181,7 +181,7 @@ m.add_choropleth(
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Choropleth Maps](tutorial/choropleth.md)
+[→ Full tutorial: Choropleth Maps](tutorial/choropleth.md)
 
 ---
 
@@ -203,7 +203,7 @@ m.add_heatmap(points=points, style=HeatmapStyle(radius=20, blur=15, min_opacity=
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Heatmaps](tutorial/heatmaps.md)
+[→ Full tutorial: Heatmaps](tutorial/heatmaps.md)
 
 ---
 
@@ -231,7 +231,7 @@ m.add_marker_cluster(
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Marker Clusters](tutorial/clusters.md)
+[→ Full tutorial: Marker Clusters](tutorial/clusters.md)
 
 ---
 
@@ -256,7 +256,7 @@ m.add_dataframe(df, hover_fields=["city", "population"])
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: DataFrames](tutorial/dataframe.md) ·
+[→ Full tutorial: DataFrames](tutorial/dataframe.md) ·
 [GeoPandas](tutorial/geodataframe.md)
 
 ---
@@ -281,7 +281,7 @@ m.add_search_control(placeholder="Find city...")
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Search Control](tutorial/search.md)
+[→ Full tutorial: Search Control](tutorial/search.md)
 
 ---
 
@@ -301,7 +301,7 @@ print(m.to_html())  # markdown-exec: hide
 
 Use the toolbar in the map's top-left corner to draw a shape.
 
-[:octicons-arrow-right-24: Full tutorial: Drawing Tools](tutorial/drawing.md)
+[→ Full tutorial: Drawing Tools](tutorial/drawing.md)
 
 ---
 
@@ -321,7 +321,7 @@ m.add_ant_path(route, tooltip="**Tram 9** — richting Maliebaan", color="#e74c3
 print(m.to_html())  # markdown-exec: hide
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Animated Layers](tutorial/animated.md)
+[→ Full tutorial: Animated Layers](tutorial/animated.md)
 
 ---
 
@@ -346,7 +346,7 @@ fc = m.to_geojson()                 # a dict
 m.to_geojson("map.geojson")         # or a file
 ```
 
-[:octicons-arrow-right-24: Full tutorial: Export](tutorial/export.md)
+[→ Full tutorial: Export](tutorial/export.md)
 
 ---
 
