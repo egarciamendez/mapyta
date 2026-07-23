@@ -69,7 +69,7 @@ but rather to provide a simple way to create interactive maps without needing to
         popup_style={"width": 300, "height": 120},
     )
     m.add_point(
-        point=Point(4.8834, 52.3667),
+        point=Point(4.884335, 52.37521),
         marker="📖",
         tooltip="**Anne Frank House**",
         popup="**Anne Frank House**\nPrinsengracht 263\nVisitors/year: ~1.3 million",
