@@ -30,18 +30,11 @@ Perfect for geotechnical site plans, infrastructure overviews, or any spatial da
 Pythonic for users who are already familiar with Shapely and GeoPandas. It's not trying to replace a full GIS,
 but rather to provide a simple way to create interactive maps without needing to learn a whole new set of tools.*
 
-<!--
-    HERO IMAGE — generate it once with a browser + internet (map tiles must load):
-        uv run --extra export python scripts/generate_hero.py
-    Then commit docs/_overrides/assets/images/hero-map.png and uncomment the block below.
-    It loads from the published docs site, so it renders on GitHub and PyPI once deployed.
-
 <p align="center">
     <a href="https://egarciamendez.github.io/mapyta/showcase/">
     <img src="https://egarciamendez.github.io/mapyta/assets/images/hero-map.png" alt="A mapyta map of Amsterdam with markers, areas, and a walking route" width="820">
     </a>
 </p>
--->
 
 👉 **[See the Showcase](https://egarciamendez.github.io/mapyta/showcase/)** — every feature as a live, interactive map on a single page.
 
