@@ -4,6 +4,14 @@
     </a>
 </p>
 
+<p align="center">
+    <a href="https://pypi.org/project/mapyta/"><img src="https://img.shields.io/pypi/v/mapyta.svg" alt="PyPI version"></a>
+    <a href="https://pypi.org/project/mapyta/"><img src="https://img.shields.io/pypi/pyversions/mapyta.svg" alt="Supported Python versions"></a>
+    <a href="https://github.com/egarciamendez/mapyta/actions/workflows/tests.yml"><img src="https://github.com/egarciamendez/mapyta/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+    <a href="https://egarciamendez.github.io/mapyta"><img src="https://img.shields.io/badge/docs-mkdocs--material-blue.svg" alt="Documentation"></a>
+    <a href="https://github.com/egarciamendez/mapyta/blob/main/LICENSE"><img src="https://img.shields.io/pypi/l/mapyta.svg" alt="License: MIT"></a>
+</p>
+
 ---
 
 **Documentation**: [https://egarciamendez.github.io/mapyta](https://egarciamendez.github.io/mapyta)
@@ -12,114 +20,51 @@
 
 ---
 
-
 **One import. A few method calls. A full interactive map.**
 
 Build OpenStreetMap visualizations with hover tooltips, choropleths, heatmaps, and export to HTML or PNG all from Shapely geometries.
 
 Perfect for geotechnical site plans, infrastructure overviews, or any spatial data visualization where you want more control than static images but don't need the full power of a GIS.
 
-*Mapyta is standing on the shoulders of giants like Folium and Leaflet, but it's designed to be more intuitive and 
-Pythonic for users who are already familiar with Shapely and GeoPandas. It's not trying to replace a full GIS, 
+*Mapyta is standing on the shoulders of giants like Folium and Leaflet, but it's designed to be more intuitive and
+Pythonic for users who are already familiar with Shapely and GeoPandas. It's not trying to replace a full GIS,
 but rather to provide a simple way to create interactive maps without needing to learn a whole new set of tools.*
 
-👉 **[See the Showcase](docs/showcase.md)** — every feature as a live, interactive map on a single page.
+<!--
+    HERO IMAGE — generate it once with a browser + internet (map tiles must load):
+        uv run --extra export python scripts/generate_hero.py
+    Then commit docs/_overrides/assets/images/hero-map.png and uncomment the block below.
+    It loads from the published docs site, so it renders on GitHub and PyPI once deployed.
+
+<p align="center">
+    <a href="https://egarciamendez.github.io/mapyta/showcase/">
+    <img src="https://egarciamendez.github.io/mapyta/assets/images/hero-map.png" alt="A mapyta map of Amsterdam with markers, areas, and a walking route" width="820">
+    </a>
+</p>
+-->
+
+👉 **[See the Showcase](https://egarciamendez.github.io/mapyta/showcase/)** — every feature as a live, interactive map on a single page.
 
 ---
 
-**Key features:**
+## Key features
 
-<!-- grid-cards-start -->
-- 🗺️ **[Shapely-native](docs/tutorial/geometries.md)** — pass `Point`, `Polygon`, `LineString` directly, including multi-geometries
-- 📝 **[Markdown/HTML hover and popup text](docs/tutorial/tooltips-popups.md)** — bold, italic, links, lists, and code in tooltips
-- 📌 **[Emoji & icon markers](docs/tutorial/markers.md)** — any text or Font Awesome icons as markers
-- 🎨 **[Choropleth & heatmaps](docs/tutorial/choropleth.md)** — color-coded maps from numeric data
-- 📊 **[GeoPandas integration](docs/tutorial/geodataframe.md)** — `Map.from_geodataframe()` one-liner
-- 🗂️ **[DataFrame support](docs/tutorial/dataframe.md)** — `add_dataframe()` works with any Pandas or Polars DataFrame with a WKT geometry column
-- 🌐 **[Auto CRS detection](docs/tutorial/coordinates.md)** — RD New (EPSG:28992) coordinates transform automatically
-- 📤 **[Export anywhere](docs/tutorial/export.md)** — HTML, PNG, SVG, GeoJSON, async variants, and `BytesIO` buffers
-- 🧩 **[Feature groups](docs/tutorial/layers.md)** — toggleable layers with a built-in layer control
-- 🔌 **[Set of tile providers](docs/tutorial/configuration.md)** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
-<!-- grid-cards-end -->
+- 🗺️ **[Shapely-native](https://egarciamendez.github.io/mapyta/tutorial/geometries/)** — pass `Point`, `Polygon`, `LineString` directly, including multi-geometries
+- 📝 **[Markdown/HTML hover and popup text](https://egarciamendez.github.io/mapyta/tutorial/tooltips-popups/)** — bold, italic, links, lists, and code in tooltips
+- 📌 **[Emoji & icon markers](https://egarciamendez.github.io/mapyta/tutorial/markers/)** — any text or Font Awesome icons as markers
+- 🎨 **[Choropleth & heatmaps](https://egarciamendez.github.io/mapyta/tutorial/choropleth/)** — color-coded maps from numeric data
+- 📊 **[GeoPandas integration](https://egarciamendez.github.io/mapyta/tutorial/geodataframe/)** — `Map.from_geodataframe()` one-liner
+- 🗂️ **[DataFrame support](https://egarciamendez.github.io/mapyta/tutorial/dataframe/)** — `add_dataframe()` works with any Pandas or Polars DataFrame with a WKT geometry column
+- 🌐 **[Auto CRS detection](https://egarciamendez.github.io/mapyta/tutorial/coordinates/)** — RD New (EPSG:28992) coordinates transform automatically
+- 📤 **[Export anywhere](https://egarciamendez.github.io/mapyta/tutorial/export/)** — HTML, PNG, SVG, GeoJSON, async variants, and `BytesIO` buffers
+- 🧩 **[Feature groups](https://egarciamendez.github.io/mapyta/tutorial/layers/)** — toggleable layers with a built-in layer control
+- 🔌 **[Set of tile providers](https://egarciamendez.github.io/mapyta/tutorial/configuration/)** — OpenStreetMap, CartoDB, Esri, Stamen, and Kadaster
 
 ---
 
-??? example "Full example for power users"
+## Installation
 
-    Complete map with points, lines, polygons, popups, feature groups, layer control, and HTML export in one block.
-    Everything below this fold explains each piece step by step.
-
-    ```python exec="true" html="true" source="tabbed-right"
-    from shapely.geometry import Point, LineString, Polygon
-    from mapyta import Map, MapConfig
-
-    m = Map(
-        title="Amsterdam Overview",
-        config=MapConfig(
-            tile_layer=["cartodb_positron", "cartodb_dark"],
-            fullscreen=True,
-            minimap=True,
-            measure_control=True,
-            mouse_position=True,
-        ),
-    )
-
-    # Feature group: landmarks
-    m.create_feature_group("🏛️ Landmarks")
-    m.add_point(
-        point=Point(4.9041, 52.3676),
-        marker="🏛️",
-        tooltip="**Royal Palace**",
-        popup="**Royal Palace**\nDam Square, Amsterdam\nBuilt: 1665",
-        popup_style={"width": 300, "height": 120},
-    )
-    m.add_point(
-        point=Point(4.8834, 52.3667),
-        marker="📖",
-        tooltip="**Anne Frank House**",
-        popup="**Anne Frank House**\nPrinsengracht 263\nVisitors/year: ~1.3 million",
-        popup_style={"width": 300, "height": 120},
-    )
-    m.add_point(
-        point=Point(4.8795, 52.3600),
-        marker="fa-landmark",
-        tooltip="**Rijksmuseum**",
-        popup="**Rijksmuseum**\nDutch art and history since 1800",
-        marker_style={"font-size": "24px", "color": "green"},
-    )
-
-    # Feature group: areas
-    m.create_feature_group("📍 Areas of Interest")
-    m.add_polygon(
-        polygon=Polygon([(4.876, 52.372), (4.889, 52.372), (4.889, 52.380), (4.876, 52.380)]),
-        tooltip="**De Jordaan**\nHistoric neighbourhood",
-        popup="**De Jordaan**\n\n- Narrow streets\n- Independent galleries\n- Brown cafés",
-        stroke={"color": "green", "weight": 2},
-        fill={"color": "blue", "opacity": 0.15},
-        popup_style={"width": 300, "height": 180},
-    )
-    m.add_linestring(
-        line=LineString([(4.8852, 52.3702), (4.8910, 52.3663), (4.8932, 52.3631), (4.884, 52.3569)]),
-        tooltip="**Walking route**\n*Centraal → Leidseplein*",
-        stroke={"color": "red", "weight": 4, "dash_array": "10 6"},
-    )
-
-    m.reset_target()
-    m.add_circle(
-        point=Point(4.8812, 52.3584),
-        tooltip="**Van Gogh Museum**",
-        style={"radius": 12, "stroke": {"color": "green", "weight": 2}, "fill": {"color": "orange", "opacity": 0.5}},
-    )
-
-    m.add_layer_control(collapsed=False)
-    m.set_bounds(padding=0.005)
-
-    print(m.to_html()) # markdown-exec: hide
-    ```
-
-## Quickstart
-
-Install mapyta:
+Mapyta requires **Python 3.12+**.
 
 ```bash
 uv add mapyta
@@ -127,9 +72,20 @@ uv add mapyta
 pip install mapyta
 ```
 
+Exporting maps to **PNG/SVG images** additionally needs a headless browser (Chrome,
+Chromium, or Edge) and the `export` extra:
+
+```bash
+uv add "mapyta[export]"
+# or
+pip install "mapyta[export]"
+```
+
+## Quickstart
+
 Create your first map:
 
-```python exec="true" html="true" source="tabbed-right"
+```python
 from shapely.geometry import Point
 from mapyta import Map
 
@@ -141,11 +97,35 @@ m.add_point(
     caption="UTR",
 )
 m.to_html("hello.html")
-
-print(m.to_html()) # markdown-exec: hide
 ```
 
 Open `hello.html` in any browser and you're done.
+
+Want the map as an image instead? Get raw PNG bytes or a buffer, no file needed:
+
+```python
+png_bytes = m.to_image()   # bytes, for an HTTP response or an email attachment
+buf = m.to_bytesio()       # io.BytesIO, e.g. for Flask/FastAPI/Django
+```
+
+See the **[Showcase](https://egarciamendez.github.io/mapyta/showcase/)** for choropleths,
+heatmaps, clusters, drawing tools, and more — each as a live, interactive map — or work
+through the **[Tutorial](https://egarciamendez.github.io/mapyta/tutorial/)** one concept
+at a time.
+
+## Contributing
+
+Issues and pull requests are welcome. To set up a local development environment:
+
+```bash
+git clone https://github.com/egarciamendez/mapyta
+cd mapyta
+uv sync --all-extras --all-groups
+uv run pytest
+```
+
+Please open an [issue](https://github.com/egarciamendez/mapyta/issues) to discuss
+substantial changes before starting.
 
 ## License
 
