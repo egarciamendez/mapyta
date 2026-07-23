@@ -69,3 +69,16 @@
 .md-typeset h6 {
     font-weight: 700;
 }
+
+/* Make the whole grid card clickable, not just the link text.
+   Scoped to cards that contain a single link (all of ours), so a stretched
+   overlay can never swallow a second link in some future multi-link card. */
+.md-typeset .grid.cards > ul > li:has(a:only-of-type) {
+    position: relative;
+    cursor: pointer;
+}
+.md-typeset .grid.cards > ul > li:has(a:only-of-type) a:only-of-type::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
