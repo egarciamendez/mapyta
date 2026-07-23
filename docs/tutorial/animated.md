@@ -12,24 +12,25 @@ An ant path is a polyline with a moving dash pattern — the gaps appear to trav
 from shapely.geometry import LineString
 from mapyta import Map
 
-m = Map(title="Tram route 9 — Utrecht")
+m = Map(title="Intercity route — Amsterdam to Eindhoven")
 
 route = LineString([
-    (5.1085, 52.0893),  # Centraal Station
-    (5.1130, 52.0877),
-    (5.1178, 52.0865),
-    (5.1213, 52.0851),
-    (5.1268, 52.0838),  # Maliebaan
+    (4.9041, 52.3676),  # Amsterdam
+    (5.1214, 52.0907),  # Utrecht
+    (5.3037, 51.6978),  # 's-Hertogenbosch
+    (5.4697, 51.4416),  # Eindhoven
 ])
 
 m.add_ant_path(
     route,
-    tooltip="**Tram 9** — richting Maliebaan",
+    tooltip="**Amsterdam → Eindhoven**",
     color="#e74c3c",
     pulse_color="#ffffff",
     weight=5,
-    delay=300,
+    delay=400,
 )
+
+m.set_bounds(padding=0.08)
 
 m.to_html("ant_path.html")
 

@@ -75,8 +75,9 @@ ignore = [
     "RUF002", # ambiguous-unicode-character-docstring
     "RUF003", # ambiguous-unicode-character-comment
 ]
-[lint.per-file-ignores] 
+[lint.per-file-ignores]
 "docs/*" = ["T201"]
+"scripts/*" = ["T201", "INP001"]
 
 [format]
 quote-style = "double"
