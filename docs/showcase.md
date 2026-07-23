@@ -22,18 +22,18 @@ pip install mapyta
 
 <div class="grid cards" markdown>
 
-- :material-map-marker: **[Your first map](#your-first-map)**
-- :material-vector-polyline: **[Geometries](#shapely-native-geometry)**
-- :material-map-marker-star: **[Markers](#markers-your-way)**
-- :material-comment-text: **[Tooltips & popups](#markdown-tooltips-popups)**
-- :material-palette: **[Choropleth](#choropleth)**
-- :material-fire: **[Heatmap](#heatmap)**
-- :material-group: **[Clusters](#marker-clusters)**
-- :material-table: **[DataFrame](#dataframe-in-one-line)**
-- :material-magnify: **[Search](#search-box)**
-- :material-draw: **[Drawing](#let-users-draw)**
-- :material-motion-play: **[Animation](#animation)**
-- :material-export: **[Export](#export-anywhere)**
+- 🗺️ **[Your first map](#your-first-map)**
+- 📐 **[Geometries](#shapely-native-geometry)**
+- 📌 **[Markers](#markers-your-way)**
+- 💬 **[Tooltips & popups](#markdown-tooltips-popups)**
+- 🎨 **[Choropleth](#choropleth)**
+- 🔥 **[Heatmap](#heatmap)**
+- 🔵 **[Clusters](#marker-clusters)**
+- 🗂️ **[DataFrame](#dataframe-in-one-line)**
+- 🔍 **[Search](#search-box)**
+- ✏️ **[Drawing](#let-users-draw)**
+- 🎞️ **[Animation](#animation)**
+- 📤 **[Export](#export-anywhere)**
 
 </div>
 
@@ -354,8 +354,8 @@ m.to_geojson("map.geojson")         # or a file
 
 <div class="grid cards" markdown>
 
-- :material-school: **[Tutorial](tutorial/index.md)** — learn mapyta from zero, one concept per page.
-- :material-api: **[API reference](API%20reference/index.md)** — every class, method, and parameter.
-- :material-github: **[GitHub](https://github.com/egarciamendez/mapyta)** — source, issues, and releases.
+- 📚 **[Tutorial](tutorial/index.md)** — learn mapyta from zero, one concept per page.
+- 🔧 **[API reference](API%20reference/index.md)** — every class, method, and parameter.
+- 🐙 **[GitHub](https://github.com/egarciamendez/mapyta)** — source, issues, and releases.
 
 </div>
