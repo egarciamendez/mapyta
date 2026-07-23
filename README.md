@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+    <em>One import. A few method calls. A full interactive map.</em>
+</p>
+
+<p align="center">
     <a href="https://pypi.org/project/mapyta/"><img src="https://img.shields.io/pypi/v/mapyta.svg" alt="PyPI version"></a>
     <a href="https://pypi.org/project/mapyta/"><img src="https://img.shields.io/pypi/pyversions/mapyta.svg" alt="Supported Python versions"></a>
     <a href="https://github.com/egarciamendez/mapyta/actions/workflows/tests.yml"><img src="https://github.com/egarciamendez/mapyta/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
@@ -19,8 +23,6 @@
 **Source Code**: [https://github.com/egarciamendez/mapyta](https://github.com/egarciamendez/mapyta)
 
 ---
-
-**One import. A few method calls. A full interactive map.**
 
 Build OpenStreetMap visualizations with hover tooltips, choropleths, heatmaps, and export to HTML or PNG all from Shapely geometries.
 
