@@ -29,8 +29,9 @@ Popup content lives in its own IFrame by default, which keeps the page CSS out o
 fixed `width` x `height`. That IFrame is loaded from a `data:` URL, and browsers do not let such a
 document navigate the page around it: a link with `target="_top"` renders but does nothing on click.
 
-Set `use_iframe=False` to put the content straight into the popup. The link then works, and the
-popup sizes itself to its content instead of to `width` x `height`.
+Set `use_iframe=False` to put the content straight into the popup. The popup is then part of the
+page itself, so the very same link does navigate, and the popup sizes itself to its content instead
+of to `width` x `height`.
 
 ```python
 m.add_point(
