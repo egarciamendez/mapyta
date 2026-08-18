@@ -41,7 +41,11 @@ m.add_point(
 )
 ```
 
-Only do this for content you trust, since it is no longer shielded from the surrounding page.
+Two things to know before you switch it off. The content is no longer shielded from the page CSS,
+so the page can restyle it and it can restyle the page. And it is no longer inert: an IFrame popup
+is base64 encoded, an inline one is written into the document as it is. `${...}` is defused for you,
+because a template literal would otherwise evaluate it, but anything else you put in there is live
+HTML in your page. Escape what comes from your data.
 
 ## Raw HTML
 

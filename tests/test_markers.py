@@ -131,6 +131,34 @@ class TestAddPoints:
         assert '<a href="/somewhere" target="_top">Go</a>' in rendered, "Link should sit in the page itself"
         assert "i_frame_" not in rendered, "No IFrame should be created"
 
+    def test_popup_without_iframe_does_not_evaluate_a_placeholder(self) -> None:
+        """
+        Scenario: Popup text happens to contain a dollar-brace sequence.
+
+        Given: An empty map and a Point
+        When: A location is added with ``${...}`` in its popup and use_iframe off
+        Then: It survives as text instead of being evaluated as JavaScript
+
+        Folium writes the popup into a template literal, where ``${...}`` is an expression the
+        browser evaluates. IFrame content is base64 encoded and safe from this; inline content
+        is not, so it has to be defused.
+        """
+        # Arrange - Given
+        m = Map()
+        point = Point(4.9041, 52.3676)
+
+        # Act - When
+        m.add_point(
+            point,
+            popup=RawHTML("<b>CPT ${alert(1)}</b>"),
+            popup_style=PopupStyle(use_iframe=False),
+        )
+        rendered = unescape(m.to_html())
+
+        # Assert - Then
+        assert "${" not in rendered, "A template placeholder must not reach the page unescaped"
+        assert "$&#123;alert(1)}" in rendered, "The text itself should survive, brace encoded"
+
     def test_add_circle_marker(self) -> None:
         """
         Scenario: Add a fixed-size circle marker for data visualization.

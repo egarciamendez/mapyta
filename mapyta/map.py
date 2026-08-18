@@ -164,6 +164,20 @@ class _HomeButtonControl(MacroElement):
         self.title = title
 
 
+def _defuse_template_placeholders(html: str) -> str:
+    """Keep ``${...}`` in *html* from being evaluated as JavaScript.
+
+    Folium writes popup content into a template literal, ``$(`<div>...</div>`)``. It escapes
+    backticks, but not ``${``, and inside a template literal that is an expression the browser
+    evaluates: it breaks the map at best and runs the expression at worst. Content routed
+    through an IFrame is base64 encoded and cannot do this, so only the inline path needs it.
+
+    Encoding the brace as an HTML entity leaves the text as the reader wrote it, since the
+    browser renders ``&#123;`` back as ``{``.
+    """
+    return html.replace("${", "$&#123;")
+
+
 class Map:
     """Interactive map builder backed by Folium and OpenStreetMap tiles.
 
@@ -361,7 +375,7 @@ class Map:
         ps = resolve_style(popup_style, PopupStyle) or PopupStyle()
         html = popup if isinstance(popup, RawHTML) else markdown_to_html(popup)
         if not ps.use_iframe:
-            return folium.Popup(html, max_width=ps.max_width)
+            return folium.Popup(_defuse_template_placeholders(html), max_width=ps.max_width)
         iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # ty: ignore[invalid-argument-type]
         return folium.Popup(iframe, max_width=ps.max_width)
 
