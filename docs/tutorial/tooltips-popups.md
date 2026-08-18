@@ -21,7 +21,26 @@ m.add_point(
 print(m.to_html()) # markdown-exec: hide
 ```
 
-**`popup_style`** controls popup size. `PopupStyle` has three fields: `width` (IFrame width in px), `height` (IFrame height in px), and `max_width`. You can also pass a plain dict: `popup_style={"width": 300, "height": 150}`.
+**`popup_style`** controls popup size. `PopupStyle` has four fields: `width` (IFrame width in px), `height` (IFrame height in px), `max_width`, and `use_iframe`. You can also pass a plain dict: `popup_style={"width": 300, "height": 150}`.
+
+## Links out of a popup
+
+Popup content lives in its own IFrame by default, which keeps the page CSS out of it and gives it a
+fixed `width` x `height`. That IFrame is loaded from a `data:` URL, and browsers do not let such a
+document navigate the page around it: a link with `target="_top"` renders but does nothing on click.
+
+Set `use_iframe=False` to put the content straight into the popup. The link then works, and the
+popup sizes itself to its content instead of to `width` x `height`.
+
+```python
+m.add_point(
+    Point(5.1213, 52.0908),
+    popup=RawHTML('<a href="/somewhere" target="_top">Open the detail page</a>'),
+    popup_style=PopupStyle(use_iframe=False),
+)
+```
+
+Only do this for content you trust, since it is no longer shielded from the surrounding page.
 
 ## Raw HTML
 

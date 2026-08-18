@@ -360,6 +360,8 @@ class Map:
             return None
         ps = resolve_style(popup_style, PopupStyle) or PopupStyle()
         html = popup if isinstance(popup, RawHTML) else markdown_to_html(popup)
+        if not ps.use_iframe:
+            return folium.Popup(html, max_width=ps.max_width)
         iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # ty: ignore[invalid-argument-type]
         return folium.Popup(iframe, max_width=ps.max_width)
 

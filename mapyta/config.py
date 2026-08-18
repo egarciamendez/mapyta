@@ -54,16 +54,23 @@ class PopupStyle:
     Parameters
     ----------
     width : int
-        IFrame width in pixels.
+        IFrame width in pixels. Ignored when ``use_iframe`` is False.
     height : int
-        IFrame height in pixels.
+        IFrame height in pixels. Ignored when ``use_iframe`` is False.
     max_width : int
         Maximum popup width in pixels.
+    use_iframe : bool
+        Render the content in its own IFrame, which shields it from the surrounding page at a
+        fixed ``width`` x ``height``. Set to False to put the content straight into the popup:
+        it then sizes to its content, and links can reach the surrounding page. An IFrame is
+        loaded from a ``data:`` URL and browsers do not let such a document navigate its parent,
+        so a link with ``target="_top"`` only works with this set to False.
     """
 
     width: int = 300
     height: int = 150
     max_width: int = 300
+    use_iframe: bool = True
 
 
 @dataclass

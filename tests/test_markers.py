@@ -5,12 +5,13 @@ docstring and Arrange/Act/Assert comments.
 """
 # ruff: noqa: SLF001
 
+from html import unescape
 from pathlib import Path
 from typing import cast
 
 from shapely import Point, Polygon
 
-from mapyta import CircleStyle, FillStyle, Map, StrokeStyle
+from mapyta import CircleStyle, FillStyle, Map, PopupStyle, RawHTML, StrokeStyle
 from mapyta.markers import (
     DEFAULT_MARKER_CAPTION_CSS,
     build_icon_marker,
@@ -85,6 +86,50 @@ class TestAddPoints:
 
         # Assert - Then
         assert len(m._bounds) == 2, "Point should be tracked in bounds"
+
+    def test_popup_is_isolated_in_an_iframe_by_default(self) -> None:
+        """
+        Scenario: A popup keeps its own IFrame unless asked otherwise.
+
+        Given: An empty map and a Point
+        When: A location is added with raw HTML as its popup
+        Then: The content is served from an IFrame instead of from the page itself
+        """
+        # Arrange - Given
+        m = Map()
+        point = Point(4.9041, 52.3676)
+
+        # Act - When
+        m.add_point(point, popup=RawHTML('<a href="/somewhere" target="_top">Go</a>'))
+        rendered = unescape(m.to_html())
+
+        # Assert - Then
+        assert "i_frame_" in rendered, "Popup content should be wrapped in an IFrame"
+        assert 'href="/somewhere"' not in rendered, "IFrame content is base64 encoded, not readable HTML"
+
+    def test_popup_without_iframe_keeps_its_link_in_the_page(self) -> None:
+        """
+        Scenario: A popup link has to reach the page around the map.
+
+        Given: An empty map and a Point
+        When: A location is added with raw HTML as its popup and use_iframe off
+        Then: The link lands in the page itself, so it can navigate the parent
+        """
+        # Arrange - Given
+        m = Map()
+        point = Point(4.9041, 52.3676)
+
+        # Act - When
+        m.add_point(
+            point,
+            popup=RawHTML('<a href="/somewhere" target="_top">Go</a>'),
+            popup_style=PopupStyle(use_iframe=False),
+        )
+        rendered = unescape(m.to_html())
+
+        # Assert - Then
+        assert '<a href="/somewhere" target="_top">Go</a>' in rendered, "Link should sit in the page itself"
+        assert "i_frame_" not in rendered, "No IFrame should be created"
 
     def test_add_circle_marker(self) -> None:
         """
