@@ -83,7 +83,7 @@ r2 = requests.get(
     "https://opendata.cbs.nl/ODataApi/odata/70072ned/TypedDataSet",
     params={
         "$filter": "startswith(RegioS,'GM') and Perioden eq '2024JJ00'",
-        "$select": "RegioS,Bevolkingsdichtheid_57,TotaleBevolking_1",
+        "$select": "RegioS,Bevolkingsdichtheid_27,TotaleBevolking_1",
     },
     timeout=30,
 )
@@ -92,12 +92,12 @@ stats["statcode"] = stats["RegioS"].str.strip()  # remove CBS padding spaces
 
 # 3. Join and map
 gdf = gdf.merge(
-    stats[["statcode", "Bevolkingsdichtheid_57", "TotaleBevolking_1"]],
+    stats[["statcode", "Bevolkingsdichtheid_27", "TotaleBevolking_1"]],
     on="statcode",
     how="left",
 )
 gdf = gdf.rename(columns={
-    "Bevolkingsdichtheid_57": "inw_per_km2",
+    "Bevolkingsdichtheid_27": "inw_per_km2",
     "TotaleBevolking_1": "inwoners",
 })
 
@@ -114,7 +114,7 @@ print(m.to_html())  # markdown-exec: hide
 
 !!! tip "CBS table IDs"
 
-    CBS table `70072ned` covers *Kerncijfers wijken en buurten* (updated annually). The column `Bevolkingsdichtheid_57` is
+    CBS table `70072ned` covers *Kerncijfers wijken en buurten* (updated annually). The column `Bevolkingsdichtheid_27` is
     inhabitants per km². Browse all available tables at [opendata.cbs.nl](https://opendata.cbs.nl/statline/#/CBS/nl/).
 
 ### Other useful CBS columns
@@ -124,11 +124,11 @@ The same table contains hundreds of variables. A few useful ones:
 | Column                              | Description                            |
 |-------------------------------------|----------------------------------------|
 | `TotaleBevolking_1`                 | Total population                       |
-| `Bevolkingsdichtheid_57`            | Inhabitants per km²                    |
-| `GemiddeldeWOZWaardeVanWoningen_98` | Average WOZ property value (€)         |
-| `TotaalBanen_116`                   | Total jobs                             |
-| `Werkloosheid_159`                  | Unemployment benefit recipients        |
-| `AfstandTotTreinstation_238`        | Average distance to train station (km) |
+| `Bevolkingsdichtheid_27`            | Inhabitants per km²                    |
+| `GemiddeldeWOZWaardeVanWoningen_68` | Average WOZ property value (€)         |
+| `TotaalBanen_86`                    | Total jobs                             |
+| `Werkloosheid_129`                  | Unemployment benefit recipients        |
+| `AfstandTotTreinstation_208`        | Average distance to train station (km) |
 
 ---
 
