@@ -2856,7 +2856,12 @@ when <code>mouse_position</code> is <code>False</code>.</p>
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">PopupStyle</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span> <span class="n">max_width</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">300</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">PopupStyle</span><span class="p">(</span>
+    <span class="n">width</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
+    <span class="n">max_width</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="n">use_iframe</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2875,7 +2880,7 @@ when <code>mouse_position</code> is <code>False</code>.</p>
 )
           –
           <div class="doc-md-description">
-            <p>IFrame width in pixels.</p>
+            <p>IFrame width in pixels. Ignored when <code>use_iframe</code> is False.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2885,7 +2890,7 @@ when <code>mouse_position</code> is <code>False</code>.</p>
 )
           –
           <div class="doc-md-description">
-            <p>IFrame height in pixels.</p>
+            <p>IFrame height in pixels. Ignored when <code>use_iframe</code> is False.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2896,6 +2901,20 @@ when <code>mouse_position</code> is <code>False</code>.</p>
           –
           <div class="doc-md-description">
             <p>Maximum popup width in pixels.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>use_iframe</code></b>
+              (<code><span title="bool">bool</span></code>, default:
+                  <code>True</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Render the content in its own IFrame, which shields it from the surrounding page at a
+fixed <code>width</code> x <code>height</code>. Set to False to put the content straight into the popup:
+it then sizes to its content, and links can reach the surrounding page. An IFrame is
+loaded from a <code>data:</code> URL and browsers do not let such a document navigate its parent,
+so a link with <code>target="_top"</code> only works with this set to False.</p>
           </div>
         </li>
     </ul>
@@ -2974,8 +2993,8 @@ when <code>mouse_position</code> is <code>False</code>.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>mapyta/config.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
-<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">js</span> <span class="o">=</span> <span class="n">js</span>
 </code></pre></div></td></tr></table></div>
                   </details>
