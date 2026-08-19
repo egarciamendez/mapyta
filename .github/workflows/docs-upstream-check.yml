@@ -1,0 +1,45 @@
+name: Docs upstream check
+
+# The tutorial examples call PDOK and CBS. Regular builds replay recorded fixtures so
+# an upstream hiccup can never fail an unrelated pull request. This job is the other
+# half of that deal: once a week it re-records against the live services, so a renamed
+# column or a retired dataset surfaces here instead of silently rotting in the docs.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install docs dependencies
+        run: uv sync --group docs
+
+      - name: Rebuild docs against live upstream services
+        env:
+          MAPYTA_DOCS_REFRESH: "1"
+        run: uv run properdocs build --clean --strict
+
+      - name: Report fixture drift
+        run: |
+          if git diff --quiet -- docs/_fixtures; then
+            echo "Upstream responses unchanged."
+            exit 0
+          fi
+          echo "::warning::Upstream responses changed — recorded fixtures are out of date."
+          git diff --stat -- docs/_fixtures
+          echo
+          echo "Refresh them locally with:"
+          echo "  MAPYTA_DOCS_REFRESH=1 uv run --group docs properdocs build --clean --strict"
+          exit 1

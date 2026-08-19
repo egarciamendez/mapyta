@@ -21,6 +21,8 @@ jobs:
         run: uv sync --group docs
 
       - name: Build docs
+        env:
+          MAPYTA_DOCS_OFFLINE: "1"
         run: uv run properdocs build --clean --strict
 
       - name: Deploy to GitHub Pages
