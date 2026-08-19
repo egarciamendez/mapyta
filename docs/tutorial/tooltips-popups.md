@@ -21,7 +21,31 @@ m.add_point(
 print(m.to_html()) # markdown-exec: hide
 ```
 
-**`popup_style`** controls popup size. `PopupStyle` has three fields: `width` (IFrame width in px), `height` (IFrame height in px), and `max_width`. You can also pass a plain dict: `popup_style={"width": 300, "height": 150}`.
+**`popup_style`** controls popup size. `PopupStyle` has four fields: `width` (IFrame width in px), `height` (IFrame height in px), `max_width`, and `use_iframe`. You can also pass a plain dict: `popup_style={"width": 300, "height": 150}`.
+
+## Links out of a popup
+
+Popup content lives in its own IFrame by default, which keeps the page CSS out of it and gives it a
+fixed `width` x `height`. That IFrame is loaded from a `data:` URL, and browsers do not let such a
+document navigate the page around it: a link with `target="_top"` renders but does nothing on click.
+
+Set `use_iframe=False` to put the content straight into the popup. The popup is then part of the
+page itself, so the very same link does navigate, and the popup sizes itself to its content instead
+of to `width` x `height`.
+
+```python
+m.add_point(
+    Point(5.1213, 52.0908),
+    popup=RawHTML('<a href="/somewhere" target="_top">Open the detail page</a>'),
+    popup_style=PopupStyle(use_iframe=False),
+)
+```
+
+Two things to know before you switch it off. The content is no longer shielded from the page CSS,
+so the page can restyle it and it can restyle the page. And it is no longer inert: an IFrame popup
+is base64 encoded, an inline one is written into the document as it is. `${...}` is defused for you,
+because a template literal would otherwise evaluate it, but anything else you put in there is live
+HTML in your page. Escape what comes from your data.
 
 ## Raw HTML
 
