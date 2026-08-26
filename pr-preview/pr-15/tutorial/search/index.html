@@ -1,0 +1,3682 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../layers/">
+      
+      
+        <link rel="next" href="../choropleth/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Search Control - Mapyta</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"DM Sans";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#search-control" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mapyta" class="md-header__button md-logo" aria-label="Mapyta" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-dark-mode.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mapyta
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Search Control
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/egarciamendez/mapyta" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Mapyta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../showcase/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Showcase
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../API%20reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Mapyta" class="md-nav__button md-logo" aria-label="Mapyta" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-dark-mode.svg" alt="logo">
+
+    </a>
+    Mapyta
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/egarciamendez/mapyta" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mapyta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../showcase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Showcase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lines & Polygons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tooltips-popups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooltips & Popups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Groups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search Control
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-geojson-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching GeoJSON features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-a-choropleth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching a choropleth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-by-tooltip-or-popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching by tooltip or popup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-matches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple matches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choropleth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choropleth Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heatmaps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heatmaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clusters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Clusters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataframes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geodataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GeoPandas Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../open-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open data (CBS & PDOK)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Map Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../text-annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Text Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drawing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../animated/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animated Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../min-zoom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zoom-dependent Visibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../API%20reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    coordinates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/dataframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    dataframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/geojson/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    geojson
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/markdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    markdown
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/mouse_position/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mouse_position
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API%20reference/tiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-geojson-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching GeoJSON features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-a-choropleth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching a choropleth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-by-tooltip-or-popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching by tooltip or popup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-matches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple matches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Mapyta
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="search-control">Search Control</h1>
+<p><code>add_search_control()</code> adds a search box that lets users type a name and center straight to the matching feature. It
+works on markers, GeoJSON layers, choropleth regions, and clusters, no setup required.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-58--__tabbed_1_1" name="exec-58--__tabbed_1" type="radio" /><input id="exec-58--__tabbed_1_2" name="exec-58--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-58--__tabbed_1_1">Result</label><label for="exec-58--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_2eb2c62b36e8137d04669af86d4672ba {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;City Finder&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_2eb2c62b36e8137d04669af86d4672ba&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_2eb2c62b36e8137d04669af86d4672ba = L.map(
+                &quot;map_2eb2c62b36e8137d04669af86d4672ba&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+
+            
+
+        
+    
+            var tile_layer_5b14a03ab7835d269342a2c1e457d19d = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_5b14a03ab7835d269342a2c1e457d19d.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var mouse_position_4362d66038bb50e73cc7810e9b56f6ed = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_4362d66038bb50e73cc7810e9b56f6ed.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_4362d66038bb50e73cc7810e9b56f6ed.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_2eb2c62b36e8137d04669af86d4672ba.addControl(mouse_position_4362d66038bb50e73cc7810e9b56f6ed);
+        
+    
+            var marker_48a1c60570659d0c5d98989a44f00416 = L.marker(
+                [52.3728, 4.9003],
+                {
+}
+            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var div_icon_1fc76654dc980184ae6347614201d70d = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eAmsterdam\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_48a1c60570659d0c5d98989a44f00416.setIcon(div_icon_1fc76654dc980184ae6347614201d70d);
+            
+    
+            var marker_2f91ff1a96d13afecda1b6b6386bec66 = L.marker(
+                [52.0907, 5.1214],
+                {
+}
+            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var div_icon_37b5ed039fc73e51a547d0d825e858e0 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eUtrecht\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_2f91ff1a96d13afecda1b6b6386bec66.setIcon(div_icon_37b5ed039fc73e51a547d0d825e858e0);
+            
+    
+            var marker_4fbb9972ef2e5071a88900038c3d3704 = L.marker(
+                [51.9244, 4.4777],
+                {
+}
+            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var div_icon_52c5f575e9c909911b94228b0ee45720 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eRotterdam\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_4fbb9972ef2e5071a88900038c3d3704.setIcon(div_icon_52c5f575e9c909911b94228b0ee45720);
+            
+    
+            var marker_9e000bc9cda53a4d1d4414a47c27f701 = L.marker(
+                [52.0705, 4.3007],
+                {
+}
+            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var div_icon_d4f2e286bd556c56377b2bbf86f1c75d = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eDen Haag\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_9e000bc9cda53a4d1d4414a47c27f701.setIcon(div_icon_d4f2e286bd556c56377b2bbf86f1c75d);
+            
+    
+            var marker_e3fcecd0444fe4b5825f65d883b4a9c8 = L.marker(
+                [51.4416, 5.4697],
+                {
+}
+            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var div_icon_7552d4a66cbb0419b38800123bb7a9bf = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eEindhoven\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_e3fcecd0444fe4b5825f65d883b4a9c8.setIcon(div_icon_7552d4a66cbb0419b38800123bb7a9bf);
+            
+    
+        function geo_json_f7a15ed90da0f92b09ac7b565e5139eb_styler(feature) {
+            switch(feature.properties.caption) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
+            }
+        }
+
+        function geo_json_f7a15ed90da0f92b09ac7b565e5139eb_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_f7a15ed90da0f92b09ac7b565e5139eb = L.geoJson(null, {
+                onEachFeature: geo_json_f7a15ed90da0f92b09ac7b565e5139eb_onEachFeature,
+            
+                style: geo_json_f7a15ed90da0f92b09ac7b565e5139eb_styler,
+            ...{
+}
+        });
+
+        function geo_json_f7a15ed90da0f92b09ac7b565e5139eb_add (data) {
+            geo_json_f7a15ed90da0f92b09ac7b565e5139eb
+                .addData(data);
+        }
+            geo_json_f7a15ed90da0f92b09ac7b565e5139eb_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Amsterdam&quot;, &quot;caption&quot;: &quot;Amsterdam&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Utrecht&quot;, &quot;caption&quot;: &quot;Utrecht&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rotterdam&quot;, &quot;caption&quot;: &quot;Rotterdam&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Den Haag&quot;, &quot;caption&quot;: &quot;Den Haag&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.4697, 51.4416], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Eindhoven&quot;, &quot;caption&quot;: &quot;Eindhoven&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+            geo_json_f7a15ed90da0f92b09ac7b565e5139eb.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            var geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl = new L.Control.Search({
+                layer: geo_json_f7a15ed90da0f92b09ac7b565e5139eb,
+                
+                propertyName: &#x27;_search_label&#x27;,
+                
+                collapsed: false,
+                textPlaceholder: &#x27;Find city...&#x27;,
+                position:&#x27;topright&#x27;,
+            
+                initial: false,
+                
+                hideMarkerOnCollapse: true
+            
+                });
+                geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_f7a15ed90da0f92b09ac7b565e5139eb.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_f7a15ed90da0f92b09ac7b565e5139eb.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_2eb2c62b36e8137d04669af86d4672ba.addControl( geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl );
+
+        
+    
+            map_2eb2c62b36e8137d04669af86d4672ba.fitBounds(
+                [[52.3728, 4.9003], [52.3728, 4.9003], [52.0907, 5.1214], [52.0907, 5.1214], [51.9244, 4.4777], [51.9244, 4.4777], [52.0705, 4.3007], [52.0705, 4.3007], [51.4416, 5.4697], [51.4416, 5.4697]],
+                {}
+            );
+        
+    
+            tile_layer_5b14a03ab7835d269342a2c1e457d19d.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+                marker_48a1c60570659d0c5d98989a44f00416.setIcon(div_icon_1fc76654dc980184ae6347614201d70d);
+            
+    
+                marker_2f91ff1a96d13afecda1b6b6386bec66.setIcon(div_icon_37b5ed039fc73e51a547d0d825e858e0);
+            
+    
+                marker_4fbb9972ef2e5071a88900038c3d3704.setIcon(div_icon_52c5f575e9c909911b94228b0ee45720);
+            
+    
+                marker_9e000bc9cda53a4d1d4414a47c27f701.setIcon(div_icon_d4f2e286bd556c56377b2bbf86f1c75d);
+            
+    
+                marker_e3fcecd0444fe4b5825f65d883b4a9c8.setIcon(div_icon_7552d4a66cbb0419b38800123bb7a9bf);
+            
+    
+            geo_json_f7a15ed90da0f92b09ac7b565e5139eb.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+        
+    
+            map_2eb2c62b36e8137d04669af86d4672ba.fitBounds(
+                [[52.3728, 4.9003], [52.3728, 4.9003], [52.0907, 5.1214], [52.0907, 5.1214], [51.9244, 4.4777], [51.9244, 4.4777], [52.0705, 4.3007], [52.0705, 4.3007], [51.4416, 5.4697], [51.4416, 5.4697]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;City Finder&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9003</span><span class="p">,</span> <span class="mf">52.3728</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏙️&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Amsterdam&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.1214</span><span class="p">,</span> <span class="mf">52.0907</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏙️&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Utrecht&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.4777</span><span class="p">,</span> <span class="mf">51.9244</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏙️&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Rotterdam&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.3007</span><span class="p">,</span> <span class="mf">52.0705</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏙️&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Den Haag&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">5.4697</span><span class="p">,</span> <span class="mf">51.4416</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏙️&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Eindhoven&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Find city...&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s2">&quot;cities.html&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Type a city name and press Enter, the map centers and highlight briefly to the matching marker.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>Calling <code>add_search_control()</code> with no arguments tells mapyta to search <strong>all features</strong> added so far. The search label
+is inferred automatically from each feature's properties in this priority order:</p>
+<p><code>caption</code> → <code>label</code> → <code>text</code> → <code>name</code> → <code>title</code> → first string property found</p>
+<p>So for <code>add_point(..., caption="Amsterdam")</code> the caption is picked up automatically. For GeoJSON features with a
+<code>"name"</code> property, those are used. If no known key matches, the first non-empty string value in the properties dict is
+used as a fallback.</p>
+<div class="admonition tip">
+<p class="admonition-title">Override the inferred label</p>
+<p>Pass <code>property_name</code> to tell mapyta exactly which property to use:</p>
+<div class="highlight"><pre><span></span><code><span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span><span class="n">property_name</span><span class="o">=</span><span class="s2">&quot;gemeente&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<h2 id="searching-geojson-features">Searching GeoJSON features</h2>
+<p>When your features come from <code>add_geojson()</code>, <code>add_search_control()</code> still works with no arguments, it picks up <code>"name"</code>
+or whatever string property is present:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-59--__tabbed_1_1" name="exec-59--__tabbed_1" type="radio" /><input id="exec-59--__tabbed_1_2" name="exec-59--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-59--__tabbed_1_1">Result</label><label for="exec-59--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_d191f2fb157b3d0c426be0e3aff87d96 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    
+                    &lt;style&gt;
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+            
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Gemeenten&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_d191f2fb157b3d0c426be0e3aff87d96&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_d191f2fb157b3d0c426be0e3aff87d96 = L.map(
+                &quot;map_d191f2fb157b3d0c426be0e3aff87d96&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+
+            
+
+        
+    
+            var tile_layer_248efa41a6a27c9db44c4ca2209ce533 = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_248efa41a6a27c9db44c4ca2209ce533.addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+        
+    
+            var mouse_position_6c440f8171f560fa558c41996681df5a = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_6c440f8171f560fa558c41996681df5a.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_6c440f8171f560fa558c41996681df5a.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_d191f2fb157b3d0c426be0e3aff87d96.addControl(mouse_position_6c440f8171f560fa558c41996681df5a);
+        
+    
+        function geo_json_900fa3e019667565fa193c4e17ce1352_styler(feature) {
+            switch(feature.properties.naam) {
+                default:
+                    return {&quot;color&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;weight&quot;: 2};
+            }
+        }
+        function geo_json_900fa3e019667565fa193c4e17ce1352_highlighter(feature) {
+            switch(feature.properties.naam) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.4, &quot;weight&quot;: 5};
+            }
+        }
+
+        function geo_json_900fa3e019667565fa193c4e17ce1352_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                            geo_json_900fa3e019667565fa193c4e17ce1352.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        const highlightStyle = geo_json_900fa3e019667565fa193c4e17ce1352_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_900fa3e019667565fa193c4e17ce1352 = L.geoJson(null, {
+                onEachFeature: geo_json_900fa3e019667565fa193c4e17ce1352_onEachFeature,
+            
+                style: geo_json_900fa3e019667565fa193c4e17ce1352_styler,
+            ...{
+}
+        });
+
+        function geo_json_900fa3e019667565fa193c4e17ce1352_add (data) {
+            geo_json_900fa3e019667565fa193c4e17ce1352
+                .addData(data);
+        }
+            geo_json_900fa3e019667565fa193c4e17ce1352_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0363&quot;, &quot;naam&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0344&quot;, &quot;naam&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0599&quot;, &quot;naam&quot;: &quot;Rotterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0518&quot;, &quot;naam&quot;: &quot;Den Haag&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+    geo_json_900fa3e019667565fa193c4e17ce1352.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+    
+    let handleObject = feature =&gt; {
+        if (feature === null) {
+            return &#x27;&#x27;;
+        } else if (typeof(feature)==&#x27;object&#x27;) {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = [&quot;naam&quot;, &quot;code&quot;];
+    let aliases = [&quot;naam&quot;, &quot;code&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i].toLocaleString()}&lt;/th&gt;
+            
+            &lt;td&gt;${handleObject(layer.feature.properties[v]).toLocaleString()}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  &quot;sticky&quot;: true,
+  &quot;className&quot;: &quot;foliumtooltip&quot;,
+});
+                     
+    
+            geo_json_900fa3e019667565fa193c4e17ce1352.addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+        
+    
+        function geo_json_a603817a628efe27295441cd5ef6fb22_styler(feature) {
+            switch(feature.properties.naam) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
+            }
+        }
+
+        function geo_json_a603817a628efe27295441cd5ef6fb22_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_a603817a628efe27295441cd5ef6fb22 = L.geoJson(null, {
+                onEachFeature: geo_json_a603817a628efe27295441cd5ef6fb22_onEachFeature,
+            
+                style: geo_json_a603817a628efe27295441cd5ef6fb22_styler,
+            ...{
+}
+        });
+
+        function geo_json_a603817a628efe27295441cd5ef6fb22_add (data) {
+            geo_json_a603817a628efe27295441cd5ef6fb22
+                .addData(data);
+        }
+            geo_json_a603817a628efe27295441cd5ef6fb22_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Amsterdam&quot;, &quot;code&quot;: &quot;0363&quot;, &quot;naam&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Utrecht&quot;, &quot;code&quot;: &quot;0344&quot;, &quot;naam&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rotterdam&quot;, &quot;code&quot;: &quot;0599&quot;, &quot;naam&quot;: &quot;Rotterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Den Haag&quot;, &quot;code&quot;: &quot;0518&quot;, &quot;naam&quot;: &quot;Den Haag&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+            geo_json_a603817a628efe27295441cd5ef6fb22.addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+        
+    
+            var geo_json_a603817a628efe27295441cd5ef6fb22searchControl = new L.Control.Search({
+                layer: geo_json_a603817a628efe27295441cd5ef6fb22,
+                
+                propertyName: &#x27;_search_label&#x27;,
+                
+                collapsed: false,
+                textPlaceholder: &#x27;Zoek gemeente...&#x27;,
+                position:&#x27;topright&#x27;,
+            
+                initial: false,
+                
+                hideMarkerOnCollapse: true
+            
+                });
+                geo_json_a603817a628efe27295441cd5ef6fb22searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_a603817a628efe27295441cd5ef6fb22.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                geo_json_a603817a628efe27295441cd5ef6fb22searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_a603817a628efe27295441cd5ef6fb22.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_d191f2fb157b3d0c426be0e3aff87d96.addControl( geo_json_a603817a628efe27295441cd5ef6fb22searchControl );
+
+        
+    
+            map_d191f2fb157b3d0c426be0e3aff87d96.fitBounds(
+                [[51.9244, 4.3007], [52.3728, 5.1214]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">geojson</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;naam&quot;</span><span class="p">:</span> <span class="s2">&quot;Amsterdam&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;0363&quot;</span><span class="p">},</span>
+         <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.9003</span><span class="p">,</span> <span class="mf">52.3728</span><span class="p">]}},</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;naam&quot;</span><span class="p">:</span> <span class="s2">&quot;Utrecht&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;0344&quot;</span><span class="p">},</span>
+         <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.1214</span><span class="p">,</span> <span class="mf">52.0907</span><span class="p">]}},</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;naam&quot;</span><span class="p">:</span> <span class="s2">&quot;Rotterdam&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;0599&quot;</span><span class="p">},</span>
+         <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.4777</span><span class="p">,</span> <span class="mf">51.9244</span><span class="p">]}},</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;naam&quot;</span><span class="p">:</span> <span class="s2">&quot;Den Haag&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;0518&quot;</span><span class="p">},</span>
+         <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.3007</span><span class="p">,</span> <span class="mf">52.0705</span><span class="p">]}},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Gemeenten&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="n">hover_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;naam&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">])</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Zoek gemeente...&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="searching-a-choropleth">Searching a choropleth</h2>
+<p>For polygon layers like choropleths, put the layer in a named feature group, then pass <code>layer_name</code>, <code>property_name</code>,
+and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-60--__tabbed_1_1" name="exec-60--__tabbed_1" type="radio" /><input id="exec-60--__tabbed_1_2" name="exec-60--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-60--__tabbed_1_1">Result</label><label for="exec-60--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_72d40704f6c19358f82d409b9d76faea {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    
+                    &lt;style&gt;
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+            
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Neighbourhood Finder&lt;/div&gt;
+    &lt;div style=&quot;position:fixed;top:5%;bottom:5%;right:14px;z-index:1000;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;color:#333;pointer-events:none;display:flex;flex-direction:column;&quot;&gt;&lt;div style=&quot;text-align:center;font-weight:bold;margin-bottom:6px;&quot;&gt;Liveability Score&lt;/div&gt;&lt;div style=&quot;display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;&quot;&gt;&lt;div style=&quot;width:14px;border-radius:2px;background:linear-gradient(to top, #ffffb2, #fecc5c, #fd8d3c, #f03b20, #bd0026);&quot;&gt;&lt;/div&gt;&lt;div style=&quot;display:flex;flex-direction:column;justify-content:space-between;margin-left:6px;&quot;&gt;&lt;span&gt;92&lt;/span&gt;&lt;span&gt;87.50&lt;/span&gt;&lt;span&gt;83&lt;/span&gt;&lt;span&gt;78.50&lt;/span&gt;&lt;span&gt;74&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_72d40704f6c19358f82d409b9d76faea&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_72d40704f6c19358f82d409b9d76faea = L.map(
+                &quot;map_72d40704f6c19358f82d409b9d76faea&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_72d40704f6c19358f82d409b9d76faea);
+
+            
+
+        
+    
+            var tile_layer_9fc7995de4f1e39b50fd40e4d2673723 = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_9fc7995de4f1e39b50fd40e4d2673723.addTo(map_72d40704f6c19358f82d409b9d76faea);
+        
+    
+            var mouse_position_17371067e950719825cd0be464e095f8 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_17371067e950719825cd0be464e095f8.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_17371067e950719825cd0be464e095f8.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_72d40704f6c19358f82d409b9d76faea.addControl(mouse_position_17371067e950719825cd0be464e095f8);
+        
+    
+            var feature_group_6c52013ec50ebd7f56b4a946c4b422b0 = L.featureGroup(
+                {
+}
+            );
+        
+    
+        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_styler(feature) {
+            switch(feature.properties.name) {
+                case &quot;Binnenstad&quot;: 
+                    return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#bd0026ff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
+                case &quot;Oost&quot;: 
+                    return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#f8682fff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
+                default:
+                    return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#ffffb2ff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
+            }
+        }
+        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_highlighter(feature) {
+            switch(feature.properties.name) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.85, &quot;weight&quot;: 3};
+            }
+        }
+
+        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                            geo_json_05a779dcb0145dd63c65f93c45f11e6a.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        const highlightStyle = geo_json_05a779dcb0145dd63c65f93c45f11e6a_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_05a779dcb0145dd63c65f93c45f11e6a = L.geoJson(null, {
+                onEachFeature: geo_json_05a779dcb0145dd63c65f93c45f11e6a_onEachFeature,
+            
+                style: geo_json_05a779dcb0145dd63c65f93c45f11e6a_styler,
+            ...{
+}
+        });
+
+        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_add (data) {
+            geo_json_05a779dcb0145dd63c65f93c45f11e6a
+                .addData(data);
+        }
+            geo_json_05a779dcb0145dd63c65f93c45f11e6a_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.1, 52.08], [5.14, 52.08], [5.14, 52.1], [5.1, 52.1], [5.1, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Binnenstad&quot;, &quot;score&quot;: 92}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.06, 52.08], [5.1, 52.08], [5.1, 52.1], [5.06, 52.1], [5.06, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;West&quot;, &quot;score&quot;: 74}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.1], [5.14, 52.1], [5.14, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Oost&quot;, &quot;score&quot;: 85}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+    geo_json_05a779dcb0145dd63c65f93c45f11e6a.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+    
+    let handleObject = feature =&gt; {
+        if (feature === null) {
+            return &#x27;&#x27;;
+        } else if (typeof(feature)==&#x27;object&#x27;) {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = [&quot;name&quot;, &quot;score&quot;];
+    let aliases = [&quot;name&quot;, &quot;score&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i].toLocaleString()}&lt;/th&gt;
+            
+            &lt;td&gt;${handleObject(layer.feature.properties[v]).toLocaleString()}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  &quot;sticky&quot;: true,
+  &quot;className&quot;: &quot;foliumtooltip&quot;,
+});
+                     
+    
+            geo_json_05a779dcb0145dd63c65f93c45f11e6a.addTo(feature_group_6c52013ec50ebd7f56b4a946c4b422b0);
+        
+    
+            feature_group_6c52013ec50ebd7f56b4a946c4b422b0.addTo(map_72d40704f6c19358f82d409b9d76faea);
+        
+    
+            var feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl = new L.Control.Search({
+                layer: feature_group_6c52013ec50ebd7f56b4a946c4b422b0,
+                
+                propertyName: &#x27;name&#x27;,
+                
+                collapsed: false,
+                textPlaceholder: &#x27;Find neighbourhood...&#x27;,
+                position:&#x27;topright&#x27;,
+            
+                marker: false,
+                moveToLocation: function(latlng, title, map) {
+                var zoom =  14 
+                    map.flyTo(latlng, zoom); // access the zoom
+                }
+            
+                });
+                feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    feature_group_6c52013ec50ebd7f56b4a946c4b422b0.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        feature_group_6c52013ec50ebd7f56b4a946c4b422b0.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_72d40704f6c19358f82d409b9d76faea.addControl( feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl );
+
+        
+    
+            map_72d40704f6c19358f82d409b9d76faea.fitBounds(
+                [[52.08, 5.06], [52.1, 5.18]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">geojson</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Binnenstad&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">92</span><span class="p">},</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[[[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">]]]},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;West&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">74</span><span class="p">},</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[[[</span><span class="mf">5.06</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.10</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.06</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.06</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">]]]},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Oost&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">85</span><span class="p">},</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[[[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.18</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.18</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.14</span><span class="p">,</span> <span class="mf">52.08</span><span class="p">]]]},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Neighbourhood Finder&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">create_feature_group</span><span class="p">(</span><span class="s2">&quot;Neighbourhoods&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_choropleth</span><span class="p">(</span>
+    <span class="n">geojson_data</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span>
+    <span class="n">value_column</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span>
+    <span class="n">key_on</span><span class="o">=</span><span class="s2">&quot;feature.properties.name&quot;</span><span class="p">,</span>
+    <span class="n">legend_name</span><span class="o">=</span><span class="s2">&quot;Liveability Score&quot;</span><span class="p">,</span>
+    <span class="n">hover_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">reset_target</span><span class="p">()</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;Neighbourhoods&quot;</span><span class="p">,</span>
+    <span class="n">property_name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+    <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Find neighbourhood...&quot;</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">geom_type</span><span class="o">=</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><code>layer_name</code> must match the name passed to <code>create_feature_group()</code>. Use <code>geom_type="Polygon"</code> whenever the features are
+polygons, it makes the view fit to the polygon bounds rather than centering to a single point.</p>
+<h2 id="searching-by-tooltip-or-popup">Searching by tooltip or popup</h2>
+<p>When your markers have descriptive tooltips but no captions, pass <code>property_name="tooltip"</code> (or <code>"popup"</code>) to search
+that field directly:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-61--__tabbed_1_1" name="exec-61--__tabbed_1" type="radio" /><input id="exec-61--__tabbed_1_2" name="exec-61--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-61--__tabbed_1_1">Result</label><label for="exec-61--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_7ba381960eb8c0155d03164eebace95e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Amsterdam Attractions&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_7ba381960eb8c0155d03164eebace95e&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_7ba381960eb8c0155d03164eebace95e = L.map(
+                &quot;map_7ba381960eb8c0155d03164eebace95e&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_7ba381960eb8c0155d03164eebace95e);
+
+            
+
+        
+    
+            var tile_layer_3205c4b4dfb3e1df7c11f2b6088f087f = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_3205c4b4dfb3e1df7c11f2b6088f087f.addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var mouse_position_de4f46242a1c122626f9419ce6633b76 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_de4f46242a1c122626f9419ce6633b76.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_de4f46242a1c122626f9419ce6633b76.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_7ba381960eb8c0155d03164eebace95e.addControl(mouse_position_de4f46242a1c122626f9419ce6633b76);
+        
+    
+            var marker_b617ba112e77d522caa6be4ea315dbaa = L.marker(
+                [52.36, 4.8852],
+                {
+}
+            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var div_icon_88de551f446d18cfe0dcd9f4fef74393 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfdb\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_b617ba112e77d522caa6be4ea315dbaa.bindTooltip(
+                `&lt;div&gt;
+                     Rijksmuseum, Dutch Golden Age paintings and applied arts
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_b617ba112e77d522caa6be4ea315dbaa.setIcon(div_icon_88de551f446d18cfe0dcd9f4fef74393);
+            
+    
+            var marker_3fd7fa54ad0253bd0898976ec5c388fd = L.marker(
+                [52.3584, 4.8783],
+                {
+}
+            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var div_icon_6615619ac57813a530e8da473c058ece = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfa8\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_3fd7fa54ad0253bd0898976ec5c388fd.bindTooltip(
+                `&lt;div&gt;
+                     Van Gogh Museum, world&#x27;s largest Van Gogh collection
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_3fd7fa54ad0253bd0898976ec5c388fd.setIcon(div_icon_6615619ac57813a530e8da473c058ece);
+            
+    
+            var marker_9150da4295528b3bd06970dd9885db91 = L.marker(
+                [52.3748, 4.8799],
+                {
+}
+            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var div_icon_3de571f1ae739677b8f2dec134a1f268 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83d\udcd6\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_9150da4295528b3bd06970dd9885db91.bindTooltip(
+                `&lt;div&gt;
+                     Anne Frank House, wartime hiding place and museum
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_9150da4295528b3bd06970dd9885db91.setIcon(div_icon_3de571f1ae739677b8f2dec134a1f268);
+            
+    
+            var marker_8a002c3262968370941734ecfedc017c = L.marker(
+                [52.3731, 4.9009],
+                {
+}
+            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var div_icon_5372901f2f5b34202a306948a32507af = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_8a002c3262968370941734ecfedc017c.bindTooltip(
+                `&lt;div&gt;
+                     Royal Palace Amsterdam, official residence of the King
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_8a002c3262968370941734ecfedc017c.setIcon(div_icon_5372901f2f5b34202a306948a32507af);
+            
+    
+            var marker_0f84d325806f0aec3264c9f153146888 = L.marker(
+                [52.3667, 4.9041],
+                {
+}
+            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var div_icon_030e82733699f7d521ea1f088269c1af = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\u26ea\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+            marker_0f84d325806f0aec3264c9f153146888.bindTooltip(
+                `&lt;div&gt;
+                     Westerkerk, tallest church tower in Amsterdam
+                 &lt;/div&gt;`,
+                {
+  &quot;sticky&quot;: true,
+}
+            );
+        
+    
+                marker_0f84d325806f0aec3264c9f153146888.setIcon(div_icon_030e82733699f7d521ea1f088269c1af);
+            
+    
+        function geo_json_476c646e8cc9bc132483b6adf0406d5d_styler(feature) {
+            switch(feature.properties.marker) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
+            }
+        }
+
+        function geo_json_476c646e8cc9bc132483b6adf0406d5d_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_476c646e8cc9bc132483b6adf0406d5d = L.geoJson(null, {
+                onEachFeature: geo_json_476c646e8cc9bc132483b6adf0406d5d_onEachFeature,
+            
+                style: geo_json_476c646e8cc9bc132483b6adf0406d5d_styler,
+            ...{
+}
+        });
+
+        function geo_json_476c646e8cc9bc132483b6adf0406d5d_add (data) {
+            geo_json_476c646e8cc9bc132483b6adf0406d5d
+                .addData(data);
+        }
+            geo_json_476c646e8cc9bc132483b6adf0406d5d_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8852, 52.36], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;, &quot;marker&quot;: &quot;\ud83c\udfdb\ufe0f&quot;, &quot;tooltip&quot;: &quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8783, 52.3584], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Van Gogh Museum, world\u0027s largest Van Gogh collection&quot;, &quot;marker&quot;: &quot;\ud83c\udfa8&quot;, &quot;tooltip&quot;: &quot;Van Gogh Museum, world\u0027s largest Van Gogh collection&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8799, 52.3748], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Anne Frank House, wartime hiding place and museum&quot;, &quot;marker&quot;: &quot;\ud83d\udcd6&quot;, &quot;tooltip&quot;: &quot;Anne Frank House, wartime hiding place and museum&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9009, 52.3731], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Royal Palace Amsterdam, official residence of the King&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;, &quot;tooltip&quot;: &quot;Royal Palace Amsterdam, official residence of the King&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3667], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Westerkerk, tallest church tower in Amsterdam&quot;, &quot;marker&quot;: &quot;\u26ea&quot;, &quot;tooltip&quot;: &quot;Westerkerk, tallest church tower in Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+            geo_json_476c646e8cc9bc132483b6adf0406d5d.addTo(map_7ba381960eb8c0155d03164eebace95e);
+        
+    
+            var geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl = new L.Control.Search({
+                layer: geo_json_476c646e8cc9bc132483b6adf0406d5d,
+                
+                propertyName: &#x27;_search_label&#x27;,
+                
+                collapsed: false,
+                textPlaceholder: &#x27;Search attractions...&#x27;,
+                position:&#x27;topright&#x27;,
+            
+                initial: false,
+                
+                hideMarkerOnCollapse: true
+            
+                });
+                geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_476c646e8cc9bc132483b6adf0406d5d.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_476c646e8cc9bc132483b6adf0406d5d.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_7ba381960eb8c0155d03164eebace95e.addControl( geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl );
+
+        
+    
+            map_7ba381960eb8c0155d03164eebace95e.fitBounds(
+                [[52.36, 4.8852], [52.36, 4.8852], [52.3584, 4.8783], [52.3584, 4.8783], [52.3748, 4.8799], [52.3748, 4.8799], [52.3731, 4.9009], [52.3731, 4.9009], [52.3667, 4.9041], [52.3667, 4.9041]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Amsterdam Attractions&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.8852</span><span class="p">,</span> <span class="mf">52.3600</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏛️&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.8783</span><span class="p">,</span> <span class="mf">52.3584</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🎨&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;Van Gogh Museum, world&#39;s largest Van Gogh collection&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.8799</span><span class="p">,</span> <span class="mf">52.3748</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;📖&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;Anne Frank House, wartime hiding place and museum&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9009</span><span class="p">,</span> <span class="mf">52.3731</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🏙️&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;Royal Palace Amsterdam, official residence of the King&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9041</span><span class="p">,</span> <span class="mf">52.3667</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;⛪&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;Westerkerk, tallest church tower in Amsterdam&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span><span class="n">property_name</span><span class="o">=</span><span class="s2">&quot;tooltip&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Search attractions...&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>The search runs against the raw tooltip string. Because matching is substring-based, typing <code>"museum"</code> already narrows
+the list before you finish typing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The tooltip value stored internally is the raw string you pass, including any Markdown syntax. So <code>tooltip="**Rijksmuseum**"</code> is stored as <code>"**Rijksmuseum**"</code>. Substring search still works, but the stars will appear as literal characters in the dropdown suggestions.</p>
+</div>
+<h2 id="multiple-matches">Multiple matches</h2>
+<p>When more than one feature matches what you typed, the search control shows a dropdown of all results. The user picks
+the one they want and the map centers to it.</p>
+<p>This works automatically, no extra configuration needed. Here's an example where typing <code>"park"</code> returns five results at
+once:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-62--__tabbed_1_1" name="exec-62--__tabbed_1" type="radio" /><input id="exec-62--__tabbed_1_2" name="exec-62--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-62--__tabbed_1_1">Result</label><label for="exec-62--__tabbed_1_2">Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    &lt;meta name=&quot;referrer&quot; content=&quot;origin&quot;&gt;
+    &lt;style&gt;.leaflet-control-layers-toggle,.leaflet-control-measure .leaflet-control-measure-toggle{width:26px!important;height:26px!important;background-size:16px 16px!important;}.leaflet-touch .leaflet-control-layers-toggle,.leaflet-touch .leaflet-control-measure .leaflet-control-measure-toggle{width:30px!important;height:30px!important;background-size:18px 18px!important;}.leaflet-control-measure .leaflet-control-measure-toggle{background-color:#fff!important;background-image:url(&quot;data:image/svg+xml,&lt;svg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; stroke=&#x27;%23333&#x27; stroke-width=&#x27;2&#x27; stroke-linecap=&#x27;round&#x27; stroke-linejoin=&#x27;round&#x27;&gt;&lt;rect x=&#x27;2&#x27; y=&#x27;7&#x27; width=&#x27;20&#x27; height=&#x27;10&#x27; rx=&#x27;1&#x27;/&gt;&lt;path d=&#x27;M7 7v4M12 7v5M17 7v4&#x27;/&gt;&lt;/svg&gt;&quot;)!important;}.leaflet-control-measure{box-shadow:0 1px 5px rgba(0,0,0,0.4)!important;border-radius:5px!important;background:#fff!important;}.leaflet-control-measure .leaflet-control-measure-toggle{border-radius:5px!important;}.leaflet-touch .leaflet-control-measure{box-shadow:none!important;border:2px solid rgba(0,0,0,0.2)!important;background-clip:padding-box!important;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_bb131cb7df98f8d0860d8726a7c7382d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css&quot;/&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Amsterdam Parks&lt;/div&gt;
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_bb131cb7df98f8d0860d8726a7c7382d&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_bb131cb7df98f8d0860d8726a7c7382d = L.map(
+                &quot;map_bb131cb7df98f8d0860d8726a7c7382d&quot;,
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 1,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+
+            
+
+        
+    
+            var tile_layer_5c228b8af39525e4f75bd22a207c8583 = L.tileLayer(
+                &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;CartoDB&quot;,
+  &quot;subdomains&quot;: &quot;abcd&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_5c228b8af39525e4f75bd22a207c8583.addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var mouse_position_0c9c6c038a79ce334625c6a6b8c3b675 = new L.Control.MousePosition(
+                {
+  &quot;position&quot;: &quot;bottomleft&quot;,
+  &quot;separator&quot;: &quot; | &quot;,
+  &quot;emptyString&quot;: &quot;Unavailable&quot;,
+  &quot;lngFirst&quot;: false,
+  &quot;numDigits&quot;: 6,
+  &quot;prefix&quot;: &quot;&quot;,
+}
+            );
+            mouse_position_0c9c6c038a79ce334625c6a6b8c3b675.options[&quot;latFormatter&quot;] =
+                undefined;
+            mouse_position_0c9c6c038a79ce334625c6a6b8c3b675.options[&quot;lngFormatter&quot;] =
+                undefined;
+            map_bb131cb7df98f8d0860d8726a7c7382d.addControl(mouse_position_0c9c6c038a79ce334625c6a6b8c3b675);
+        
+    
+            var marker_3f82e5dbf458a5c0d2071e5718318d5b = L.marker(
+                [52.3618, 4.8783],
+                {
+}
+            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var div_icon_7f83aa565224e92277798c82dd4d5e73 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eVondelpark\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_3f82e5dbf458a5c0d2071e5718318d5b.setIcon(div_icon_7f83aa565224e92277798c82dd4d5e73);
+            
+    
+            var marker_249f1051e0da701be517db07be265505 = L.marker(
+                [52.3577, 4.8595],
+                {
+}
+            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var div_icon_e9c56f2b4106501431c47ae34188e8b9 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eRembrandt Park\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_249f1051e0da701be517db07be265505.setIcon(div_icon_e9c56f2b4106501431c47ae34188e8b9);
+            
+    
+            var marker_3ed2b47880d6a189b68398c3176115be = L.marker(
+                [52.3575, 4.9024],
+                {
+}
+            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var div_icon_6340bd34c7b251dac85e5c99e2431165 = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eOosterpark\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_3ed2b47880d6a189b68398c3176115be.setIcon(div_icon_6340bd34c7b251dac85e5c99e2431165);
+            
+    
+            var marker_e4ee07dea204818bbcb874af063a5e6f = L.marker(
+                [52.3648, 4.928],
+                {
+}
+            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var div_icon_b0f8416b513d1dc08bbc802199a0c95c = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eFlevopark\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_e4ee07dea204818bbcb874af063a5e6f.setIcon(div_icon_b0f8416b513d1dc08bbc802199a0c95c);
+            
+    
+            var marker_d029aa5bf5e9141b8f7f6d0e85b04ebc = L.marker(
+                [52.3722, 4.8639],
+                {
+}
+            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var div_icon_fd124592e6447fb32d103857ef0c2aff = L.divIcon({
+  &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eWesterpark\u003c/div\u003e\u003c/div\u003e&quot;,
+  &quot;iconSize&quot;: [26, 26],
+  &quot;iconAnchor&quot;: [13, 13],
+  &quot;className&quot;: &quot;empty&quot;,
+});
+        
+    
+                marker_d029aa5bf5e9141b8f7f6d0e85b04ebc.setIcon(div_icon_fd124592e6447fb32d103857ef0c2aff);
+            
+    
+        function geo_json_34a80fb78cac1c42fe0833cae3d6068f_styler(feature) {
+            switch(feature.properties.caption) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
+            }
+        }
+
+        function geo_json_34a80fb78cac1c42fe0833cae3d6068f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_34a80fb78cac1c42fe0833cae3d6068f = L.geoJson(null, {
+                onEachFeature: geo_json_34a80fb78cac1c42fe0833cae3d6068f_onEachFeature,
+            
+                style: geo_json_34a80fb78cac1c42fe0833cae3d6068f_styler,
+            ...{
+}
+        });
+
+        function geo_json_34a80fb78cac1c42fe0833cae3d6068f_add (data) {
+            geo_json_34a80fb78cac1c42fe0833cae3d6068f
+                .addData(data);
+        }
+            geo_json_34a80fb78cac1c42fe0833cae3d6068f_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8783, 52.3618], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Vondelpark&quot;, &quot;caption&quot;: &quot;Vondelpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8595, 52.3577], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rembrandt Park&quot;, &quot;caption&quot;: &quot;Rembrandt Park&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9024, 52.3575], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Oosterpark&quot;, &quot;caption&quot;: &quot;Oosterpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.928, 52.3648], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Flevopark&quot;, &quot;caption&quot;: &quot;Flevopark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8639, 52.3722], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Westerpark&quot;, &quot;caption&quot;: &quot;Westerpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+            geo_json_34a80fb78cac1c42fe0833cae3d6068f.addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+        
+    
+            var geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl = new L.Control.Search({
+                layer: geo_json_34a80fb78cac1c42fe0833cae3d6068f,
+                
+                propertyName: &#x27;_search_label&#x27;,
+                
+                collapsed: false,
+                textPlaceholder: &#x27;Find a park...&#x27;,
+                position:&#x27;topright&#x27;,
+            
+                initial: false,
+                
+                hideMarkerOnCollapse: true
+            
+                });
+                geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_34a80fb78cac1c42fe0833cae3d6068f.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_34a80fb78cac1c42fe0833cae3d6068f.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_bb131cb7df98f8d0860d8726a7c7382d.addControl( geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl );
+
+        
+    
+            map_bb131cb7df98f8d0860d8726a7c7382d.fitBounds(
+                [[52.3618, 4.8783], [52.3618, 4.8783], [52.3577, 4.8595], [52.3577, 4.8595], [52.3575, 4.9024], [52.3575, 4.9024], [52.3648, 4.928], [52.3648, 4.928], [52.3722, 4.8639], [52.3722, 4.8639]],
+                {}
+            );
+        
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
+</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mapyta</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Amsterdam Parks&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.8783</span><span class="p">,</span> <span class="mf">52.3618</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌳&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Vondelpark&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.8595</span><span class="p">,</span> <span class="mf">52.3577</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌳&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Rembrandt Park&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9024</span><span class="p">,</span> <span class="mf">52.3575</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌳&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Oosterpark&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9280</span><span class="p">,</span> <span class="mf">52.3648</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌳&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Flevopark&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.8639</span><span class="p">,</span> <span class="mf">52.3722</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;🌳&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Westerpark&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">add_search_control</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Find a park...&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Type <code>"park"</code> in the search box, a dropdown lists all five matches. Select one to center the map to it.</p>
+<h2 id="parameters">Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layer_name</code></td>
+<td><code>None</code></td>
+<td>Feature group to search. <code>None</code> searches all features on the map.</td>
+</tr>
+<tr>
+<td><code>property_name</code></td>
+<td><code>None</code></td>
+<td>GeoJSON property to use as the search label. Auto-inferred when <code>None</code>.</td>
+</tr>
+<tr>
+<td><code>placeholder</code></td>
+<td><code>"Search..."</code></td>
+<td>Placeholder text in the search input box.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><code>"topright"</code></td>
+<td>Control position: <code>"topleft"</code>, <code>"topright"</code>, <code>"bottomleft"</code>, <code>"bottomright"</code>.</td>
+</tr>
+<tr>
+<td><code>zoom</code></td>
+<td><code>None</code></td>
+<td>Zoom level when a result is selected. Uses the map's current zoom if <code>None</code>.</td>
+</tr>
+<tr>
+<td><code>geom_type</code></td>
+<td><code>"Point"</code></td>
+<td><code>"Point"</code> for markers and point features; <code>"Polygon"</code> for area features.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../layers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Feature Groups">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Feature Groups
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../choropleth/" class="md-footer__link md-footer__link--next" aria-label="Next: Choropleth Maps">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Choropleth Maps
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026 &copy; Mapyta - Enrique García
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/engarcia/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/egarciamendez/mapyta" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.code.copy", "content.code.select", "content.footnote.tooltips", "content.tabs.link", "content.tooltips", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "search.highlight", "search.share", "search.suggest", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+        <script src="../../js/open_in_new_tab.js"></script>
+      
+    
+  </body>
+</html>
