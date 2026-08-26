@@ -196,12 +196,16 @@ def _point_properties(
 
     The browser-side factory tests for each key, so an unset one is left out rather than
     written as ``null``.
+
+    ``color`` lands inside a ``style`` attribute and ``caption`` in element content of an
+    HTML string the browser parses, so both are escaped here: an unescaped colour such as
+    ``red" onmouseover="..."`` would close the attribute and add an event handler.
     """
     props: dict[str, Any] = {}
     if color is not None:
-        props["color"] = color
+        props["color"] = html_escape(color, quote=True)
     if caption:
-        props["caption"] = caption
+        props["caption"] = html_escape(caption)
     if tooltip:
         props["tooltip"] = render_text(tooltip)
     if popup:
@@ -1130,9 +1134,11 @@ class Map:
             Marker symbol for every point, resolved exactly as in :meth:`add_point`
             (icon name, full CSS class, or emoji/text).  ``None`` gives ``"arrow-down"``.
         captions : Sequence[str | None] | None
-            Per-point text placed below the marker.  Entries may be ``None``.
+            Per-point text placed below the marker, HTML-escaped and shown literally.
+            Entries may be ``None``.
         colors : Sequence[str] | None
             Per-point CSS colour for the marker symbol, overriding ``marker_style``.
+            HTML-escaped, so a colour cannot smuggle markup into the icon.
         tooltips : Sequence[str | RawHTML | None] | None
             Per-point hover text.  Markdown is supported for plain strings.
         popups : Sequence[str | RawHTML | None] | None

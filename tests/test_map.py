@@ -6590,3 +6590,42 @@ class TestAddPointsBulkLayer:
         # Assert - Then
         group = m._feature_groups["Sondering"]
         assert any(child._name == "GeoJson" for child in group._children.values())
+
+    def test_color_cannot_break_out_of_the_style_attribute(self) -> None:
+        """
+        Scenario: A colour taken from data cannot inject markup into the icon.
+
+        Given: A point whose colour closes the style attribute and adds an event handler
+        When: The map is rendered
+        Then: The quote is escaped, so the handler stays inside the style value
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(1), colors=['red" onmouseover="alert(1)'])
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert _point_properties('red" onmouseover="alert(1)', None, None, None)["color"] == "red&quot; onmouseover=&quot;alert(1)"
+        assert 'red" onmouseover=' not in html, "an unescaped quote would close the style attribute the colour is spliced into"
+
+    def test_caption_is_shown_literally(self) -> None:
+        """
+        Scenario: A caption taken from data cannot inject markup into the icon.
+
+        Given: A point captioned with a script tag
+        When: The map is rendered
+        Then: The caption is escaped, and to_geojson still exports it unchanged
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(1), captions=["<script>alert(1)</script>"])
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert _point_properties(None, "<script>alert(1)</script>", None, None)["caption"] == "&lt;script&gt;alert(1)&lt;/script&gt;"
+        assert "<script>alert(1)</script>" not in html, "a caption must not become active markup"
+        assert m.to_geojson()["features"][0]["properties"]["caption"] == "<script>alert(1)</script>", "the export keeps the caption as given"
