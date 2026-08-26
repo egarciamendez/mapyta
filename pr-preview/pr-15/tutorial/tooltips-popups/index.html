@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../markers/">
+        <link rel="prev" href="../bulk-points/">
       
       
         <link rel="next" href="../layers/">
@@ -476,6 +476,8 @@
       
         
       
+        
+      
     
     
     
@@ -604,6 +606,34 @@
     
   
     Markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bulk-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bulk Points
   
 
     
@@ -1764,7 +1794,7 @@
 <h1 id="tooltips-popups">Tooltips &amp; Popups</h1>
 <p>Tooltips appear on hover; popups appear on click. Both accept Markdown, raw HTML, or nothing at all.</p>
 <h2 id="markdown-content">Markdown content</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-65--__tabbed_1_1" name="exec-65--__tabbed_1" type="radio" /><input id="exec-65--__tabbed_1_2" name="exec-65--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-65--__tabbed_1_1">Result</label><label for="exec-65--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-66--__tabbed_1_1" name="exec-66--__tabbed_1" type="radio" /><input id="exec-66--__tabbed_1_2" name="exec-66--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-66--__tabbed_1_1">Result</label><label for="exec-66--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1788,7 +1818,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_5d7ddbd7e76847288a68bef64a9f8fa1 {
+                #map_4405da92648364b015b6e9d340e37c24 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1828,14 +1858,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Custom Popups&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_5d7ddbd7e76847288a68bef64a9f8fa1&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_4405da92648364b015b6e9d340e37c24&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_5d7ddbd7e76847288a68bef64a9f8fa1 = L.map(
-                &quot;map_5d7ddbd7e76847288a68bef64a9f8fa1&quot;,
+            var map_4405da92648364b015b6e9d340e37c24 = L.map(
+                &quot;map_4405da92648364b015b6e9d340e37c24&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1847,13 +1877,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_5d7ddbd7e76847288a68bef64a9f8fa1);
+            L.control.scale().addTo(map_4405da92648364b015b6e9d340e37c24);
 
             
 
         
     
-            var tile_layer_bfae47d456b3b4983e0f2074133d7a15 = L.tileLayer(
+            var tile_layer_24cbc88e2fa52cff5aab93e317cf6834 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1870,10 +1900,10 @@
             );
         
     
-            tile_layer_bfae47d456b3b4983e0f2074133d7a15.addTo(map_5d7ddbd7e76847288a68bef64a9f8fa1);
+            tile_layer_24cbc88e2fa52cff5aab93e317cf6834.addTo(map_4405da92648364b015b6e9d340e37c24);
         
     
-            var mouse_position_c414f285cf93252ba6023379df1ba156 = new L.Control.MousePosition(
+            var mouse_position_ebfff2a595d841bee147d937075d0459 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1883,21 +1913,21 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_c414f285cf93252ba6023379df1ba156.options[&quot;latFormatter&quot;] =
+            mouse_position_ebfff2a595d841bee147d937075d0459.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_c414f285cf93252ba6023379df1ba156.options[&quot;lngFormatter&quot;] =
+            mouse_position_ebfff2a595d841bee147d937075d0459.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_5d7ddbd7e76847288a68bef64a9f8fa1.addControl(mouse_position_c414f285cf93252ba6023379df1ba156);
+            map_4405da92648364b015b6e9d340e37c24.addControl(mouse_position_ebfff2a595d841bee147d937075d0459);
         
     
-            var marker_1dacbfffbc0dd1759c0eb7c6b2eec4e1 = L.marker(
+            var marker_e5eca2fc6876afd65c16ff779c789c60 = L.marker(
                 [52.0908, 5.1213],
                 {
 }
-            ).addTo(map_5d7ddbd7e76847288a68bef64a9f8fa1);
+            ).addTo(map_4405da92648364b015b6e9d340e37c24);
         
     
-            var div_icon_61dbe189da9719c60791a8ae97597cc6 = L.divIcon({
+            var div_icon_a0a24d1052ac8a231b89693c2cc6fa4c = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83d\udccb\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1905,24 +1935,24 @@
 });
         
     
-        var popup_75fce5abed635d3b5b31c81927c1db15 = L.popup({
+        var popup_3a2636e31fd6e7e88946f84af0f63c38 = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_92f07aabc7cc198c390c846a9c3b66cb = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlV0cmVjaHQ8L3N0cm9uZz4KPGJyPlBvcHVsYXRpb246IDM2MSw5MjQ8YnI+UHJvdmluY2U6IFV0cmVjaHQ8YnI+Rm91bmRlZDogNDcgQUQ=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;150&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_75fce5abed635d3b5b31c81927c1db15.setContent(i_frame_92f07aabc7cc198c390c846a9c3b66cb);
+                var i_frame_4bbf64640f7343af25624ede8641338d = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICA8c3Ryb25nPlV0cmVjaHQ8L3N0cm9uZz4KPGJyPlBvcHVsYXRpb246IDM2MSw5MjQ8YnI+UHJvdmluY2U6IFV0cmVjaHQ8YnI+Rm91bmRlZDogNDcgQUQ=&quot; width=&quot;300&quot; style=&quot;border:none !important;&quot; height=&quot;150&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_3a2636e31fd6e7e88946f84af0f63c38.setContent(i_frame_4bbf64640f7343af25624ede8641338d);
             
         
 
-        marker_1dacbfffbc0dd1759c0eb7c6b2eec4e1.bindPopup(popup_75fce5abed635d3b5b31c81927c1db15)
+        marker_e5eca2fc6876afd65c16ff779c789c60.bindPopup(popup_3a2636e31fd6e7e88946f84af0f63c38)
         ;
 
         
     
     
-            marker_1dacbfffbc0dd1759c0eb7c6b2eec4e1.bindTooltip(
+            marker_e5eca2fc6876afd65c16ff779c789c60.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Utrecht&lt;/strong&gt;
 &lt;em&gt;Hover tooltip&lt;/em&gt;
@@ -1933,10 +1963,10 @@
             );
         
     
-                marker_1dacbfffbc0dd1759c0eb7c6b2eec4e1.setIcon(div_icon_61dbe189da9719c60791a8ae97597cc6);
+                marker_e5eca2fc6876afd65c16ff779c789c60.setIcon(div_icon_a0a24d1052ac8a231b89693c2cc6fa4c);
             
     
-            map_5d7ddbd7e76847288a68bef64a9f8fa1.fitBounds(
+            map_4405da92648364b015b6e9d340e37c24.fitBounds(
                 [[52.0908, 5.1213], [52.0908, 5.1213]],
                 {}
             );
@@ -1983,7 +2013,7 @@ because a template literal would otherwise evaluate it, but anything else you pu
 HTML in your page. Escape what comes from your data.</p>
 <h2 id="raw-html">Raw HTML</h2>
 <p>When Markdown isn't enough, styled tables, colored text, embedded images, wrap your string in <code>RawHTML</code> to bypass conversion entirely.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-66--__tabbed_1_1" name="exec-66--__tabbed_1" type="radio" /><input id="exec-66--__tabbed_1_2" name="exec-66--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-66--__tabbed_1_1">Result</label><label for="exec-66--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-67--__tabbed_1_1" name="exec-67--__tabbed_1" type="radio" /><input id="exec-67--__tabbed_1_2" name="exec-67--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-67--__tabbed_1_1">Result</label><label for="exec-67--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2007,7 +2037,7 @@ HTML in your page. Escape what comes from your data.</p>
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_efdfc907e9808da08dd2d2b5c748ef4b {
+                #map_190532179428cb345b34418d61688d3a {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2047,14 +2077,14 @@ HTML in your page. Escape what comes from your data.</p>
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Raw HTML Popup&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_efdfc907e9808da08dd2d2b5c748ef4b&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_190532179428cb345b34418d61688d3a&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_efdfc907e9808da08dd2d2b5c748ef4b = L.map(
-                &quot;map_efdfc907e9808da08dd2d2b5c748ef4b&quot;,
+            var map_190532179428cb345b34418d61688d3a = L.map(
+                &quot;map_190532179428cb345b34418d61688d3a&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2066,13 +2096,13 @@ HTML in your page. Escape what comes from your data.</p>
 
                 }
             );
-            L.control.scale().addTo(map_efdfc907e9808da08dd2d2b5c748ef4b);
+            L.control.scale().addTo(map_190532179428cb345b34418d61688d3a);
 
             
 
         
     
-            var tile_layer_53d6b9b50301a851fe94cea6b1a53cf4 = L.tileLayer(
+            var tile_layer_92c93bc4daf8000f0a55a798e5de4359 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2089,10 +2119,10 @@ HTML in your page. Escape what comes from your data.</p>
             );
         
     
-            tile_layer_53d6b9b50301a851fe94cea6b1a53cf4.addTo(map_efdfc907e9808da08dd2d2b5c748ef4b);
+            tile_layer_92c93bc4daf8000f0a55a798e5de4359.addTo(map_190532179428cb345b34418d61688d3a);
         
     
-            var mouse_position_021760e63d1cffe2fc8ecc2297c65b4c = new L.Control.MousePosition(
+            var mouse_position_068a4f105e6ecc352f3ac80526838740 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2102,21 +2132,21 @@ HTML in your page. Escape what comes from your data.</p>
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_021760e63d1cffe2fc8ecc2297c65b4c.options[&quot;latFormatter&quot;] =
+            mouse_position_068a4f105e6ecc352f3ac80526838740.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_021760e63d1cffe2fc8ecc2297c65b4c.options[&quot;lngFormatter&quot;] =
+            mouse_position_068a4f105e6ecc352f3ac80526838740.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_efdfc907e9808da08dd2d2b5c748ef4b.addControl(mouse_position_021760e63d1cffe2fc8ecc2297c65b4c);
+            map_190532179428cb345b34418d61688d3a.addControl(mouse_position_068a4f105e6ecc352f3ac80526838740);
         
     
-            var marker_f411fc4a28639d04fff9bed616a25ba9 = L.marker(
+            var marker_61732dd240210b606e6a50011aa93359 = L.marker(
                 [52.0908, 5.1213],
                 {
 }
-            ).addTo(map_efdfc907e9808da08dd2d2b5c748ef4b);
+            ).addTo(map_190532179428cb345b34418d61688d3a);
         
     
-            var div_icon_bb2150a586568b6be86512c754a13fbf = L.divIcon({
+            var div_icon_b22c9f3ab7d917f94df15972cad97d7b = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83d\udcca\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -2124,24 +2154,24 @@ HTML in your page. Escape what comes from your data.</p>
 });
         
     
-        var popup_a95c0189ab102d2e0b0b5c9e10dd0ef7 = L.popup({
+        var popup_59c215c6f936c0bc760f8113ac1c3e0d = L.popup({
   &quot;maxWidth&quot;: 300,
 });
 
         
             
-                var i_frame_579ab4f8f7d2c8b39a5e76bfe08f51d5 = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICAKPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7d2lkdGg6MTAwJTsiPgogIDx0ciBzdHlsZT0iYmFja2dyb3VuZDojMzQ5OGRiO2NvbG9yOndoaXRlOyI+CiAgICA8dGggc3R5bGU9InBhZGRpbmc6NnB4OyI+UHJvcGVydHk8L3RoPgogICAgPHRoIHN0eWxlPSJwYWRkaW5nOjZweDsiPlZhbHVlPC90aD4KICA8L3RyPgogIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6NHB4OyI+TmFtZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjRweDsiPlV0cmVjaHQ8L3RkPjwvdHI+CiAgPHRyIHN0eWxlPSJiYWNrZ3JvdW5kOiNmMGYwZjA7Ij48dGQgc3R5bGU9InBhZGRpbmc6NHB4OyI+UG9wdWxhdGlvbjwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjRweDsiPjM2MSw5MjQ8L3RkPjwvdHI+CiAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzo0cHg7Ij5Qcm92aW5jZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjRweDsiPlV0cmVjaHQ8L3RkPjwvdHI+CjwvdGFibGU+&quot; width=&quot;320&quot; style=&quot;border:none !important;&quot; height=&quot;160&quot;&gt;&lt;/iframe&gt;`)[0];
-                popup_a95c0189ab102d2e0b0b5c9e10dd0ef7.setContent(i_frame_579ab4f8f7d2c8b39a5e76bfe08f51d5);
+                var i_frame_fd8e7abdc8d1c6ee005527356d7ecd5b = $(`&lt;iframe src=&quot;data:text/html;charset=utf-8;base64,CiAgICAKPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7d2lkdGg6MTAwJTsiPgogIDx0ciBzdHlsZT0iYmFja2dyb3VuZDojMzQ5OGRiO2NvbG9yOndoaXRlOyI+CiAgICA8dGggc3R5bGU9InBhZGRpbmc6NnB4OyI+UHJvcGVydHk8L3RoPgogICAgPHRoIHN0eWxlPSJwYWRkaW5nOjZweDsiPlZhbHVlPC90aD4KICA8L3RyPgogIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6NHB4OyI+TmFtZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjRweDsiPlV0cmVjaHQ8L3RkPjwvdHI+CiAgPHRyIHN0eWxlPSJiYWNrZ3JvdW5kOiNmMGYwZjA7Ij48dGQgc3R5bGU9InBhZGRpbmc6NHB4OyI+UG9wdWxhdGlvbjwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjRweDsiPjM2MSw5MjQ8L3RkPjwvdHI+CiAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzo0cHg7Ij5Qcm92aW5jZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjRweDsiPlV0cmVjaHQ8L3RkPjwvdHI+CjwvdGFibGU+&quot; width=&quot;320&quot; style=&quot;border:none !important;&quot; height=&quot;160&quot;&gt;&lt;/iframe&gt;`)[0];
+                popup_59c215c6f936c0bc760f8113ac1c3e0d.setContent(i_frame_fd8e7abdc8d1c6ee005527356d7ecd5b);
             
         
 
-        marker_f411fc4a28639d04fff9bed616a25ba9.bindPopup(popup_a95c0189ab102d2e0b0b5c9e10dd0ef7)
+        marker_61732dd240210b606e6a50011aa93359.bindPopup(popup_59c215c6f936c0bc760f8113ac1c3e0d)
         ;
 
         
     
     
-            marker_f411fc4a28639d04fff9bed616a25ba9.bindTooltip(
+            marker_61732dd240210b606e6a50011aa93359.bindTooltip(
                 `&lt;div&gt;
                      &lt;b&gt;Utrecht&lt;/b&gt;&lt;br&gt;click for details
                  &lt;/div&gt;`,
@@ -2151,10 +2181,10 @@ HTML in your page. Escape what comes from your data.</p>
             );
         
     
-                marker_f411fc4a28639d04fff9bed616a25ba9.setIcon(div_icon_bb2150a586568b6be86512c754a13fbf);
+                marker_61732dd240210b606e6a50011aa93359.setIcon(div_icon_b22c9f3ab7d917f94df15972cad97d7b);
             
     
-            map_efdfc907e9808da08dd2d2b5c748ef4b.fitBounds(
+            map_190532179428cb345b34418d61688d3a.fitBounds(
                 [[52.0908, 5.1213], [52.0908, 5.1213]],
                 {}
             );
@@ -2260,7 +2290,7 @@ HTML in your page. Escape what comes from your data.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../markers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Markers">
+          <a href="../bulk-points/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Bulk Points">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2270,7 +2300,7 @@ HTML in your page. Escape what comes from your data.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Markers
+                Bulk Points
               </div>
             </div>
           </a>

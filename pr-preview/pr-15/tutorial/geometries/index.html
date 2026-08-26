@@ -476,6 +476,8 @@
       
         
       
+        
+      
     
     
     
@@ -662,6 +664,34 @@
     
   
     Markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bulk-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bulk Points
   
 
     
@@ -1697,7 +1727,7 @@
 
 <h1 id="lines-polygons">Lines &amp; Polygons</h1>
 <p>Points are useful, but maps really come alive with shapes. Let's draw a walking route and highlight a neighbourhood in Utrecht.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-43--__tabbed_1_1" name="exec-43--__tabbed_1" type="radio" /><input id="exec-43--__tabbed_1_2" name="exec-43--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-43--__tabbed_1_1">Result</label><label for="exec-43--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-44--__tabbed_1_1" name="exec-44--__tabbed_1" type="radio" /><input id="exec-44--__tabbed_1_2" name="exec-44--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-44--__tabbed_1_1">Result</label><label for="exec-44--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1721,7 +1751,7 @@
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_f8e64f715d8ca0fc887595a135c1e242 {
+                #map_b37a755ee86cd2186dfebcbebc4d0e3d {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1761,14 +1791,14 @@
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Utrecht Walk&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_f8e64f715d8ca0fc887595a135c1e242&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_b37a755ee86cd2186dfebcbebc4d0e3d&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_f8e64f715d8ca0fc887595a135c1e242 = L.map(
-                &quot;map_f8e64f715d8ca0fc887595a135c1e242&quot;,
+            var map_b37a755ee86cd2186dfebcbebc4d0e3d = L.map(
+                &quot;map_b37a755ee86cd2186dfebcbebc4d0e3d&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1780,13 +1810,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_f8e64f715d8ca0fc887595a135c1e242);
+            L.control.scale().addTo(map_b37a755ee86cd2186dfebcbebc4d0e3d);
 
             
 
         
     
-            var tile_layer_c4e38b34e39bbfb3af4a0237a7cd94a3 = L.tileLayer(
+            var tile_layer_92c34cc73992e4fabf5a1332fa48858d = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1803,10 +1833,10 @@
             );
         
     
-            tile_layer_c4e38b34e39bbfb3af4a0237a7cd94a3.addTo(map_f8e64f715d8ca0fc887595a135c1e242);
+            tile_layer_92c34cc73992e4fabf5a1332fa48858d.addTo(map_b37a755ee86cd2186dfebcbebc4d0e3d);
         
     
-            var mouse_position_cfe9bab36fd3274396549ae310c19c96 = new L.Control.MousePosition(
+            var mouse_position_53ded59e826a4052a55c080a5ee3cf92 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1816,20 +1846,20 @@
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_cfe9bab36fd3274396549ae310c19c96.options[&quot;latFormatter&quot;] =
+            mouse_position_53ded59e826a4052a55c080a5ee3cf92.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_cfe9bab36fd3274396549ae310c19c96.options[&quot;lngFormatter&quot;] =
+            mouse_position_53ded59e826a4052a55c080a5ee3cf92.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_f8e64f715d8ca0fc887595a135c1e242.addControl(mouse_position_cfe9bab36fd3274396549ae310c19c96);
+            map_b37a755ee86cd2186dfebcbebc4d0e3d.addControl(mouse_position_53ded59e826a4052a55c080a5ee3cf92);
         
     
-            var poly_line_0fb4aec79115e9d14595d2d1aec39364 = L.polyline(
+            var poly_line_2d030d843189d9b6a9f875cbebf669dc = L.polyline(
                 [[52.0894, 5.1097], [52.0934, 5.1133], [52.0919, 5.1197], [52.0908, 5.1213]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;#e74c3c&quot;, &quot;dashArray&quot;: &quot;10 6&quot;, &quot;dashOffset&quot;: null, &quot;fill&quot;: false, &quot;fillColor&quot;: &quot;#e74c3c&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 4}
-            ).addTo(map_f8e64f715d8ca0fc887595a135c1e242);
+            ).addTo(map_b37a755ee86cd2186dfebcbebc4d0e3d);
         
     
-            poly_line_0fb4aec79115e9d14595d2d1aec39364.bindTooltip(
+            poly_line_2d030d843189d9b6a9f875cbebf669dc.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Walking route&lt;/strong&gt;
 &lt;em&gt;Centraal → Dom Tower&lt;/em&gt;
@@ -1840,13 +1870,13 @@
             );
         
     
-            var polygon_4dcf90005a4703895268de2d998ae02b = L.polygon(
+            var polygon_b2fb61190a2f08559506e86be1b75302 = L.polygon(
                 [[[52.0915, 5.1195], [52.0897, 5.1242], [52.0893, 5.1298], [52.0908, 5.1362], [52.0948, 5.1378], [52.0975, 5.1318], [52.097, 5.1252], [52.0952, 5.1208], [52.0915, 5.1195]]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;#2ecc71&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#2ecc71&quot;, &quot;fillOpacity&quot;: 0.15, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 2}
-            ).addTo(map_f8e64f715d8ca0fc887595a135c1e242);
+            ).addTo(map_b37a755ee86cd2186dfebcbebc4d0e3d);
         
     
-            polygon_4dcf90005a4703895268de2d998ae02b.bindTooltip(
+            polygon_b2fb61190a2f08559506e86be1b75302.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Wittevrouwen&lt;/strong&gt;
 Historic neighbourhood
@@ -1857,16 +1887,16 @@ Historic neighbourhood
             );
         
     
-            map_f8e64f715d8ca0fc887595a135c1e242.fitBounds(
+            map_b37a755ee86cd2186dfebcbebc4d0e3d.fitBounds(
                 [[52.0894, 5.1097], [52.0934, 5.1213], [52.0893, 5.1195], [52.0975, 5.1378]],
                 {}
             );
         
     
-            tile_layer_c4e38b34e39bbfb3af4a0237a7cd94a3.addTo(map_f8e64f715d8ca0fc887595a135c1e242);
+            tile_layer_92c34cc73992e4fabf5a1332fa48858d.addTo(map_b37a755ee86cd2186dfebcbebc4d0e3d);
         
     
-            map_f8e64f715d8ca0fc887595a135c1e242.fitBounds(
+            map_b37a755ee86cd2186dfebcbebc4d0e3d.fitBounds(
                 [[52.0894, 5.1097], [52.0934, 5.1213], [52.0893, 5.1195], [52.0975, 5.1378]],
                 {}
             );
@@ -1929,7 +1959,7 @@ Historic neighbourhood
 <div class="admonition info">
 <p class="admonition-title">Style with dicts or dataclass objects</p>
 <p><code>StrokeStyle</code>, <code>FillStyle</code>, and <code>CircleStyle</code> accept either a dataclass instance or a plain dict with the same keys:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-44--__tabbed_1_1" name="exec-44--__tabbed_1" type="radio" /><input id="exec-44--__tabbed_1_2" name="exec-44--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-44--__tabbed_1_1">Source</label><label for="exec-44--__tabbed_1_2">Result</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-45--__tabbed_1_1" name="exec-45--__tabbed_1" type="radio" /><input id="exec-45--__tabbed_1_2" name="exec-45--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-45--__tabbed_1_1">Source</label><label for="exec-45--__tabbed_1_2">Result</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
@@ -1970,7 +2000,7 @@ Historic neighbourhood
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_01925884f710cf033a071358e57b40f4 {
+                #map_fb35c80efa2daf9e8b4725bd333fdbd6 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2010,14 +2040,14 @@ Historic neighbourhood
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Quick styling&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_01925884f710cf033a071358e57b40f4&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_fb35c80efa2daf9e8b4725bd333fdbd6&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_01925884f710cf033a071358e57b40f4 = L.map(
-                &quot;map_01925884f710cf033a071358e57b40f4&quot;,
+            var map_fb35c80efa2daf9e8b4725bd333fdbd6 = L.map(
+                &quot;map_fb35c80efa2daf9e8b4725bd333fdbd6&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2029,13 +2059,13 @@ Historic neighbourhood
 
                 }
             );
-            L.control.scale().addTo(map_01925884f710cf033a071358e57b40f4);
+            L.control.scale().addTo(map_fb35c80efa2daf9e8b4725bd333fdbd6);
 
             
 
         
     
-            var tile_layer_eb1ed5d50e2677cd16221aa1cdbbe7cf = L.tileLayer(
+            var tile_layer_bcf93ecaa85d37e984b462a7fee30a75 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2052,10 +2082,10 @@ Historic neighbourhood
             );
         
     
-            tile_layer_eb1ed5d50e2677cd16221aa1cdbbe7cf.addTo(map_01925884f710cf033a071358e57b40f4);
+            tile_layer_bcf93ecaa85d37e984b462a7fee30a75.addTo(map_fb35c80efa2daf9e8b4725bd333fdbd6);
         
     
-            var mouse_position_b12f7845ba4d41b86b3234192a6916ea = new L.Control.MousePosition(
+            var mouse_position_54e3c072b3580e26493a26e69c50b66d = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2065,20 +2095,20 @@ Historic neighbourhood
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_b12f7845ba4d41b86b3234192a6916ea.options[&quot;latFormatter&quot;] =
+            mouse_position_54e3c072b3580e26493a26e69c50b66d.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_b12f7845ba4d41b86b3234192a6916ea.options[&quot;lngFormatter&quot;] =
+            mouse_position_54e3c072b3580e26493a26e69c50b66d.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_01925884f710cf033a071358e57b40f4.addControl(mouse_position_b12f7845ba4d41b86b3234192a6916ea);
+            map_fb35c80efa2daf9e8b4725bd333fdbd6.addControl(mouse_position_54e3c072b3580e26493a26e69c50b66d);
         
     
-            var polygon_01776b621101c7d9bffd8671a89b1b90 = L.polygon(
+            var polygon_b18b2191fc0cadac2edc42759dd140ea = L.polygon(
                 [[[52.08, 5.1], [52.076, 5.12], [52.083, 5.138], [52.095, 5.133], [52.099, 5.114], [52.09, 5.101], [52.08, 5.1]]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;red&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;red&quot;, &quot;fillOpacity&quot;: 0.15, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 4}
-            ).addTo(map_01925884f710cf033a071358e57b40f4);
+            ).addTo(map_fb35c80efa2daf9e8b4725bd333fdbd6);
         
     
-            map_01925884f710cf033a071358e57b40f4.fitBounds(
+            map_fb35c80efa2daf9e8b4725bd333fdbd6.fitBounds(
                 [[52.076, 5.1], [52.099, 5.138]],
                 {}
             );
@@ -2090,7 +2120,7 @@ Historic neighbourhood
 </div>
 </div>
 <p>Use dataclass objects when you want IDE autocomplete or want to reuse a style across multiple geometries:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-45--__tabbed_1_1" name="exec-45--__tabbed_1" type="radio" /><input id="exec-45--__tabbed_1_2" name="exec-45--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-45--__tabbed_1_1">Source</label><label for="exec-45--__tabbed_1_2">Result</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-46--__tabbed_1_1" name="exec-46--__tabbed_1" type="radio" /><input id="exec-46--__tabbed_1_2" name="exec-46--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-46--__tabbed_1_1">Source</label><label for="exec-46--__tabbed_1_2">Result</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
@@ -2133,7 +2163,7 @@ Historic neighbourhood
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_d47c4edcfbb55dc925842f5dd5915d52 {
+                #map_99794a0ab73e582549fcffa50ea1ebb6 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2173,14 +2203,14 @@ Historic neighbourhood
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Reusable styles&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_d47c4edcfbb55dc925842f5dd5915d52&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_99794a0ab73e582549fcffa50ea1ebb6&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_d47c4edcfbb55dc925842f5dd5915d52 = L.map(
-                &quot;map_d47c4edcfbb55dc925842f5dd5915d52&quot;,
+            var map_99794a0ab73e582549fcffa50ea1ebb6 = L.map(
+                &quot;map_99794a0ab73e582549fcffa50ea1ebb6&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2192,13 +2222,13 @@ Historic neighbourhood
 
                 }
             );
-            L.control.scale().addTo(map_d47c4edcfbb55dc925842f5dd5915d52);
+            L.control.scale().addTo(map_99794a0ab73e582549fcffa50ea1ebb6);
 
             
 
         
     
-            var tile_layer_f25b30d1fe20e516ecf526ce0814cced = L.tileLayer(
+            var tile_layer_48e4da65898db223fc50b9da0a05bb43 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2215,10 +2245,10 @@ Historic neighbourhood
             );
         
     
-            tile_layer_f25b30d1fe20e516ecf526ce0814cced.addTo(map_d47c4edcfbb55dc925842f5dd5915d52);
+            tile_layer_48e4da65898db223fc50b9da0a05bb43.addTo(map_99794a0ab73e582549fcffa50ea1ebb6);
         
     
-            var mouse_position_c73a8c3e3646413aa8003986de12fe73 = new L.Control.MousePosition(
+            var mouse_position_cfd4e3319f8e5af3d0a556f37326434a = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2228,26 +2258,26 @@ Historic neighbourhood
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_c73a8c3e3646413aa8003986de12fe73.options[&quot;latFormatter&quot;] =
+            mouse_position_cfd4e3319f8e5af3d0a556f37326434a.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_c73a8c3e3646413aa8003986de12fe73.options[&quot;lngFormatter&quot;] =
+            mouse_position_cfd4e3319f8e5af3d0a556f37326434a.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_d47c4edcfbb55dc925842f5dd5915d52.addControl(mouse_position_c73a8c3e3646413aa8003986de12fe73);
+            map_99794a0ab73e582549fcffa50ea1ebb6.addControl(mouse_position_cfd4e3319f8e5af3d0a556f37326434a);
         
     
-            var polygon_2f82a350a1a0498b2a78a2f940504b39 = L.polygon(
+            var polygon_52ca4eb86fe9247cd5fc5a05547f2924 = L.polygon(
                 [[[52.08, 5.1], [52.076, 5.12], [52.083, 5.138], [52.095, 5.133], [52.099, 5.114], [52.09, 5.101], [52.08, 5.1]]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;red&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 4}
-            ).addTo(map_d47c4edcfbb55dc925842f5dd5915d52);
+            ).addTo(map_99794a0ab73e582549fcffa50ea1ebb6);
         
     
-            var polygon_8216ba5eb1033f284195bf0528bd311c = L.polygon(
+            var polygon_47b9be67c65615d383eafad02246163e = L.polygon(
                 [[[52.088, 5.082], [52.083, 5.098], [52.091, 5.108], [52.101, 5.102], [52.098, 5.083], [52.093, 5.076], [52.088, 5.082]]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;red&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 4}
-            ).addTo(map_d47c4edcfbb55dc925842f5dd5915d52);
+            ).addTo(map_99794a0ab73e582549fcffa50ea1ebb6);
         
     
-            map_d47c4edcfbb55dc925842f5dd5915d52.fitBounds(
+            map_99794a0ab73e582549fcffa50ea1ebb6.fitBounds(
                 [[52.076, 5.1], [52.099, 5.138], [52.083, 5.076], [52.101, 5.108]],
                 {}
             );
@@ -2262,7 +2292,7 @@ Historic neighbourhood
 <div class="admonition tip">
 <p class="admonition-title">Polygons with holes</p>
 <p>Pass interior rings as the second argument to <code>Polygon</code>, they render as cutouts:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-46--__tabbed_1_1" name="exec-46--__tabbed_1" type="radio" /><input id="exec-46--__tabbed_1_2" name="exec-46--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-46--__tabbed_1_1">Source</label><label for="exec-46--__tabbed_1_2">Result</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-47--__tabbed_1_1" name="exec-47--__tabbed_1" type="radio" /><input id="exec-47--__tabbed_1_2" name="exec-47--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-47--__tabbed_1_1">Source</label><label for="exec-47--__tabbed_1_2">Result</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
@@ -2305,7 +2335,7 @@ Historic neighbourhood
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_90541725d4c2c15aa5ea3d26dac30280 {
+                #map_6de675fc6cdb73bde6c8e66a93459d2f {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2345,14 +2375,14 @@ Historic neighbourhood
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Wilhelminapark&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_90541725d4c2c15aa5ea3d26dac30280&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_6de675fc6cdb73bde6c8e66a93459d2f&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_90541725d4c2c15aa5ea3d26dac30280 = L.map(
-                &quot;map_90541725d4c2c15aa5ea3d26dac30280&quot;,
+            var map_6de675fc6cdb73bde6c8e66a93459d2f = L.map(
+                &quot;map_6de675fc6cdb73bde6c8e66a93459d2f&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2364,13 +2394,13 @@ Historic neighbourhood
 
                 }
             );
-            L.control.scale().addTo(map_90541725d4c2c15aa5ea3d26dac30280);
+            L.control.scale().addTo(map_6de675fc6cdb73bde6c8e66a93459d2f);
 
             
 
         
     
-            var tile_layer_fa87b405f407dbf499034d6ca7a506ca = L.tileLayer(
+            var tile_layer_6b1879a24f58afceec84ad242b05fcf6 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2387,10 +2417,10 @@ Historic neighbourhood
             );
         
     
-            tile_layer_fa87b405f407dbf499034d6ca7a506ca.addTo(map_90541725d4c2c15aa5ea3d26dac30280);
+            tile_layer_6b1879a24f58afceec84ad242b05fcf6.addTo(map_6de675fc6cdb73bde6c8e66a93459d2f);
         
     
-            var mouse_position_5e127bd4a0d86af9f94b66ee15f5cdc2 = new L.Control.MousePosition(
+            var mouse_position_4dd9bd6aa95c678fb38bc91d6948c61e = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2400,20 +2430,20 @@ Historic neighbourhood
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_5e127bd4a0d86af9f94b66ee15f5cdc2.options[&quot;latFormatter&quot;] =
+            mouse_position_4dd9bd6aa95c678fb38bc91d6948c61e.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_5e127bd4a0d86af9f94b66ee15f5cdc2.options[&quot;lngFormatter&quot;] =
+            mouse_position_4dd9bd6aa95c678fb38bc91d6948c61e.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_90541725d4c2c15aa5ea3d26dac30280.addControl(mouse_position_5e127bd4a0d86af9f94b66ee15f5cdc2);
+            map_6de675fc6cdb73bde6c8e66a93459d2f.addControl(mouse_position_4dd9bd6aa95c678fb38bc91d6948c61e);
         
     
-            var polygon_ac61377f7a7469bef0cf8b9256dc60cd = L.polygon(
+            var polygon_18cd84b35eeeb18bdc9110e5e0e0b14d = L.polygon(
                 [[[52.0835, 5.1215], [52.0828, 5.1252], [52.0838, 5.1278], [52.0863, 5.1282], [52.088, 5.1262], [52.0881, 5.1232], [52.0868, 5.1203], [52.0848, 5.1198], [52.0835, 5.1215]], [[52.0848, 5.1228], [52.0845, 5.1255], [52.086, 5.126], [52.0867, 5.1242], [52.0859, 5.1222], [52.0848, 5.1228]]],
                 {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;#3388ff&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;noClip&quot;: false, &quot;opacity&quot;: 1.0, &quot;smoothFactor&quot;: 1.0, &quot;stroke&quot;: true, &quot;weight&quot;: 3.0}
-            ).addTo(map_90541725d4c2c15aa5ea3d26dac30280);
+            ).addTo(map_6de675fc6cdb73bde6c8e66a93459d2f);
         
     
-            polygon_ac61377f7a7469bef0cf8b9256dc60cd.bindTooltip(
+            polygon_18cd84b35eeeb18bdc9110e5e0e0b14d.bindTooltip(
                 `&lt;div&gt;
                      &lt;strong&gt;Wilhelminapark&lt;/strong&gt;, the hole is the pond!
                  &lt;/div&gt;`,
@@ -2423,7 +2453,7 @@ Historic neighbourhood
             );
         
     
-            map_90541725d4c2c15aa5ea3d26dac30280.fitBounds(
+            map_6de675fc6cdb73bde6c8e66a93459d2f.fitBounds(
                 [[52.0828, 5.1198], [52.0881, 5.1282]],
                 {}
             );

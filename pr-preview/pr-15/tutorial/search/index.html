@@ -476,6 +476,8 @@
       
         
       
+        
+      
     
     
     
@@ -604,6 +606,34 @@
     
   
     Markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bulk-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bulk Points
   
 
     
@@ -1808,7 +1838,7 @@
 <h1 id="search-control">Search Control</h1>
 <p><code>add_search_control()</code> adds a search box that lets users type a name and center straight to the matching feature. It
 works on markers, GeoJSON layers, choropleth regions, and clusters, no setup required.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-58--__tabbed_1_1" name="exec-58--__tabbed_1" type="radio" /><input id="exec-58--__tabbed_1_2" name="exec-58--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-58--__tabbed_1_1">Result</label><label for="exec-58--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-59--__tabbed_1_1" name="exec-59--__tabbed_1" type="radio" /><input id="exec-59--__tabbed_1_2" name="exec-59--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-59--__tabbed_1_1">Result</label><label for="exec-59--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -1832,7 +1862,7 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_2eb2c62b36e8137d04669af86d4672ba {
+                #map_aa71ba73ffcabf3cfa1275c8e6879fc8 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1874,14 +1904,14 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;City Finder&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_2eb2c62b36e8137d04669af86d4672ba&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_aa71ba73ffcabf3cfa1275c8e6879fc8&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_2eb2c62b36e8137d04669af86d4672ba = L.map(
-                &quot;map_2eb2c62b36e8137d04669af86d4672ba&quot;,
+            var map_aa71ba73ffcabf3cfa1275c8e6879fc8 = L.map(
+                &quot;map_aa71ba73ffcabf3cfa1275c8e6879fc8&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -1893,13 +1923,13 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
 
                 }
             );
-            L.control.scale().addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            L.control.scale().addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
 
             
 
         
     
-            var tile_layer_5b14a03ab7835d269342a2c1e457d19d = L.tileLayer(
+            var tile_layer_6aad8b12080299e469e62859e639e2cc = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -1916,10 +1946,10 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
             );
         
     
-            tile_layer_5b14a03ab7835d269342a2c1e457d19d.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            tile_layer_6aad8b12080299e469e62859e639e2cc.addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var mouse_position_4362d66038bb50e73cc7810e9b56f6ed = new L.Control.MousePosition(
+            var mouse_position_85696f0fa194bc5af28b3cc792a483f2 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -1929,21 +1959,21 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_4362d66038bb50e73cc7810e9b56f6ed.options[&quot;latFormatter&quot;] =
+            mouse_position_85696f0fa194bc5af28b3cc792a483f2.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_4362d66038bb50e73cc7810e9b56f6ed.options[&quot;lngFormatter&quot;] =
+            mouse_position_85696f0fa194bc5af28b3cc792a483f2.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_2eb2c62b36e8137d04669af86d4672ba.addControl(mouse_position_4362d66038bb50e73cc7810e9b56f6ed);
+            map_aa71ba73ffcabf3cfa1275c8e6879fc8.addControl(mouse_position_85696f0fa194bc5af28b3cc792a483f2);
         
     
-            var marker_48a1c60570659d0c5d98989a44f00416 = L.marker(
+            var marker_00a262538205f1ca3535619f94764bd1 = L.marker(
                 [52.3728, 4.9003],
                 {
 }
-            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            ).addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var div_icon_1fc76654dc980184ae6347614201d70d = L.divIcon({
+            var div_icon_83c795e381deb7d8f4659a5b054c2ad8 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eAmsterdam\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1951,17 +1981,17 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
 });
         
     
-                marker_48a1c60570659d0c5d98989a44f00416.setIcon(div_icon_1fc76654dc980184ae6347614201d70d);
+                marker_00a262538205f1ca3535619f94764bd1.setIcon(div_icon_83c795e381deb7d8f4659a5b054c2ad8);
             
     
-            var marker_2f91ff1a96d13afecda1b6b6386bec66 = L.marker(
+            var marker_4efad7f529ebbb863a4b2ebce332d84e = L.marker(
                 [52.0907, 5.1214],
                 {
 }
-            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            ).addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var div_icon_37b5ed039fc73e51a547d0d825e858e0 = L.divIcon({
+            var div_icon_9496433cb06a068659a676ac335f1e8a = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eUtrecht\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1969,17 +1999,17 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
 });
         
     
-                marker_2f91ff1a96d13afecda1b6b6386bec66.setIcon(div_icon_37b5ed039fc73e51a547d0d825e858e0);
+                marker_4efad7f529ebbb863a4b2ebce332d84e.setIcon(div_icon_9496433cb06a068659a676ac335f1e8a);
             
     
-            var marker_4fbb9972ef2e5071a88900038c3d3704 = L.marker(
+            var marker_986b8b510f074a4ec0ecd8c7f21199d0 = L.marker(
                 [51.9244, 4.4777],
                 {
 }
-            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            ).addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var div_icon_52c5f575e9c909911b94228b0ee45720 = L.divIcon({
+            var div_icon_8a19743a313b1e55d3233a972f76f46d = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eRotterdam\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -1987,17 +2017,17 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
 });
         
     
-                marker_4fbb9972ef2e5071a88900038c3d3704.setIcon(div_icon_52c5f575e9c909911b94228b0ee45720);
+                marker_986b8b510f074a4ec0ecd8c7f21199d0.setIcon(div_icon_8a19743a313b1e55d3233a972f76f46d);
             
     
-            var marker_9e000bc9cda53a4d1d4414a47c27f701 = L.marker(
+            var marker_47ea6739662a3bfb442059ae37637877 = L.marker(
                 [52.0705, 4.3007],
                 {
 }
-            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            ).addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var div_icon_d4f2e286bd556c56377b2bbf86f1c75d = L.divIcon({
+            var div_icon_4718f690386c8d47388b731115f181f9 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eDen Haag\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -2005,17 +2035,17 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
 });
         
     
-                marker_9e000bc9cda53a4d1d4414a47c27f701.setIcon(div_icon_d4f2e286bd556c56377b2bbf86f1c75d);
+                marker_47ea6739662a3bfb442059ae37637877.setIcon(div_icon_4718f690386c8d47388b731115f181f9);
             
     
-            var marker_e3fcecd0444fe4b5825f65d883b4a9c8 = L.marker(
+            var marker_3f99f1a50b8792ed0dfc25c2e0aa513b = L.marker(
                 [51.4416, 5.4697],
                 {
 }
-            ).addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            ).addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var div_icon_7552d4a66cbb0419b38800123bb7a9bf = L.divIcon({
+            var div_icon_79f54c957413f61c2953e3ce7f0ee3e0 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eEindhoven\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -2023,42 +2053,42 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
 });
         
     
-                marker_e3fcecd0444fe4b5825f65d883b4a9c8.setIcon(div_icon_7552d4a66cbb0419b38800123bb7a9bf);
+                marker_3f99f1a50b8792ed0dfc25c2e0aa513b.setIcon(div_icon_79f54c957413f61c2953e3ce7f0ee3e0);
             
     
-        function geo_json_f7a15ed90da0f92b09ac7b565e5139eb_styler(feature) {
+        function geo_json_6017070a230255440715579b263146f7_styler(feature) {
             switch(feature.properties.caption) {
                 default:
                     return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
             }
         }
 
-        function geo_json_f7a15ed90da0f92b09ac7b565e5139eb_onEachFeature(feature, layer) {
+        function geo_json_6017070a230255440715579b263146f7_onEachFeature(feature, layer) {
 
             layer.on({
             });
         };
-        var geo_json_f7a15ed90da0f92b09ac7b565e5139eb = L.geoJson(null, {
-                onEachFeature: geo_json_f7a15ed90da0f92b09ac7b565e5139eb_onEachFeature,
+        var geo_json_6017070a230255440715579b263146f7 = L.geoJson(null, {
+                onEachFeature: geo_json_6017070a230255440715579b263146f7_onEachFeature,
             
-                style: geo_json_f7a15ed90da0f92b09ac7b565e5139eb_styler,
+                style: geo_json_6017070a230255440715579b263146f7_styler,
             ...{
 }
         });
 
-        function geo_json_f7a15ed90da0f92b09ac7b565e5139eb_add (data) {
-            geo_json_f7a15ed90da0f92b09ac7b565e5139eb
+        function geo_json_6017070a230255440715579b263146f7_add (data) {
+            geo_json_6017070a230255440715579b263146f7
                 .addData(data);
         }
-            geo_json_f7a15ed90da0f92b09ac7b565e5139eb_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Amsterdam&quot;, &quot;caption&quot;: &quot;Amsterdam&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Utrecht&quot;, &quot;caption&quot;: &quot;Utrecht&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rotterdam&quot;, &quot;caption&quot;: &quot;Rotterdam&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Den Haag&quot;, &quot;caption&quot;: &quot;Den Haag&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.4697, 51.4416], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Eindhoven&quot;, &quot;caption&quot;: &quot;Eindhoven&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_6017070a230255440715579b263146f7_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Amsterdam&quot;, &quot;caption&quot;: &quot;Amsterdam&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Utrecht&quot;, &quot;caption&quot;: &quot;Utrecht&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rotterdam&quot;, &quot;caption&quot;: &quot;Rotterdam&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Den Haag&quot;, &quot;caption&quot;: &quot;Den Haag&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.4697, 51.4416], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Eindhoven&quot;, &quot;caption&quot;: &quot;Eindhoven&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-            geo_json_f7a15ed90da0f92b09ac7b565e5139eb.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            geo_json_6017070a230255440715579b263146f7.addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            var geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl = new L.Control.Search({
-                layer: geo_json_f7a15ed90da0f92b09ac7b565e5139eb,
+            var geo_json_6017070a230255440715579b263146f7searchControl = new L.Control.Search({
+                layer: geo_json_6017070a230255440715579b263146f7,
                 
                 propertyName: &#x27;_search_label&#x27;,
                 
@@ -2071,51 +2101,51 @@ works on markers, GeoJSON layers, choropleth regions, and clusters, no setup req
                 hideMarkerOnCollapse: true
             
                 });
-                geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
-                    geo_json_f7a15ed90da0f92b09ac7b565e5139eb.setStyle(function(feature){
+                geo_json_6017070a230255440715579b263146f7searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_6017070a230255440715579b263146f7.setStyle(function(feature){
                         return feature.properties.style
                     })
                     
                     if(e.layer._popup)
                         e.layer.openPopup();
                 })
-                geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
-                        geo_json_f7a15ed90da0f92b09ac7b565e5139eb.setStyle(function(feature){
+                geo_json_6017070a230255440715579b263146f7searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_6017070a230255440715579b263146f7.setStyle(function(feature){
                             return feature.properties.style
                     });
                 });
-            map_2eb2c62b36e8137d04669af86d4672ba.addControl( geo_json_f7a15ed90da0f92b09ac7b565e5139ebsearchControl );
+            map_aa71ba73ffcabf3cfa1275c8e6879fc8.addControl( geo_json_6017070a230255440715579b263146f7searchControl );
 
         
     
-            map_2eb2c62b36e8137d04669af86d4672ba.fitBounds(
+            map_aa71ba73ffcabf3cfa1275c8e6879fc8.fitBounds(
                 [[52.3728, 4.9003], [52.3728, 4.9003], [52.0907, 5.1214], [52.0907, 5.1214], [51.9244, 4.4777], [51.9244, 4.4777], [52.0705, 4.3007], [52.0705, 4.3007], [51.4416, 5.4697], [51.4416, 5.4697]],
                 {}
             );
         
     
-            tile_layer_5b14a03ab7835d269342a2c1e457d19d.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            tile_layer_6aad8b12080299e469e62859e639e2cc.addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-                marker_48a1c60570659d0c5d98989a44f00416.setIcon(div_icon_1fc76654dc980184ae6347614201d70d);
+                marker_00a262538205f1ca3535619f94764bd1.setIcon(div_icon_83c795e381deb7d8f4659a5b054c2ad8);
             
     
-                marker_2f91ff1a96d13afecda1b6b6386bec66.setIcon(div_icon_37b5ed039fc73e51a547d0d825e858e0);
+                marker_4efad7f529ebbb863a4b2ebce332d84e.setIcon(div_icon_9496433cb06a068659a676ac335f1e8a);
             
     
-                marker_4fbb9972ef2e5071a88900038c3d3704.setIcon(div_icon_52c5f575e9c909911b94228b0ee45720);
+                marker_986b8b510f074a4ec0ecd8c7f21199d0.setIcon(div_icon_8a19743a313b1e55d3233a972f76f46d);
             
     
-                marker_9e000bc9cda53a4d1d4414a47c27f701.setIcon(div_icon_d4f2e286bd556c56377b2bbf86f1c75d);
+                marker_47ea6739662a3bfb442059ae37637877.setIcon(div_icon_4718f690386c8d47388b731115f181f9);
             
     
-                marker_e3fcecd0444fe4b5825f65d883b4a9c8.setIcon(div_icon_7552d4a66cbb0419b38800123bb7a9bf);
+                marker_3f99f1a50b8792ed0dfc25c2e0aa513b.setIcon(div_icon_79f54c957413f61c2953e3ce7f0ee3e0);
             
     
-            geo_json_f7a15ed90da0f92b09ac7b565e5139eb.addTo(map_2eb2c62b36e8137d04669af86d4672ba);
+            geo_json_6017070a230255440715579b263146f7.addTo(map_aa71ba73ffcabf3cfa1275c8e6879fc8);
         
     
-            map_2eb2c62b36e8137d04669af86d4672ba.fitBounds(
+            map_aa71ba73ffcabf3cfa1275c8e6879fc8.fitBounds(
                 [[52.3728, 4.9003], [52.3728, 4.9003], [52.0907, 5.1214], [52.0907, 5.1214], [51.9244, 4.4777], [51.9244, 4.4777], [52.0705, 4.3007], [52.0705, 4.3007], [51.4416, 5.4697], [51.4416, 5.4697]],
                 {}
             );
@@ -2159,7 +2189,7 @@ used as a fallback.</p>
 <h2 id="searching-geojson-features">Searching GeoJSON features</h2>
 <p>When your features come from <code>add_geojson()</code>, <code>add_search_control()</code> still works with no arguments, it picks up <code>"name"</code>
 or whatever string property is present:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-59--__tabbed_1_1" name="exec-59--__tabbed_1" type="radio" /><input id="exec-59--__tabbed_1_2" name="exec-59--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-59--__tabbed_1_1">Result</label><label for="exec-59--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-60--__tabbed_1_1" name="exec-60--__tabbed_1" type="radio" /><input id="exec-60--__tabbed_1_2" name="exec-60--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-60--__tabbed_1_1">Result</label><label for="exec-60--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2183,7 +2213,7 @@ or whatever string property is present:</p>
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_d191f2fb157b3d0c426be0e3aff87d96 {
+                #map_5f3caf69185cc9e20d44e62eee73905e {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2241,14 +2271,14 @@ or whatever string property is present:</p>
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Gemeenten&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_d191f2fb157b3d0c426be0e3aff87d96&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_5f3caf69185cc9e20d44e62eee73905e&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_d191f2fb157b3d0c426be0e3aff87d96 = L.map(
-                &quot;map_d191f2fb157b3d0c426be0e3aff87d96&quot;,
+            var map_5f3caf69185cc9e20d44e62eee73905e = L.map(
+                &quot;map_5f3caf69185cc9e20d44e62eee73905e&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2260,13 +2290,13 @@ or whatever string property is present:</p>
 
                 }
             );
-            L.control.scale().addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+            L.control.scale().addTo(map_5f3caf69185cc9e20d44e62eee73905e);
 
             
 
         
     
-            var tile_layer_248efa41a6a27c9db44c4ca2209ce533 = L.tileLayer(
+            var tile_layer_2149b137bd1fe88eb656145677d8f53f = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2283,10 +2313,10 @@ or whatever string property is present:</p>
             );
         
     
-            tile_layer_248efa41a6a27c9db44c4ca2209ce533.addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+            tile_layer_2149b137bd1fe88eb656145677d8f53f.addTo(map_5f3caf69185cc9e20d44e62eee73905e);
         
     
-            var mouse_position_6c440f8171f560fa558c41996681df5a = new L.Control.MousePosition(
+            var mouse_position_4b03965529c312266bc24d5c9c0997a9 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2296,59 +2326,59 @@ or whatever string property is present:</p>
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_6c440f8171f560fa558c41996681df5a.options[&quot;latFormatter&quot;] =
+            mouse_position_4b03965529c312266bc24d5c9c0997a9.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_6c440f8171f560fa558c41996681df5a.options[&quot;lngFormatter&quot;] =
+            mouse_position_4b03965529c312266bc24d5c9c0997a9.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_d191f2fb157b3d0c426be0e3aff87d96.addControl(mouse_position_6c440f8171f560fa558c41996681df5a);
+            map_5f3caf69185cc9e20d44e62eee73905e.addControl(mouse_position_4b03965529c312266bc24d5c9c0997a9);
         
     
-        function geo_json_900fa3e019667565fa193c4e17ce1352_styler(feature) {
+        function geo_json_202caf508a3ac13c796294ef04334271_styler(feature) {
             switch(feature.properties.naam) {
                 default:
                     return {&quot;color&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;weight&quot;: 2};
             }
         }
-        function geo_json_900fa3e019667565fa193c4e17ce1352_highlighter(feature) {
+        function geo_json_202caf508a3ac13c796294ef04334271_highlighter(feature) {
             switch(feature.properties.naam) {
                 default:
                     return {&quot;fillOpacity&quot;: 0.4, &quot;weight&quot;: 5};
             }
         }
 
-        function geo_json_900fa3e019667565fa193c4e17ce1352_onEachFeature(feature, layer) {
+        function geo_json_202caf508a3ac13c796294ef04334271_onEachFeature(feature, layer) {
 
             layer.on({
                 mouseout: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                            geo_json_900fa3e019667565fa193c4e17ce1352.resetStyle(e.target);
+                            geo_json_202caf508a3ac13c796294ef04334271.resetStyle(e.target);
                     }
                 },
                 mouseover: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                        const highlightStyle = geo_json_900fa3e019667565fa193c4e17ce1352_highlighter(e.target.feature)
+                        const highlightStyle = geo_json_202caf508a3ac13c796294ef04334271_highlighter(e.target.feature)
                         e.target.setStyle(highlightStyle);
                     }
                 },
             });
         };
-        var geo_json_900fa3e019667565fa193c4e17ce1352 = L.geoJson(null, {
-                onEachFeature: geo_json_900fa3e019667565fa193c4e17ce1352_onEachFeature,
+        var geo_json_202caf508a3ac13c796294ef04334271 = L.geoJson(null, {
+                onEachFeature: geo_json_202caf508a3ac13c796294ef04334271_onEachFeature,
             
-                style: geo_json_900fa3e019667565fa193c4e17ce1352_styler,
+                style: geo_json_202caf508a3ac13c796294ef04334271_styler,
             ...{
 }
         });
 
-        function geo_json_900fa3e019667565fa193c4e17ce1352_add (data) {
-            geo_json_900fa3e019667565fa193c4e17ce1352
+        function geo_json_202caf508a3ac13c796294ef04334271_add (data) {
+            geo_json_202caf508a3ac13c796294ef04334271
                 .addData(data);
         }
-            geo_json_900fa3e019667565fa193c4e17ce1352_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0363&quot;, &quot;naam&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0344&quot;, &quot;naam&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0599&quot;, &quot;naam&quot;: &quot;Rotterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0518&quot;, &quot;naam&quot;: &quot;Den Haag&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_202caf508a3ac13c796294ef04334271_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0363&quot;, &quot;naam&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0344&quot;, &quot;naam&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0599&quot;, &quot;naam&quot;: &quot;Rotterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;code&quot;: &quot;0518&quot;, &quot;naam&quot;: &quot;Den Haag&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-    geo_json_900fa3e019667565fa193c4e17ce1352.bindTooltip(
+    geo_json_202caf508a3ac13c796294ef04334271.bindTooltip(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -2383,42 +2413,42 @@ or whatever string property is present:</p>
 });
                      
     
-            geo_json_900fa3e019667565fa193c4e17ce1352.addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+            geo_json_202caf508a3ac13c796294ef04334271.addTo(map_5f3caf69185cc9e20d44e62eee73905e);
         
     
-        function geo_json_a603817a628efe27295441cd5ef6fb22_styler(feature) {
+        function geo_json_8f522e2f5949630fdb0f7a8a356217db_styler(feature) {
             switch(feature.properties.naam) {
                 default:
                     return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
             }
         }
 
-        function geo_json_a603817a628efe27295441cd5ef6fb22_onEachFeature(feature, layer) {
+        function geo_json_8f522e2f5949630fdb0f7a8a356217db_onEachFeature(feature, layer) {
 
             layer.on({
             });
         };
-        var geo_json_a603817a628efe27295441cd5ef6fb22 = L.geoJson(null, {
-                onEachFeature: geo_json_a603817a628efe27295441cd5ef6fb22_onEachFeature,
+        var geo_json_8f522e2f5949630fdb0f7a8a356217db = L.geoJson(null, {
+                onEachFeature: geo_json_8f522e2f5949630fdb0f7a8a356217db_onEachFeature,
             
-                style: geo_json_a603817a628efe27295441cd5ef6fb22_styler,
+                style: geo_json_8f522e2f5949630fdb0f7a8a356217db_styler,
             ...{
 }
         });
 
-        function geo_json_a603817a628efe27295441cd5ef6fb22_add (data) {
-            geo_json_a603817a628efe27295441cd5ef6fb22
+        function geo_json_8f522e2f5949630fdb0f7a8a356217db_add (data) {
+            geo_json_8f522e2f5949630fdb0f7a8a356217db
                 .addData(data);
         }
-            geo_json_a603817a628efe27295441cd5ef6fb22_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Amsterdam&quot;, &quot;code&quot;: &quot;0363&quot;, &quot;naam&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Utrecht&quot;, &quot;code&quot;: &quot;0344&quot;, &quot;naam&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rotterdam&quot;, &quot;code&quot;: &quot;0599&quot;, &quot;naam&quot;: &quot;Rotterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Den Haag&quot;, &quot;code&quot;: &quot;0518&quot;, &quot;naam&quot;: &quot;Den Haag&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_8f522e2f5949630fdb0f7a8a356217db_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9003, 52.3728], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Amsterdam&quot;, &quot;code&quot;: &quot;0363&quot;, &quot;naam&quot;: &quot;Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [5.1214, 52.0907], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Utrecht&quot;, &quot;code&quot;: &quot;0344&quot;, &quot;naam&quot;: &quot;Utrecht&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.4777, 51.9244], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rotterdam&quot;, &quot;code&quot;: &quot;0599&quot;, &quot;naam&quot;: &quot;Rotterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.3007, 52.0705], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Den Haag&quot;, &quot;code&quot;: &quot;0518&quot;, &quot;naam&quot;: &quot;Den Haag&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-            geo_json_a603817a628efe27295441cd5ef6fb22.addTo(map_d191f2fb157b3d0c426be0e3aff87d96);
+            geo_json_8f522e2f5949630fdb0f7a8a356217db.addTo(map_5f3caf69185cc9e20d44e62eee73905e);
         
     
-            var geo_json_a603817a628efe27295441cd5ef6fb22searchControl = new L.Control.Search({
-                layer: geo_json_a603817a628efe27295441cd5ef6fb22,
+            var geo_json_8f522e2f5949630fdb0f7a8a356217dbsearchControl = new L.Control.Search({
+                layer: geo_json_8f522e2f5949630fdb0f7a8a356217db,
                 
                 propertyName: &#x27;_search_label&#x27;,
                 
@@ -2431,24 +2461,24 @@ or whatever string property is present:</p>
                 hideMarkerOnCollapse: true
             
                 });
-                geo_json_a603817a628efe27295441cd5ef6fb22searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
-                    geo_json_a603817a628efe27295441cd5ef6fb22.setStyle(function(feature){
+                geo_json_8f522e2f5949630fdb0f7a8a356217dbsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_8f522e2f5949630fdb0f7a8a356217db.setStyle(function(feature){
                         return feature.properties.style
                     })
                     
                     if(e.layer._popup)
                         e.layer.openPopup();
                 })
-                geo_json_a603817a628efe27295441cd5ef6fb22searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
-                        geo_json_a603817a628efe27295441cd5ef6fb22.setStyle(function(feature){
+                geo_json_8f522e2f5949630fdb0f7a8a356217dbsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_8f522e2f5949630fdb0f7a8a356217db.setStyle(function(feature){
                             return feature.properties.style
                     });
                 });
-            map_d191f2fb157b3d0c426be0e3aff87d96.addControl( geo_json_a603817a628efe27295441cd5ef6fb22searchControl );
+            map_5f3caf69185cc9e20d44e62eee73905e.addControl( geo_json_8f522e2f5949630fdb0f7a8a356217dbsearchControl );
 
         
     
-            map_d191f2fb157b3d0c426be0e3aff87d96.fitBounds(
+            map_5f3caf69185cc9e20d44e62eee73905e.fitBounds(
                 [[51.9244, 4.3007], [52.3728, 5.1214]],
                 {}
             );
@@ -2484,7 +2514,7 @@ or whatever string property is present:</p>
 <h2 id="searching-a-choropleth">Searching a choropleth</h2>
 <p>For polygon layers like choropleths, put the layer in a named feature group, then pass <code>layer_name</code>, <code>property_name</code>,
 and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-60--__tabbed_1_1" name="exec-60--__tabbed_1" type="radio" /><input id="exec-60--__tabbed_1_2" name="exec-60--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-60--__tabbed_1_1">Result</label><label for="exec-60--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-61--__tabbed_1_1" name="exec-61--__tabbed_1" type="radio" /><input id="exec-61--__tabbed_1_2" name="exec-61--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-61--__tabbed_1_1">Result</label><label for="exec-61--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2508,7 +2538,7 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_72d40704f6c19358f82d409b9d76faea {
+                #map_6f82c84c4929dc2c3435b99d48ee5b44 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2567,14 +2597,14 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Neighbourhood Finder&lt;/div&gt;
     &lt;div style=&quot;position:fixed;top:5%;bottom:5%;right:14px;z-index:1000;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;color:#333;pointer-events:none;display:flex;flex-direction:column;&quot;&gt;&lt;div style=&quot;text-align:center;font-weight:bold;margin-bottom:6px;&quot;&gt;Liveability Score&lt;/div&gt;&lt;div style=&quot;display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;&quot;&gt;&lt;div style=&quot;width:14px;border-radius:2px;background:linear-gradient(to top, #ffffb2, #fecc5c, #fd8d3c, #f03b20, #bd0026);&quot;&gt;&lt;/div&gt;&lt;div style=&quot;display:flex;flex-direction:column;justify-content:space-between;margin-left:6px;&quot;&gt;&lt;span&gt;92&lt;/span&gt;&lt;span&gt;87.50&lt;/span&gt;&lt;span&gt;83&lt;/span&gt;&lt;span&gt;78.50&lt;/span&gt;&lt;span&gt;74&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_72d40704f6c19358f82d409b9d76faea&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_6f82c84c4929dc2c3435b99d48ee5b44&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_72d40704f6c19358f82d409b9d76faea = L.map(
-                &quot;map_72d40704f6c19358f82d409b9d76faea&quot;,
+            var map_6f82c84c4929dc2c3435b99d48ee5b44 = L.map(
+                &quot;map_6f82c84c4929dc2c3435b99d48ee5b44&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2586,13 +2616,13 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
 
                 }
             );
-            L.control.scale().addTo(map_72d40704f6c19358f82d409b9d76faea);
+            L.control.scale().addTo(map_6f82c84c4929dc2c3435b99d48ee5b44);
 
             
 
         
     
-            var tile_layer_9fc7995de4f1e39b50fd40e4d2673723 = L.tileLayer(
+            var tile_layer_74ff123bfabe5e9dc226ddc7655f3605 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2609,10 +2639,10 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
             );
         
     
-            tile_layer_9fc7995de4f1e39b50fd40e4d2673723.addTo(map_72d40704f6c19358f82d409b9d76faea);
+            tile_layer_74ff123bfabe5e9dc226ddc7655f3605.addTo(map_6f82c84c4929dc2c3435b99d48ee5b44);
         
     
-            var mouse_position_17371067e950719825cd0be464e095f8 = new L.Control.MousePosition(
+            var mouse_position_558dd37075c8798ea8734dc32605f5ee = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2622,20 +2652,20 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_17371067e950719825cd0be464e095f8.options[&quot;latFormatter&quot;] =
+            mouse_position_558dd37075c8798ea8734dc32605f5ee.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_17371067e950719825cd0be464e095f8.options[&quot;lngFormatter&quot;] =
+            mouse_position_558dd37075c8798ea8734dc32605f5ee.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_72d40704f6c19358f82d409b9d76faea.addControl(mouse_position_17371067e950719825cd0be464e095f8);
+            map_6f82c84c4929dc2c3435b99d48ee5b44.addControl(mouse_position_558dd37075c8798ea8734dc32605f5ee);
         
     
-            var feature_group_6c52013ec50ebd7f56b4a946c4b422b0 = L.featureGroup(
+            var feature_group_ee0b3b475d398a77912a067fc1bf89f9 = L.featureGroup(
                 {
 }
             );
         
     
-        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_styler(feature) {
+        function geo_json_7275e58f59afc6bb58b206f1ffc0b41a_styler(feature) {
             switch(feature.properties.name) {
                 case &quot;Binnenstad&quot;: 
                     return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#bd0026ff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
@@ -2645,46 +2675,46 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
                     return {&quot;color&quot;: &quot;#333&quot;, &quot;fillColor&quot;: &quot;#ffffb2ff&quot;, &quot;fillOpacity&quot;: 0.7, &quot;opacity&quot;: 0.5, &quot;weight&quot;: 1.0};
             }
         }
-        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_highlighter(feature) {
+        function geo_json_7275e58f59afc6bb58b206f1ffc0b41a_highlighter(feature) {
             switch(feature.properties.name) {
                 default:
                     return {&quot;fillOpacity&quot;: 0.85, &quot;weight&quot;: 3};
             }
         }
 
-        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_onEachFeature(feature, layer) {
+        function geo_json_7275e58f59afc6bb58b206f1ffc0b41a_onEachFeature(feature, layer) {
 
             layer.on({
                 mouseout: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                            geo_json_05a779dcb0145dd63c65f93c45f11e6a.resetStyle(e.target);
+                            geo_json_7275e58f59afc6bb58b206f1ffc0b41a.resetStyle(e.target);
                     }
                 },
                 mouseover: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                        const highlightStyle = geo_json_05a779dcb0145dd63c65f93c45f11e6a_highlighter(e.target.feature)
+                        const highlightStyle = geo_json_7275e58f59afc6bb58b206f1ffc0b41a_highlighter(e.target.feature)
                         e.target.setStyle(highlightStyle);
                     }
                 },
             });
         };
-        var geo_json_05a779dcb0145dd63c65f93c45f11e6a = L.geoJson(null, {
-                onEachFeature: geo_json_05a779dcb0145dd63c65f93c45f11e6a_onEachFeature,
+        var geo_json_7275e58f59afc6bb58b206f1ffc0b41a = L.geoJson(null, {
+                onEachFeature: geo_json_7275e58f59afc6bb58b206f1ffc0b41a_onEachFeature,
             
-                style: geo_json_05a779dcb0145dd63c65f93c45f11e6a_styler,
+                style: geo_json_7275e58f59afc6bb58b206f1ffc0b41a_styler,
             ...{
 }
         });
 
-        function geo_json_05a779dcb0145dd63c65f93c45f11e6a_add (data) {
-            geo_json_05a779dcb0145dd63c65f93c45f11e6a
+        function geo_json_7275e58f59afc6bb58b206f1ffc0b41a_add (data) {
+            geo_json_7275e58f59afc6bb58b206f1ffc0b41a
                 .addData(data);
         }
-            geo_json_05a779dcb0145dd63c65f93c45f11e6a_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.1, 52.08], [5.14, 52.08], [5.14, 52.1], [5.1, 52.1], [5.1, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Binnenstad&quot;, &quot;score&quot;: 92}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.06, 52.08], [5.1, 52.08], [5.1, 52.1], [5.06, 52.1], [5.06, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;West&quot;, &quot;score&quot;: 74}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.1], [5.14, 52.1], [5.14, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Oost&quot;, &quot;score&quot;: 85}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_7275e58f59afc6bb58b206f1ffc0b41a_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.1, 52.08], [5.14, 52.08], [5.14, 52.1], [5.1, 52.1], [5.1, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Binnenstad&quot;, &quot;score&quot;: 92}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.06, 52.08], [5.1, 52.08], [5.1, 52.1], [5.06, 52.1], [5.06, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;West&quot;, &quot;score&quot;: 74}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[5.14, 52.08], [5.18, 52.08], [5.18, 52.1], [5.14, 52.1], [5.14, 52.08]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;name&quot;: &quot;Oost&quot;, &quot;score&quot;: 85}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-    geo_json_05a779dcb0145dd63c65f93c45f11e6a.bindTooltip(
+    geo_json_7275e58f59afc6bb58b206f1ffc0b41a.bindTooltip(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -2719,14 +2749,14 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
 });
                      
     
-            geo_json_05a779dcb0145dd63c65f93c45f11e6a.addTo(feature_group_6c52013ec50ebd7f56b4a946c4b422b0);
+            geo_json_7275e58f59afc6bb58b206f1ffc0b41a.addTo(feature_group_ee0b3b475d398a77912a067fc1bf89f9);
         
     
-            feature_group_6c52013ec50ebd7f56b4a946c4b422b0.addTo(map_72d40704f6c19358f82d409b9d76faea);
+            feature_group_ee0b3b475d398a77912a067fc1bf89f9.addTo(map_6f82c84c4929dc2c3435b99d48ee5b44);
         
     
-            var feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl = new L.Control.Search({
-                layer: feature_group_6c52013ec50ebd7f56b4a946c4b422b0,
+            var feature_group_ee0b3b475d398a77912a067fc1bf89f9searchControl = new L.Control.Search({
+                layer: feature_group_ee0b3b475d398a77912a067fc1bf89f9,
                 
                 propertyName: &#x27;name&#x27;,
                 
@@ -2741,24 +2771,24 @@ and <code>geom_type="Polygon"</code> so the map fits the polygon bounds on match
                 }
             
                 });
-                feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
-                    feature_group_6c52013ec50ebd7f56b4a946c4b422b0.setStyle(function(feature){
+                feature_group_ee0b3b475d398a77912a067fc1bf89f9searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    feature_group_ee0b3b475d398a77912a067fc1bf89f9.setStyle(function(feature){
                         return feature.properties.style
                     })
                     
                     if(e.layer._popup)
                         e.layer.openPopup();
                 })
-                feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
-                        feature_group_6c52013ec50ebd7f56b4a946c4b422b0.setStyle(function(feature){
+                feature_group_ee0b3b475d398a77912a067fc1bf89f9searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        feature_group_ee0b3b475d398a77912a067fc1bf89f9.setStyle(function(feature){
                             return feature.properties.style
                     });
                 });
-            map_72d40704f6c19358f82d409b9d76faea.addControl( feature_group_6c52013ec50ebd7f56b4a946c4b422b0searchControl );
+            map_6f82c84c4929dc2c3435b99d48ee5b44.addControl( feature_group_ee0b3b475d398a77912a067fc1bf89f9searchControl );
 
         
     
-            map_72d40704f6c19358f82d409b9d76faea.fitBounds(
+            map_6f82c84c4929dc2c3435b99d48ee5b44.fitBounds(
                 [[52.08, 5.06], [52.1, 5.18]],
                 {}
             );
@@ -2822,7 +2852,7 @@ polygons, it makes the view fit to the polygon bounds rather than centering to a
 <h2 id="searching-by-tooltip-or-popup">Searching by tooltip or popup</h2>
 <p>When your markers have descriptive tooltips but no captions, pass <code>property_name="tooltip"</code> (or <code>"popup"</code>) to search
 that field directly:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-61--__tabbed_1_1" name="exec-61--__tabbed_1" type="radio" /><input id="exec-61--__tabbed_1_2" name="exec-61--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-61--__tabbed_1_1">Result</label><label for="exec-61--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-62--__tabbed_1_1" name="exec-62--__tabbed_1" type="radio" /><input id="exec-62--__tabbed_1_2" name="exec-62--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-62--__tabbed_1_1">Result</label><label for="exec-62--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -2846,7 +2876,7 @@ that field directly:</p>
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_7ba381960eb8c0155d03164eebace95e {
+                #map_a66dfb8e20ca4a108af46df8dc863ff0 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -2888,14 +2918,14 @@ that field directly:</p>
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Amsterdam Attractions&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_7ba381960eb8c0155d03164eebace95e&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_a66dfb8e20ca4a108af46df8dc863ff0&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_7ba381960eb8c0155d03164eebace95e = L.map(
-                &quot;map_7ba381960eb8c0155d03164eebace95e&quot;,
+            var map_a66dfb8e20ca4a108af46df8dc863ff0 = L.map(
+                &quot;map_a66dfb8e20ca4a108af46df8dc863ff0&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -2907,13 +2937,13 @@ that field directly:</p>
 
                 }
             );
-            L.control.scale().addTo(map_7ba381960eb8c0155d03164eebace95e);
+            L.control.scale().addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
 
             
 
         
     
-            var tile_layer_3205c4b4dfb3e1df7c11f2b6088f087f = L.tileLayer(
+            var tile_layer_080665c1dc6e2b004b88b966cfb6afd4 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -2930,10 +2960,10 @@ that field directly:</p>
             );
         
     
-            tile_layer_3205c4b4dfb3e1df7c11f2b6088f087f.addTo(map_7ba381960eb8c0155d03164eebace95e);
+            tile_layer_080665c1dc6e2b004b88b966cfb6afd4.addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var mouse_position_de4f46242a1c122626f9419ce6633b76 = new L.Control.MousePosition(
+            var mouse_position_2fb181d340172fe4f46c49cff5a44187 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -2943,21 +2973,21 @@ that field directly:</p>
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_de4f46242a1c122626f9419ce6633b76.options[&quot;latFormatter&quot;] =
+            mouse_position_2fb181d340172fe4f46c49cff5a44187.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_de4f46242a1c122626f9419ce6633b76.options[&quot;lngFormatter&quot;] =
+            mouse_position_2fb181d340172fe4f46c49cff5a44187.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_7ba381960eb8c0155d03164eebace95e.addControl(mouse_position_de4f46242a1c122626f9419ce6633b76);
+            map_a66dfb8e20ca4a108af46df8dc863ff0.addControl(mouse_position_2fb181d340172fe4f46c49cff5a44187);
         
     
-            var marker_b617ba112e77d522caa6be4ea315dbaa = L.marker(
+            var marker_37afa8b16ddeee0ae07a30243c7c9403 = L.marker(
                 [52.36, 4.8852],
                 {
 }
-            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+            ).addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var div_icon_88de551f446d18cfe0dcd9f4fef74393 = L.divIcon({
+            var div_icon_25387f41b44b8a3a4b1e220616296a71 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfdb\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -2965,7 +2995,7 @@ that field directly:</p>
 });
         
     
-            marker_b617ba112e77d522caa6be4ea315dbaa.bindTooltip(
+            marker_37afa8b16ddeee0ae07a30243c7c9403.bindTooltip(
                 `&lt;div&gt;
                      Rijksmuseum, Dutch Golden Age paintings and applied arts
                  &lt;/div&gt;`,
@@ -2975,17 +3005,17 @@ that field directly:</p>
             );
         
     
-                marker_b617ba112e77d522caa6be4ea315dbaa.setIcon(div_icon_88de551f446d18cfe0dcd9f4fef74393);
+                marker_37afa8b16ddeee0ae07a30243c7c9403.setIcon(div_icon_25387f41b44b8a3a4b1e220616296a71);
             
     
-            var marker_3fd7fa54ad0253bd0898976ec5c388fd = L.marker(
+            var marker_1b7d272a6e09270ba8b17a038c016586 = L.marker(
                 [52.3584, 4.8783],
                 {
 }
-            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+            ).addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var div_icon_6615619ac57813a530e8da473c058ece = L.divIcon({
+            var div_icon_9e890abf8aec83f8467c1e16d1f91f04 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfa8\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -2993,7 +3023,7 @@ that field directly:</p>
 });
         
     
-            marker_3fd7fa54ad0253bd0898976ec5c388fd.bindTooltip(
+            marker_1b7d272a6e09270ba8b17a038c016586.bindTooltip(
                 `&lt;div&gt;
                      Van Gogh Museum, world&#x27;s largest Van Gogh collection
                  &lt;/div&gt;`,
@@ -3003,17 +3033,17 @@ that field directly:</p>
             );
         
     
-                marker_3fd7fa54ad0253bd0898976ec5c388fd.setIcon(div_icon_6615619ac57813a530e8da473c058ece);
+                marker_1b7d272a6e09270ba8b17a038c016586.setIcon(div_icon_9e890abf8aec83f8467c1e16d1f91f04);
             
     
-            var marker_9150da4295528b3bd06970dd9885db91 = L.marker(
+            var marker_b0cdd7b5962ca9d77dc7abc74cabc6ee = L.marker(
                 [52.3748, 4.8799],
                 {
 }
-            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+            ).addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var div_icon_3de571f1ae739677b8f2dec134a1f268 = L.divIcon({
+            var div_icon_a0cb22a5c6cd0c2f69aad67551c2466e = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83d\udcd6\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3021,7 +3051,7 @@ that field directly:</p>
 });
         
     
-            marker_9150da4295528b3bd06970dd9885db91.bindTooltip(
+            marker_b0cdd7b5962ca9d77dc7abc74cabc6ee.bindTooltip(
                 `&lt;div&gt;
                      Anne Frank House, wartime hiding place and museum
                  &lt;/div&gt;`,
@@ -3031,17 +3061,17 @@ that field directly:</p>
             );
         
     
-                marker_9150da4295528b3bd06970dd9885db91.setIcon(div_icon_3de571f1ae739677b8f2dec134a1f268);
+                marker_b0cdd7b5962ca9d77dc7abc74cabc6ee.setIcon(div_icon_a0cb22a5c6cd0c2f69aad67551c2466e);
             
     
-            var marker_8a002c3262968370941734ecfedc017c = L.marker(
+            var marker_187a61a607dd765ad2839174652d44e3 = L.marker(
                 [52.3731, 4.9009],
                 {
 }
-            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+            ).addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var div_icon_5372901f2f5b34202a306948a32507af = L.divIcon({
+            var div_icon_d206c3e610cc1b8379be9bd5ec88434f = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udfd9\ufe0f\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3049,7 +3079,7 @@ that field directly:</p>
 });
         
     
-            marker_8a002c3262968370941734ecfedc017c.bindTooltip(
+            marker_187a61a607dd765ad2839174652d44e3.bindTooltip(
                 `&lt;div&gt;
                      Royal Palace Amsterdam, official residence of the King
                  &lt;/div&gt;`,
@@ -3059,17 +3089,17 @@ that field directly:</p>
             );
         
     
-                marker_8a002c3262968370941734ecfedc017c.setIcon(div_icon_5372901f2f5b34202a306948a32507af);
+                marker_187a61a607dd765ad2839174652d44e3.setIcon(div_icon_d206c3e610cc1b8379be9bd5ec88434f);
             
     
-            var marker_0f84d325806f0aec3264c9f153146888 = L.marker(
+            var marker_fc55f9a4a1b1ca043a24f971876e24a0 = L.marker(
                 [52.3667, 4.9041],
                 {
 }
-            ).addTo(map_7ba381960eb8c0155d03164eebace95e);
+            ).addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var div_icon_030e82733699f7d521ea1f088269c1af = L.divIcon({
+            var div_icon_e8d241fa79a3de5e4130e83201d5a2a4 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\u26ea\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3077,7 +3107,7 @@ that field directly:</p>
 });
         
     
-            marker_0f84d325806f0aec3264c9f153146888.bindTooltip(
+            marker_fc55f9a4a1b1ca043a24f971876e24a0.bindTooltip(
                 `&lt;div&gt;
                      Westerkerk, tallest church tower in Amsterdam
                  &lt;/div&gt;`,
@@ -3087,42 +3117,42 @@ that field directly:</p>
             );
         
     
-                marker_0f84d325806f0aec3264c9f153146888.setIcon(div_icon_030e82733699f7d521ea1f088269c1af);
+                marker_fc55f9a4a1b1ca043a24f971876e24a0.setIcon(div_icon_e8d241fa79a3de5e4130e83201d5a2a4);
             
     
-        function geo_json_476c646e8cc9bc132483b6adf0406d5d_styler(feature) {
+        function geo_json_afbd72c6924f960783989618726158a4_styler(feature) {
             switch(feature.properties.marker) {
                 default:
                     return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
             }
         }
 
-        function geo_json_476c646e8cc9bc132483b6adf0406d5d_onEachFeature(feature, layer) {
+        function geo_json_afbd72c6924f960783989618726158a4_onEachFeature(feature, layer) {
 
             layer.on({
             });
         };
-        var geo_json_476c646e8cc9bc132483b6adf0406d5d = L.geoJson(null, {
-                onEachFeature: geo_json_476c646e8cc9bc132483b6adf0406d5d_onEachFeature,
+        var geo_json_afbd72c6924f960783989618726158a4 = L.geoJson(null, {
+                onEachFeature: geo_json_afbd72c6924f960783989618726158a4_onEachFeature,
             
-                style: geo_json_476c646e8cc9bc132483b6adf0406d5d_styler,
+                style: geo_json_afbd72c6924f960783989618726158a4_styler,
             ...{
 }
         });
 
-        function geo_json_476c646e8cc9bc132483b6adf0406d5d_add (data) {
-            geo_json_476c646e8cc9bc132483b6adf0406d5d
+        function geo_json_afbd72c6924f960783989618726158a4_add (data) {
+            geo_json_afbd72c6924f960783989618726158a4
                 .addData(data);
         }
-            geo_json_476c646e8cc9bc132483b6adf0406d5d_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8852, 52.36], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;, &quot;marker&quot;: &quot;\ud83c\udfdb\ufe0f&quot;, &quot;tooltip&quot;: &quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8783, 52.3584], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Van Gogh Museum, world\u0027s largest Van Gogh collection&quot;, &quot;marker&quot;: &quot;\ud83c\udfa8&quot;, &quot;tooltip&quot;: &quot;Van Gogh Museum, world\u0027s largest Van Gogh collection&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8799, 52.3748], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Anne Frank House, wartime hiding place and museum&quot;, &quot;marker&quot;: &quot;\ud83d\udcd6&quot;, &quot;tooltip&quot;: &quot;Anne Frank House, wartime hiding place and museum&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9009, 52.3731], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Royal Palace Amsterdam, official residence of the King&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;, &quot;tooltip&quot;: &quot;Royal Palace Amsterdam, official residence of the King&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3667], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Westerkerk, tallest church tower in Amsterdam&quot;, &quot;marker&quot;: &quot;\u26ea&quot;, &quot;tooltip&quot;: &quot;Westerkerk, tallest church tower in Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_afbd72c6924f960783989618726158a4_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8852, 52.36], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;, &quot;marker&quot;: &quot;\ud83c\udfdb\ufe0f&quot;, &quot;tooltip&quot;: &quot;Rijksmuseum, Dutch Golden Age paintings and applied arts&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8783, 52.3584], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Van Gogh Museum, world\u0027s largest Van Gogh collection&quot;, &quot;marker&quot;: &quot;\ud83c\udfa8&quot;, &quot;tooltip&quot;: &quot;Van Gogh Museum, world\u0027s largest Van Gogh collection&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8799, 52.3748], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Anne Frank House, wartime hiding place and museum&quot;, &quot;marker&quot;: &quot;\ud83d\udcd6&quot;, &quot;tooltip&quot;: &quot;Anne Frank House, wartime hiding place and museum&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9009, 52.3731], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Royal Palace Amsterdam, official residence of the King&quot;, &quot;marker&quot;: &quot;\ud83c\udfd9\ufe0f&quot;, &quot;tooltip&quot;: &quot;Royal Palace Amsterdam, official residence of the King&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9041, 52.3667], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Westerkerk, tallest church tower in Amsterdam&quot;, &quot;marker&quot;: &quot;\u26ea&quot;, &quot;tooltip&quot;: &quot;Westerkerk, tallest church tower in Amsterdam&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-            geo_json_476c646e8cc9bc132483b6adf0406d5d.addTo(map_7ba381960eb8c0155d03164eebace95e);
+            geo_json_afbd72c6924f960783989618726158a4.addTo(map_a66dfb8e20ca4a108af46df8dc863ff0);
         
     
-            var geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl = new L.Control.Search({
-                layer: geo_json_476c646e8cc9bc132483b6adf0406d5d,
+            var geo_json_afbd72c6924f960783989618726158a4searchControl = new L.Control.Search({
+                layer: geo_json_afbd72c6924f960783989618726158a4,
                 
                 propertyName: &#x27;_search_label&#x27;,
                 
@@ -3135,24 +3165,24 @@ that field directly:</p>
                 hideMarkerOnCollapse: true
             
                 });
-                geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
-                    geo_json_476c646e8cc9bc132483b6adf0406d5d.setStyle(function(feature){
+                geo_json_afbd72c6924f960783989618726158a4searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_afbd72c6924f960783989618726158a4.setStyle(function(feature){
                         return feature.properties.style
                     })
                     
                     if(e.layer._popup)
                         e.layer.openPopup();
                 })
-                geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
-                        geo_json_476c646e8cc9bc132483b6adf0406d5d.setStyle(function(feature){
+                geo_json_afbd72c6924f960783989618726158a4searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_afbd72c6924f960783989618726158a4.setStyle(function(feature){
                             return feature.properties.style
                     });
                 });
-            map_7ba381960eb8c0155d03164eebace95e.addControl( geo_json_476c646e8cc9bc132483b6adf0406d5dsearchControl );
+            map_a66dfb8e20ca4a108af46df8dc863ff0.addControl( geo_json_afbd72c6924f960783989618726158a4searchControl );
 
         
     
-            map_7ba381960eb8c0155d03164eebace95e.fitBounds(
+            map_a66dfb8e20ca4a108af46df8dc863ff0.fitBounds(
                 [[52.36, 4.8852], [52.36, 4.8852], [52.3584, 4.8783], [52.3584, 4.8783], [52.3748, 4.8799], [52.3748, 4.8799], [52.3731, 4.9009], [52.3731, 4.9009], [52.3667, 4.9041], [52.3667, 4.9041]],
                 {}
             );
@@ -3188,7 +3218,7 @@ the list before you finish typing.</p>
 the one they want and the map centers to it.</p>
 <p>This works automatically, no extra configuration needed. Here's an example where typing <code>"park"</code> returns five results at
 once:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-62--__tabbed_1_1" name="exec-62--__tabbed_1" type="radio" /><input id="exec-62--__tabbed_1_2" name="exec-62--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-62--__tabbed_1_1">Result</label><label for="exec-62--__tabbed_1_2">Source</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-63--__tabbed_1_1" name="exec-63--__tabbed_1" type="radio" /><input id="exec-63--__tabbed_1_2" name="exec-63--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-63--__tabbed_1_1">Result</label><label for="exec-63--__tabbed_1_2">Source</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
@@ -3212,7 +3242,7 @@ once:</p>
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_bb131cb7df98f8d0860d8726a7c7382d {
+                #map_0a34c1f9e215f534864b924c6b029985 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -3254,14 +3284,14 @@ once:</p>
     
     &lt;div style=&quot;position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);padding:8px 20px;border-radius:6px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.3);pointer-events:none;&quot;&gt;Amsterdam Parks&lt;/div&gt;
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_bb131cb7df98f8d0860d8726a7c7382d&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_0a34c1f9e215f534864b924c6b029985&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_bb131cb7df98f8d0860d8726a7c7382d = L.map(
-                &quot;map_bb131cb7df98f8d0860d8726a7c7382d&quot;,
+            var map_0a34c1f9e215f534864b924c6b029985 = L.map(
+                &quot;map_0a34c1f9e215f534864b924c6b029985&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -3273,13 +3303,13 @@ once:</p>
 
                 }
             );
-            L.control.scale().addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            L.control.scale().addTo(map_0a34c1f9e215f534864b924c6b029985);
 
             
 
         
     
-            var tile_layer_5c228b8af39525e4f75bd22a207c8583 = L.tileLayer(
+            var tile_layer_d050bbdc8959743e23ded1bffb443890 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -3296,10 +3326,10 @@ once:</p>
             );
         
     
-            tile_layer_5c228b8af39525e4f75bd22a207c8583.addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            tile_layer_d050bbdc8959743e23ded1bffb443890.addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var mouse_position_0c9c6c038a79ce334625c6a6b8c3b675 = new L.Control.MousePosition(
+            var mouse_position_082500b6663542b2edb05e4dc31a3534 = new L.Control.MousePosition(
                 {
   &quot;position&quot;: &quot;bottomleft&quot;,
   &quot;separator&quot;: &quot; | &quot;,
@@ -3309,21 +3339,21 @@ once:</p>
   &quot;prefix&quot;: &quot;&quot;,
 }
             );
-            mouse_position_0c9c6c038a79ce334625c6a6b8c3b675.options[&quot;latFormatter&quot;] =
+            mouse_position_082500b6663542b2edb05e4dc31a3534.options[&quot;latFormatter&quot;] =
                 undefined;
-            mouse_position_0c9c6c038a79ce334625c6a6b8c3b675.options[&quot;lngFormatter&quot;] =
+            mouse_position_082500b6663542b2edb05e4dc31a3534.options[&quot;lngFormatter&quot;] =
                 undefined;
-            map_bb131cb7df98f8d0860d8726a7c7382d.addControl(mouse_position_0c9c6c038a79ce334625c6a6b8c3b675);
+            map_0a34c1f9e215f534864b924c6b029985.addControl(mouse_position_082500b6663542b2edb05e4dc31a3534);
         
     
-            var marker_3f82e5dbf458a5c0d2071e5718318d5b = L.marker(
+            var marker_46ec260b519721275cd6672c6d9ad2e3 = L.marker(
                 [52.3618, 4.8783],
                 {
 }
-            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            ).addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var div_icon_7f83aa565224e92277798c82dd4d5e73 = L.divIcon({
+            var div_icon_feba5a221cd25cd879a8f0d81f0c466b = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eVondelpark\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3331,17 +3361,17 @@ once:</p>
 });
         
     
-                marker_3f82e5dbf458a5c0d2071e5718318d5b.setIcon(div_icon_7f83aa565224e92277798c82dd4d5e73);
+                marker_46ec260b519721275cd6672c6d9ad2e3.setIcon(div_icon_feba5a221cd25cd879a8f0d81f0c466b);
             
     
-            var marker_249f1051e0da701be517db07be265505 = L.marker(
+            var marker_1465056a025829ed3fef6cbc50ee1930 = L.marker(
                 [52.3577, 4.8595],
                 {
 }
-            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            ).addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var div_icon_e9c56f2b4106501431c47ae34188e8b9 = L.divIcon({
+            var div_icon_47642075dfd6d6065f582141bdd54097 = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eRembrandt Park\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3349,17 +3379,17 @@ once:</p>
 });
         
     
-                marker_249f1051e0da701be517db07be265505.setIcon(div_icon_e9c56f2b4106501431c47ae34188e8b9);
+                marker_1465056a025829ed3fef6cbc50ee1930.setIcon(div_icon_47642075dfd6d6065f582141bdd54097);
             
     
-            var marker_3ed2b47880d6a189b68398c3176115be = L.marker(
+            var marker_9e765aee434ac10da25ad8fa213b1b74 = L.marker(
                 [52.3575, 4.9024],
                 {
 }
-            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            ).addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var div_icon_6340bd34c7b251dac85e5c99e2431165 = L.divIcon({
+            var div_icon_e62a2d7835a167adb7672dd60038c29b = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eOosterpark\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3367,17 +3397,17 @@ once:</p>
 });
         
     
-                marker_3ed2b47880d6a189b68398c3176115be.setIcon(div_icon_6340bd34c7b251dac85e5c99e2431165);
+                marker_9e765aee434ac10da25ad8fa213b1b74.setIcon(div_icon_e62a2d7835a167adb7672dd60038c29b);
             
     
-            var marker_e4ee07dea204818bbcb874af063a5e6f = L.marker(
+            var marker_72db9dbf6591e3070b3b823476a2d884 = L.marker(
                 [52.3648, 4.928],
                 {
 }
-            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            ).addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var div_icon_b0f8416b513d1dc08bbc802199a0c95c = L.divIcon({
+            var div_icon_c03e9b3f35591b33cd9c79011b2846ba = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eFlevopark\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3385,17 +3415,17 @@ once:</p>
 });
         
     
-                marker_e4ee07dea204818bbcb874af063a5e6f.setIcon(div_icon_b0f8416b513d1dc08bbc802199a0c95c);
+                marker_72db9dbf6591e3070b3b823476a2d884.setIcon(div_icon_c03e9b3f35591b33cd9c79011b2846ba);
             
     
-            var marker_d029aa5bf5e9141b8f7f6d0e85b04ebc = L.marker(
+            var marker_54ad86454af9ae969a70b4d15cbf626c = L.marker(
                 [52.3722, 4.8639],
                 {
 }
-            ).addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            ).addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var div_icon_fd124592e6447fb32d103857ef0c2aff = L.divIcon({
+            var div_icon_3e96565049addcd74a273d1ecd9a515b = L.divIcon({
   &quot;html&quot;: &quot;\u003cdiv style=\&quot;position:relative;display:flex;align-items:center;justify-content:center;width:26px;height:26px;overflow:visible;line-height:1;\&quot;\u003e\u003cdiv style=\&quot;font-size:16px;color:black;text-align:center;line-height:1\&quot;\u003e\ud83c\udf33\u003c/div\u003e\u003cdiv style=\&quot;font-size:12px;font-family:Arial, sans-serif;color:#333333;font-weight:bold;background-color:transparent;border:none;padding:2px 6px;white-space:nowrap;text-align:center;position:absolute;left:50%;top:18px;transform:translateX(-50%)\&quot;\u003eWesterpark\u003c/div\u003e\u003c/div\u003e&quot;,
   &quot;iconSize&quot;: [26, 26],
   &quot;iconAnchor&quot;: [13, 13],
@@ -3403,42 +3433,42 @@ once:</p>
 });
         
     
-                marker_d029aa5bf5e9141b8f7f6d0e85b04ebc.setIcon(div_icon_fd124592e6447fb32d103857ef0c2aff);
+                marker_54ad86454af9ae969a70b4d15cbf626c.setIcon(div_icon_3e96565049addcd74a273d1ecd9a515b);
             
     
-        function geo_json_34a80fb78cac1c42fe0833cae3d6068f_styler(feature) {
+        function geo_json_7bc901bc84a1f96c4c41f6c42ee20c95_styler(feature) {
             switch(feature.properties.caption) {
                 default:
                     return {&quot;fillOpacity&quot;: 0, &quot;opacity&quot;: 0, &quot;weight&quot;: 0};
             }
         }
 
-        function geo_json_34a80fb78cac1c42fe0833cae3d6068f_onEachFeature(feature, layer) {
+        function geo_json_7bc901bc84a1f96c4c41f6c42ee20c95_onEachFeature(feature, layer) {
 
             layer.on({
             });
         };
-        var geo_json_34a80fb78cac1c42fe0833cae3d6068f = L.geoJson(null, {
-                onEachFeature: geo_json_34a80fb78cac1c42fe0833cae3d6068f_onEachFeature,
+        var geo_json_7bc901bc84a1f96c4c41f6c42ee20c95 = L.geoJson(null, {
+                onEachFeature: geo_json_7bc901bc84a1f96c4c41f6c42ee20c95_onEachFeature,
             
-                style: geo_json_34a80fb78cac1c42fe0833cae3d6068f_styler,
+                style: geo_json_7bc901bc84a1f96c4c41f6c42ee20c95_styler,
             ...{
 }
         });
 
-        function geo_json_34a80fb78cac1c42fe0833cae3d6068f_add (data) {
-            geo_json_34a80fb78cac1c42fe0833cae3d6068f
+        function geo_json_7bc901bc84a1f96c4c41f6c42ee20c95_add (data) {
+            geo_json_7bc901bc84a1f96c4c41f6c42ee20c95
                 .addData(data);
         }
-            geo_json_34a80fb78cac1c42fe0833cae3d6068f_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8783, 52.3618], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Vondelpark&quot;, &quot;caption&quot;: &quot;Vondelpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8595, 52.3577], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rembrandt Park&quot;, &quot;caption&quot;: &quot;Rembrandt Park&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9024, 52.3575], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Oosterpark&quot;, &quot;caption&quot;: &quot;Oosterpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.928, 52.3648], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Flevopark&quot;, &quot;caption&quot;: &quot;Flevopark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8639, 52.3722], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Westerpark&quot;, &quot;caption&quot;: &quot;Westerpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_7bc901bc84a1f96c4c41f6c42ee20c95_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8783, 52.3618], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Vondelpark&quot;, &quot;caption&quot;: &quot;Vondelpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8595, 52.3577], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Rembrandt Park&quot;, &quot;caption&quot;: &quot;Rembrandt Park&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.9024, 52.3575], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Oosterpark&quot;, &quot;caption&quot;: &quot;Oosterpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.928, 52.3648], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Flevopark&quot;, &quot;caption&quot;: &quot;Flevopark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [4.8639, 52.3722], &quot;type&quot;: &quot;Point&quot;}, &quot;properties&quot;: {&quot;_search_label&quot;: &quot;Westerpark&quot;, &quot;caption&quot;: &quot;Westerpark&quot;, &quot;marker&quot;: &quot;\ud83c\udf33&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-            geo_json_34a80fb78cac1c42fe0833cae3d6068f.addTo(map_bb131cb7df98f8d0860d8726a7c7382d);
+            geo_json_7bc901bc84a1f96c4c41f6c42ee20c95.addTo(map_0a34c1f9e215f534864b924c6b029985);
         
     
-            var geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl = new L.Control.Search({
-                layer: geo_json_34a80fb78cac1c42fe0833cae3d6068f,
+            var geo_json_7bc901bc84a1f96c4c41f6c42ee20c95searchControl = new L.Control.Search({
+                layer: geo_json_7bc901bc84a1f96c4c41f6c42ee20c95,
                 
                 propertyName: &#x27;_search_label&#x27;,
                 
@@ -3451,24 +3481,24 @@ once:</p>
                 hideMarkerOnCollapse: true
             
                 });
-                geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl.on(&#x27;search:locationfound&#x27;, function(e) {
-                    geo_json_34a80fb78cac1c42fe0833cae3d6068f.setStyle(function(feature){
+                geo_json_7bc901bc84a1f96c4c41f6c42ee20c95searchControl.on(&#x27;search:locationfound&#x27;, function(e) {
+                    geo_json_7bc901bc84a1f96c4c41f6c42ee20c95.setStyle(function(feature){
                         return feature.properties.style
                     })
                     
                     if(e.layer._popup)
                         e.layer.openPopup();
                 })
-                geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl.on(&#x27;search:collapsed&#x27;, function(e) {
-                        geo_json_34a80fb78cac1c42fe0833cae3d6068f.setStyle(function(feature){
+                geo_json_7bc901bc84a1f96c4c41f6c42ee20c95searchControl.on(&#x27;search:collapsed&#x27;, function(e) {
+                        geo_json_7bc901bc84a1f96c4c41f6c42ee20c95.setStyle(function(feature){
                             return feature.properties.style
                     });
                 });
-            map_bb131cb7df98f8d0860d8726a7c7382d.addControl( geo_json_34a80fb78cac1c42fe0833cae3d6068fsearchControl );
+            map_0a34c1f9e215f534864b924c6b029985.addControl( geo_json_7bc901bc84a1f96c4c41f6c42ee20c95searchControl );
 
         
     
-            map_bb131cb7df98f8d0860d8726a7c7382d.fitBounds(
+            map_0a34c1f9e215f534864b924c6b029985.fitBounds(
                 [[52.3618, 4.8783], [52.3618, 4.8783], [52.3577, 4.8595], [52.3577, 4.8595], [52.3575, 4.9024], [52.3575, 4.9024], [52.3648, 4.928], [52.3648, 4.928], [52.3722, 4.8639], [52.3722, 4.8639]],
                 {}
             );
