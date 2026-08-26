@@ -188,7 +188,7 @@ class _HomeButtonControl(MacroElement):
 
 def _point_properties(
     color: str | None,
-    caption: str | None,
+    caption: str | RawHTML | None,
     tooltip: str | RawHTML | None,
     popup: str | RawHTML | None,
 ) -> dict[str, Any]:
@@ -200,12 +200,13 @@ def _point_properties(
     ``color`` lands inside a ``style`` attribute and ``caption`` in element content of an
     HTML string the browser parses, so both are escaped here: an unescaped colour such as
     ``red" onmouseover="..."`` would close the attribute and add an event handler.
+    A ``RawHTML`` caption opts back into markup, as it does on :meth:`Map.add_point`.
     """
     props: dict[str, Any] = {}
     if color is not None:
         props["color"] = html_escape(color, quote=True)
     if caption:
-        props["caption"] = html_escape(caption)
+        props["caption"] = escape_text(caption)
     if tooltip:
         props["tooltip"] = render_text(tooltip)
     if popup:
@@ -985,7 +986,7 @@ class Map:
         self,
         point: Point,
         marker: str | None = None,
-        caption: str | None = None,
+        caption: str | RawHTML | None = None,
         tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         marker_style: dict[str, str] | None = None,
@@ -1009,9 +1010,12 @@ class Map:
             - Full CSS class (e.g. ``"fa-solid fa-house"``) → used as-is.
             - Emoji / unicode text → rendered as text DivIcon.
             - ``None`` → default ``"arrow-down"`` icon.
-        caption : str | None
+        caption : str | RawHTML | None
             Text annotation placed below the marker.  Works with any marker
-            type (emoji, icon).  Can be styled via ``caption_style``.
+            type (emoji, icon).  Can be styled via ``caption_style``.  Plain
+            strings are HTML-escaped and shown literally; wrap in
+            :class:`~mapyta.markdown.RawHTML` to render inline markup such as
+            ``<sub>``.
         tooltip : str | RawHTML | None
             Information shown on mouse tooltip.  Markdown supported for
             strings, or use ``RawHTML`` for pre-formatted HTML.
@@ -1073,7 +1077,7 @@ class Map:
             point,
             {
                 "marker": marker,
-                "caption": caption,
+                "caption": self._raw_text(caption),
                 "tooltip": self._raw_text(tooltip),
                 "popup": self._raw_text(popup),
                 "min_zoom": min_zoom,
@@ -1099,7 +1103,7 @@ class Map:
         self,
         points: Sequence[Point],
         marker: str | None = None,
-        captions: Sequence[str | None] | None = None,
+        captions: Sequence[str | RawHTML | None] | None = None,
         colors: Sequence[str] | None = None,
         tooltips: Sequence[str | RawHTML | None] | None = None,
         popups: Sequence[str | RawHTML | None] | None = None,
@@ -1133,8 +1137,8 @@ class Map:
         marker : str | None
             Marker symbol for every point, resolved exactly as in :meth:`add_point`
             (icon name, full CSS class, or emoji/text).  ``None`` gives ``"arrow-down"``.
-        captions : Sequence[str | None] | None
-            Per-point text placed below the marker, HTML-escaped and shown literally.
+        captions : Sequence[str | RawHTML | None] | None
+            Per-point text placed below the marker, escaped as on :meth:`add_point`.
             Entries may be ``None``.
         colors : Sequence[str] | None
             Per-point CSS colour for the marker symbol, overriding ``marker_style``.
@@ -1206,7 +1210,7 @@ class Map:
                 {"type": "Point", "coordinates": [lon, lat]},
                 {
                     "marker": marker,
-                    "caption": caption,
+                    "caption": self._raw_text(caption),
                     "tooltip": self._raw_text(tooltip),
                     "popup": self._raw_text(popup),
                     "min_zoom": min_zoom,
@@ -2466,7 +2470,7 @@ class Map:
         name: str | None = None,
         min_zoom: int | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
-        captions: list[str] | None = None,
+        captions: list[str | RawHTML] | None = None,
         caption_style: dict[str, str] | None = None,
         tooltip_style: TooltipStyle | dict[str, Any] | None = None,
         min_zoom_caption: int | None = None,
@@ -2491,8 +2495,9 @@ class Map:
             Minimum zoom level at which the cluster is visible.
         popup_style : PopupStyle | dict[str, Any] | None
             Popup dimensions.
-        captions : list[str] | None
-            Per-location text annotations placed below each marker.
+        captions : list[str | RawHTML] | None
+            Per-location text annotations placed below each marker, escaped as
+            on :meth:`add_point`.
         caption_style : dict[str, str] | None
             CSS property overrides for ``captions``.
         tooltip_style : TooltipStyle | dict[str, Any] | None
@@ -2548,7 +2553,7 @@ class Map:
                 pt,
                 {
                     "marker": label,
-                    "caption": txt,
+                    "caption": self._raw_text(txt),
                     "tooltip": tip,
                     "popup": popup,
                     "min_zoom": min_zoom,

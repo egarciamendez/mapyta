@@ -12,7 +12,7 @@ import json
 import shutil
 from collections.abc import Generator
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, cast
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import folium
@@ -4582,6 +4582,17 @@ class TestGeoDataFrame:
 # ===================================================================
 
 
+def _divicon_html(m: Map) -> str:
+    """Return the HTML of the map's single DivIcon marker.
+
+    Folium writes it into a JS string literal, escaping ``<`` as ``\u003c``, so the
+    rendered page is the wrong place to assert on the markup the browser ends up parsing.
+    """
+    marker = next(child for child in m._map._children.values() if isinstance(child, folium.Marker))
+    icon = next(child for child in marker._children.values() if isinstance(child, folium.DivIcon))
+    return cast(str, icon.options["html"])
+
+
 class TestCaption:
     """Scenarios for the caption parameter on add_point."""
 
@@ -4690,10 +4701,40 @@ class TestCaption:
         assert len(m._zoom_controlled_markers) == 1, "Combined marker should be a single entry"
         assert m._zoom_controlled_markers[0]["min_zoom"] == 10
 
+    # ===================================================================
+    # Scenarios for zoom-dependent marker visibility.
+    # ===================================================================
 
-# ===================================================================
-# Scenarios for zoom-dependent marker visibility.
-# ===================================================================
+    def test_caption_escapes_a_plain_string(self) -> None:
+        """
+        Scenario: A caption taken from data cannot inject markup into the marker.
+
+        Given: A point captioned with a script tag
+        When: The map is rendered
+        Then: The caption is escaped, and to_geojson still exports it unchanged
+        """
+        m = Map()
+
+        m.add_point(Point(4.9, 52.37), caption="<script>alert(1)</script>")
+        icon_html = _divicon_html(m)
+
+        assert "<script>alert(1)</script>" not in icon_html, "a caption must not become active markup"
+        assert "&lt;script&gt;alert(1)&lt;/script&gt;" in icon_html, "plain-string captions must be HTML-escaped"
+        assert m.to_geojson()["features"][0]["properties"]["caption"] == "<script>alert(1)</script>", "the export keeps the caption as given"
+
+    def test_raw_html_caption_is_rendered_verbatim(self) -> None:
+        """
+        Scenario: RawHTML opts a caption back into inline markup.
+
+        Given: A point captioned with RawHTML containing a subscript
+        When: The map is rendered
+        Then: The markup reaches the HTML unescaped
+        """
+        m = Map()
+
+        m.add_point(Point(4.9, 52.37), caption=RawHTML("R<sub>c;cal</sub>"))
+
+        assert "R<sub>c;cal</sub>" in _divicon_html(m), "RawHTML in a caption must be rendered verbatim, not escaped"
 
 
 class TestZoomDependentVisibility:
@@ -6629,3 +6670,21 @@ class TestAddPointsBulkLayer:
         assert _point_properties(None, "<script>alert(1)</script>", None, None)["caption"] == "&lt;script&gt;alert(1)&lt;/script&gt;"
         assert "<script>alert(1)</script>" not in html, "a caption must not become active markup"
         assert m.to_geojson()["features"][0]["properties"]["caption"] == "<script>alert(1)</script>", "the export keeps the caption as given"
+
+    def test_raw_html_caption_is_rendered_verbatim(self) -> None:
+        """
+        Scenario: Bulk captions follow the same escaping rules as add_point.
+
+        Given: A point captioned with RawHTML containing a subscript
+        When: The layer data is built
+        Then: The markup is passed through unescaped
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(1), captions=[RawHTML("R<sub>c;cal</sub>")])
+
+        # Assert - Then
+        assert _point_properties(None, RawHTML("R<sub>c;cal</sub>"), None, None)["caption"] == "R<sub>c;cal</sub>"
+        assert m.to_geojson()["features"][0]["properties"]["caption"] == "R<sub>c;cal</sub>", "the export keeps the caption as given"

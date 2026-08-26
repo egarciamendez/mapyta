@@ -4,6 +4,8 @@ from typing import Literal, NamedTuple
 
 import folium
 
+from mapyta.markdown import RawHTML, escape_text
+
 # Default CSS for marker styles
 DEFAULT_ICON_CSS: dict[str, str] = {
     "font-size": "20px",
@@ -189,12 +191,16 @@ def marker_wrapper_open(width: int, height: int) -> str:
     )
 
 
-def _absolute_caption_html(text: str, css: dict[str, str], top_px: int, element_id: str | None = None) -> str:
-    """Build a complete caption ``<div>``; see :func:`caption_open_tag`."""
-    return f"{caption_open_tag(css, top_px, element_id=element_id)}{text}</div>"
+def _absolute_caption_html(text: str | RawHTML, css: dict[str, str], top_px: int, element_id: str | None = None) -> str:
+    """Build a complete caption ``<div>``; see :func:`caption_open_tag`.
+
+    The caption goes into the DivIcon's HTML, so a plain string is escaped: a label taken
+    from a data source would otherwise become active markup. ``RawHTML`` opts back in.
+    """
+    return f"{caption_open_tag(css, top_px, element_id=element_id)}{escape_text(text)}</div>"
 
 
-def _build_marker(glyph: MarkerGlyph, caption: str | None, caption_css: dict[str, str], caption_id: str | None) -> folium.DivIcon:
+def _build_marker(glyph: MarkerGlyph, caption: str | RawHTML | None, caption_css: dict[str, str], caption_id: str | None) -> folium.DivIcon:
     """Assemble a glyph and its optional caption into a square DivIcon."""
     caption_html = _absolute_caption_html(caption, caption_css, top_px=glyph.caption_top, element_id=caption_id) if caption else ""
     size = glyph.box_size
@@ -208,7 +214,7 @@ def _build_marker(glyph: MarkerGlyph, caption: str | None, caption_css: dict[str
 def build_icon_marker(
     icon: str,
     css: dict[str, str],
-    caption: str | None,
+    caption: str | RawHTML | None,
     caption_css: dict[str, str],
     caption_id: str | None = None,
 ) -> folium.DivIcon:
@@ -223,8 +229,10 @@ def build_icon_marker(
         names (e.g. ``"home"``) get a ``"glyphicon"`` prefix.
     css : dict[str, str]
         CSS property overrides for the icon element.
-    caption : str | None
-        Optional caption text below the icon.
+    caption : str | RawHTML | None
+        Optional caption text below the icon.  Plain strings are HTML-escaped
+        and shown literally; wrap in :class:`~mapyta.markdown.RawHTML` to render
+        inline markup such as ``<sub>``.
     caption_css : dict[str, str]
         CSS property overrides for the caption.
     caption_id : str | None
@@ -241,7 +249,7 @@ def build_icon_marker(
 def build_text_marker(
     text: str,
     css: dict[str, str],
-    caption: str | None,
+    caption: str | RawHTML | None,
     caption_css: dict[str, str],
     caption_id: str | None = None,
 ) -> folium.DivIcon:
@@ -253,8 +261,9 @@ def build_text_marker(
         The actual text/emoji to render.
     css : dict[str, str]
         CSS property overrides for the text element.
-    caption : str | None
-        Optional caption text below the text.
+    caption : str | RawHTML | None
+        Optional caption text below the text.  Escaped as on
+        :func:`build_icon_marker`.
     caption_css : dict[str, str]
         CSS property overrides for the caption.
     caption_id : str | None

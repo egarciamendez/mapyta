@@ -50,7 +50,7 @@ What you give up is a per-point symbol. Some arguments describe the layer, the r
 | `caption_style` — CSS for the captions | `tooltips` — hover text, Markdown supported |
 | `tooltip_style`, `popup_style` | `popups` — click text, Markdown supported |
 
-The per-point sequences are optional, but any you pass must be exactly as long as `points`; a mismatch raises `ValueError` rather than silently dropping markers. Captions and colours are HTML-escaped, so values read straight from a data source are shown literally.
+The per-point sequences are optional, but any you pass must be exactly as long as `points`; a mismatch raises `ValueError` rather than silently dropping markers. Captions and colours are HTML-escaped, so values read straight from a data source are shown literally; wrap a caption in `RawHTML` to render inline markup, exactly as on `add_point()`.
 
 `name` labels the layer in the layer control, and `min_zoom` / `min_zoom_caption` gate the whole layer and its captions by zoom level, exactly as described under [Zoom-dependent Visibility](min-zoom.md).
 
