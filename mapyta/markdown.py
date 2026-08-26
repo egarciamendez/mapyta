@@ -1,6 +1,7 @@
 """Markdown to HTML conversion and RawHTML utilities."""
 
 import re
+from html import escape
 
 
 def sanitize_href(url: str) -> str:
@@ -65,3 +66,18 @@ class RawHTML(str):
     """
 
     __slots__ = ()
+
+
+def render_text(value: str | RawHTML) -> str:
+    """Convert a plain string from Markdown, or pass :class:`RawHTML` through verbatim."""
+    return value if isinstance(value, RawHTML) else markdown_to_html(value)
+
+
+def escape_text(value: str | RawHTML) -> str:
+    """Escape a plain string, or pass :class:`RawHTML` through verbatim.
+
+    The counterpart to :func:`render_text` for labels that take no Markdown — legend
+    captions and swatch labels. Escaping keeps untrusted text from becoming active
+    markup while :class:`RawHTML` still opts into inline markup such as ``<sub>``.
+    """
+    return value if isinstance(value, RawHTML) else escape(value)

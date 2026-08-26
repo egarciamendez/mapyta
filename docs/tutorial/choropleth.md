@@ -176,7 +176,7 @@ The same `colors` parameter works on `Map.from_geodataframe()` when using `color
 
 ## Categorical data
 
-If your values are string categories (land use type, municipality class, etc.), set `categorical=True` or pass string values and mapyta auto-detects them. Each unique category gets a distinct color from the palette:
+If your values are string categories (land use type, municipality class, etc.), set `categorical=True` or pass string values and mapyta auto-detects them. Each unique category gets a distinct color from the palette, and the legend is a [swatch per category](#categorical-legend) rather than a colorbar, so it names the categories instead of numbering them:
 
 ```python exec="true" html="true" source="tabbed-right"
 from mapyta import Map
@@ -266,8 +266,57 @@ from mapyta import RawHTML
 m.add_colorbar(colors="viridis", vmin=0, vmax=50, legend_name=RawHTML("R<sub>c;cal</sub>"))
 ```
 
-The legend is a vertical gradient bar pinned to the right edge of the map, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals.
+The legend is a vertical gradient bar pinned to the right edge of the map, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals. `add_choropleth` and `from_geodataframe` draw the same bar for their continuous scales, so every legend on a map matches — and because it is plain HTML rather than a Leaflet control, it survives `to_image()`, which hides the map controls by default.
 
 !!! tip "Reuse the same scale everywhere"
 
     Because `colormap` is just a callable, you can pass `colormap(value)` to any styled feature, circles, polygons (`add_polygon`), or DataFrame rows, so every layer on the map reads against one legend.
+
+## Categorical legend
+
+`add_colorbar()` explains a continuous scale. When features fall into named classes instead, a status, a material, an owner, `add_legend()` draws one colour swatch per class. A [categorical choropleth](#categorical-data) draws this legend for you; call `add_legend()` yourself when you coloured the features by hand:
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map, CircleStyle, StrokeStyle, FillStyle
+
+STATUSES = [
+    ("#1a9850", "Geclassificeerd"),
+    ("#fee08b", "Deels geclassificeerd"),
+    ("#d73027", "Niet geclassificeerd"),
+    ("#999999", "Onbekend"),
+]
+
+# Each site carries the index of its status.
+sites = [(5.10, 52.090, 0), (5.12, 52.100, 1), (5.14, 52.085, 2), (5.16, 52.105, 3), (5.11, 52.078, 0)]
+
+m = Map(title="Classification status")
+
+for lon, lat, status in sites:
+    color, label = STATUSES[status]
+    m.add_circle(
+        point=Point(lon, lat),
+        tooltip=label,
+        style=CircleStyle(
+            radius=10,
+            stroke=StrokeStyle(color="#333", weight=1),
+            fill=FillStyle(color=color, opacity=1.0),
+        ),
+    )
+
+m.add_legend(entries=STATUSES, title="Status")
+
+print(m.to_html())  # markdown-exec: hide
+```
+
+### How it works
+
+**`entries`** is a list of `(color, label)` pairs, drawn top to bottom in the order you give them. Nothing links them to the features on the map, so pass the same colors you used to style those features. Plain-string labels are HTML-escaped and shown literally; wrap one in `RawHTML` to render inline markup such as `<sub>`.
+
+**`title`** is the heading above the swatches, escaped the same way. Leave it out for an unlabelled legend.
+
+**`position`** pins the card to `"topleft"`, `"topright"`, `"bottomleft"` or `"bottomright"`. The default `"bottomright"` stays clear of the map title, the top-right controls and the bottom-left coordinate readout. The legend never intercepts mouse events, so panning and zooming still work over it.
+
+!!! tip "Filtering as well as explaining"
+
+    A legend explains the colors but cannot switch classes off. Put each class in its own [feature group](layers.md) and add `add_layer_control()` alongside the legend: readers then get both the color key and a "show only unclassified" filter.

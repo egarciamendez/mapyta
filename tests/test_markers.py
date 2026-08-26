@@ -703,7 +703,7 @@ class TestCaption:
         )
         assert len(m._zoom_controlled_captions) == 1
         assert m._zoom_controlled_captions[0]["min_zoom"] == 12
-        assert m._zoom_controlled_captions[0]["caption_id"].startswith("caption_")
+        assert m._zoom_controlled_captions[0]["selector"].startswith("#caption_")
         assert len(m._zoom_controlled_markers) == 0, "marker icon should stay always-visible"
 
     def test_min_zoom_caption_emits_id_in_html(self, tmp_path: Path) -> None:
@@ -720,7 +720,7 @@ class TestCaption:
         out = tmp_path / "caption_id.html"
         m.to_html(out)
         html = out.read_text(encoding="utf-8")
-        caption_id = m._zoom_controlled_captions[0]["caption_id"]
+        caption_id = m._zoom_controlled_captions[0]["selector"].removeprefix("#")
         # Folium serialises the DivIcon HTML into JSON, so quotes appear escaped.
         assert f'id=\\"{caption_id}\\"' in html
 
@@ -823,7 +823,7 @@ class TestCaption:
         m = Map()
         m.add_point(Point(4.9, 52.37), marker="home", caption="A", min_zoom_caption=10)
         m.add_point(Point(5.0, 52.38), marker="home", caption="B", min_zoom_caption=10)
-        ids = {entry["caption_id"] for entry in m._zoom_controlled_captions}
+        ids = {entry["selector"] for entry in m._zoom_controlled_captions}
         assert len(ids) == 2, "each caption should have its own DOM id"
 
     def test_min_zoom_caption_injects_js(self, tmp_path: Path) -> None:
@@ -839,7 +839,7 @@ class TestCaption:
         out = tmp_path / "caption_js.html"
         m.to_html(out)
         html = out.read_text(encoding="utf-8")
-        caption_id = m._zoom_controlled_captions[0]["caption_id"]
+        caption_id = m._zoom_controlled_captions[0]["selector"].removeprefix("#")
         assert caption_id in html
         assert "el.style.display" in html, "caption toggle script should be injected"
 

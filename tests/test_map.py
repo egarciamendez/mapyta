@@ -12,7 +12,7 @@ import json
 import shutil
 from collections.abc import Generator
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import folium
@@ -30,8 +30,10 @@ from shapely.geometry import (
     Polygon,
 )
 
+import mapyta.coordinates
 from mapyta import CircleStyle, FillStyle, HeatmapStyle, Map, MapConfig, PopupStyle, StrokeStyle
 from mapyta.coordinates import detect_and_transform_coords, transform_geometry
+from mapyta.map import _point_properties
 from mapyta.markdown import RawHTML, markdown_to_html, sanitize_href
 from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_ICON_CSS, DEFAULT_MARKER_CAPTION_CSS, DEFAULT_TEXT_CSS, classify_marker, css_to_style
 from mapyta.style import PALETTES, resolve_style
@@ -1947,6 +1949,149 @@ class TestChoroplethColors:
         assert colormap.colors[0] == colormap.colors[2], "x and z should share the same cycled color"
         assert colormap.colors[0] != colormap.colors[1], "x and y should have different colors"
 
+    _CATEGORIES: ClassVar[list[tuple[str, str]]] = [("A", "Geclassificeerd"), ("B", "Deels"), ("C", "Onbekend")]
+
+    def _make_categorical_geojson(self) -> dict:
+        """Return a FeatureCollection with three named status categories."""
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [4.9 + index / 10, 52.37]},
+                    "properties": {"id": key, "status": status},
+                }
+                for index, (key, status) in enumerate(self._CATEGORIES)
+            ],
+        }
+
+    def test_categorical_legend_names_every_category(self) -> None:
+        """
+        Scenario: A categorical choropleth explains its colors by name.
+
+        Given: A GeoJSON with three named status categories
+        When: add_choropleth renders it in categorical mode
+        Then: Each category name appears in the legend alongside its own color
+        """
+        m = Map()
+        palette = ["#1a9850", "#fee08b", "#999999"]
+        m.add_choropleth(
+            self._make_categorical_geojson(),
+            value_column="status",
+            key_on="feature.properties.id",
+            legend_name="Status",
+            colors=palette,
+        )
+
+        html = m.get_standalone_html()
+
+        assert "Status" in html
+        for color, (_, category) in zip(palette, self._CATEGORIES):
+            assert f"background:{color}" in html, f"{category} must carry its own swatch"
+            assert category in html
+
+    def test_categorical_legend_is_not_brancas_step_colorbar(self) -> None:
+        """
+        Scenario: The categorical legend names the categories instead of numbering them.
+
+        Given: A categorical choropleth
+        When: The map is rendered to HTML
+        Then: branca's step colorbar, whose ticks are category indices, is not emitted
+
+        branca's colorbar is also a Leaflet control, so ``to_image(hide_controls=True)``
+        used to strip the categorical legend from exported PNGs entirely.
+        """
+        m = Map()
+        m.add_choropleth(self._make_categorical_geojson(), value_column="status", key_on="feature.properties.id")
+
+        html = m.get_standalone_html()
+
+        assert "color_map_" not in html, "branca's step colorbar must not be emitted for categories"
+        assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
+
+    def test_categorical_legend_falls_back_to_the_value_column(self) -> None:
+        """
+        Scenario: A categorical choropleth without an explicit legend name.
+
+        Given: A categorical choropleth called without ``legend_name``
+        When: The map is rendered to HTML
+        Then: The legend is headed with the value column name
+        """
+        m = Map()
+        m.add_choropleth(self._make_categorical_geojson(), value_column="status", key_on="feature.properties.id")
+
+        assert '<div style="font-weight:bold;">status</div>' in m.get_standalone_html()
+
+    def test_categorical_colormap_is_still_tracked(self) -> None:
+        """
+        Scenario: The categorical scale stays available to callers merging two maps.
+
+        Given: A categorical choropleth
+        When: The colormaps registered on the map are inspected
+        Then: The StepColormap is tracked, even though it draws no colorbar of its own
+        """
+        m = Map()
+        m.add_choropleth(self._make_categorical_geojson(), value_column="status", key_on="feature.properties.id")
+
+        assert len(m._colormaps) == 1
+        assert isinstance(m._colormaps[0], StepColormap)
+
+    def test_numeric_choropleth_draws_a_gradient_colorbar(self) -> None:
+        """
+        Scenario: A numeric choropleth reads as a continuous scale, not as swatches.
+
+        Given: A choropleth over numeric values
+        When: The map is rendered to HTML
+        Then: The HTML gradient colorbar is drawn and no per-category swatch appears
+        """
+        m = Map()
+        m.add_choropleth(self._make_geojson(), value_column="val", key_on="feature.properties.id", legend_name="Score")
+
+        html = m.get_standalone_html()
+
+        assert "linear-gradient(to top" in html, "a continuous scale reads as a gradient bar"
+        assert "Score" in html
+        assert "border:1px solid rgba(0,0,0,0.25)" not in html, "no swatch legend for a continuous scale"
+
+    def test_numeric_choropleth_survives_an_image_export(self) -> None:
+        """
+        Scenario: The numeric legend is not a Leaflet control.
+
+        Given: A choropleth over numeric values
+        When: The map is rendered to HTML
+        Then: branca's colorbar control is absent
+
+        ``to_image`` hides ``.leaflet-control`` by default, so a legend rendered as a
+        Leaflet control is stripped from every exported image.
+        """
+        m = Map()
+        m.add_choropleth(self._make_geojson(), value_column="val", key_on="feature.properties.id")
+
+        html = m.get_standalone_html()
+
+        assert "color_map_" not in html, "branca's colorbar control must not be emitted"
+        assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
+
+    def test_categorical_without_values_adds_no_legend(self) -> None:
+        """
+        Scenario: A categorical choropleth with nothing to classify.
+
+        Given: A FeatureCollection whose features carry no value for the column
+        When: add_choropleth is called in categorical mode
+        Then: No legend is drawn rather than an empty card
+        """
+        m = Map()
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "geometry": {"type": "Point", "coordinates": [4.9, 52.37]}, "properties": {"id": "A"}},
+            ],
+        }
+
+        m.add_choropleth(geojson, value_column="status", key_on="feature.properties.id", categorical=True)
+
+        assert "border:1px solid rgba(0,0,0,0.25)" not in m.get_standalone_html()
+
 
 # ===================================================================
 # Scenarios for search control.
@@ -2720,6 +2865,25 @@ class TestCoordinateTransformation:
         lon, lat = result[0]
         assert 5.0 < lon < 6.0, "Should be in the Netherlands"
         assert 51.5 < lat < 53.0, "Should be in the Netherlands"
+
+    def test_transformer_is_built_once_per_crs(self) -> None:
+        """
+        Scenario: Repeated transforms reuse a single Transformer.
+
+        Given: A cold transformer cache
+        When: _detect_and_transform_coords is called once per point, as add_point does
+        Then: Only one Transformer is built, no matter how many points follow
+        """
+        # Arrange - Given
+        mapyta.coordinates._transformer.cache_clear()
+
+        # Act - When
+        with patch.object(mapyta.coordinates, "Transformer", wraps=mapyta.coordinates.Transformer) as transformer:
+            for _ in range(50):
+                detect_and_transform_coords([(155_000, 463_000)], source_crs="EPSG:28992")
+
+        # Assert - Then
+        assert transformer.from_crs.call_count == 1, "Building a Transformer per point costs ~20 ms each"
 
     def test_transform_point_geometry(self) -> None:
         """
@@ -4169,6 +4333,25 @@ class TestGeoDataFrame:
         # Assert - Then
         assert len(m._colormaps) == 1, "One colormap should be registered"
 
+    def test_geodataframe_colorbar_is_not_a_leaflet_control(self, cities_gdf: GeoDataFrame) -> None:
+        """
+        Scenario: A colour-coded GeoDataFrame keeps its legend in an exported image.
+
+        Given: A GeoDataFrame coloured by a numeric column
+        When: The map is rendered to HTML
+        Then: The legend is the HTML gradient bar, not branca's Leaflet control
+
+        ``to_image`` hides ``.leaflet-control`` by default, which would strip a
+        control-based legend out of every exported image.
+        """
+        m = Map.from_geodataframe(cities_gdf, color_column="population", legend_name="Population")
+
+        html = m.get_standalone_html()
+
+        assert "linear-gradient(to top" in html
+        assert "Population" in html
+        assert "color_map_" not in html, "branca's colorbar control must not be emitted"
+
     def test_geodataframe_with_label_column(self, cities_gdf: GeoDataFrame) -> None:
         """
         Scenario: Use city names as marker labels.
@@ -4637,13 +4820,13 @@ class TestZoomDependentVisibility:
 
         Given: A Map with a min_zoom marker
         When: _get_html is called twice
-        Then: The flag _zoom_js_injected is True and JS appears only once
+        Then: The script is replaced, not appended, so it still appears once
         """
         m = Map()
         m.add_point(Point(4.9, 52.37), min_zoom=10)
         html1 = m._get_html()
         html2 = m._get_html()
-        assert m._zoom_js_injected is True
+        assert html2.count("zoomend") == 1
         assert html1.count("zoomend") == html2.count("zoomend")
 
     def test_merge_combines_zoom_markers(self) -> None:
@@ -4662,6 +4845,28 @@ class TestZoomDependentVisibility:
 
         combined = a + b
         assert len(combined._zoom_controlled_markers) == 2
+
+    def test_merge_after_rendering_drives_both_maps_zoom_rules(self) -> None:
+        """
+        Scenario: A rendered map keeps working as a merge operand.
+
+        Given: A rendered map with a zoom-gated caption, merged with a second one
+        When: The combined map is rendered
+        Then: The script carries both thresholds
+
+        The zoom script is regenerated on every render under a fixed name, so an
+        earlier render cannot freeze it with only the left-hand map's entries.
+        """
+        a = Map()
+        a.add_point(Point(4.9, 52.37), marker="home", caption="A", min_zoom_caption=12)
+        a.get_standalone_html()
+        b = Map()
+        b.add_point(Point(5.0, 52.38), marker="home", caption="B", min_zoom_caption=14)
+
+        html = (a + b).get_standalone_html()
+
+        assert "minZoom: 12" in html
+        assert "minZoom: 14" in html, "a render before the merge must not freeze the zoom script"
 
     def test_add_linestring_with_min_zoom(self) -> None:
         """
@@ -4688,6 +4893,60 @@ class TestZoomDependentVisibility:
         m.add_polygon(Polygon([(4.9, 52.3), (5.0, 52.3), (5.0, 52.4), (4.9, 52.4)]), min_zoom=12)
         assert len(m._zoom_controlled_markers) == 1
         assert m._zoom_controlled_markers[0]["min_zoom"] == 12
+
+    def test_zoom_layer_records_its_feature_group_as_parent(self) -> None:
+        """
+        Scenario: A zoom-controlled layer inside a feature group remembers that group.
+
+        Given: A Map with a feature group as the active target
+        When: add_point is called with min_zoom
+        Then: The tracked parent is the feature group, the layer the control switches
+        """
+        m = Map()
+        m.create_feature_group("Sonderingen")
+        m.add_point(Point(4.9, 52.37), min_zoom=10)
+        assert m._zoom_controlled_markers[0]["parent"] == m._feature_groups["Sonderingen"].get_name()
+
+    def test_zoom_layer_records_the_map_as_parent_outside_a_group(self) -> None:
+        """
+        Scenario: A zoom-controlled layer on the base map records the map as its parent.
+
+        Given: A Map with no active feature group
+        When: add_point is called with min_zoom
+        Then: The tracked parent is the map itself
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), min_zoom=10)
+        assert m._zoom_controlled_markers[0]["parent"] == m._map.get_name()
+
+    def test_zoom_js_restores_layers_through_their_parent(self) -> None:
+        """
+        Scenario: The zoom script re-adds a layer to its parent and follows the layer control.
+
+        Given: A Map with a min_zoom point inside a feature group
+        When: _get_html is called
+        Then: The script adds through the recorded parent, watches the control, and no
+              longer re-attaches the layer straight to the map
+        """
+        m = Map()
+        m.create_feature_group("Sonderingen")
+        m.add_point(Point(4.9, 52.37), min_zoom=10)
+        html = m._get_html()
+        assert "c.parent.addLayer(c.layer)" in html
+        assert "overlayadd overlayremove" in html
+        assert "el.addTo(map)" not in html
+
+    def test_zoom_js_falls_back_to_the_map_for_an_unknown_parent(self) -> None:
+        """
+        Scenario: A parent that does not exist in the document degrades to the map.
+
+        Given: A Map with a min_zoom marker, whose parent may be dropped by Map.__add__
+        When: _get_html is called
+        Then: The script falls back to the map when the parent variable is missing
+        """
+        m = Map()
+        m.add_point(Point(4.9, 52.37), min_zoom=10)
+        assert "window[c.parentId] || map" in m._get_html()
 
 
 # ===================================================================
@@ -5705,3 +5964,629 @@ class TestAddColorbar:
 
         assert "<script>alert(1)</script>" not in html, "a quote in a color stop must not break out into active markup"
         assert "&quot;" in html, "the quote in the color stop must be HTML-escaped"
+
+
+# ===================================================================
+# Scenarios for add_legend (categorical legend).
+# ===================================================================
+
+
+class TestAddLegend:
+    """Tests for the categorical ``add_legend`` swatch legend."""
+
+    def test_returns_self_for_chaining(self) -> None:
+        """
+        Scenario: A categorical legend is added to a map.
+
+        Given: An empty map
+        When: add_legend is called with two entries
+        Then: The map itself is returned so calls can be chained
+        """
+        m = Map()
+
+        result = m.add_legend([("#1a9850", "Approved"), ("#d73027", "Rejected")])
+
+        assert result is m
+
+    def test_renders_swatch_and_label_per_entry(self) -> None:
+        """
+        Scenario: Every entry becomes a colour swatch with its label.
+
+        Given: A map with a three-entry legend
+        When: The map is rendered to HTML
+        Then: Each colour and each label appears in the output
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Geclassificeerd"), ("#fee08b", "Deels"), ("#999999", "Onbekend")], title="Status")
+
+        html = m.get_standalone_html()
+
+        assert "Status" in html
+        for color, label in [("#1a9850", "Geclassificeerd"), ("#fee08b", "Deels"), ("#999999", "Onbekend")]:
+            assert f"background:{color}" in html
+            assert label in html
+
+    def test_entries_keep_their_order(self) -> None:
+        """
+        Scenario: Entries render top to bottom in the order given.
+
+        Given: A legend whose labels are passed in a deliberate order
+        When: The map is rendered to HTML
+        Then: The labels appear in that same order in the markup
+        """
+        m = Map()
+        m.add_legend([("#111111", "First"), ("#222222", "Second"), ("#333333", "Third")])
+
+        html = m.get_standalone_html()
+
+        assert html.index("First") < html.index("Second") < html.index("Third")
+
+    def test_title_is_optional(self) -> None:
+        """
+        Scenario: A legend without a heading.
+
+        Given: A legend added without a title
+        When: The map is rendered to HTML
+        Then: No heading element is emitted, but the entry still renders
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")])
+
+        html = m.get_standalone_html()
+
+        assert "Approved" in html
+        assert '<div style="font-weight:bold;">' not in html
+
+    @pytest.mark.parametrize(
+        ("position", "expected_css"),
+        [
+            ("topleft", "top:10px;left:10px"),
+            ("topright", "top:10px;right:10px"),
+            ("bottomleft", "bottom:10px;left:10px"),
+            ("bottomright", "bottom:10px;right:10px"),
+        ],
+    )
+    def test_position_maps_to_corner_offsets(self, position: str, expected_css: str) -> None:
+        """
+        Scenario: Each supported position pins the legend to its corner.
+
+        Given: A legend placed at one of the four corners
+        When: The map is rendered to HTML
+        Then: The matching CSS offsets are emitted
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")], position=position)
+
+        assert expected_css in m.get_standalone_html()
+
+    def test_defaults_to_bottom_right(self) -> None:
+        """
+        Scenario: The default position stays clear of the title and the top-right controls.
+
+        Given: A legend added without an explicit position
+        When: The map is rendered to HTML
+        Then: It is pinned to the bottom-right corner
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")])
+
+        assert "bottom:10px;right:10px" in m.get_standalone_html()
+
+    def test_unknown_position_raises(self) -> None:
+        """
+        Scenario: A position outside the four corners.
+
+        Given: An empty map
+        When: add_legend is called with an unsupported position
+        Then: A ValueError names the valid positions
+        """
+        m = Map()
+
+        with pytest.raises(ValueError, match="Unknown position"):
+            m.add_legend([("#1a9850", "Approved")], position="middle")
+
+    def test_empty_entries_raises(self) -> None:
+        """
+        Scenario: A legend with nothing to show.
+
+        Given: An empty map
+        When: add_legend is called with no entries
+        Then: A ValueError is raised instead of emitting an empty card
+        """
+        m = Map()
+
+        with pytest.raises(ValueError, match="entries must not be empty"):
+            m.add_legend([])
+
+    def test_raw_html_label_renders_verbatim(self) -> None:
+        """
+        Scenario: A label carrying inline markup.
+
+        Given: A legend whose label is RawHTML containing a ``<sub>`` tag
+        When: The map is rendered to HTML
+        Then: The tag reaches the output unescaped so the browser renders it
+        """
+        m = Map()
+        m.add_legend([("#1a9850", RawHTML("R<sub>c;cal</sub>"))], title=RawHTML("N<sub>k</sub>"))
+
+        html = m.get_standalone_html()
+
+        assert "R<sub>c;cal</sub>" in html
+        assert "N<sub>k</sub>" in html
+
+    def test_plain_label_is_escaped(self) -> None:
+        """
+        Scenario: An untrusted label containing markup.
+
+        Given: A legend whose label and title are plain strings holding a script tag
+        When: The map is rendered to HTML
+        Then: The markup is escaped and never becomes active
+
+        Plain strings are escaped like tooltips and popups; only ``RawHTML`` opts out.
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "<script>alert(1)</script>")], title="<b>bold</b>")
+
+        html = m.get_standalone_html()
+
+        assert "<script>alert(1)</script>" not in html
+        assert "&lt;script&gt;" in html
+        assert "&lt;b&gt;bold&lt;/b&gt;" in html
+
+    def test_escapes_swatch_color(self) -> None:
+        """
+        Scenario: A colour containing a quote cannot break out of the style attribute.
+
+        Given: A legend entry whose colour holds a double quote and markup
+        When: The map is rendered to HTML
+        Then: The quote is HTML-escaped, so it stays inside the ``style="..."`` attribute
+        """
+        m = Map()
+        m.add_legend([('#00ff00"></div><script>alert(1)</script>', "Approved")])
+
+        html = m.get_standalone_html()
+
+        assert "<script>alert(1)</script>" not in html, "a quote in a colour must not break out into active markup"
+        assert "&quot;" in html, "the quote in the colour must be HTML-escaped"
+
+    def test_does_not_block_map_interaction(self) -> None:
+        """
+        Scenario: The legend sits over the map without swallowing gestures.
+
+        Given: A map with a legend
+        When: The map is rendered to HTML
+        Then: The legend card disables pointer events so panning still works over it
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")])
+
+        assert "pointer-events:none" in m.get_standalone_html()
+
+    def test_merge_keeps_both_maps_legends(self) -> None:
+        """
+        Scenario: Merging two legended maps keeps both legends.
+
+        Given: Two maps, each with its own swatch legend
+        When: They are added together and rendered
+        Then: Both legends appear
+
+        ``__add__`` copies the Folium map's children but not the figure's, so a legend
+        written straight into the figure used to be dropped from the right-hand map.
+        """
+        left = Map().add_legend([("#1a9850", "LeftCategory")], title="Left")
+        right = Map().add_legend([("#d73027", "RightCategory")], title="Right")
+
+        html = (left + right).get_standalone_html()
+
+        assert "LeftCategory" in html
+        assert "RightCategory" in html, "the right-hand map's legend must survive the merge"
+
+    def test_merge_keeps_both_maps_colorbars(self) -> None:
+        """
+        Scenario: A merged map keeps both continuous legends.
+
+        Given: Two maps, each with a colorbar
+        When: They are added together and rendered
+        Then: Both colorbar captions appear
+        """
+        left = Map()
+        left.add_colorbar(colors="viridis", vmin=0, vmax=10, legend_name="LeftScale")
+        right = Map()
+        right.add_colorbar(colors="blues", vmin=0, vmax=20, legend_name="RightScale")
+
+        html = (left + right).get_standalone_html()
+
+        assert "LeftScale" in html
+        assert "RightScale" in html, "the right-hand map's colorbar must survive the merge"
+
+    def test_merge_after_rendering_still_gains_the_new_legend(self) -> None:
+        """
+        Scenario: A map that was already rendered can still be merged.
+
+        Given: A rendered map with a legend, merged with a second legended map
+        When: The combined map is rendered
+        Then: Both legends appear
+        """
+        left = Map().add_legend([("#1a9850", "AlreadyRendered")], title="Left")
+        left.get_standalone_html()
+        right = Map().add_legend([("#d73027", "AddedLater")], title="Right")
+
+        html = (left + right).get_standalone_html()
+
+        assert "AlreadyRendered" in html
+        assert "AddedLater" in html, "a render before the merge must not freeze the legends"
+
+    def test_rendering_twice_does_not_duplicate_the_legend(self) -> None:
+        """
+        Scenario: Rendering a map repeatedly leaves one legend.
+
+        Given: A map with a legend
+        When: It is rendered twice
+        Then: The legend appears exactly once
+        """
+        m = Map().add_legend([("#1a9850", "OnlyOnce")], title="Status")
+
+        m.get_standalone_html()
+
+        assert m.get_standalone_html().count("OnlyOnce") == 1
+
+
+# ===================================================================
+# Scenarios for adding many points as a single GeoJSON layer.
+# ===================================================================
+
+
+def _rd_points(n: int) -> list[Point]:
+    """Return *n* RD New points spread over a small grid near Utrecht."""
+    return [Point(135_000 + (i % 10) * 250, 455_000 + (i // 10) * 250) for i in range(n)]
+
+
+class TestAddPointsBulkLayer:
+    """Scenarios for adding many points as a single GeoJSON layer."""
+
+    def test_empty_points_is_a_no_op(self) -> None:
+        """
+        Scenario: An empty sequence adds nothing.
+
+        Given: A map
+        When: add_points is called with no points
+        Then: No layer, feature or bound is recorded, and the map is returned for chaining
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        result = m.add_points([])
+
+        # Assert - Then
+        assert result is m
+        assert m.to_geojson()["features"] == []
+        assert m._bounds == []
+
+    @pytest.mark.parametrize("field", ["captions", "colors", "tooltips", "popups"])
+    def test_mismatched_length_raises(self, field: str) -> None:
+        """
+        Scenario: A per-point sequence of the wrong length is rejected.
+
+        Given: Three points and a two-entry sequence for one of the per-point fields
+        When: add_points is called
+        Then: ValueError names the offending field, rather than silently dropping a point
+        """
+        # Arrange - Given
+        m = Map()
+        points = _rd_points(3)
+        kwargs: dict[str, Any] = {field: ["a", "b"]}
+
+        # Act - When / Assert - Then
+        with pytest.raises(ValueError, match=f"{field} has 2 entries but points has 3"):
+            m.add_points(points, **kwargs)
+
+    def test_emits_one_layer_instead_of_one_marker_per_point(self) -> None:
+        """
+        Scenario: The whole layer is a single GeoJSON object.
+
+        Given: A map with 50 points added in bulk
+        When: The map is rendered
+        Then: One L.geoJson layer carries them, with no per-point L.marker statement
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(50), marker="triangle-bottom")
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert html.count("L.geoJson(") == 1
+        assert "L.marker(" not in html, "a per-point marker statement is what makes the output large"
+
+    def test_payload_is_far_smaller_than_the_add_point_loop(self) -> None:
+        """
+        Scenario: Bulk output is a fraction of the size of the per-point output.
+
+        Given: The same 200 points, captions and colours
+        When: One map is built with add_point in a loop and one with add_points
+        Then: The bulk map's HTML is several times smaller
+        """
+        # Arrange - Given
+        points = _rd_points(200)
+        captions = [f"CPT-{i:03d}" for i in range(200)]
+
+        # Act - When
+        loop = Map()
+        for i, point in enumerate(points):
+            loop.add_point(point, marker="triangle-bottom", caption=captions[i])
+        bulk = Map()
+        bulk.add_points(points, marker="triangle-bottom", captions=captions)
+
+        # Assert - Then
+        loop_size = len(loop.get_standalone_html())
+        bulk_size = len(bulk.get_standalone_html())
+        assert bulk_size * 3 < loop_size, f"bulk {bulk_size} vs loop {loop_size}"
+
+    def test_records_every_point_for_geojson_export(self) -> None:
+        """
+        Scenario: Bulk points still reach to_geojson.
+
+        Given: A map with three points carrying captions
+        When: to_geojson is called
+        Then: Every point is exported, in WGS84, with its caption
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(3), captions=["A", "B", "C"])
+        features = m.to_geojson()["features"]
+
+        # Assert - Then
+        assert len(features) == 3
+        assert [f["properties"]["caption"] for f in features] == ["A", "B", "C"]
+        lon, lat = features[0]["geometry"]["coordinates"]
+        assert 5.0 < lon < 6.0, "Longitude should be in NL range"
+        assert 51.5 < lat < 53.0, "Latitude should be in NL range"
+
+    def test_tracks_two_bounds_for_the_whole_layer(self) -> None:
+        """
+        Scenario: Bounds tracking summarises the layer instead of listing it.
+
+        Given: A map with 50 bulk points
+        When: The layer is added
+        Then: Only the two extreme corners are tracked, and they span the data
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(50))
+
+        # Assert - Then
+        assert len(m._bounds) == 2, "a bulk layer must not push two bounds per point"
+        (min_lat, min_lon), (max_lat, max_lon) = m._bounds
+        assert min_lat < max_lat
+        assert min_lon < max_lon
+
+    def test_emoji_marker_renders_as_text(self) -> None:
+        """
+        Scenario: An emoji marker takes the text rendering path.
+
+        Given: A map with points marked by an emoji
+        When: The map is rendered
+        Then: The shared factory writes the emoji into a text div, not an icon element
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(2), marker="📍")
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        # The glyph is JSON-escaped into the shared factory, so compare against that form.
+        assert json.dumps("📍")[1:-1] in html
+        assert "text-align:center" in html, "an emoji takes the text path, not the icon path"
+        assert "glyphicon glyphicon-" not in html, "the icon path must not run for an emoji"
+
+    @pytest.mark.parametrize(
+        ("marker", "expected"),
+        [
+            ("home", "glyphicon glyphicon-home"),
+            ("fa-arrow-right", "fa-solid fa-arrow-right"),
+            ("fa-solid fa-house", "fa-solid fa-house"),
+        ],
+    )
+    def test_icon_marker_class_resolution(self, marker: str, expected: str) -> None:
+        """
+        Scenario: Icon names resolve exactly as they do for a single point.
+
+        Given: A bare Glyphicon name, a bare FontAwesome name and a full CSS class
+        When: Each is used as the layer marker
+        Then: The rendered class string matches what add_point would produce
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(1), marker=marker)
+
+        # Assert - Then
+        assert expected in m.get_standalone_html()
+
+    def test_default_marker_matches_add_point(self) -> None:
+        """
+        Scenario: Omitting the marker gives the same default as add_point.
+
+        Given: A map with a bulk layer and no marker specified
+        When: The map is rendered
+        Then: The default arrow-down glyphicon is used
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(1))
+
+        # Assert - Then
+        assert "glyphicon glyphicon-arrow-down" in m.get_standalone_html()
+
+    def test_zoom_gated_captions_share_one_class(self) -> None:
+        """
+        Scenario: Caption visibility is gated per layer, not per point.
+
+        Given: A map with 100 zoom-gated captions
+        When: The zoom JavaScript is generated
+        Then: One shared class drives them all, and it starts hidden
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(100), captions=[f"c{i}" for i in range(100)], min_zoom_caption=15)
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert len(m._zoom_controlled_captions) == 1, "one entry per layer, not per point"
+        assert m._zoom_controlled_captions[0]["selector"].startswith("."), "a bulk layer gates by class, not by id"
+        assert "querySelectorAll" in html
+        assert "display:none" in html, "gated captions start hidden so they cannot flash before the zoom check"
+
+    def test_captions_without_gating_are_not_registered(self) -> None:
+        """
+        Scenario: Captions with no zoom gate need no JavaScript.
+
+        Given: A map with captions but no min_zoom_caption
+        When: The layer is added
+        Then: No caption class is registered
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(2), captions=["A", "B"])
+
+        # Assert - Then
+        assert m._zoom_controlled_captions == []
+
+    def test_min_zoom_registers_the_layer(self) -> None:
+        """
+        Scenario: The whole layer can be hidden below a zoom level.
+
+        Given: A map with a bulk layer added at min_zoom 12
+        When: The layer is added
+        Then: A single zoom-controlled entry names the GeoJSON layer
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(20), min_zoom=12)
+
+        # Assert - Then
+        assert len(m._zoom_controlled_markers) == 1
+        assert m._zoom_controlled_markers[0]["min_zoom"] == 12
+
+    def test_colors_are_applied_per_point(self) -> None:
+        """
+        Scenario: Each point can carry its own colour.
+
+        Given: A map with three differently coloured points
+        When: The map is rendered
+        Then: Every colour reaches the layer data and the factory appends it to the style
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(3), colors=["#1a9850", "#fee08b", "#d73027"])
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        for color in ("#1a9850", "#fee08b", "#d73027"):
+            assert color in html
+        assert "';color:' + p.color" in html, "the per-point colour must override the shared style"
+
+    def test_markdown_is_converted_and_raw_html_passes_through(self) -> None:
+        """
+        Scenario: Tooltips and popups follow the same text rules as add_point.
+
+        Given: One point with a markdown tooltip and one with a RawHTML popup
+        When: The map is rendered
+        Then: The markdown is converted and the RawHTML is left verbatim
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(2), tooltips=["**bold**", None], popups=[None, RawHTML("<b>raw</b>")])
+        props = _point_properties(None, None, "**bold**", RawHTML("<b>raw</b>"))
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert props["tooltip"] == "<strong>bold</strong>", "plain strings go through the markdown converter"
+        assert props["popup"] == "<b>raw</b>", "RawHTML is passed through verbatim"
+        # Folium escapes the layer data before writing it, so assert the bindings rather than the escaped text.
+        assert "bindTooltip" in html
+        assert "bindPopup" in html
+
+    def test_tooltip_style_reaches_the_factory(self) -> None:
+        """
+        Scenario: Tooltip styling is written once, not per point.
+
+        Given: A map whose bulk layer sets a tooltip style and a popup width
+        When: The map is rendered
+        Then: Both appear exactly once, in the shared factory
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(
+            _rd_points(10),
+            tooltips=[f"t{i}" for i in range(10)],
+            popups=[f"p{i}" for i in range(10)],
+            tooltip_style={"style": "font-size:14px", "sticky": False},
+            popup_style={"max_width": 420},
+        )
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert html.count("font-size:14px") == 1
+        assert html.count("maxWidth: 420") == 1
+        assert "sticky: false" in html
+
+    def test_merge_carries_the_gated_captions(self) -> None:
+        """
+        Scenario: Adding two maps keeps both layers' caption gating.
+
+        Given: Two maps, each with a zoom-gated bulk layer
+        When: They are added together
+        Then: The combined map drives both layers' captions
+        """
+        # Arrange - Given
+        left = Map().add_points(_rd_points(2), captions=["A", "B"], min_zoom_caption=14)
+        right = Map().add_points(_rd_points(2), captions=["C", "D"], min_zoom_caption=16)
+
+        # Act - When
+        combined = left + right
+
+        # Assert - Then
+        assert len(combined._zoom_controlled_captions) == 2
+        assert {c["min_zoom"] for c in combined._zoom_controlled_captions} == {14, 16}
+
+    def test_targets_the_active_feature_group(self) -> None:
+        """
+        Scenario: A bulk layer honours the current feature group.
+
+        Given: A map with an active feature group
+        When: add_points is called
+        Then: The layer is added to the group rather than to the base map
+        """
+        # Arrange - Given
+        m = Map().create_feature_group("Sondering")
+
+        # Act - When
+        m.add_points(_rd_points(3), name="CPTs")
+
+        # Assert - Then
+        group = m._feature_groups["Sondering"]
+        assert any(child._name == "GeoJson" for child in group._children.values())
