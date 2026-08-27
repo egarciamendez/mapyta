@@ -1544,6 +1544,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#markers.build_marker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_marker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#markers.build_text_marker" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1614,6 +1625,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;marker_wrapper_open
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#markers.point_layer_js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;point_layer_js
       
     </span>
   </a>
@@ -1819,6 +1841,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#markers.build_marker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_marker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#markers.build_text_marker" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1889,6 +1922,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;marker_wrapper_open
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#markers.point_layer_js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;point_layer_js
       
     </span>
   </a>
@@ -2194,39 +2238,39 @@ visibility JS to target the caption independently of its marker.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_icon_marker</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_icon_marker</span><span class="p">(</span>
     <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -2259,6 +2303,154 @@ visibility JS to target the caption independently of its marker.</p>
 <span class="sd">    folium.DivIcon</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_build_marker</span><span class="p">(</span><span class="n">icon_glyph</span><span class="p">(</span><span class="n">icon</span><span class="p">,</span> <span class="n">css</span><span class="p">),</span> <span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">,</span> <span class="n">caption_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="markers.build_marker" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">markers.build_marker</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">build_marker</span><span class="p">(</span>
+    <span class="n">marker</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
+    <span class="n">caption</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="mapyta.markdown.RawHTML">RawHTML</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">caption_css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
+    <span class="n">caption_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="folium.DivIcon">DivIcon</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Build the DivIcon for <em>marker</em>, classified as icon or text/emoji by :func:<code>marker_glyph</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>marker</code></b>
+              (<code><span title="str">str</span> | None</code>)
+          –
+          <div class="doc-md-description">
+            <p>Icon name, full CSS class string, or emoji/text.  <code>None</code> falls back to the
+default <code>arrow-down</code> icon.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>css</code></b>
+              (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>]</code>)
+          –
+          <div class="doc-md-description">
+            <p>CSS property overrides for the glyph element.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>caption</code></b>
+              (<code><span title="str">str</span> | <span title="mapyta.markdown.RawHTML">RawHTML</span> | None</code>)
+          –
+          <div class="doc-md-description">
+            <p>Optional caption text below the glyph.  Escaped as on :func:<code>build_icon_marker</code>.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>caption_css</code></b>
+              (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>]</code>)
+          –
+          <div class="doc-md-description">
+            <p>CSS property overrides for the caption.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>caption_id</code></b>
+              (<code><span title="str">str</span> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Optional DOM <code>id</code> on the caption <code>&lt;div&gt;</code>, used by zoom-dependent
+visibility JS to target the caption independently of its marker.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code><span title="folium.DivIcon">DivIcon</span></code>
+          –
+          <div class="doc-md-description">
+            
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>mapyta/markers.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_marker</span><span class="p">(</span>
+    <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">caption_css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">caption_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">folium</span><span class="o">.</span><span class="n">DivIcon</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the DivIcon for *marker*, classified as icon or text/emoji by :func:`marker_glyph`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    marker : str | None</span>
+<span class="sd">        Icon name, full CSS class string, or emoji/text.  ``None`` falls back to the</span>
+<span class="sd">        default ``arrow-down`` icon.</span>
+<span class="sd">    css : dict[str, str]</span>
+<span class="sd">        CSS property overrides for the glyph element.</span>
+<span class="sd">    caption : str | RawHTML | None</span>
+<span class="sd">        Optional caption text below the glyph.  Escaped as on :func:`build_icon_marker`.</span>
+<span class="sd">    caption_css : dict[str, str]</span>
+<span class="sd">        CSS property overrides for the caption.</span>
+<span class="sd">    caption_id : str | None</span>
+<span class="sd">        Optional DOM ``id`` on the caption ``&lt;div&gt;``, used by zoom-dependent</span>
+<span class="sd">        visibility JS to target the caption independently of its marker.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    folium.DivIcon</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_build_marker</span><span class="p">(</span><span class="n">marker_glyph</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="n">css</span><span class="p">),</span> <span class="n">caption</span><span class="p">,</span> <span class="n">caption_css</span><span class="p">,</span> <span class="n">caption_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2350,36 +2542,36 @@ visibility JS to target the caption independently of its marker.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_text_marker</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_text_marker</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -2497,9 +2689,7 @@ edge.  Typically the glyph height plus a small gap.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
@@ -2537,7 +2727,9 @@ edge.  Typically the glyph height plus a small gap.</p>
 <span class="normal">171</span>
 <span class="normal">172</span>
 <span class="normal">173</span>
-<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">caption_open_tag</span><span class="p">(</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">caption_open_tag</span><span class="p">(</span>
     <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">top_px</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">element_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2628,9 +2820,7 @@ edge.  Typically the glyph height plus a small gap.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -2644,7 +2834,9 @@ edge.  Typically the glyph height plus a small gap.</p>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classify_marker</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_class&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_name&quot;</span><span class="p">]:</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classify_marker</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_class&quot;</span><span class="p">,</span> <span class="s2">&quot;icon_name&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Classify a marker string.</span>
 
 <span class="sd">    Returns</span>
@@ -2685,9 +2877,9 @@ edge.  Typically the glyph height plus a small gap.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">css_to_style</span><span class="p">(</span><span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">css_to_style</span><span class="p">(</span><span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a CSS property dict to an inline style string.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">css</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
@@ -2714,16 +2906,16 @@ edge.  Typically the glyph height plus a small gap.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">icon_glyph</span><span class="p">(</span><span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MarkerGlyph</span><span class="p">:</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">icon_glyph</span><span class="p">(</span><span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MarkerGlyph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the ``&lt;i&gt;`` glyph for an icon marker.&quot;&quot;&quot;</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_ICON_CSS</span><span class="p">,</span> <span class="o">**</span><span class="n">css</span><span class="p">}</span>
     <span class="n">fs</span> <span class="o">=</span> <span class="n">px_to_int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;20px&quot;</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
@@ -2757,11 +2949,11 @@ edge.  Typically the glyph height plus a small gap.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
 <span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">marker_glyph</span><span class="p">(</span><span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MarkerGlyph</span><span class="p">:</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">marker_glyph</span><span class="p">(</span><span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MarkerGlyph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Classify *marker* and build its glyph, falling back to the ``arrow-down`` icon.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">marker</span> <span class="ow">and</span> <span class="n">classify_marker</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">text_glyph</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="n">css</span><span class="p">)</span>
@@ -2796,9 +2988,7 @@ events bubble up to the Leaflet marker even though they render outside
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
@@ -2810,7 +3000,9 @@ events bubble up to the Leaflet marker even though they render outside
 <span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
-<span class="normal">191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">marker_wrapper_open</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">marker_wrapper_open</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the flex-centred outer wrapper shared by every marker path.</span>
 
 <span class="sd">    Sized to match the DivIcon&#39;s ``icon_size`` and uses flex centring so the</span>
@@ -2824,6 +3016,119 @@ events bubble up to the Leaflet marker even though they render outside
         <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;position:relative;display:flex;align-items:center;&#39;</span>
         <span class="sa">f</span><span class="s2">&quot;justify-content:center;width:</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2">px;height:</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">px;&quot;</span>
         <span class="sa">f</span><span class="s1">&#39;overflow:visible;line-height:1;&quot;&gt;&#39;</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="markers.point_layer_js" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">markers.point_layer_js</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">point_layer_js</span><span class="p">(</span>
+    <span class="n">marker</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">marker_css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
+    <span class="n">caption_css</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">],</span>
+    <span class="n">caption_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="p">:</span> <span class="n"><span title="mapyta.config.TooltipStyle">TooltipStyle</span></span><span class="p">,</span>
+    <span class="n">popup</span><span class="p">:</span> <span class="n"><span title="mapyta.config.PopupStyle">PopupStyle</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Build the browser-side <code>onEachFeature</code> factory used by :meth:<code>Map.add_points</code>.</p>
+<p>The JavaScript counterpart of :func:<code>build_marker</code>: same wrapper, same glyph, same
+caption nested inside, assembled per point in the browser instead of per point in
+Python.  Both live here so the two renderings of one marker cannot drift apart.</p>
+<p>Every constant — the wrapper div, the glyph markup, the caption CSS — is written into
+the function once, so a feature carries only what genuinely differs between points.
+Styling through Folium's <code>style_function</code> instead would defeat that: it compiles to a
+<code>switch</code> with one case per distinct style, putting the output back at O(n) bytes.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>mapyta/markers.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">point_layer_js</span><span class="p">(</span>
+    <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">marker_css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">caption_css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">caption_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="p">:</span> <span class="n">TooltipStyle</span><span class="p">,</span>
+    <span class="n">popup</span><span class="p">:</span> <span class="n">PopupStyle</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the browser-side ``onEachFeature`` factory used by :meth:`Map.add_points`.</span>
+
+<span class="sd">    The JavaScript counterpart of :func:`build_marker`: same wrapper, same glyph, same</span>
+<span class="sd">    caption nested inside, assembled per point in the browser instead of per point in</span>
+<span class="sd">    Python.  Both live here so the two renderings of one marker cannot drift apart.</span>
+
+<span class="sd">    Every constant — the wrapper div, the glyph markup, the caption CSS — is written into</span>
+<span class="sd">    the function once, so a feature carries only what genuinely differs between points.</span>
+<span class="sd">    Styling through Folium&#39;s ``style_function`` instead would defeat that: it compiles to a</span>
+<span class="sd">    ``switch`` with one case per distinct style, putting the output back at O(n) bytes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">glyph</span> <span class="o">=</span> <span class="n">marker_glyph</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="n">marker_css</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">box_size</span>
+    <span class="n">caption_open</span> <span class="o">=</span> <span class="n">caption_open_tag</span><span class="p">(</span><span class="n">caption_css</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">caption_top</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="n">caption_class</span><span class="p">)</span>
+    <span class="n">wrapper_open</span> <span class="o">=</span> <span class="n">marker_wrapper_open</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="n">tooltip_open</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;</span><span class="si">{</span><span class="n">tooltip</span><span class="o">.</span><span class="n">style</span><span class="si">}</span><span class="s1">&quot;&gt;&#39;</span> <span class="k">if</span> <span class="n">tooltip</span><span class="o">.</span><span class="n">style</span> <span class="k">else</span> <span class="s2">&quot;&lt;div&gt;&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;function(feature, layer) {&quot;</span>
+        <span class="s2">&quot; var p = feature.properties;&quot;</span>
+        <span class="s2">&quot; var color = p.color ? &#39;;color:&#39; + p.color : &#39;&#39;;&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; var caption = p.caption ? </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">caption_open</span><span class="p">)</span><span class="si">}</span><span class="s2"> + p.caption + &#39;&lt;/div&gt;&#39; : &#39;&#39;;&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; layer.setIcon(L.divIcon(</span><span class="se">{{</span><span class="s2">html: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">wrapper_open</span><span class="p">)</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">glyph</span><span class="o">.</span><span class="n">open_html</span><span class="p">)</span><span class="si">}</span><span class="s2"> + color&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; + </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">glyph</span><span class="o">.</span><span class="n">close_html</span><span class="p">)</span><span class="si">}</span><span class="s2"> + caption + &#39;&lt;/div&gt;&#39;, iconSize: [</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">],&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; iconAnchor: [</span><span class="si">{</span><span class="n">size</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">size</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">], className: &#39;empty&#39;</span><span class="se">}}</span><span class="s2">));&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; if (p.tooltip) </span><span class="se">{{</span><span class="s2"> layer.bindTooltip(</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tooltip_open</span><span class="p">)</span><span class="si">}</span><span class="s2"> + p.tooltip + &#39;&lt;/div&gt;&#39;,&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; </span><span class="se">{{</span><span class="s2">sticky: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tooltip</span><span class="o">.</span><span class="n">sticky</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2">); </span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; if (p.popup) </span><span class="se">{{</span><span class="s2"> layer.bindPopup(p.popup, </span><span class="se">{{</span><span class="s2">maxWidth: </span><span class="si">{</span><span class="n">popup</span><span class="o">.</span><span class="n">max_width</span><span class="si">}</span><span class="se">}}</span><span class="s2">); </span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;}&quot;</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2851,16 +3156,16 @@ and malformed values so icon size estimation never raises.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">px_to_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">px_to_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a CSS length string like ``&quot;12px&quot;`` or ``&quot;12.5px&quot;`` to an int.</span>
 
 <span class="sd">    Falls back to ``default`` for non-``px`` units (``&quot;1em&quot;``, ``&quot;medium&quot;``)</span>
@@ -2896,9 +3201,7 @@ and malformed values so icon size estimation never raises.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
@@ -2906,7 +3209,9 @@ and malformed values so icon size estimation never raises.</p>
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_icon_class</span><span class="p">(</span><span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_icon_class</span><span class="p">(</span><span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve a marker icon name to its full CSS class.</span>
 
 <span class="sd">    A string containing a space is already a class list and is used as-is; a bare</span>
@@ -2941,16 +3246,16 @@ and malformed values so icon size estimation never raises.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/markers.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
-<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">text_glyph</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MarkerGlyph</span><span class="p">:</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">text_glyph</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MarkerGlyph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the ``&lt;div&gt;`` glyph for a text or emoji marker.&quot;&quot;&quot;</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_TEXT_CSS</span><span class="p">,</span> <span class="o">**</span><span class="n">css</span><span class="p">}</span>
     <span class="n">fs</span> <span class="o">=</span> <span class="n">px_to_int</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;16px&quot;</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
