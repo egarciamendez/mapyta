@@ -8,55 +8,23 @@ which is the only way to tell a filter that runs from one that merely rendered.
 The module skips when selenium or Chrome is missing.
 """
 
-import time
-from collections.abc import Generator
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import pytest
 from shapely.geometry import Point
 
 from mapyta import ClusterStyle, Map, MapConfig
-from mapyta.export import _detect_chrome
+from tests.browser import COUNT_MARKERS, eventually, open_map, requires_chrome
 
 if TYPE_CHECKING:
     from selenium.webdriver.remote.webdriver import WebDriver
 
-webdriver = pytest.importorskip("selenium.webdriver", reason="browser tests need selenium (the 'export' extra)")
+pytestmark = requires_chrome
 
-pytestmark = pytest.mark.skipif(not _detect_chrome(), reason="browser tests need Chrome")
-
-COUNT_MARKERS = "return document.querySelectorAll('.leaflet-marker-icon').length;"
 COUNT_BUBBLED = (
     "return Array.from(document.querySelectorAll('.marker-cluster')).reduce(function(total, el) { return total + Number(el.textContent); }, 0);"
 )
 FILTER_BOX = "document.querySelector('.leaflet-control input[type=text]')"
-
-
-@pytest.fixture(scope="session")
-def browser() -> Generator["WebDriver", None, None]:
-    """A headless Chrome session shared by every scenario in this module."""
-    options = webdriver.ChromeOptions()
-    for flag in ("--headless=new", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1200,900"):
-        options.add_argument(flag)
-    try:
-        driver = webdriver.Chrome(options=options)
-    except Exception as exc:  # a browser that will not start is a skip, not a mapyta failure
-        pytest.skip(f"could not start Chrome: {exc}")
-    yield driver
-    driver.quit()
-
-
-def eventually(browser: "WebDriver", script: str, expected: object, timeout: float = 15.0) -> None:
-    """Poll *script* until it returns *expected*, reporting the last value seen on failure."""
-    deadline = time.monotonic() + timeout
-    actual = None
-    while time.monotonic() < deadline:
-        actual = browser.execute_script(script)
-        if actual == expected:
-            return
-        time.sleep(0.05)
-    pytest.fail(f"expected {expected!r}, last saw {actual!r}")
 
 
 def type_into_filter(browser: "WebDriver", text: str) -> None:
@@ -64,10 +32,9 @@ def type_into_filter(browser: "WebDriver", text: str) -> None:
     browser.execute_script(f"var box = {FILTER_BOX}; box.value = {text!r}; box.dispatchEvent(new Event('input'));")
 
 
-def open_map(browser: "WebDriver", tmp_path: Path, m: Map, name: str) -> None:
-    """Render *m* to *name* under *tmp_path* and load it in *browser*."""
-    browser.get(Path(m.to_html(tmp_path / name)).resolve().as_uri())
-    eventually(browser, f"return {FILTER_BOX} !== null;", True)
+def open_filter_map(browser: "WebDriver", tmp_path: Path, m: Map, name: str) -> None:
+    """Open *m* and wait for the filter box, which every scenario needs before it can type."""
+    open_map(browser, tmp_path, m, name, ready=f"return {FILTER_BOX} !== null;")
 
 
 def _points(n: int) -> list[Point]:
@@ -93,7 +60,7 @@ class TestFilterControlInTheBrowser:
         m.add_points(_points(6), marker="triangle-bottom", captions=captions).add_filter_control()
 
         # Act - When
-        open_map(browser, tmp_path, m, "filter.html")
+        open_filter_map(browser, tmp_path, m, "filter.html")
         eventually(browser, COUNT_MARKERS, 6)
         type_into_filter(browser, "cpt-004")
 
@@ -124,7 +91,7 @@ class TestFilterControlInTheBrowser:
         ).add_filter_control()
 
         # Act - When
-        open_map(browser, tmp_path, m, "search_texts.html")
+        open_filter_map(browser, tmp_path, m, "search_texts.html")
         eventually(browser, COUNT_MARKERS, 4)
         type_into_filter(browser, "zuidasdok")
 
@@ -153,7 +120,7 @@ class TestFilterControlInTheBrowser:
         ).add_filter_control()
 
         # Act - When
-        open_map(browser, tmp_path, m, "clustered_filter.html")
+        open_filter_map(browser, tmp_path, m, "clustered_filter.html")
         eventually(browser, COUNT_BUBBLED, 10)
         type_into_filter(browser, "Zuidasdok")
 

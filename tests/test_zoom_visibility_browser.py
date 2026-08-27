@@ -9,61 +9,24 @@ test instead of passing it by accident.
 The module skips when selenium or Chrome is missing.
 """
 
-import time
-from collections.abc import Generator
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import pytest
 from shapely.geometry import Point
 
 from mapyta import ClusterStyle, Map, MapConfig
-from mapyta.export import _detect_chrome
+from tests.browser import COUNT_MARKERS, eventually, open_map, requires_chrome
 
 if TYPE_CHECKING:
     from selenium.webdriver.remote.webdriver import WebDriver
 
-webdriver = pytest.importorskip("selenium.webdriver", reason="browser tests need selenium (the 'export' extra)")
-
-pytestmark = pytest.mark.skipif(not _detect_chrome(), reason="browser tests need Chrome")
+pytestmark = requires_chrome
 
 MAP_VAR = "window[document.querySelector('.folium-map').id]"
-COUNT_MARKERS = "return document.querySelectorAll('.leaflet-marker-icon').length;"
 COUNT_CAPTIONS = "return Array.from(document.querySelectorAll('[id^=caption_]')).filter(function(e) { return e.style.display !== 'none'; }).length;"
 OVERLAY_BOX = "document.querySelector('.leaflet-control-layers-overlays input[type=checkbox]')"
 READ_CHECKBOX = f"return {OVERLAY_BOX}.checked;"
 CLICK_CHECKBOX = f"{OVERLAY_BOX}.click();"
-
-
-@pytest.fixture(scope="session")
-def browser() -> Generator["WebDriver", None, None]:
-    """A headless Chrome session shared by every scenario in this module."""
-    options = webdriver.ChromeOptions()
-    for flag in ("--headless=new", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1200,900"):
-        options.add_argument(flag)
-    try:
-        driver = webdriver.Chrome(options=options)
-    except Exception as exc:  # a browser that will not start is a skip, not a mapyta failure
-        pytest.skip(f"could not start Chrome: {exc}")
-    yield driver
-    driver.quit()
-
-
-def open_map(browser: "WebDriver", tmp_path: Path, m: Map, name: str) -> None:
-    """Render *m* to *name* under *tmp_path* and load it in *browser*."""
-    browser.get(Path(m.to_html(tmp_path / name)).resolve().as_uri())
-
-
-def eventually(browser: "WebDriver", script: str, expected: object, timeout: float = 15.0) -> None:
-    """Poll *script* until it returns *expected*, reporting the last value seen on failure."""
-    deadline = time.monotonic() + timeout
-    actual = None
-    while time.monotonic() < deadline:
-        actual = browser.execute_script(script)
-        if actual == expected:
-            return
-        time.sleep(0.05)
-    pytest.fail(f"expected {expected!r}, last saw {actual!r}")
 
 
 def zoom_to(browser: "WebDriver", zoom: int) -> None:
@@ -256,11 +219,19 @@ FIRST_PAINT_TIMEOUT = 30.0
 scenario also pays for Chrome's cold start; every later wait keeps the default."""
 
 
+def grid_points() -> list[Point]:
+    """Four hundred points around Utrecht, spaced so they bubble when zoomed out and separate when in.
+
+    The spacing is load-bearing — it decides whether a scenario sees markers cluster or sees
+    them culled off-screen — so every scenario in this module reads it from here.
+    """
+    return [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
+
+
 def clustered_map(**cluster_kwargs: object) -> Map:
     """Four hundred points around Utrecht as one clustered bulk layer."""
-    points = [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
     m = Map(center=(52.004, 5.004), config=MapConfig(zoom_start=17))
-    return m.add_points(points, marker="triangle-bottom", name="Sonderingen", cluster=ClusterStyle(**cluster_kwargs))  # ty: ignore[invalid-argument-type]
+    return m.add_points(grid_points(), marker="triangle-bottom", name="Sonderingen", cluster=ClusterStyle(**cluster_kwargs))  # ty: ignore[invalid-argument-type]
 
 
 class TestClusteredLayerInBrowser:
@@ -290,7 +261,7 @@ class TestClusteredLayerInBrowser:
         When: The map zooms out
         Then: All four hundred markers stay in the DOM, which is the cost clustering removes
         """
-        points = [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
+        points = grid_points()
         m = Map(center=(52.004, 5.004), config=MapConfig(zoom_start=17)).add_points(points, marker="triangle-bottom")
         open_map(browser, tmp_path, m, "unclustered.html")
         eventually(browser, COUNT_MARKERS, 400, timeout=FIRST_PAINT_TIMEOUT)
@@ -335,7 +306,7 @@ class TestClusteredLayerInBrowser:
         When: The map drops below that level
         Then: Neither markers nor bubbles remain, and both come back on the way up
         """
-        points = [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
+        points = grid_points()
         m = Map(center=(52.004, 5.004), config=MapConfig(zoom_start=14))
         m.add_points(points, marker="triangle-bottom", min_zoom=12, cluster=ClusterStyle())
         open_map(browser, tmp_path, m, "clustered_min_zoom.html")

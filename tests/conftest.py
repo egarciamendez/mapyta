@@ -1,13 +1,16 @@
 """Shared pytest fixtures and configuration for mapyta tests."""
 
 from collections.abc import Generator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from shapely.geometry import Point
 
 from mapyta import Map
+
+if TYPE_CHECKING:
+    from selenium.webdriver.remote.webdriver import WebDriver
 
 
 @pytest.fixture
@@ -68,6 +71,21 @@ def map_with_point() -> Map:
     m = Map(title="Export")
     m.add_point(Point(4.9, 52.37), marker="📍")
     return m
+
+
+@pytest.fixture(scope="session")
+def browser() -> Generator["WebDriver", None, None]:
+    """A headless Chrome session shared by every browser-driven scenario in the suite."""
+    webdriver = pytest.importorskip("selenium.webdriver", reason="browser tests need selenium (the 'export' extra)")
+    options = webdriver.ChromeOptions()
+    for flag in ("--headless=new", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1200,900"):
+        options.add_argument(flag)
+    try:
+        driver = webdriver.Chrome(options=options)
+    except Exception as exc:  # a browser that will not start is a skip, not a mapyta failure
+        pytest.skip(f"could not start Chrome: {exc}")
+    yield driver
+    driver.quit()
 
 
 @pytest.fixture
