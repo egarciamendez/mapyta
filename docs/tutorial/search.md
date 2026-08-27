@@ -183,6 +183,55 @@ print(m.to_html())  # markdown-exec: hide
 
 Type `"park"` in the search box, a dropdown lists all five matches. Select one to center the map to it.
 
+## Filtering instead of finding
+
+The search control finds one feature and flies to it, leaving the rest of the map where it was. When the question is
+not *where is this one* but *which of these belong together*, use `add_filter_control()` instead: it takes the map down
+to the markers matching what you type, and brings them back when you clear the box.
+
+It filters the bulk layers of [`add_points()`](layers.md), which is where the scale that makes filtering worth having
+comes from.
+
+```python exec="true" html="true" source="tabbed-right"
+from shapely.geometry import Point
+from mapyta import Map
+
+names = ["CPT-001", "CPT-002", "CPT-003", "CPT-004", "CPT-005", "CPT-006"]
+projects = ["Zuidasdok", "Zuidasdok", "Zuidasdok", "Afsluitdijk", "Afsluitdijk", "Afsluitdijk"]
+points = [Point(135_000 + i * 900, 455_000 + (i % 2) * 700) for i in range(6)]
+
+m = Map(title="Soundings by project")
+m.add_points(
+    points,
+    marker="triangle-bottom",
+    captions=names,
+    search_texts=[f"{name} {project}" for name, project in zip(names, projects, strict=True)],
+)
+m.add_filter_control(placeholder="Sounding or project...")
+
+print(m.to_html())  # markdown-exec: hide
+```
+
+Type `"zuidasdok"` and three markers remain, though no caption on the map says so. That is what `search_texts` is for:
+a point is matched on it rather than on what it displays, so it can be reached by the project it belongs to, a client
+reference, or any other name the map has no room for. A point without one is matched on its caption, which is why the
+box works with no extra arguments at all.
+
+Matching is case-insensitive and substring-based, so a partial name narrows the map as you type.
+
+!!! note
+
+    A cluster bubble recounts to what is left of it, so the numbers on the map keep agreeing with the filter rather
+    than with the underlying data.
+
+### Filter parameters
+
+| Parameter     | Default       | Description                                                                   |
+|---------------|---------------|-------------------------------------------------------------------------------|
+| `placeholder` | `"Filter..."` | Placeholder text in the empty box.                                            |
+| `position`    | `"topleft"`   | Control position: `"topleft"`, `"topright"`, `"bottomleft"`, `"bottomright"`. |
+| `label`       | `None`        | Optional caption rendered above the box.                                      |
+
 ## Parameters
 
 | Parameter       | Default       | Description                                                                   |

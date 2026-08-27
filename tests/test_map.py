@@ -6345,7 +6345,7 @@ class TestAddPointsBulkLayer:
         assert m.to_geojson()["features"] == []
         assert m._bounds == []
 
-    @pytest.mark.parametrize("field", ["captions", "colors", "tooltips", "popups"])
+    @pytest.mark.parametrize("field", ["captions", "colors", "tooltips", "popups", "search_texts"])
     def test_mismatched_length_raises(self, field: str) -> None:
         """
         Scenario: A per-point sequence of the wrong length is rejected.
@@ -6958,3 +6958,213 @@ class TestAddPointsClustering:
 
         # Assert - Then
         assert clustered.to_geojson() == plain.to_geojson()
+
+
+# ===================================================================
+# Scenarios for the marker filter.
+# ===================================================================
+
+
+def _filter_script(html: str) -> str:
+    """Return the injected filter script, or an empty string when there is none."""
+    match = re.search(r"<script>\s*\ndocument\.addEventListener\('DOMContentLoaded'.*?_mfPairs.*?</script>", html, re.DOTALL)
+    return match.group(0) if match else ""
+
+
+class TestFilterControl:
+    """Scenarios for add_filter_control()."""
+
+    def test_returns_self_for_chaining(self) -> None:
+        """
+        Scenario: The filter control joins a chain of add_* calls.
+
+        Given: A map with a bulk point layer
+        When: add_filter_control is called
+        Then: The map itself comes back
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        result = m.add_points(_rd_points(3)).add_filter_control()
+
+        # Assert - Then
+        assert result is m
+
+    def test_no_points_means_no_script(self) -> None:
+        """
+        Scenario: A map with nothing to filter gets no filter.
+
+        Given: A map holding a single marker and no bulk layer
+        When: add_filter_control is called and the map is rendered
+        Then: No filter script is emitted, rather than a box that answers nothing
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_point(Point(135_000, 455_000), caption="CPT-001")
+
+        # Act - When
+        html = m.add_filter_control().get_standalone_html()
+
+        # Assert - Then
+        assert _filter_script(html) == ""
+
+    def test_filters_the_cluster_that_holds_the_markers(self) -> None:
+        """
+        Scenario: A clustered layer is filtered through its cluster.
+
+        Given: A clustered bulk layer
+        When: The map is rendered with a filter control
+        Then: The script reads the markers from the GeoJSON layer and puts them back into the cluster,
+              which is what holds them once clustering is on
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), cluster=ClusterStyle()).add_filter_control()
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        pairs = re.search(r"var _mfPairs = (\[\[.*?\]\]);", script)
+        assert pairs is not None
+        markers, container = json.loads(pairs.group(1))[0]
+        assert markers.startswith("geo_json_")
+        assert container.startswith("marker_cluster_")
+
+    def test_unclustered_layer_filters_itself(self) -> None:
+        """
+        Scenario: Without a cluster the layer is its own container.
+
+        Given: A bulk layer drawn without clustering
+        When: The map is rendered with a filter control
+        Then: Markers are read from and returned to the same layer
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10)).add_filter_control()
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        pairs = re.search(r"var _mfPairs = (\[\[.*?\]\]);", script)
+        assert pairs is not None
+        markers, container = json.loads(pairs.group(1))[0]
+        assert markers == container
+
+    def test_search_texts_reach_the_features(self) -> None:
+        """
+        Scenario: A point is findable by something the map never draws.
+
+        Given: Points whose search text names a project the caption does not
+        When: The map is rendered
+        Then: The text rides along as a property, and stays out of the drawn caption
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(2), captions=["CPT-001", "CPT-002"], search_texts=["CPT-001 Zuidasdok", "CPT-002 Zuidasdok"])
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert '"search": "CPT-001 Zuidasdok"' in html
+        # No filter control here, so the icon factory is the only thing that could read the property.
+        assert "p.search" not in html, "the search text is matched against, never drawn"
+
+    def test_a_point_without_a_search_text_falls_back_to_its_caption(self) -> None:
+        """
+        Scenario: The common case needs no extra argument.
+
+        Given: A bulk layer with captions and no search texts
+        When: The map is rendered with a filter control
+        Then: The script matches on the caption, so the box works out of the box
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(2), captions=["CPT-001", "CPT-002"]).add_filter_control()
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        assert "p.search || p.caption" in script
+
+    def test_placeholder_and_label_reach_the_control(self) -> None:
+        """
+        Scenario: The box says what it matches on.
+
+        Given: A filter control with a placeholder and a label
+        When: The map is rendered
+        Then: Both are written into the control
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(3)).add_filter_control(placeholder="Zoek sondering", label="Filter")
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        assert '"Zoek sondering"' in script
+        assert '"Filter"' in script
+
+    def test_placeholder_cannot_close_the_script_block(self) -> None:
+        """
+        Scenario: A placeholder is text, not markup.
+
+        Given: A placeholder containing a closing script tag
+        When: The map is rendered
+        Then: The tag is escaped, leaving the script block intact
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(3)).add_filter_control(placeholder="</script><img src=x>")
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        assert "</script><img" not in script
+        assert "\u003c/script\u003e" in script
+
+    def test_survives_being_added_after_the_layer_control(self) -> None:
+        """
+        Scenario: The filter can be added last, which is where a caller reaches for it.
+
+        Given: A layer control added before the filter control
+        When: The map is rendered
+        Then: The filter resolves its layers through window at DOMContentLoaded, so it never
+              leaves the layer control pointing at a variable declared below it
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(5), name="Sonderingen", cluster=ClusterStyle())
+        m.add_layer_control()
+        m.add_filter_control()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert list(_layer_control_overlays(html)) == ["Sonderingen"]
+        assert "window[pair[0]]" in _filter_script(html)
+
+    def test_a_second_render_does_not_repeat_the_control(self) -> None:
+        """
+        Scenario: Rendering twice draws one box.
+
+        Given: A map with a filter control
+        When: It is rendered twice
+        Then: The script is injected once, since a second box would filter the first one's leftovers
+        """
+        # Arrange - Given
+        m = Map().add_points(_rd_points(3)).add_filter_control()
+
+        # Act - When
+        m.get_standalone_html()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert html.count("var _mfPairs") == 1

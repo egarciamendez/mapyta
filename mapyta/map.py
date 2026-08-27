@@ -203,6 +203,7 @@ def _point_properties(
     caption: str | RawHTML | None,
     tooltip: str | RawHTML | None,
     popup: str | RawHTML | None,
+    search: str | None = None,
 ) -> dict[str, Any]:
     """Collect one point's GeoJSON properties for :meth:`Map.add_points`, omitting what is unset.
 
@@ -213,6 +214,9 @@ def _point_properties(
     HTML string the browser parses, so both are escaped here: an unescaped colour such as
     ``red" onmouseover="..."`` would close the attribute and add an event handler.
     A ``RawHTML`` caption opts back into markup, as it does on :meth:`Map.add_point`.
+
+    ``search`` is never rendered, only compared against what the reader types, so it is
+    kept as written.
     """
     props: dict[str, Any] = {}
     if color is not None:
@@ -223,6 +227,8 @@ def _point_properties(
         props["tooltip"] = render_text(tooltip)
     if popup:
         props["popup"] = render_text(popup)
+    if search:
+        props["search"] = search
     return props
 
 
@@ -323,6 +329,9 @@ class Map:
         self._export_button_injected: bool = False
         self._layer_dropdown_config: dict[str, Any] | None = None
         self._layer_dropdown_injected: bool = False
+        self._filterable_layers: list[dict[str, str]] = []
+        self._filter_control_config: dict[str, Any] | None = None
+        self._filter_control_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -1127,6 +1136,7 @@ class Map:
         min_zoom: int | None = None,
         min_zoom_caption: int | None = None,
         cluster: ClusterStyle | dict[str, Any] | None = None,
+        search_texts: Sequence[str | None] | None = None,
     ) -> Self:
         """Add many markers as a single GeoJSON layer.
 
@@ -1191,6 +1201,11 @@ class Map:
             every marker at every zoom, which is the readable choice up to a few thousand
             points and the unresponsive one beyond that.  The bubble carries the layer name
             in the layer control, and ``min_zoom`` hides bubble and markers alike.
+        search_texts : Sequence[str | None] | None
+            Per-point text for :meth:`add_filter_control` to match on, and the reason a
+            point can be found by something the map never shows — the project it belongs
+            to, a client reference, the names inside its popup.  Never rendered.  Points
+            without one are matched on their caption instead.
 
         Returns
         -------
@@ -1199,8 +1214,8 @@ class Map:
         Raises
         ------
         ValueError
-            If ``captions``, ``colors``, ``tooltips`` or ``popups`` is given with a
-            length other than ``len(points)``.
+            If ``captions``, ``colors``, ``tooltips``, ``popups`` or ``search_texts`` is
+            given with a length other than ``len(points)``.
 
         Examples
         --------
@@ -1213,7 +1228,13 @@ class Map:
         """
         if not points:
             return self
-        for label, values in (("captions", captions), ("colors", colors), ("tooltips", tooltips), ("popups", popups)):
+        for label, values in (
+            ("captions", captions),
+            ("colors", colors),
+            ("tooltips", tooltips),
+            ("popups", popups),
+            ("search_texts", search_texts),
+        ):
             if values is not None and len(values) != len(points):
                 raise ValueError(f"{label} has {len(values)} entries but points has {len(points)}")
 
@@ -1231,7 +1252,13 @@ class Map:
             tooltip = tooltips[i] if tooltips is not None else None
             popup = popups[i] if popups is not None else None
 
-            props = _point_properties(colors[i] if colors is not None else None, caption, tooltip, popup)
+            props = _point_properties(
+                colors[i] if colors is not None else None,
+                caption,
+                tooltip,
+                popup,
+                search_texts[i] if search_texts is not None else None,
+            )
             features.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": props})
             # Build the tracked geometry directly rather than round-tripping through a
             # shapely Point, which would re-derive an identical dict and dominate a bulk call.
@@ -1273,6 +1300,9 @@ class Map:
         )
         group = self._point_cluster(resolve_style(cluster, ClusterStyle) or ClusterStyle(), name) if cluster is not None else None
         layer.add_to(group or self._target())
+        # The markers stay children of the GeoJson layer even once a cluster holds them, so the
+        # filter reads them from the one and puts them back into the other.
+        self._filterable_layers.append({"markers": layer.get_name(), "container": (group or layer).get_name()})
 
         if min_zoom is not None and min_zoom > 0:
             # The cluster is what the map holds; hiding the layer inside it would leave an
@@ -3165,6 +3195,125 @@ class Map:
         folium.plugins.Search(**search_kwargs).add_to(self._map)
         return self
 
+    def add_filter_control(
+        self,
+        placeholder: str = "Filter...",
+        position: str = "topleft",
+        label: str | None = None,
+    ) -> Self:
+        """Add a box that hides every marker not matching what the reader types.
+
+        Where :meth:`add_search_control` finds one feature and flies to it, leaving the map
+        as it was, this takes the map down to the markers that match: the rest are removed,
+        and a cluster bubble recounts to what is left of it.  That is the difference between
+        looking a sounding up by name and asking which of a thousand belong to one project.
+
+        Only the bulk layers of :meth:`add_points` are filtered.  A point is matched on its
+        ``search_texts`` entry, or on its caption where it has none, case-insensitively and
+        anywhere in the text.  Emptying the box brings every marker back.
+
+        Filtering does not survive a re-render into a second map, since the markers it hides
+        are hidden in the browser and nothing on the Python side knows a filter ran.
+
+        Parameters
+        ----------
+        placeholder : str
+            Text shown in the empty box.
+        position : str
+            Leaflet control position: ``"topleft"``, ``"topright"``, ``"bottomleft"``,
+            or ``"bottomright"``.
+        label : str | None
+            Optional caption rendered above the box.
+
+        Returns
+        -------
+        Map
+        """
+        self._filter_control_config = {"placeholder": placeholder, "position": position, "label": label}
+        self._filter_control_injected = False
+        return self
+
+    def _inject_filter_control(self) -> None:
+        """Inject the marker filter as a Leaflet control.
+
+        Written as a ``DOMContentLoaded`` script rather than a Folium child, so it resolves
+        the layers through ``window`` once every one of them is declared.  That is what lets
+        :meth:`add_filter_control` be called after the layer control, which as a Folium child
+        it could not: Folium emits children in the order they were added, and the layer
+        control would then reference a layer declared below it.
+        """
+        cfg = self._filter_control_config
+        assert cfg is not None
+        if not self._filterable_layers:
+            return
+        pairs = self._json_for_script([[layer["markers"], layer["container"]] for layer in self._filterable_layers])
+        map_var = self._map.get_name()
+        placeholder_json = self._json_for_script(cfg["placeholder"])
+        position_json = self._json_for_script(cfg["position"])
+        label = cfg["label"]
+        label_js = ""
+        if label:
+            label_js = (
+                "        var lbl = L.DomUtil.create('div', '', div);\n"
+                f"        lbl.textContent = {self._json_for_script(label)};\n"
+                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
+            )
+
+        script = (
+            "<script>\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{map_var}'];\n"
+            "    if (!map) return;\n"
+            f"    var _mfPairs = {pairs};\n"
+            "    var layers = _mfPairs.map(function(pair) {\n"
+            "        var markers = window[pair[0]], container = window[pair[1]];\n"
+            "        if (!markers || !container) { return null; }\n"
+            # Read once: the container is emptied on every keystroke, so asking it afterwards
+            # would only ever return what the previous filter left behind.
+            "        var all = markers.getLayers();\n"
+            "        return {container: container, all: all, terms: all.map(function(m) {\n"
+            "            var p = (m.feature && m.feature.properties) || {};\n"
+            "            return String(p.search || p.caption || '').toLowerCase();\n"
+            "        })};\n"
+            "    }).filter(Boolean);\n"
+            "    if (!layers.length) return;\n"
+            "    function apply(query) {\n"
+            "        var q = query.trim().toLowerCase();\n"
+            "        layers.forEach(function(l) {\n"
+            "            var keep = q ? l.all.filter(function(_, i) { return l.terms[i].indexOf(q) !== -1; }) : l.all;\n"
+            "            l.container.clearLayers();\n"
+            # A cluster takes the whole batch at once, which is what keeps a keystroke cheap at
+            # thousands of markers; a plain layer has no such method and is filled one by one.
+            "            if (l.container.addLayers) { l.container.addLayers(keep); }\n"
+            "            else { keep.forEach(function(m) { l.container.addLayer(m); }); }\n"
+            "        });\n"
+            # Re-adding a marker rebuilds its icon from scratch, losing the caption visibility the
+            # zoom script set; that script listens for zoomend, so this hands the job back to it.
+            "        map.fire('zoomend');\n"
+            "    }\n"
+            f"    var filterControl = L.control({{position: {position_json}}});\n"
+            "    filterControl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
+            f"{label_js}"
+            "        var input = L.DomUtil.create('input', '', div);\n"
+            "        input.type = 'text';\n"
+            f"        input.placeholder = {placeholder_json};\n"
+            "        input.style.cssText = 'border:none;background:#fff;font-size:13px;width:150px;outline:none;';\n"
+            "        input.oninput = function() { apply(this.value); };\n"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        L.DomEvent.disableScrollPropagation(div);\n"
+            # The map keeps its own keyboard shortcuts on the container this box sits in, so
+            # arrow keys would pan the map away from under whoever is typing.
+            "        L.DomEvent.on(input, 'keydown keypress keyup', L.DomEvent.stopPropagation);\n"
+            "        return div;\n"
+            "    };\n"
+            "    filterControl.addTo(map);\n"
+            "});\n"
+            "</script>\n"
+        )
+        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
+
     def add_tile_layer(
         self,
         name: str,
@@ -3377,6 +3526,9 @@ class Map:
         if self._layer_dropdown_config and not self._layer_dropdown_injected:
             self._inject_layer_dropdown()
             self._layer_dropdown_injected = True
+        if self._filter_control_config and not self._filter_control_injected:
+            self._inject_filter_control()
+            self._filter_control_injected = True
         if self._export_button_config and not self._export_button_injected:
             self._inject_export_button()
             self._export_button_injected = True
