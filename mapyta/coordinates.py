@@ -63,8 +63,10 @@ def detect_and_transform_coords(
             return [(c[0], c[1]) for c in coords]
 
     if source_crs and source_crs != WGS84:
-        transformer = _transformer(source_crs)
-        return [transformer.transform(c[0], c[1]) for c in coords]
+        # One call for the whole sequence: pyproj loops in C, where a call per point pays
+        # Python-level overhead that dominates on the bulk sizes ``Map.add_points`` takes.
+        lons, lats = _transformer(source_crs).transform([c[0] for c in coords], [c[1] for c in coords])
+        return list(zip(lons, lats, strict=True))
 
     return [(c[0], c[1]) for c in coords]
 

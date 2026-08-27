@@ -1,9 +1,11 @@
 """Marker building utilities."""
 
+import json
 from typing import Literal, NamedTuple
 
 import folium
 
+from mapyta.config import PopupStyle, TooltipStyle
 from mapyta.markdown import RawHTML, escape_text
 
 # Default CSS for marker styles
@@ -191,23 +193,89 @@ def marker_wrapper_open(width: int, height: int) -> str:
     )
 
 
-def _absolute_caption_html(text: str | RawHTML, css: dict[str, str], top_px: int, element_id: str | None = None) -> str:
-    """Build a complete caption ``<div>``; see :func:`caption_open_tag`.
+def _build_marker(glyph: MarkerGlyph, caption: str | RawHTML | None, caption_css: dict[str, str], caption_id: str | None) -> folium.DivIcon:
+    """Assemble a glyph and its optional caption into a square DivIcon.
 
     The caption goes into the DivIcon's HTML, so a plain string is escaped: a label taken
     from a data source would otherwise become active markup. ``RawHTML`` opts back in.
     """
-    return f"{caption_open_tag(css, top_px, element_id=element_id)}{escape_text(text)}</div>"
-
-
-def _build_marker(glyph: MarkerGlyph, caption: str | RawHTML | None, caption_css: dict[str, str], caption_id: str | None) -> folium.DivIcon:
-    """Assemble a glyph and its optional caption into a square DivIcon."""
-    caption_html = _absolute_caption_html(caption, caption_css, top_px=glyph.caption_top, element_id=caption_id) if caption else ""
+    caption_html = f"{caption_open_tag(caption_css, glyph.caption_top, element_id=caption_id)}{escape_text(caption)}</div>" if caption else ""
     size = glyph.box_size
     return folium.DivIcon(
         html=f"{marker_wrapper_open(size, size)}{glyph.open_html}{glyph.close_html}{caption_html}</div>",
         icon_size=(size, size),
         icon_anchor=(size // 2, size // 2),
+    )
+
+
+def build_marker(
+    marker: str | None,
+    css: dict[str, str],
+    caption: str | RawHTML | None,
+    caption_css: dict[str, str],
+    caption_id: str | None = None,
+) -> folium.DivIcon:
+    """Build the DivIcon for *marker*, classified as icon or text/emoji by :func:`marker_glyph`.
+
+    Parameters
+    ----------
+    marker : str | None
+        Icon name, full CSS class string, or emoji/text.  ``None`` falls back to the
+        default ``arrow-down`` icon.
+    css : dict[str, str]
+        CSS property overrides for the glyph element.
+    caption : str | RawHTML | None
+        Optional caption text below the glyph.  Escaped as on :func:`build_icon_marker`.
+    caption_css : dict[str, str]
+        CSS property overrides for the caption.
+    caption_id : str | None
+        Optional DOM ``id`` on the caption ``<div>``, used by zoom-dependent
+        visibility JS to target the caption independently of its marker.
+
+    Returns
+    -------
+    folium.DivIcon
+    """
+    return _build_marker(marker_glyph(marker, css), caption, caption_css, caption_id)
+
+
+def point_layer_js(
+    marker: str | None,
+    marker_css: dict[str, str],
+    caption_css: dict[str, str],
+    caption_class: str | None,
+    tooltip: TooltipStyle,
+    popup: PopupStyle,
+) -> str:
+    """Build the browser-side ``onEachFeature`` factory used by :meth:`Map.add_points`.
+
+    The JavaScript counterpart of :func:`build_marker`: same wrapper, same glyph, same
+    caption nested inside, assembled per point in the browser instead of per point in
+    Python.  Both live here so the two renderings of one marker cannot drift apart.
+
+    Every constant — the wrapper div, the glyph markup, the caption CSS — is written into
+    the function once, so a feature carries only what genuinely differs between points.
+    Styling through Folium's ``style_function`` instead would defeat that: it compiles to a
+    ``switch`` with one case per distinct style, putting the output back at O(n) bytes.
+    """
+    glyph = marker_glyph(marker, marker_css)
+    size = glyph.box_size
+    caption_open = caption_open_tag(caption_css, glyph.caption_top, class_name=caption_class)
+    wrapper_open = marker_wrapper_open(size, size)
+    tooltip_open = f'<div style="{tooltip.style}">' if tooltip.style else "<div>"
+
+    return (
+        "function(feature, layer) {"
+        " var p = feature.properties;"
+        " var color = p.color ? ';color:' + p.color : '';"
+        f" var caption = p.caption ? {json.dumps(caption_open)} + p.caption + '</div>' : '';"
+        f" layer.setIcon(L.divIcon({{html: {json.dumps(wrapper_open)} + {json.dumps(glyph.open_html)} + color"
+        f" + {json.dumps(glyph.close_html)} + caption + '</div>', iconSize: [{size}, {size}],"
+        f" iconAnchor: [{size // 2}, {size // 2}], className: 'empty'}}));"
+        f" if (p.tooltip) {{ layer.bindTooltip({json.dumps(tooltip_open)} + p.tooltip + '</div>',"
+        f" {{sticky: {json.dumps(tooltip.sticky)}}}); }}"
+        f" if (p.popup) {{ layer.bindPopup(p.popup, {{maxWidth: {popup.max_width}}}); }}"
+        "}"
     )
 
 

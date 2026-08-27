@@ -6600,7 +6600,7 @@ class TestAddPointsBulkLayer:
 
         # Act - When
         m.add_points(_rd_points(2), tooltips=["**bold**", None], popups=[None, RawHTML("<b>raw</b>")])
-        props = _point_properties(None, None, "**bold**", RawHTML("<b>raw</b>"))
+        props = _point_properties(None, None, "**bold**", RawHTML("<b>raw</b>"), None)
         html = m.get_standalone_html()
 
         # Assert - Then
@@ -6689,7 +6689,7 @@ class TestAddPointsBulkLayer:
         html = m.get_standalone_html()
 
         # Assert - Then
-        assert _point_properties('red" onmouseover="alert(1)', None, None, None)["color"] == "red&quot; onmouseover=&quot;alert(1)"
+        assert _point_properties('red" onmouseover="alert(1)', None, None, None, None)["color"] == "red&quot; onmouseover=&quot;alert(1)"
         assert 'red" onmouseover=' not in html, "an unescaped quote would close the style attribute the colour is spliced into"
 
     def test_caption_is_shown_literally(self) -> None:
@@ -6708,7 +6708,7 @@ class TestAddPointsBulkLayer:
         html = m.get_standalone_html()
 
         # Assert - Then
-        assert _point_properties(None, "<script>alert(1)</script>", None, None)["caption"] == "&lt;script&gt;alert(1)&lt;/script&gt;"
+        assert _point_properties(None, "<script>alert(1)</script>", None, None, None)["caption"] == "&lt;script&gt;alert(1)&lt;/script&gt;"
         assert "<script>alert(1)</script>" not in html, "a caption must not become active markup"
         assert m.to_geojson()["features"][0]["properties"]["caption"] == "<script>alert(1)</script>", "the export keeps the caption as given"
 
@@ -6727,7 +6727,7 @@ class TestAddPointsBulkLayer:
         m.add_points(_rd_points(1), captions=[RawHTML("R<sub>c;cal</sub>")])
 
         # Assert - Then
-        assert _point_properties(None, RawHTML("R<sub>c;cal</sub>"), None, None)["caption"] == "R<sub>c;cal</sub>"
+        assert _point_properties(None, RawHTML("R<sub>c;cal</sub>"), None, None, None)["caption"] == "R<sub>c;cal</sub>"
         assert m.to_geojson()["features"][0]["properties"]["caption"] == "R<sub>c;cal</sub>", "the export keeps the caption as given"
 
 

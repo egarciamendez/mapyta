@@ -3,13 +3,25 @@
 import re
 from html import escape
 
+# Compiled once at import: :meth:`Map.add_points` renders one tooltip and one popup per
+# point, so re's pattern-cache lookup on every substitution shows up in a bulk call.
+_SAFE_SCHEME = re.compile(r"^(https?://|mailto:)", re.IGNORECASE)
+_H4 = re.compile(r"^### (.+)$", re.MULTILINE)
+_H3 = re.compile(r"^## (.+)$", re.MULTILINE)
+_H2 = re.compile(r"^# (.+)$", re.MULTILINE)
+_BOLD = re.compile(r"\*\*(.+?)\*\*")
+_ITALIC = re.compile(r"\*(.+?)\*")
+_CODE = re.compile(r"`(.+?)`")
+_LINK = re.compile(r"\[(.+?)\]\((.+?)\)")
+_LIST_ITEM = re.compile(r"^- (.+)$", re.MULTILINE)
+_LIST_BLOCK = re.compile(r"((?:<li>.*?</li>\s*)+)", re.DOTALL)
+_LOOSE_NEWLINE = re.compile(r"(?<!>)\n(?!<)")
+
 
 def sanitize_href(url: str) -> str:
     """Allow only safe URL schemes (http, https, mailto). Returns ``#`` otherwise."""
     stripped = url.strip()
-    if re.match(r"^https?://", stripped, re.IGNORECASE) or re.match(r"^mailto:", stripped, re.IGNORECASE):
-        return stripped
-    return "#"
+    return stripped if _SAFE_SCHEME.match(stripped) else "#"
 
 
 def markdown_to_html(md_text: str) -> str:
@@ -31,25 +43,25 @@ def markdown_to_html(md_text: str) -> str:
     text = md_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     # Headers
-    text = re.sub(r"^### (.+)$", r"<h4>\1</h4>", text, flags=re.MULTILINE)
-    text = re.sub(r"^## (.+)$", r"<h3>\1</h3>", text, flags=re.MULTILINE)
-    text = re.sub(r"^# (.+)$", r"<h2>\1</h2>", text, flags=re.MULTILINE)
+    text = _H4.sub(r"<h4>\1</h4>", text)
+    text = _H3.sub(r"<h3>\1</h3>", text)
+    text = _H2.sub(r"<h2>\1</h2>", text)
 
     # Bold, italic, code
-    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
-    text = re.sub(r"\*(.+?)\*", r"<em>\1</em>", text)
-    text = re.sub(r"`(.+?)`", r"<code>\1</code>", text)
+    text = _BOLD.sub(r"<strong>\1</strong>", text)
+    text = _ITALIC.sub(r"<em>\1</em>", text)
+    text = _CODE.sub(r"<code>\1</code>", text)
 
     # Links
-    text = re.sub(r"\[(.+?)\]\((.+?)\)", lambda m: f'<a href="{sanitize_href(m.group(2))}" target="_blank">{m.group(1)}</a>', text)
+    text = _LINK.sub(lambda m: f'<a href="{sanitize_href(m.group(2))}" target="_blank">{m.group(1)}</a>', text)
 
     # Lists
-    text = re.sub(r"^- (.+)$", r"<li>\1</li>", text, flags=re.MULTILINE)
+    text = _LIST_ITEM.sub(r"<li>\1</li>", text)
     if "<li>" in text:
-        text = re.sub(r"((?:<li>.*?</li>\s*)+)", r"<ul>\1</ul>", text, flags=re.DOTALL)
+        text = _LIST_BLOCK.sub(r"<ul>\1</ul>", text)
 
     # Newlines (not after block elements)
-    return re.sub(r"(?<!>)\n(?!<)", "<br>", text)
+    return _LOOSE_NEWLINE.sub("<br>", text)
 
 
 class RawHTML(str):

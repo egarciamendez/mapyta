@@ -74,13 +74,9 @@ from mapyta.markdown import RawHTML, escape_text, render_text
 from mapyta.markers import (
     DEFAULT_CAPTION_CSS,
     DEFAULT_MARKER_CAPTION_CSS,
-    build_icon_marker,
-    build_text_marker,
-    caption_open_tag,
-    classify_marker,
+    build_marker,
     css_to_style,
-    marker_glyph,
-    marker_wrapper_open,
+    point_layer_js,
     px_to_int,
 )
 from mapyta.mouse_position import MousePositionProjected
@@ -203,7 +199,7 @@ def _point_properties(
     caption: str | RawHTML | None,
     tooltip: str | RawHTML | None,
     popup: str | RawHTML | None,
-    search: str | None = None,
+    search: str | None,
 ) -> dict[str, Any]:
     """Collect one point's GeoJSON properties for :meth:`Map.add_points`, omitting what is unset.
 
@@ -230,42 +226,6 @@ def _point_properties(
     if search:
         props["search"] = search
     return props
-
-
-def _point_layer_js(
-    marker: str | None,
-    marker_css: dict[str, str],
-    caption_css: dict[str, str],
-    caption_class: str | None,
-    tooltip: TooltipStyle,
-    popup: PopupStyle,
-) -> str:
-    """Build the shared ``onEachFeature`` factory used by :meth:`Map.add_points`.
-
-    Every constant — the wrapper div, the glyph markup, the caption CSS — is written into
-    the function once, so a feature carries only what genuinely differs between points.
-    Styling through Folium's ``style_function`` instead would defeat that: it compiles to a
-    ``switch`` with one case per distinct style, putting the output back at O(n) bytes.
-    """
-    glyph = marker_glyph(marker, marker_css)
-    size = glyph.box_size
-    caption_open = caption_open_tag(caption_css, glyph.caption_top, class_name=caption_class)
-    wrapper_open = marker_wrapper_open(size, size)
-    tooltip_open = f'<div style="{tooltip.style}">' if tooltip.style else "<div>"
-
-    return (
-        "function(feature, layer) {"
-        " var p = feature.properties;"
-        " var color = p.color ? ';color:' + p.color : '';"
-        f" var caption = p.caption ? {json.dumps(caption_open)} + p.caption + '</div>' : '';"
-        f" layer.setIcon(L.divIcon({{html: {json.dumps(wrapper_open)} + {json.dumps(glyph.open_html)} + color"
-        f" + {json.dumps(glyph.close_html)} + caption + '</div>', iconSize: [{size}, {size}],"
-        f" iconAnchor: [{size // 2}, {size // 2}], className: 'empty'}}));"
-        f" if (p.tooltip) {{ layer.bindTooltip({json.dumps(tooltip_open)} + p.tooltip + '</div>',"
-        f" {{sticky: {json.dumps(tooltip.sticky)}}}); }}"
-        f" if (p.popup) {{ layer.bindPopup(p.popup, {{maxWidth: {popup.max_width}}}); }}"
-        "}"
-    )
 
 
 def _defuse_template_placeholders(html: str) -> str:
@@ -329,9 +289,8 @@ class Map:
         self._export_button_injected: bool = False
         self._layer_dropdown_config: dict[str, Any] | None = None
         self._layer_dropdown_injected: bool = False
-        self._filterable_layers: list[dict[str, str]] = []
+        self._filterable_layers: list[tuple[str, str]] = []
         self._filter_control_config: dict[str, Any] | None = None
-        self._filter_control_injected: bool = False
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -1079,17 +1038,9 @@ class Map:
         if caption is not None and min_zoom_caption is not None and min_zoom_caption > 0:
             caption_id = f"caption_{uuid.uuid4().hex[:15]}"
 
-        kind = classify_marker(marker) if marker else "icon_name"
-        if kind == "emoji":
-            assert marker is not None  # guarded by classify_marker above
-            icon = build_text_marker(marker, css, caption, cap_css, caption_id)
-        else:
-            icon_name = marker or "arrow-down"
-            icon = build_icon_marker(icon_name, css, caption, cap_css, caption_id)
-
         m = folium.Marker(
             location=[lat, lon],
-            icon=icon,
+            icon=build_marker(marker, css, caption, cap_css, caption_id),
             tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
         )
@@ -1246,33 +1197,36 @@ class Map:
         gate_captions = min_zoom_caption is not None and min_zoom_caption > 0
         caption_class = f"caption_{uuid.uuid4().hex[:15]}" if gate_captions else None
 
-        features: list[dict[str, Any]] = []
-        for i, (lon, lat) in enumerate(coords):
-            caption = captions[i] if captions is not None else None
-            tooltip = tooltips[i] if tooltips is not None else None
-            popup = popups[i] if popups is not None else None
+        # The exported properties that describe the layer rather than a point, built once
+        # instead of once per point. Split around the per-point text to keep the key order.
+        head_props = {"marker": marker} if marker is not None else {}
+        tail_props = {k: v for k, v in (("min_zoom", min_zoom), ("min_zoom_caption", min_zoom_caption)) if v is not None}
 
-            props = _point_properties(
-                colors[i] if colors is not None else None,
-                caption,
-                tooltip,
-                popup,
-                search_texts[i] if search_texts is not None else None,
-            )
+        blank: list[None] = [None] * len(points)
+        rows = zip(
+            coords,
+            captions if captions is not None else blank,
+            colors if colors is not None else blank,
+            tooltips if tooltips is not None else blank,
+            popups if popups is not None else blank,
+            search_texts if search_texts is not None else blank,
+            strict=True,
+        )
+
+        features: list[dict[str, Any]] = []
+        for (lon, lat), caption, color, tooltip, popup, search in rows:
+            props = _point_properties(color, caption, tooltip, popup, search)
             features.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": props})
             # Build the tracked geometry directly rather than round-tripping through a
             # shapely Point, which would re-derive an identical dict and dominate a bulk call.
             # It stays a separate dict so the layer and the export never alias each other.
-            self._record_geojson_feature(
-                {"type": "Point", "coordinates": [lon, lat]},
+            text_props = {k: str(v) for k, v in (("caption", caption), ("tooltip", tooltip), ("popup", popup)) if v is not None}
+            self._geojson_features.append(
                 {
-                    "marker": marker,
-                    "caption": self._raw_text(caption),
-                    "tooltip": self._raw_text(tooltip),
-                    "popup": self._raw_text(popup),
-                    "min_zoom": min_zoom,
-                    "min_zoom_caption": min_zoom_caption,
-                },
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [lon, lat]},
+                    "properties": {**head_props, **text_props, **tail_props},
+                }
             )
 
         # Two corners rather than two per point: fit_bounds only ever reads the extremes,
@@ -1288,7 +1242,7 @@ class Map:
             name=None if cluster is not None else name,
             marker=folium.Marker(icon=folium.DivIcon()),
             on_each_feature=JsCode(
-                _point_layer_js(
+                point_layer_js(
                     marker,
                     marker_style or {},
                     {**DEFAULT_MARKER_CAPTION_CSS, **(caption_style or {})},
@@ -1302,7 +1256,7 @@ class Map:
         layer.add_to(group or self._target())
         # The markers stay children of the GeoJson layer even once a cluster holds them, so the
         # filter reads them from the one and puts them back into the other.
-        self._filterable_layers.append({"markers": layer.get_name(), "container": (group or layer).get_name()})
+        self._filterable_layers.append((layer.get_name(), (group or layer).get_name()))
 
         if min_zoom is not None and min_zoom > 0:
             # The cluster is what the map holds; hiding the layer inside it would leave an
@@ -2619,17 +2573,9 @@ class Map:
             if txt is not None and track_captions:
                 caption_id = f"caption_{uuid.uuid4().hex[:15]}"
 
-            kind = classify_marker(label) if label else "icon_name"
-            if kind == "emoji":
-                assert label is not None  # guarded by classify_marker above
-                icon = build_text_marker(label, css, txt, cap_css, caption_id)
-            else:
-                icon_name = label or "arrow-down"
-                icon = build_icon_marker(icon_name, css, txt, cap_css, caption_id)
-
             folium.Marker(
                 location=[lat, lon],
-                icon=icon,
+                icon=build_marker(label, css, txt, cap_css, caption_id),
                 tooltip=self._make_tooltip(tip, tooltip_style),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
@@ -2972,6 +2918,62 @@ class Map:
             .replace("\u2029", "\\u2029")
         )
 
+    def _corner_control_script(self, position: str, label: str | None, setup_js: str, widget_js: str, tail_js: str = "") -> str:
+        """Wrap *widget_js* in the white corner control shared by the dropdown and the filter.
+
+        ``setup_js`` runs once the map is resolved and before the control is built,
+        ``widget_js`` fills the control's ``div``, and ``tail_js`` runs after it is added.
+
+        Written as a ``DOMContentLoaded`` script rather than a Folium child, so it resolves
+        the layers through ``window`` once every one of them is declared.  That is what lets
+        these controls be added after the layer control, which as Folium children they could
+        not: Folium emits children in the order they were added, and the layer control would
+        then reference a layer declared below it.
+
+        Parameters
+        ----------
+        position : str
+            Leaflet control position, e.g. ``"topleft"``.
+        label : str | None
+            Optional caption rendered above the widget.
+        setup_js, widget_js, tail_js : str
+            JavaScript for the three insertion points described above.
+
+        Returns
+        -------
+        str
+            A complete ``<script>`` element.
+        """
+        label_js = ""
+        if label:
+            label_js = (
+                "        var lbl = L.DomUtil.create('div', '', div);\n"
+                # ``textContent`` (not ``innerHTML``) so the label renders as literal text.
+                f"        lbl.textContent = {self._json_for_script(label)};\n"
+                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
+            )
+        return (
+            "<script>\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{self._map.get_name()}'];\n"
+            "    if (!map) return;\n"
+            f"{setup_js}"
+            # JSON-encode the position too so it can't break out of the JS string literal.
+            f"    var ctrl = L.control({{position: {self._json_for_script(position)}}});\n"
+            "    ctrl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
+            f"{label_js}{widget_js}"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        L.DomEvent.disableScrollPropagation(div);\n"
+            "        return div;\n"
+            "    };\n"
+            "    ctrl.addTo(map);\n"
+            f"{tail_js}"
+            "});\n"
+            "</script>\n"
+        )
+
     def _inject_layer_dropdown(self) -> None:
         """Inject the single-select feature-group dropdown as a Leaflet control.
 
@@ -2997,29 +2999,9 @@ class Map:
         # so a name containing ``</script>`` must not close the script block.
         options_json = self._json_for_script(options)
 
-        map_var = self._map.get_name()
-        # JSON-encode the position too so it can't break out of the JS string literal.
-        position_json = self._json_for_script(cfg["position"])
-        label = cfg["label"]
-        if label:
-            label_js = (
-                "        var lbl = L.DomUtil.create('div', '', div);\n"
-                # ``textContent`` (not ``innerHTML``) so the label renders as literal text.
-                f"        lbl.textContent = {self._json_for_script(label)};\n"
-                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
-            )
-        else:
-            label_js = ""
-
-        # DOMContentLoaded so the map and feature-group variables (declared at the
-        # top of Folium's synchronous script block) are defined, mirroring the
-        # export button. The groups are added to the map at creation, so the initial
-        # ``showOnly`` removes all but the first to enforce single-select.
-        script = (
-            "<script>\n"
-            "document.addEventListener('DOMContentLoaded', function() {\n"
-            f"    var map = window['{map_var}'];\n"
-            "    if (!map) return;\n"
+        # The groups are added to the map at creation, so the trailing ``showOnly`` removes
+        # all but the first to enforce single-select.
+        setup_js = (
             f"    var _ddOpts = {options_json};\n"
             "    var groups = _ddOpts.map(function(o) { return {name: o[0], layer: window[o[1]]}; })\n"
             "        .filter(function(g) { return g.layer; });\n"
@@ -3030,11 +3012,8 @@ class Map:
             "            else if (map.hasLayer(g.layer)) { map.removeLayer(g.layer); }\n"
             "        });\n"
             "    }\n"
-            f"    var ddControl = L.control({{position: {position_json}}});\n"
-            "    ddControl.onAdd = function() {\n"
-            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
-            f"{label_js}"
+        )
+        widget_js = (
             "        var select = L.DomUtil.create('select', '', div);\n"
             "        select.style.cssText = 'border:none;background:#fff;font-size:13px;cursor:pointer;max-width:220px;';\n"
             "        groups.forEach(function(g) {\n"
@@ -3043,15 +3022,8 @@ class Map:
             "            select.appendChild(opt);\n"
             "        });\n"
             "        select.onchange = function() { showOnly(this.value); };\n"
-            "        L.DomEvent.disableClickPropagation(div);\n"
-            "        L.DomEvent.disableScrollPropagation(div);\n"
-            "        return div;\n"
-            "    };\n"
-            "    ddControl.addTo(map);\n"
-            "    showOnly(groups[0].name);\n"
-            "});\n"
-            "</script>\n"
         )
+        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js, "    showOnly(groups[0].name);\n")
         self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
 
     _SEARCH_LABEL_PRIORITY = ("caption", "label", "text", "name", "naam", "title")
@@ -3230,41 +3202,23 @@ class Map:
         Map
         """
         self._filter_control_config = {"placeholder": placeholder, "position": position, "label": label}
-        self._filter_control_injected = False
         return self
+
+    _FILTER_DEBOUNCE_MS = 150
 
     def _inject_filter_control(self) -> None:
         """Inject the marker filter as a Leaflet control.
 
-        Written as a ``DOMContentLoaded`` script rather than a Folium child, so it resolves
-        the layers through ``window`` once every one of them is declared.  That is what lets
-        :meth:`add_filter_control` be called after the layer control, which as a Folium child
-        it could not: Folium emits children in the order they were added, and the layer
-        control would then reference a layer declared below it.
+        Goes in under a fixed name, so rendering twice replaces the script rather than
+        stacking a second one, and a map that gained points since the last render filters
+        those too.
         """
         cfg = self._filter_control_config
         assert cfg is not None
         if not self._filterable_layers:
             return
-        pairs = self._json_for_script([[layer["markers"], layer["container"]] for layer in self._filterable_layers])
-        map_var = self._map.get_name()
-        placeholder_json = self._json_for_script(cfg["placeholder"])
-        position_json = self._json_for_script(cfg["position"])
-        label = cfg["label"]
-        label_js = ""
-        if label:
-            label_js = (
-                "        var lbl = L.DomUtil.create('div', '', div);\n"
-                f"        lbl.textContent = {self._json_for_script(label)};\n"
-                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
-            )
-
-        script = (
-            "<script>\n"
-            "document.addEventListener('DOMContentLoaded', function() {\n"
-            f"    var map = window['{map_var}'];\n"
-            "    if (!map) return;\n"
-            f"    var _mfPairs = {pairs};\n"
+        setup_js = (
+            f"    var _mfPairs = {self._json_for_script(self._filterable_layers)};\n"
             "    var layers = _mfPairs.map(function(pair) {\n"
             "        var markers = window[pair[0]], container = window[pair[1]];\n"
             "        if (!markers || !container) { return null; }\n"
@@ -3291,28 +3245,26 @@ class Map:
             # zoom script set; that script listens for zoomend, so this hands the job back to it.
             "        map.fire('zoomend');\n"
             "    }\n"
-            f"    var filterControl = L.control({{position: {position_json}}});\n"
-            "    filterControl.onAdd = function() {\n"
-            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
-            f"{label_js}"
+        )
+        widget_js = (
             "        var input = L.DomUtil.create('input', '', div);\n"
             "        input.type = 'text';\n"
-            f"        input.placeholder = {placeholder_json};\n"
+            f"        input.placeholder = {self._json_for_script(cfg['placeholder'])};\n"
             "        input.style.cssText = 'border:none;background:#fff;font-size:13px;width:150px;outline:none;';\n"
-            "        input.oninput = function() { apply(this.value); };\n"
-            "        L.DomEvent.disableClickPropagation(div);\n"
-            "        L.DomEvent.disableScrollPropagation(div);\n"
+            # Applying costs a full rebuild of every layer, so a typed word waits for the
+            # typing to stop instead of rebuilding once per character.
+            "        var pending;\n"
+            "        input.oninput = function() {\n"
+            "            var value = this.value;\n"
+            "            clearTimeout(pending);\n"
+            f"            pending = setTimeout(function() {{ apply(value); }}, {self._FILTER_DEBOUNCE_MS});\n"
+            "        };\n"
             # The map keeps its own keyboard shortcuts on the container this box sits in, so
             # arrow keys would pan the map away from under whoever is typing.
             "        L.DomEvent.on(input, 'keydown keypress keyup', L.DomEvent.stopPropagation);\n"
-            "        return div;\n"
-            "    };\n"
-            "    filterControl.addTo(map);\n"
-            "});\n"
-            "</script>\n"
         )
-        self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
+        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js)
+        self._map.get_root().html.add_child(folium.Element(script), name="mapyta_filter_control")  # ty: ignore[unresolved-attribute]
 
     def add_tile_layer(
         self,
@@ -3382,6 +3334,7 @@ class Map:
         result._legends.extend(other._legends)
         result._zoom_controlled_markers.extend(other._zoom_controlled_markers)
         result._zoom_controlled_captions.extend(other._zoom_controlled_captions)
+        result._filterable_layers.extend(other._filterable_layers)
         return result
 
     # ------------------------------------------------------------------
@@ -3526,9 +3479,8 @@ class Map:
         if self._layer_dropdown_config and not self._layer_dropdown_injected:
             self._inject_layer_dropdown()
             self._layer_dropdown_injected = True
-        if self._filter_control_config and not self._filter_control_injected:
+        if self._filter_control_config:
             self._inject_filter_control()
-            self._filter_control_injected = True
         if self._export_button_config and not self._export_button_injected:
             self._inject_export_button()
             self._export_button_injected = True
