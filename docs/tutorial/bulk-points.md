@@ -54,10 +54,40 @@ The per-point sequences are optional, but any you pass must be exactly as long a
 
 `name` labels the layer in the layer control, and `min_zoom` / `min_zoom_caption` gate the whole layer and its captions by zoom level, exactly as described under [Zoom-dependent Visibility](min-zoom.md).
 
+## Staying responsive past a few thousand points
+
+A small file is not yet a responsive one. Leaflet keeps every marker of the layer in the DOM and repositions all of
+them on each zoom, so past a few thousand points a zoom blocks the browser for the length of the gesture — no matter
+how compactly the layer was written. Pass a `ClusterStyle` and only the markers of the current view stay in the DOM:
+
+```python
+from mapyta import ClusterStyle
+
+m.add_points(
+    points=points,
+    marker="triangle-bottom",
+    name="CPTs",
+    cluster=ClusterStyle(disable_at_zoom=15),
+)
+```
+
+`disable_at_zoom` is the level from which every marker is drawn on its own again; leave it unset to cluster all the
+way down to the pair that happens to overlap. `max_radius` sets how far apart two markers may be on screen and still
+share a bubble, and `spiderfy` decides whether clicking a bubble that cannot be split any further fans its markers out.
+
+The bubble becomes the layer's entry in the layer control, and `min_zoom` hides bubble and markers alike. Captions only
+exist where markers do, so pair `min_zoom_caption` with a `disable_at_zoom` at or below the same level.
+
+!!! warning "Bubble colours carry a meaning of their own"
+
+    Leaflet.markercluster colours its bubbles green, amber and red by how many markers they hold. On a map that already
+    spends those colours on something — a status legend, say — that reads as a second, contradictory legend. Pass
+    `icon_create_js` with your own `iconCreateFunction` to style the bubbles yourself.
+
 !!! tip "Which method for which job"
 
     - **[`add_point()`](markers.md)** — each marker needs its own symbol, or there are few enough that the file size does not matter.
-    - **`add_points()`** — many markers sharing one symbol, and the file has to stay small.
-    - **[`add_marker_cluster()`](clusters.md)** — the goal is grouping overlapping markers at low zoom rather than a smaller file.
+    - **`add_points()`** — many markers sharing one symbol, and the file has to stay small; add `cluster` once they run into the thousands.
+    - **[`add_marker_cluster()`](clusters.md)** — each marker needs its own symbol *and* they should group at low zoom.
 
 One difference from `add_point()`: `popup_style.use_iframe` has no effect here. Popup content always goes straight into the popup, because a base64 `data:` URL per point is a large part of what makes the one-marker-per-point output big.

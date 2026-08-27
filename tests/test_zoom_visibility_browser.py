@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 import pytest
 from shapely.geometry import Point
 
-from mapyta import Map, MapConfig
+from mapyta import ClusterStyle, Map, MapConfig
 from mapyta.export import _detect_chrome
 
 if TYPE_CHECKING:
@@ -244,3 +244,105 @@ class TestZoomVisibilityInBrowser:
         zoom_to(browser, 11)
         eventually(browser, COUNT_MARKERS, 0)
         eventually(browser, COUNT_CAPTIONS, 0)
+
+
+COUNT_BULK_CAPTIONS = (
+    "return Array.from(document.querySelectorAll('[class^=caption_]')).filter(function(e) { return e.style.display !== 'none'; }).length;"
+)
+HAS_BUBBLES = "return document.querySelectorAll('.marker-cluster').length > 0;"
+
+FIRST_PAINT_TIMEOUT = 30.0
+"""A clustered layer of hundreds of points is the heaviest page in this module, and the first
+scenario also pays for Chrome's cold start; every later wait keeps the default."""
+
+
+def clustered_map(**cluster_kwargs: object) -> Map:
+    """Four hundred points around Utrecht as one clustered bulk layer."""
+    points = [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
+    m = Map(center=(52.004, 5.004), config=MapConfig(zoom_start=17))
+    return m.add_points(points, marker="triangle-bottom", name="Sonderingen", cluster=ClusterStyle(**cluster_kwargs))  # ty: ignore[invalid-argument-type]
+
+
+class TestClusteredLayerInBrowser:
+    """Scenarios for what a clustered bulk layer puts in the DOM."""
+
+    def test_clustering_keeps_the_dom_small_until_you_zoom_in(self, browser: "WebDriver", tmp_path: Path) -> None:
+        """
+        Scenario: A clustered layer holds a handful of bubbles, not a marker per point.
+
+        Given: Four hundred clustered points opened above the cut-off, where each is drawn on its own
+        When: The map zooms out past the cut-off
+        Then: The four hundred markers collapse into a few bubbles, which is what keeps zooming responsive
+        """
+        open_map(browser, tmp_path, clustered_map(disable_at_zoom=16), "clustered.html")
+        eventually(browser, COUNT_MARKERS, 400, timeout=FIRST_PAINT_TIMEOUT)
+
+        zoom_to(browser, 13)
+
+        eventually(browser, "return document.querySelectorAll('.leaflet-marker-icon').length < 20;", True)
+        assert browser.execute_script("return document.querySelectorAll('.marker-cluster').length;") > 0
+
+    def test_the_same_layer_unclustered_keeps_every_marker_in_the_dom(self, browser: "WebDriver", tmp_path: Path) -> None:
+        """
+        Scenario: Without clustering the DOM carries every point at every zoom.
+
+        Given: The same four hundred points as a plain bulk layer
+        When: The map zooms out
+        Then: All four hundred markers stay in the DOM, which is the cost clustering removes
+        """
+        points = [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
+        m = Map(center=(52.004, 5.004), config=MapConfig(zoom_start=17)).add_points(points, marker="triangle-bottom")
+        open_map(browser, tmp_path, m, "unclustered.html")
+        eventually(browser, COUNT_MARKERS, 400, timeout=FIRST_PAINT_TIMEOUT)
+
+        zoom_to(browser, 13)
+
+        eventually(browser, COUNT_MARKERS, 400)
+
+    def test_captions_follow_min_zoom_caption_across_a_cluster_rebuild(self, browser: "WebDriver", tmp_path: Path) -> None:
+        """
+        Scenario: Markers the cluster spawns mid-zoom obey the caption threshold.
+
+        Given: Clustered points whose captions start two zoom levels above the cut-off
+        When: The map zooms past the cut-off and then past the caption threshold
+        Then: The markers appear captionless first and only then gain their captions
+        """
+        # Tight enough to stay in view at zoom 18: a clustered layer drops off-screen markers,
+        # so a wider spread would count culling rather than the caption threshold.
+        points = [Point(5.0 + i * 0.0001, 52.0 + i * 0.0001) for i in range(20)]
+        m = Map(center=(52.001, 5.001), config=MapConfig(zoom_start=13))
+        m.add_points(
+            points,
+            marker="triangle-bottom",
+            captions=[f"P{i}" for i in range(20)],
+            min_zoom_caption=18,
+            cluster=ClusterStyle(disable_at_zoom=16),
+        )
+        open_map(browser, tmp_path, m, "clustered_captions.html")
+
+        zoom_to(browser, 17)
+        eventually(browser, COUNT_MARKERS, 20)
+        eventually(browser, COUNT_BULK_CAPTIONS, 0)
+
+        zoom_to(browser, 18)
+        eventually(browser, COUNT_BULK_CAPTIONS, 20)
+
+    def test_min_zoom_hides_the_bubbles_too(self, browser: "WebDriver", tmp_path: Path) -> None:
+        """
+        Scenario: A clustered layer below its min_zoom leaves nothing behind.
+
+        Given: A clustered layer visible from zoom 12
+        When: The map drops below that level
+        Then: Neither markers nor bubbles remain, and both come back on the way up
+        """
+        points = [Point(5.0 + (i % 20) * 0.0004, 52.0 + (i // 20) * 0.0004) for i in range(400)]
+        m = Map(center=(52.004, 5.004), config=MapConfig(zoom_start=14))
+        m.add_points(points, marker="triangle-bottom", min_zoom=12, cluster=ClusterStyle())
+        open_map(browser, tmp_path, m, "clustered_min_zoom.html")
+        eventually(browser, HAS_BUBBLES, True, timeout=FIRST_PAINT_TIMEOUT)
+
+        zoom_to(browser, 10)
+        eventually(browser, COUNT_MARKERS, 0)
+
+        zoom_to(browser, 14)
+        eventually(browser, HAS_BUBBLES, True)

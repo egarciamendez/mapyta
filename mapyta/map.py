@@ -54,7 +54,19 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
-from mapyta.config import CircleStyle, DrawConfig, DrawTool, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
+from mapyta.config import (
+    CircleStyle,
+    ClusterStyle,
+    DrawConfig,
+    DrawTool,
+    FillStyle,
+    HeatmapStyle,
+    MapConfig,
+    PopupStyle,
+    RawJS,
+    StrokeStyle,
+    TooltipStyle,
+)
 from mapyta.coordinates import WGS84, detect_and_transform_coords, transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
@@ -1114,6 +1126,7 @@ class Map:
         name: str | None = None,
         min_zoom: int | None = None,
         min_zoom_caption: int | None = None,
+        cluster: ClusterStyle | dict[str, Any] | None = None,
     ) -> Self:
         """Add many markers as a single GeoJSON layer.
 
@@ -1126,8 +1139,14 @@ class Map:
         What you give up is a per-point symbol: ``marker``, ``marker_style`` and
         ``caption_style`` apply to the whole layer, and only the caption, colour,
         tooltip and popup vary.  Reach for :meth:`add_point` when each marker needs its
-        own symbol, and for :meth:`add_marker_cluster` when the goal is grouping at low
-        zoom rather than a smaller file.
+        own symbol, and for :meth:`add_marker_cluster` when every marker needs its own
+        symbol *and* they should group at low zoom.
+
+        A small file is not yet a responsive one.  Leaflet keeps every marker of the layer
+        in the DOM and repositions all of them on each zoom, so past a few thousand points
+        a zoom blocks the browser for the length of the gesture no matter how compactly the
+        layer was written.  ``cluster`` is what fixes that, by leaving only the markers of
+        the current view in the DOM.
 
         Parameters
         ----------
@@ -1164,7 +1183,14 @@ class Map:
             always visible.
         min_zoom_caption : int | None
             Minimum zoom level at which the captions are visible.  The markers stay
-            visible either way.  ``None`` or ``0`` means always visible.
+            visible either way.  ``None`` or ``0`` means always visible.  Note that a
+            clustered layer only has captions where it has markers, so this is worth
+            pairing with ``disable_at_zoom`` at or below the same level.
+        cluster : ClusterStyle | dict[str, Any] | None
+            Group nearby markers into one clickable bubble.  ``None``, the default, draws
+            every marker at every zoom, which is the readable choice up to a few thousand
+            points and the unresponsive one beyond that.  The bubble carries the layer name
+            in the layer control, and ``min_zoom`` hides bubble and markers alike.
 
         Returns
         -------
@@ -1180,6 +1206,10 @@ class Map:
         --------
         >>> m = Map()
         >>> m.add_points([Point(155_000, 463_000)], marker="triangle-bottom", captions=["CPT-001"])
+
+        Thousands of points stay interactive once they cluster::
+
+            m.add_points(soundings, marker="triangle-bottom", cluster=ClusterStyle(disable_at_zoom=15))
         """
         if not points:
             return self
@@ -1226,7 +1256,9 @@ class Map:
 
         layer = folium.GeoJson(
             {"type": "FeatureCollection", "features": features},
-            name=name,
+            # A layer nested in a cluster is no child of the map, so the layer control never
+            # sees it; the cluster carries the name on its behalf.
+            name=None if cluster is not None else name,
             marker=folium.Marker(icon=folium.DivIcon()),
             on_each_feature=JsCode(
                 _point_layer_js(
@@ -1239,14 +1271,36 @@ class Map:
                 )
             ),
         )
-        layer.add_to(self._target())
+        group = self._point_cluster(resolve_style(cluster, ClusterStyle) or ClusterStyle(), name) if cluster is not None else None
+        layer.add_to(group or self._target())
 
         if min_zoom is not None and min_zoom > 0:
-            self._register_zoom_layer(layer, min_zoom)
+            # The cluster is what the map holds; hiding the layer inside it would leave an
+            # empty bubble behind.
+            self._register_zoom_layer(group or layer, min_zoom)
         if caption_class is not None:
             self._zoom_controlled_captions.append({"selector": f".{caption_class}", "min_zoom": min_zoom_caption})
 
         return self
+
+    def _point_cluster(self, style: ClusterStyle, name: str | None) -> folium.plugins.MarkerCluster:
+        """Return a marker cluster on the current target, to hold a bulk point layer.
+
+        Parameters
+        ----------
+        style : ClusterStyle
+            How the markers group and how the bubble looks.
+        name : str | None
+            Layer name, as shown in the layer control.
+
+        Returns
+        -------
+        folium.plugins.MarkerCluster
+            The cluster, already added to the current target.
+        """
+        cluster = folium.plugins.MarkerCluster(name=name, options=style.leaflet_options(), icon_create_function=style.icon_create_js)
+        cluster.add_to(self._target())
+        return cluster
 
     def add_circle(
         self,

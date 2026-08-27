@@ -9,6 +9,7 @@ import asyncio
 import contextlib
 import io
 import json
+import re
 import shutil
 from collections.abc import Generator
 from pathlib import Path
@@ -31,7 +32,7 @@ from shapely.geometry import (
 )
 
 import mapyta.coordinates
-from mapyta import CircleStyle, FillStyle, HeatmapStyle, Map, MapConfig, PopupStyle, StrokeStyle
+from mapyta import CircleStyle, ClusterStyle, FillStyle, HeatmapStyle, Map, MapConfig, PopupStyle, StrokeStyle
 from mapyta.coordinates import detect_and_transform_coords, transform_geometry
 from mapyta.map import _point_properties
 from mapyta.markdown import RawHTML, markdown_to_html, sanitize_href
@@ -6688,3 +6689,232 @@ class TestAddPointsBulkLayer:
         # Assert - Then
         assert _point_properties(None, RawHTML("R<sub>c;cal</sub>"), None, None)["caption"] == "R<sub>c;cal</sub>"
         assert m.to_geojson()["features"][0]["properties"]["caption"] == "R<sub>c;cal</sub>", "the export keeps the caption as given"
+
+
+# ===================================================================
+# Scenarios for clustering a bulk point layer.
+# ===================================================================
+
+
+def _cluster_options(html: str) -> dict[str, Any]:
+    """Return the options the rendered map passes to ``L.markerClusterGroup``."""
+    options = re.search(r"markerClusterGroup\(\s*(\{.*?\})\s*\)", html, re.DOTALL)
+    assert options, "no marker cluster in the rendered map"
+    return json.loads(re.sub(r",(\s*\})", r"\1", options.group(1)))
+
+
+def _layer_control_overlays(html: str) -> dict[str, str]:
+    """Return the layer control's overlay entries, as name -> Folium variable."""
+    block = re.search(r"overlays :\s*\{(.*?)\},?\s*\};", html, re.DOTALL)
+    assert block, "no layer control in the rendered map"
+    return dict(re.findall(r'"([^"]+)"\s*:\s*(\w+)', block.group(1)))
+
+
+class TestAddPointsClustering:
+    """Scenarios for grouping a bulk point layer into clusters."""
+
+    def test_layer_is_not_clustered_by_default(self) -> None:
+        """
+        Scenario: Clustering is something you ask for.
+
+        Given: A map with bulk points and no cluster style
+        When: The map is rendered
+        Then: No cluster group is created and none of its assets are pulled in
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(20), marker="triangle-bottom")
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "markerClusterGroup" not in html
+        assert "markercluster" not in html, "an unclustered map must not pay for the plugin"
+
+    def test_the_bulk_layer_goes_inside_the_cluster(self) -> None:
+        """
+        Scenario: Clustering wraps the layer rather than replacing it.
+
+        Given: A map with 50 bulk points and a cluster style
+        When: The map is rendered
+        Then: The single GeoJSON layer is added to a cluster group, still without per-point markers
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(50), marker="triangle-bottom", cluster=ClusterStyle())
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert html.count("L.geoJson(") == 1
+        assert "L.marker(" not in html, "clustering must not undo the bulk layer's compactness"
+        assert re.search(r"\.addTo\(marker_cluster_\w+\)", html), "the layer belongs inside the cluster"
+
+    def test_chunked_loading_is_always_on(self) -> None:
+        """
+        Scenario: Adding thousands of markers at once is spread over several frames.
+
+        Given: A map with a clustered bulk layer
+        When: The map is rendered
+        Then: Leaflet is told to load the markers in chunks, without the caller asking
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), cluster=ClusterStyle())
+
+        # Assert - Then
+        assert _cluster_options(m.get_standalone_html())["chunkedLoading"] is True
+
+    def test_style_reaches_the_leaflet_options(self) -> None:
+        """
+        Scenario: The cluster style is what Leaflet is configured with.
+
+        Given: A cluster style with a zoom cut-off, a radius and spiderfying switched off
+        When: The map is rendered
+        Then: Every field arrives under its Leaflet name
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), cluster=ClusterStyle(disable_at_zoom=15, max_radius=40, spiderfy=False))
+        options = _cluster_options(m.get_standalone_html())
+
+        # Assert - Then
+        assert options["disableClusteringAtZoom"] == 15
+        assert options["maxClusterRadius"] == 40
+        assert options["spiderfyOnMaxZoom"] is False
+
+    def test_clustering_at_every_zoom_omits_the_cut_off(self) -> None:
+        """
+        Scenario: No cut-off means Leaflet is not given one.
+
+        Given: A cluster style leaving disable_at_zoom unset
+        When: The map is rendered
+        Then: disableClusteringAtZoom is absent rather than sent as null
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), cluster=ClusterStyle())
+
+        # Assert - Then
+        assert "disableClusteringAtZoom" not in _cluster_options(m.get_standalone_html())
+
+    def test_accepts_a_plain_dict(self) -> None:
+        """
+        Scenario: The style can be given as a dict, as everywhere else in the API.
+
+        Given: A map given the cluster style as a dict
+        When: The map is rendered
+        Then: The dict is resolved to the same Leaflet options
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), cluster={"disable_at_zoom": 13})
+
+        # Assert - Then
+        assert _cluster_options(m.get_standalone_html())["disableClusteringAtZoom"] == 13
+
+    def test_cluster_carries_the_layer_control_entry(self) -> None:
+        """
+        Scenario: A clustered layer is switched on and off as one entry.
+
+        Given: A named clustered layer and a layer control
+        When: The map is rendered
+        Then: The single overlay entry points at the cluster, since the control never sees a nested layer
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), name="Sonderingen", cluster=ClusterStyle()).add_layer_control()
+        overlays = _layer_control_overlays(m.get_standalone_html())
+
+        # Assert - Then
+        assert list(overlays) == ["Sonderingen"]
+        assert overlays["Sonderingen"].startswith("marker_cluster_")
+
+    def test_unclustered_layer_still_carries_its_own_entry(self) -> None:
+        """
+        Scenario: Naming an unclustered layer keeps working.
+
+        Given: A named bulk layer without clustering, and a layer control
+        When: The map is rendered
+        Then: The overlay entry points at the GeoJSON layer itself
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), name="Sonderingen").add_layer_control()
+        overlays = _layer_control_overlays(m.get_standalone_html())
+
+        # Assert - Then
+        assert list(overlays) == ["Sonderingen"]
+        assert overlays["Sonderingen"].startswith("geo_json_")
+
+    def test_min_zoom_governs_the_cluster_not_the_layer_inside_it(self) -> None:
+        """
+        Scenario: Hiding a clustered layer takes the bubbles with it.
+
+        Given: A clustered layer with a min_zoom
+        When: The zoom controller is generated
+        Then: It is the cluster that is added and removed, or an empty bubble would be left behind
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), min_zoom=12, cluster=ClusterStyle())
+        config = re.search(r"var configs = \[(.*?)\];", m.get_standalone_html())
+
+        # Assert - Then
+        assert config, "min_zoom should register a zoom-controlled layer"
+        assert "marker_cluster_" in config.group(1)
+        assert "geo_json_" not in config.group(1)
+
+    def test_custom_bubble_icon_reaches_the_output(self) -> None:
+        """
+        Scenario: A map whose colours already mean something can style the bubbles itself.
+
+        Given: A cluster style carrying an iconCreateFunction
+        When: The map is rendered
+        Then: The function is installed on the cluster
+        """
+        # Arrange - Given
+        icon_js = "function(cluster) { return L.divIcon({html: '<b>' + cluster.getChildCount() + '</b>'}); }"
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(10), cluster=ClusterStyle(icon_create_js=icon_js))
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "iconCreateFunction" in html
+        assert "cluster.getChildCount()" in html
+
+    def test_clustering_does_not_change_the_geojson_export(self) -> None:
+        """
+        Scenario: Clustering is a display choice, not a change to the data.
+
+        Given: The same three points added with and without clustering
+        When: to_geojson is called on both
+        Then: The exported features are identical
+        """
+        # Arrange - Given
+        points = _rd_points(3)
+
+        # Act - When
+        plain = Map().add_points(points, captions=["A", "B", "C"])
+        clustered = Map().add_points(points, captions=["A", "B", "C"], cluster=ClusterStyle())
+
+        # Assert - Then
+        assert clustered.to_geojson() == plain.to_geojson()

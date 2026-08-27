@@ -22,6 +22,12 @@ print(m.to_html()) # markdown-exec: hide
 
 At low zoom you'll see cluster bubbles with counts. Zoom in and they split into individual ☕ markers.
 
+!!! tip "Thousands of markers sharing one symbol"
+
+    `add_marker_cluster()` writes a full marker per point, which is what lets each carry its own symbol — and what
+    makes the file large in bulk. When every marker uses the same symbol, cluster the bulk layer instead:
+    [`add_points(cluster=ClusterStyle(...))`](bulk-points.md#staying-responsive-past-a-few-thousand-points).
+
 ## Parameters
 
 | Parameter | Description |
