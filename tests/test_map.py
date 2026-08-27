@@ -2232,6 +2232,46 @@ class TestSearchControl:
         html = m._repr_html_()
         assert "Search..." in html
 
+    def test_auto_mode_layer_draws_no_marker_of_its_own(self) -> None:
+        """
+        Scenario: The layer the search indexes stays invisible.
+
+        Given: A map whose markers carry a symbol of their own
+        When: add_search_control indexes them through its hidden layer
+        Then: That layer draws an empty DivIcon, since a point feature without one gets
+              Leaflet's default blue pin and no styling can hide it
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_points(_rd_points(3), marker="triangle-bottom", captions=["A", "B", "C"])
+
+        # Act - When
+        html = m.add_search_control().get_standalone_html()
+
+        # Assert - Then
+        assert html.count("L.geoJson(") == html.count("_pointToLayer(feature, latlng)"), (
+            "a GeoJSON layer without a pointToLayer gets Leaflet's default pin for every point"
+        )
+        assert '"iconSize": [0, 0]' in html
+
+    def test_auto_mode_layer_stays_out_of_the_layer_control(self) -> None:
+        """
+        Scenario: A layer nobody named is not offered as a checkbox.
+
+        Given: A named bulk layer, a layer control and a search control
+        When: The map is rendered
+        Then: Only the named layer is listed, not the hidden search layer under its element id
+        """
+        # Arrange - Given
+        m = Map()
+        m.add_points(_rd_points(3), name="Sonderingen", captions=["A", "B", "C"])
+
+        # Act - When
+        html = m.add_layer_control().add_search_control().get_standalone_html()
+
+        # Assert - Then
+        assert list(_layer_control_overlays(html)) == ["Sonderingen"]
+
     def test_auto_mode_empty_features_is_silent_no_op(self) -> None:
         """
         Scenario: Zero-config search on a map with no features is a silent no-op.

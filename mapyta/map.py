@@ -3051,6 +3051,13 @@ class Map:
     def _build_hidden_search_layer(self, property_name: str | None) -> folium.GeoJson:
         """Build an invisible GeoJson layer with a ``_search_label`` property on each feature.
 
+        The layer exists only to be indexed: ``folium.plugins.Search`` reads its features and
+        nobody is meant to see it.  Two things are needed to keep it that way.  A point feature
+        with no ``marker`` of its own is drawn by Leaflet as its default blue pin, and the
+        ``style_function`` here cannot hide it — styling reaches paths, not marker icons — so
+        an empty ``DivIcon`` takes its place.  And ``control=False`` keeps a layer nobody named
+        out of the layer control, where it would otherwise sit as ``macro_element_<hash>``.
+
         Parameters
         ----------
         property_name : str | None
@@ -3077,8 +3084,10 @@ class Map:
         collection = {"type": "FeatureCollection", "features": features}
         return folium.GeoJson(
             collection,
+            marker=folium.Marker(icon=folium.DivIcon(html="", icon_size=(0, 0))),
             style_function=lambda _: {"opacity": 0, "fillOpacity": 0, "weight": 0},
             show=True,
+            control=False,
         )
 
     def add_search_control(
