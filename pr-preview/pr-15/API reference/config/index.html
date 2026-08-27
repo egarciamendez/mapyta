@@ -1348,6 +1348,34 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#config.ClusterStyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ClusterStyle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" ClusterStyle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config.ClusterStyle.leaflet_options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;leaflet_options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#config.DrawConfig" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1797,6 +1825,34 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#config.ClusterStyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ClusterStyle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" ClusterStyle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config.ClusterStyle.leaflet_options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;leaflet_options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#config.DrawConfig" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1994,6 +2050,18 @@
           –
           <div class="doc-md-description">
             <p>Style for circle markers (fixed pixel size).</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;config.ClusterStyle&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt;" href="#config.ClusterStyle">ClusterStyle</a></code></b>
+          –
+          <div class="doc-md-description">
+            <p>Grouping of nearby markers into one clickable bubble.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2250,6 +2318,189 @@
 
 
 
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="config.ClusterStyle" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">config.ClusterStyle</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ClusterStyle</span><span class="p">(</span>
+    <span class="n">disable_at_zoom</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_radius</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="n">spiderfy</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">icon_create_js</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Grouping of nearby markers into one clickable bubble.</p>
+<p>Leaflet keeps every marker of a layer in the DOM and repositions all of them on each
+zoom, so a layer running into the thousands blocks the browser for the length of the
+gesture. Clustering leaves only the markers of the current view in the DOM, which is
+what keeps such a layer interactive.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>disable_at_zoom</code></b>
+              (<code><span title="int">int</span> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Zoom level from which every marker is drawn on its own again. <code>None</code> clusters at
+every zoom, down to the pair that happens to overlap.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>max_radius</code></b>
+              (<code><span title="int">int</span></code>, default:
+                  <code>80</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>How far apart, in pixels on screen, two markers may be and still share a bubble.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>spiderfy</code></b>
+              (<code><span title="bool">bool</span></code>, default:
+                  <code>True</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether clicking a bubble that cannot be split by zooming any further fans its
+markers out around it.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>icon_create_js</code></b>
+              (<code><span title="str">str</span> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>JavaScript function expression building the bubble icon, receiving the cluster and
+returning an <code>L.divIcon</code>. <code>None</code> gives Leaflet.markercluster's own green-amber-red
+bubbles, whose colour reads as a count — pass a function of your own when the map
+already spends those colours on a meaning of its own.</p>
+          </div>
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="config.ClusterStyle.leaflet_options" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">config.ClusterStyle.leaflet_options</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">leaflet_options</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the Leaflet.markercluster options this style stands for.</p>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+          –
+          <div class="doc-md-description">
+            <p>Options for <code>L.markerClusterGroup</code>.</p>
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>mapyta/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">leaflet_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the Leaflet.markercluster options this style stands for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[str, Any]</span>
+<span class="sd">        Options for ``L.markerClusterGroup``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Adding thousands of markers in one go is itself a freeze; chunked loading</span>
+        <span class="c1"># spreads it over several frames, which is the whole point of clustering here.</span>
+        <span class="s2">&quot;chunkedLoading&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;maxClusterRadius&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_radius</span><span class="p">,</span>
+        <span class="s2">&quot;spiderfyOnMaxZoom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">spiderfy</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_at_zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">options</span><span class="p">[</span><span class="s2">&quot;disableClusteringAtZoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_at_zoom</span>
+    <span class="k">return</span> <span class="n">options</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
@@ -3023,8 +3274,8 @@ so a link with <code>target="_top"</code> only works with this set to False.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>mapyta/config.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">223</span>
-<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">274</span>
+<span class="normal">275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">js</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">js</span> <span class="o">=</span> <span class="n">js</span>
 </code></pre></div></td></tr></table></div>
                   </details>
