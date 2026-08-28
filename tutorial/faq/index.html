@@ -1995,7 +1995,7 @@
 <p><strong>How do I change the marker icon?</strong></p>
 <p>Pass an emoji or a <a href="https://fontawesome.com/icons">Font Awesome 6</a> icon name to <code>marker</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9</span><span class="p">,</span> <span class="mf">52.37</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;📍&quot;</span><span class="p">)</span>         <span class="c1"># emoji</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9</span><span class="p">,</span> <span class="mf">52.37</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;location-dot&quot;</span><span class="p">)</span>  <span class="c1"># Font Awesome</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mf">4.9</span><span class="p">,</span> <span class="mf">52.37</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;fa-location-dot&quot;</span><span class="p">)</span>  <span class="c1"># Font Awesome</span>
 </code></pre></div>
 <hr />
 <h2 id="tooltips-popups">Tooltips &amp; popups</h2>
@@ -2038,7 +2038,7 @@
 <p>The same <code>colors</code> parameter works on <code>Map.from_geodataframe(color_column=...)</code>.</p>
 <hr />
 <p><strong>How do I create a choropleth with categorical (non-numeric) data?</strong></p>
-<p>Just use string values. Mapyta auto-detects them and assigns a distinct color per category:</p>
+<p>Just use string values. Mapyta auto-detects them, assigns a distinct color per category, and draws a legend naming each one:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># String values → auto-detected as categorical</span>
 <span class="n">m</span><span class="o">.</span><span class="n">add_choropleth</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="n">value_column</span><span class="o">=</span><span class="s2">&quot;land_use&quot;</span><span class="p">,</span> <span class="n">key_on</span><span class="o">=</span><span class="s2">&quot;feature.properties.id&quot;</span><span class="p">)</span>
 
