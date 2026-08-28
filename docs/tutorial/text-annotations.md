@@ -68,8 +68,10 @@ print(m.to_html()) # markdown-exec: hide
 **`caption`** works with any marker type. By default it has a transparent background; pass a `caption_style` CSS dict to override. Plain strings are HTML-escaped and shown literally; wrap the text in `RawHTML` to render inline markup such as `<sub>` or `<sup>`:
 
 ```python
+from shapely.geometry import Point
 from mapyta import RawHTML
 
+pt = Point(5.0420, 52.0900)
 m.add_point(pt, marker="fa-location-dot", caption=RawHTML("R<sub>c;cal</sub>"))
 ```
 
