@@ -189,7 +189,7 @@ The search control finds one feature and flies to it, leaving the rest of the ma
 not *where is this one* but *which of these belong together*, use `add_filter_control()` instead: it takes the map down
 to the markers matching what you type, and brings them back when you clear the box.
 
-It filters the bulk layers of [`add_points()`](layers.md), which is where the scale that makes filtering worth having
+It filters the bulk layers of [`add_points()`](markers.md#many-points-at-once), which is where the scale that makes filtering worth having
 comes from.
 
 ```python exec="true" html="true" source="tabbed-right"
