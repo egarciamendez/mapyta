@@ -87,6 +87,11 @@ LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/le
 LEAFLET_DRAW_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
 VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "circle"})
 
+#: Folium pins the glyphicon sheet to Bootstrap 3.0.0, which predates the ``triangle-*``
+#: and ``menu-*`` icons: those classes resolve to nothing and the marker renders 0x0.
+#: 3.3.7 is the last Bootstrap 3 release and carries the complete glyphicon set.
+GLYPHICONS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+
 #: CSS offsets per corner for :meth:`Map.add_legend`, inset far enough to clear
 #: the Leaflet controls that live in the same corners.
 _LEGEND_CORNERS: dict[str, str] = {
@@ -380,6 +385,9 @@ class Map:
                 max_native_zoom=max_native_zoom,
             ).add_to(fmap)
 
+        # ``default_css`` is a class attribute read at render time, so the copy has to be
+        # per instance or it would rewrite the CDN for every folium map in the process.
+        fmap.default_css = [(name, GLYPHICONS_CSS if name == "glyphicons_css" else url) for name, url in fmap.default_css]
         fmap.get_root().header.add_child(folium.Element('<meta name="referrer" content="origin">'))  # ty: ignore[unresolved-attribute]
         fmap.get_root().header.add_child(folium.Element(CONTROL_SIZE_CSS))  # ty: ignore[unresolved-attribute]
 
