@@ -130,7 +130,7 @@ Pass an emoji or a [Font Awesome 6](https://fontawesome.com/icons) icon name to 
 
 ```python
 m.add_point(Point(4.9, 52.37), marker="📍")         # emoji
-m.add_point(Point(4.9, 52.37), marker="location-dot")  # Font Awesome
+m.add_point(Point(4.9, 52.37), marker="fa-location-dot")  # Font Awesome
 ```
 
 ---
@@ -197,7 +197,7 @@ The same `colors` parameter works on `Map.from_geodataframe(color_column=...)`.
 
 **How do I create a choropleth with categorical (non-numeric) data?**
 
-Just use string values. Mapyta auto-detects them and assigns a distinct color per category:
+Just use string values. Mapyta auto-detects them, assigns a distinct color per category, and draws a legend naming each one:
 
 ```python
 # String values → auto-detected as categorical

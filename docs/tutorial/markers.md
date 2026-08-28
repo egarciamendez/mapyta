@@ -62,3 +62,42 @@ print(m.to_html()) # markdown-exec: hide
     ```
 
     For marker and caption styling, pass a CSS dict, any CSS property is valid.
+
+## Many points at once
+
+`add_points()` draws a whole set of markers as a single GeoJSON layer instead of one Leaflet marker per point. Reach for it when a loop over `add_point()` would turn hundreds of points into an HTML file that takes seconds to open.
+
+```python exec="true" html="true" source="tabbed-right"
+import random
+from shapely.geometry import Point
+from mapyta import Map
+
+random.seed(7)
+STATUS = [("#1a9850", "Approved"), ("#fee08b", "In review"), ("#d73027", "Rejected")]
+
+points, captions, colors, tooltips = [], [], [], []
+for i in range(150):
+    color, label = random.choice(STATUS)
+    points.append(Point(5.12 + random.uniform(-0.03, 0.03), 52.09 + random.uniform(-0.015, 0.015)))
+    captions.append(f"CPT-{i + 1:03d}")
+    colors.append(color)
+    tooltips.append(f"**CPT-{i + 1:03d}**\n\nStatus: {label}")
+
+m = Map(title="Cone penetration tests")
+m.add_points(
+    points=points,
+    marker="triangle-bottom",
+    captions=captions,
+    colors=colors,
+    tooltips=tooltips,
+    name="CPTs",
+    min_zoom_caption=15,
+)
+m.add_legend(entries=STATUS, title="Status")
+
+m.to_html("bulk-points.html")
+
+print(m.to_html()) # markdown-exec: hide
+```
+
+Zoom past level 15 and the captions appear; the markers themselves stay visible at every zoom.

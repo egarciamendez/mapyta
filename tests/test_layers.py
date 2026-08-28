@@ -403,7 +403,7 @@ class TestMarkerCluster:
 
         assert len(m._zoom_controlled_captions) == 2
         assert {entry["min_zoom"] for entry in m._zoom_controlled_captions} == {12}
-        ids = {entry["caption_id"] for entry in m._zoom_controlled_captions}
+        ids = {entry["selector"] for entry in m._zoom_controlled_captions}
         assert len(ids) == 2, "each caption should have its own DOM id"
         assert len(m._zoom_controlled_markers) == 0, "marker icons remain always-visible"
 
@@ -628,13 +628,13 @@ class TestZoomDependentVisibility:
 
         Given: A Map with a min_zoom marker
         When: _get_html is called twice
-        Then: The flag _zoom_js_injected is True and JS appears only once
+        Then: The script is replaced, not appended, so it still appears once
         """
         m = Map()
         m.add_point(Point(4.9, 52.37), min_zoom=10)
         html1 = m._get_html()
         html2 = m._get_html()
-        assert m._zoom_js_injected is True
+        assert html2.count("zoomend") == 1
         assert html1.count("zoomend") == html2.count("zoomend")
 
     def test_merge_combines_zoom_markers(self) -> None:

@@ -91,6 +91,57 @@ class TooltipStyle:
 
 
 @dataclass
+class ClusterStyle:
+    """Grouping of nearby markers into one clickable bubble.
+
+    Leaflet keeps every marker of a layer in the DOM and repositions all of them on each
+    zoom, so a layer running into the thousands blocks the browser for the length of the
+    gesture. Clustering leaves only the markers of the current view in the DOM, which is
+    what keeps such a layer interactive.
+
+    Parameters
+    ----------
+    disable_at_zoom : int | None
+        Zoom level from which every marker is drawn on its own again. ``None`` clusters at
+        every zoom, down to the pair that happens to overlap.
+    max_radius : int
+        How far apart, in pixels on screen, two markers may be and still share a bubble.
+    spiderfy : bool
+        Whether clicking a bubble that cannot be split by zooming any further fans its
+        markers out around it.
+    icon_create_js : str | None
+        JavaScript function expression building the bubble icon, receiving the cluster and
+        returning an ``L.divIcon``. ``None`` gives Leaflet.markercluster's own green-amber-red
+        bubbles, whose colour reads as a count — pass a function of your own when the map
+        already spends those colours on a meaning of its own.
+    """
+
+    disable_at_zoom: int | None = None
+    max_radius: int = 80
+    spiderfy: bool = True
+    icon_create_js: str | None = None
+
+    def leaflet_options(self) -> dict[str, Any]:
+        """Return the Leaflet.markercluster options this style stands for.
+
+        Returns
+        -------
+        dict[str, Any]
+            Options for ``L.markerClusterGroup``.
+        """
+        options: dict[str, Any] = {
+            # Adding thousands of markers in one go is itself a freeze; chunked loading
+            # spreads it over several frames, which is the whole point of clustering here.
+            "chunkedLoading": True,
+            "maxClusterRadius": self.max_radius,
+            "spiderfyOnMaxZoom": self.spiderfy,
+        }
+        if self.disable_at_zoom is not None:
+            options["disableClusteringAtZoom"] = self.disable_at_zoom
+        return options
+
+
+@dataclass
 class CircleStyle:
     """Style for circle markers (fixed pixel size).
 

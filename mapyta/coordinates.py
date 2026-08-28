@@ -1,5 +1,6 @@
 """Coordinate system detection and transformation utilities."""
 
+from functools import lru_cache
 from typing import cast
 
 from pyproj import Transformer
@@ -13,6 +14,20 @@ from shapely.geometry import (
     Polygon,
 )
 from shapely.geometry.base import BaseGeometry
+
+WGS84 = "EPSG:4326"
+
+
+@lru_cache(maxsize=32)
+def _transformer(source_crs: str) -> Transformer:
+    """Return a cached WGS84 transformer for *source_crs*.
+
+    Building one costs ~20 ms while a transform costs ~2 us, so an uncached
+    build per call dominates any loop that adds features one at a time.
+    ``Transformer`` keeps its PROJ object in thread-local storage, so a
+    shared instance stays safe across threads.
+    """
+    return Transformer.from_crs(source_crs, WGS84, always_xy=True)
 
 
 def detect_and_transform_coords(
@@ -47,9 +62,11 @@ def detect_and_transform_coords(
         else:
             return [(c[0], c[1]) for c in coords]
 
-    if source_crs and source_crs != "EPSG:4326":
-        transformer = Transformer.from_crs(source_crs, "EPSG:4326", always_xy=True)
-        return [transformer.transform(c[0], c[1]) for c in coords]
+    if source_crs and source_crs != WGS84:
+        # One call for the whole sequence: pyproj loops in C, where a call per point pays
+        # Python-level overhead that dominates on the bulk sizes ``Map.add_points`` takes.
+        lons, lats = _transformer(source_crs).transform([c[0] for c in coords], [c[1] for c in coords])
+        return list(zip(lons, lats, strict=True))
 
     return [(c[0], c[1]) for c in coords]
 

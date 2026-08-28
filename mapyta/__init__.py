@@ -1,6 +1,18 @@
 """Mapyta - interactive map builder for Python."""
 
-from mapyta.config import CircleStyle, DrawConfig, DrawTool, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
+from mapyta.config import (
+    CircleStyle,
+    ClusterStyle,
+    DrawConfig,
+    DrawTool,
+    FillStyle,
+    HeatmapStyle,
+    MapConfig,
+    PopupStyle,
+    RawJS,
+    StrokeStyle,
+    TooltipStyle,
+)
 from mapyta.map import Map
 from mapyta.markdown import RawHTML
 from mapyta.style import PALETTES
@@ -9,6 +21,7 @@ from mapyta.tiles import TileProviderKey
 __all__ = [
     "PALETTES",
     "CircleStyle",
+    "ClusterStyle",
     "DrawConfig",
     "DrawTool",
     "FillStyle",

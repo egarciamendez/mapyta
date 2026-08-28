@@ -27,7 +27,7 @@ import tempfile
 import uuid
 import warnings
 import webbrowser
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from html import escape as html_escape
 from pathlib import Path
 from typing import Any, Self, cast, overload
@@ -38,6 +38,8 @@ import folium.features
 import folium.plugins
 from branca.element import MacroElement
 from folium.template import Template
+from folium.utilities import JsCode
+from shapely import get_coordinates
 from shapely.geometry import (
     LinearRing,
     LineString,
@@ -52,18 +54,29 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
-from mapyta.config import CircleStyle, DrawConfig, DrawTool, FillStyle, HeatmapStyle, MapConfig, PopupStyle, RawJS, StrokeStyle, TooltipStyle
-from mapyta.coordinates import transform_geometry
+from mapyta.config import (
+    CircleStyle,
+    ClusterStyle,
+    DrawConfig,
+    DrawTool,
+    FillStyle,
+    HeatmapStyle,
+    MapConfig,
+    PopupStyle,
+    RawJS,
+    StrokeStyle,
+    TooltipStyle,
+)
+from mapyta.coordinates import WGS84, detect_and_transform_coords, transform_geometry
 from mapyta.export import capture_screenshot
 from mapyta.geojson import load_geojson_input
-from mapyta.markdown import RawHTML, markdown_to_html
+from mapyta.markdown import RawHTML, escape_text, render_text
 from mapyta.markers import (
     DEFAULT_CAPTION_CSS,
     DEFAULT_MARKER_CAPTION_CSS,
-    build_icon_marker,
-    build_text_marker,
-    classify_marker,
+    build_marker,
     css_to_style,
+    point_layer_js,
     px_to_int,
 )
 from mapyta.mouse_position import MousePositionProjected
@@ -73,6 +86,28 @@ from mapyta.tiles import TILE_PROVIDERS
 LEAFLET_DRAW_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
 LEAFLET_DRAW_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
 VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "circle"})
+
+#: Folium pins the glyphicon sheet to Bootstrap 3.0.0, which predates the ``triangle-*``
+#: and ``menu-*`` icons: those classes resolve to nothing and the marker renders 0x0.
+#: 3.3.7 is the last Bootstrap 3 release and carries the complete glyphicon set.
+GLYPHICONS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+
+#: CSS offsets per corner for :meth:`Map.add_legend`, inset far enough to clear
+#: the Leaflet controls that live in the same corners.
+_LEGEND_CORNERS: dict[str, str] = {
+    "topleft": "top:10px;left:10px",
+    "topright": "top:10px;right:10px",
+    "bottomleft": "bottom:10px;left:10px",
+    "bottomright": "bottom:10px;right:10px",
+}
+
+#: Shared card chrome for both legend kinds, so a colorbar and a swatch legend on the
+#: same map read as one family. ``pointer-events:none`` keeps them from swallowing pans.
+_LEGEND_CARD_CSS = (
+    "z-index:1000;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:6px;"
+    "box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;"
+    "color:#333;pointer-events:none;"
+)
 
 # Normalise the size of every corner control button. Leaflet renders the layer
 # and measure toggles at 36px (44px on touch), while the zoom, draw, home and
@@ -164,6 +199,40 @@ class _HomeButtonControl(MacroElement):
         self.title = title
 
 
+def _point_properties(
+    color: str | None,
+    caption: str | RawHTML | None,
+    tooltip: str | RawHTML | None,
+    popup: str | RawHTML | None,
+    search: str | None,
+) -> dict[str, Any]:
+    """Collect one point's GeoJSON properties for :meth:`Map.add_points`, omitting what is unset.
+
+    The browser-side factory tests for each key, so an unset one is left out rather than
+    written as ``null``.
+
+    ``color`` lands inside a ``style`` attribute and ``caption`` in element content of an
+    HTML string the browser parses, so both are escaped here: an unescaped colour such as
+    ``red" onmouseover="..."`` would close the attribute and add an event handler.
+    A ``RawHTML`` caption opts back into markup, as it does on :meth:`Map.add_point`.
+
+    ``search`` is never rendered, only compared against what the reader types, so it is
+    kept as written.
+    """
+    props: dict[str, Any] = {}
+    if color is not None:
+        props["color"] = html_escape(color, quote=True)
+    if caption:
+        props["caption"] = escape_text(caption)
+    if tooltip:
+        props["tooltip"] = render_text(tooltip)
+    if popup:
+        props["popup"] = render_text(popup)
+    if search:
+        props["search"] = search
+    return props
+
+
 def _defuse_template_placeholders(html: str) -> str:
     """Keep ``${...}`` in *html* from being evaluated as JavaScript.
 
@@ -215,9 +284,9 @@ class Map:
         self._feature_groups: dict[str, folium.FeatureGroup] = {}
         self._active_group: folium.FeatureGroup | folium.Map = self._map
         self._colormaps: list[cm.LinearColormap | cm.StepColormap] = []
+        self._legends: list[str] = []
         self._zoom_controlled_markers: list[dict[str, Any]] = []
         self._zoom_controlled_captions: list[dict[str, Any]] = []
-        self._zoom_js_injected: bool = False
         self._draw_config: DrawConfig | None = None
         self._draw_injected: bool = False
         self._geojson_features: list[dict] = []
@@ -225,6 +294,8 @@ class Map:
         self._export_button_injected: bool = False
         self._layer_dropdown_config: dict[str, Any] | None = None
         self._layer_dropdown_injected: bool = False
+        self._filterable_layers: list[tuple[str, str]] = []
+        self._filter_control_config: dict[str, Any] | None = None
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -314,6 +385,9 @@ class Map:
                 max_native_zoom=max_native_zoom,
             ).add_to(fmap)
 
+        # ``default_css`` is a class attribute read at render time, so the copy has to be
+        # per instance or it would rewrite the CDN for every folium map in the process.
+        fmap.default_css = [(name, GLYPHICONS_CSS if name == "glyphicons_css" else url) for name, url in fmap.default_css]
         fmap.get_root().header.add_child(folium.Element('<meta name="referrer" content="origin">'))  # ty: ignore[unresolved-attribute]
         fmap.get_root().header.add_child(folium.Element(CONTROL_SIZE_CSS))  # ty: ignore[unresolved-attribute]
 
@@ -365,7 +439,7 @@ class Map:
         if not hover:
             return None
         ts = resolve_style(tooltip_style, TooltipStyle) or TooltipStyle()
-        html = hover if isinstance(hover, RawHTML) else markdown_to_html(hover)
+        html = render_text(hover)
         return folium.Tooltip(html, sticky=ts.sticky, style=ts.style)
 
     def _make_popup(self, popup: str | RawHTML | None, popup_style: PopupStyle | dict[str, Any] | None = None) -> folium.Popup | None:
@@ -373,7 +447,7 @@ class Map:
         if not popup:
             return None
         ps = resolve_style(popup_style, PopupStyle) or PopupStyle()
-        html = popup if isinstance(popup, RawHTML) else markdown_to_html(popup)
+        html = render_text(popup)
         if not ps.use_iframe:
             return folium.Popup(_defuse_template_placeholders(html), max_width=ps.max_width)
         iframe = folium.IFrame(html, width=ps.width, height=ps.height)  # ty: ignore[invalid-argument-type]
@@ -876,10 +950,14 @@ class Map:
 
     def _record_feature(self, geom: BaseGeometry, props: dict[str, Any]) -> None:
         """Append a GeoJSON Feature to the internal tracking list."""
+        self._record_geojson_feature(dict(geom_to_geojson(geom)), props)
+
+    def _record_geojson_feature(self, geometry: dict[str, Any], props: dict[str, Any]) -> None:
+        """Append a GeoJSON Feature whose geometry is already a GeoJSON dict."""
         self._geojson_features.append(
             {
                 "type": "Feature",
-                "geometry": dict(geom_to_geojson(geom)),
+                "geometry": geometry,
                 "properties": {k: v for k, v in props.items() if v is not None},
             }
         )
@@ -896,7 +974,7 @@ class Map:
         self,
         point: Point,
         marker: str | None = None,
-        caption: str | None = None,
+        caption: str | RawHTML | None = None,
         tooltip: str | RawHTML | None = None,
         popup: str | RawHTML | None = None,
         marker_style: dict[str, str] | None = None,
@@ -920,9 +998,12 @@ class Map:
             - Full CSS class (e.g. ``"fa-solid fa-house"``) → used as-is.
             - Emoji / unicode text → rendered as text DivIcon.
             - ``None`` → default ``"arrow-down"`` icon.
-        caption : str | None
+        caption : str | RawHTML | None
             Text annotation placed below the marker.  Works with any marker
-            type (emoji, icon).  Can be styled via ``caption_style``.
+            type (emoji, icon).  Can be styled via ``caption_style``.  Plain
+            strings are HTML-escaped and shown literally; wrap in
+            :class:`~mapyta.markdown.RawHTML` to render inline markup such as
+            ``<sub>``.
         tooltip : str | RawHTML | None
             Information shown on mouse tooltip.  Markdown supported for
             strings, or use ``RawHTML`` for pre-formatted HTML.
@@ -965,17 +1046,9 @@ class Map:
         if caption is not None and min_zoom_caption is not None and min_zoom_caption > 0:
             caption_id = f"caption_{uuid.uuid4().hex[:15]}"
 
-        kind = classify_marker(marker) if marker else "icon_name"
-        if kind == "emoji":
-            assert marker is not None  # guarded by classify_marker above
-            icon = build_text_marker(marker, css, caption, cap_css, caption_id)
-        else:
-            icon_name = marker or "arrow-down"
-            icon = build_icon_marker(icon_name, css, caption, cap_css, caption_id)
-
         m = folium.Marker(
             location=[lat, lon],
-            icon=icon,
+            icon=build_marker(marker, css, caption, cap_css, caption_id),
             tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
         )
@@ -984,7 +1057,7 @@ class Map:
             point,
             {
                 "marker": marker,
-                "caption": caption,
+                "caption": self._raw_text(caption),
                 "tooltip": self._raw_text(tooltip),
                 "popup": self._raw_text(popup),
                 "min_zoom": min_zoom,
@@ -993,23 +1066,233 @@ class Map:
         )
 
         if min_zoom is not None and min_zoom > 0:
-            self._zoom_controlled_markers.append(
-                {
-                    "var_name": m.get_name(),
-                    "min_zoom": min_zoom,
-                }
-            )
+            self._register_zoom_layer(m, min_zoom)
 
         if caption_id is not None:
             assert min_zoom_caption is not None  # guarded above
             self._zoom_controlled_captions.append(
                 {
-                    "caption_id": caption_id,
+                    "selector": f"#{caption_id}",
                     "min_zoom": min_zoom_caption,
                 }
             )
 
         return self
+
+    def add_points(  # noqa: PLR0913
+        self,
+        points: Sequence[Point],
+        marker: str | None = None,
+        captions: Sequence[str | RawHTML | None] | None = None,
+        colors: Sequence[str] | None = None,
+        tooltips: Sequence[str | RawHTML | None] | None = None,
+        popups: Sequence[str | RawHTML | None] | None = None,
+        marker_style: dict[str, str] | None = None,
+        caption_style: dict[str, str] | None = None,
+        tooltip_style: TooltipStyle | dict[str, Any] | None = None,
+        popup_style: PopupStyle | dict[str, Any] | None = None,
+        name: str | None = None,
+        min_zoom: int | None = None,
+        min_zoom_caption: int | None = None,
+        cluster: ClusterStyle | dict[str, Any] | None = None,
+        search_texts: Sequence[str | None] | None = None,
+    ) -> Self:
+        """Add many markers as a single GeoJSON layer.
+
+        The bulk counterpart to :meth:`add_point`.  Calling ``add_point`` in a loop
+        emits six JavaScript statements per marker, each repeating the full inline CSS
+        and a 32-character variable name.  This method writes the coordinates and the
+        per-point text once as GeoJSON properties and builds every icon in the browser
+        from one shared factory, which is what keeps the file small enough to open.
+
+        What you give up is a per-point symbol: ``marker``, ``marker_style`` and
+        ``caption_style`` apply to the whole layer, and only the caption, colour,
+        tooltip and popup vary.  Reach for :meth:`add_point` when each marker needs its
+        own symbol, and for :meth:`add_marker_cluster` when every marker needs its own
+        symbol *and* they should group at low zoom.
+
+        A small file is not yet a responsive one.  Leaflet keeps every marker of the layer
+        in the DOM and repositions all of them on each zoom, so past a few thousand points
+        a zoom blocks the browser for the length of the gesture no matter how compactly the
+        layer was written.  ``cluster`` is what fixes that, by leaving only the markers of
+        the current view in the DOM.
+
+        Parameters
+        ----------
+        points : Sequence[Point]
+            Shapely Points ``(x, y)`` in source CRS.  The CRS is detected once, from the
+            first point, and applied to all of them, so one call cannot mix CRSs.
+        marker : str | None
+            Marker symbol for every point, resolved exactly as in :meth:`add_point`
+            (icon name, full CSS class, or emoji/text).  ``None`` gives ``"arrow-down"``.
+        captions : Sequence[str | RawHTML | None] | None
+            Per-point text placed below the marker, escaped as on :meth:`add_point`.
+            Entries may be ``None``.
+        colors : Sequence[str] | None
+            Per-point CSS colour for the marker symbol, overriding ``marker_style``.
+            HTML-escaped, so a colour cannot smuggle markup into the icon.
+        tooltips : Sequence[str | RawHTML | None] | None
+            Per-point hover text.  Markdown is supported for plain strings.
+        popups : Sequence[str | RawHTML | None] | None
+            Per-point click text.  Markdown is supported for plain strings.
+        marker_style : dict[str, str] | None
+            CSS property overrides for every marker symbol.
+        caption_style : dict[str, str] | None
+            CSS property overrides for every caption.
+        tooltip_style : TooltipStyle | dict[str, Any] | None
+            Tooltip appearance, shared by every point.
+        popup_style : PopupStyle | dict[str, Any] | None
+            Popup dimensions, shared by every point.  ``use_iframe`` does not apply: the
+            content always goes straight into the popup, because a base64 ``data:`` URL
+            per point is a large part of what makes the one-marker-per-point output big.
+        name : str | None
+            Layer name, as shown in the layer control.
+        min_zoom : int | None
+            Minimum zoom level at which the layer is visible.  ``None`` or ``0`` means
+            always visible.
+        min_zoom_caption : int | None
+            Minimum zoom level at which the captions are visible.  The markers stay
+            visible either way.  ``None`` or ``0`` means always visible.  Note that a
+            clustered layer only has captions where it has markers, so this is worth
+            pairing with ``disable_at_zoom`` at or below the same level.
+        cluster : ClusterStyle | dict[str, Any] | None
+            Group nearby markers into one clickable bubble.  ``None``, the default, draws
+            every marker at every zoom, which is the readable choice up to a few thousand
+            points and the unresponsive one beyond that.  The bubble carries the layer name
+            in the layer control, and ``min_zoom`` hides bubble and markers alike.
+        search_texts : Sequence[str | None] | None
+            Per-point text for :meth:`add_filter_control` to match on, and the reason a
+            point can be found by something the map never shows — the project it belongs
+            to, a client reference, the names inside its popup.  Never rendered.  Points
+            without one are matched on their caption instead.
+
+        Returns
+        -------
+        Map
+
+        Raises
+        ------
+        ValueError
+            If ``captions``, ``colors``, ``tooltips``, ``popups`` or ``search_texts`` is
+            given with a length other than ``len(points)``.
+
+        Examples
+        --------
+        >>> m = Map()
+        >>> m.add_points([Point(155_000, 463_000)], marker="triangle-bottom", captions=["CPT-001"])
+
+        Thousands of points stay interactive once they cluster::
+
+            m.add_points(soundings, marker="triangle-bottom", cluster=ClusterStyle(disable_at_zoom=15))
+        """
+        if not points:
+            return self
+        for label, values in (
+            ("captions", captions),
+            ("colors", colors),
+            ("tooltips", tooltips),
+            ("popups", popups),
+            ("search_texts", search_texts),
+        ):
+            if values is not None and len(values) != len(points):
+                raise ValueError(f"{label} has {len(values)} entries but points has {len(points)}")
+
+        # One call for the whole layer: the CRS is detected once and, more to the point,
+        # a single pyproj Transformer covers every point instead of one per add_* call.
+        # ``get_coordinates`` reads the whole array at C speed; ``p.x``/``p.y`` per point
+        # is an order of magnitude slower on the sequence sizes this method exists for.
+        coords = detect_and_transform_coords(get_coordinates(points).tolist(), self._source_crs)
+        gate_captions = min_zoom_caption is not None and min_zoom_caption > 0
+        caption_class = f"caption_{uuid.uuid4().hex[:15]}" if gate_captions else None
+
+        # The exported properties that describe the layer rather than a point, built once
+        # instead of once per point. Split around the per-point text to keep the key order.
+        head_props = {"marker": marker} if marker is not None else {}
+        tail_props = {k: v for k, v in (("min_zoom", min_zoom), ("min_zoom_caption", min_zoom_caption)) if v is not None}
+
+        blank: list[None] = [None] * len(points)
+        rows = zip(
+            coords,
+            captions if captions is not None else blank,
+            colors if colors is not None else blank,
+            tooltips if tooltips is not None else blank,
+            popups if popups is not None else blank,
+            search_texts if search_texts is not None else blank,
+            strict=True,
+        )
+
+        features: list[dict[str, Any]] = []
+        for (lon, lat), caption, color, tooltip, popup, search in rows:
+            props = _point_properties(color, caption, tooltip, popup, search)
+            features.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": props})
+            # Build the tracked geometry directly rather than round-tripping through a
+            # shapely Point, which would re-derive an identical dict and dominate a bulk call.
+            # It stays a separate dict so the layer and the export never alias each other.
+            text_props = {k: str(v) for k, v in (("caption", caption), ("tooltip", tooltip), ("popup", popup)) if v is not None}
+            self._geojson_features.append(
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [lon, lat]},
+                    "properties": {**head_props, **text_props, **tail_props},
+                }
+            )
+
+        # Two corners rather than two per point: fit_bounds only ever reads the extremes,
+        # and a bulk layer would otherwise dominate the tracked bounds list.
+        lons, lats = zip(*coords, strict=True)
+        self._bounds.append((min(lats), min(lons)))
+        self._bounds.append((max(lats), max(lons)))
+
+        layer = folium.GeoJson(
+            {"type": "FeatureCollection", "features": features},
+            # A layer nested in a cluster is no child of the map, so the layer control never
+            # sees it; the cluster carries the name on its behalf.
+            name=None if cluster is not None else name,
+            marker=folium.Marker(icon=folium.DivIcon()),
+            on_each_feature=JsCode(
+                point_layer_js(
+                    marker,
+                    marker_style or {},
+                    {**DEFAULT_MARKER_CAPTION_CSS, **(caption_style or {})},
+                    caption_class,
+                    resolve_style(tooltip_style, TooltipStyle) or TooltipStyle(),
+                    resolve_style(popup_style, PopupStyle) or PopupStyle(),
+                )
+            ),
+        )
+        group = self._point_cluster(resolve_style(cluster, ClusterStyle) or ClusterStyle(), name) if cluster is not None else None
+        layer.add_to(group or self._target())
+        # The markers stay children of the GeoJson layer even once a cluster holds them, so the
+        # filter reads them from the one and puts them back into the other.
+        self._filterable_layers.append((layer.get_name(), (group or layer).get_name()))
+
+        if min_zoom is not None and min_zoom > 0:
+            # The cluster is what the map holds; hiding the layer inside it would leave an
+            # empty bubble behind.
+            self._register_zoom_layer(group or layer, min_zoom)
+        if caption_class is not None:
+            self._zoom_controlled_captions.append({"selector": f".{caption_class}", "min_zoom": min_zoom_caption})
+
+        return self
+
+    def _point_cluster(self, style: ClusterStyle, name: str | None) -> folium.plugins.MarkerCluster:
+        """Return a marker cluster on the current target, to hold a bulk point layer.
+
+        Parameters
+        ----------
+        style : ClusterStyle
+            How the markers group and how the bubble looks.
+        name : str | None
+            Layer name, as shown in the layer control.
+
+        Returns
+        -------
+        folium.plugins.MarkerCluster
+            The cluster, already added to the current target.
+        """
+        cluster = folium.plugins.MarkerCluster(name=name, options=style.leaflet_options(), icon_create_function=style.icon_create_js)
+        cluster.add_to(self._target())
+        return cluster
 
     def add_circle(
         self,
@@ -1077,12 +1360,7 @@ class Map:
             },
         )
         if min_zoom is not None and min_zoom > 0:
-            self._zoom_controlled_markers.append(
-                {
-                    "var_name": marker.get_name(),
-                    "min_zoom": min_zoom,
-                }
-            )
+            self._register_zoom_layer(marker, min_zoom)
         return self
 
     def add_linestring(
@@ -1145,7 +1423,7 @@ class Map:
             },
         )
         if min_zoom is not None and min_zoom > 0:
-            self._zoom_controlled_markers.append({"var_name": layer.get_name(), "min_zoom": min_zoom})
+            self._register_zoom_layer(layer, min_zoom)
         return self
 
     def add_polygon(
@@ -1218,7 +1496,7 @@ class Map:
             },
         )
         if min_zoom is not None and min_zoom > 0:
-            self._zoom_controlled_markers.append({"var_name": layer.get_name(), "min_zoom": min_zoom})
+            self._register_zoom_layer(layer, min_zoom)
         return self
 
     def add_multipolygon(
@@ -1497,30 +1775,6 @@ class Map:
     # Choropleth / colormap
     # ------------------------------------------------------------------
 
-    def _build_colormap(
-        self,
-        colors: list[str] | str | None,
-        vmin: float,
-        vmax: float,
-        caption: str,
-    ) -> cm.LinearColormap:
-        """Build a LinearColormap from a palette name, color list, or the default palette.
-
-        Parameters
-        ----------
-        colors : list[str] | str | None
-            Palette name (e.g. ``"blues"``), list of hex colors, or ``None`` for default.
-        vmin, vmax : float
-            Color scale range.
-        caption : str
-            Legend label.
-
-        Returns
-        -------
-        branca.colormap.LinearColormap
-        """
-        return cm.LinearColormap(colors=self._resolve_colors(colors), vmin=vmin, vmax=vmax, caption=caption)
-
     def _resolve_colors(self, colors: list[str] | str | None) -> list[str]:
         """Resolve a palette name, explicit color list, or ``None`` to a concrete low→high ramp.
 
@@ -1552,10 +1806,33 @@ class Map:
             return colors
         return PALETTES["ylrd"]
 
-    def _register_colormap(self, colormap: cm.LinearColormap | cm.StepColormap) -> None:
-        """Add ``colormap`` to the folium map and track it so legends merge correctly."""
-        colormap.add_to(self._map)
+    def _register_colorbar(self, colors: list[str] | str | None, vmin: float, vmax: float, caption: str | RawHTML) -> cm.LinearColormap:
+        """Build a continuous colormap, track it, and draw its HTML colorbar legend.
+
+        Every continuous scale on the map goes through here so they all render the
+        same way. branca's own colorbar is deliberately not used: it is a Leaflet
+        control, so :meth:`to_image` with ``hide_controls=True`` — the default —
+        strips it out and the exported image loses its legend.
+
+        Parameters
+        ----------
+        colors : list[str] | str | None
+            Palette name (e.g. ``"blues"``), list of hex colors, or ``None`` for default.
+        vmin, vmax : float
+            Color scale range.
+        caption : str | RawHTML
+            Legend label, escaped as described on :meth:`add_legend`.
+
+        Returns
+        -------
+        branca.colormap.LinearColormap
+            The colormap, callable with a value to get its color.
+        """
+        color_list = self._resolve_colors(colors)
+        colormap = cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=caption)
         self._colormaps.append(colormap)
+        self._add_html_colorbar(colors=color_list, vmin=vmin, vmax=vmax, legend_name=caption)
+        return colormap
 
     def add_colorbar(
         self,
@@ -1597,16 +1874,7 @@ class Map:
         branca.colormap.LinearColormap
             The colormap added to the map. Call it with a value to get a colour.
         """
-        color_list = self._resolve_colors(colors)
-        # Build the colormap from the already-resolved ramp (don't route back through
-        # ``_build_colormap``, which would resolve a second time).
-        colormap = cm.LinearColormap(colors=color_list, vmin=vmin, vmax=vmax, caption=legend_name)
-        # Track the colormap in ``self._colormaps`` for consistency with the other
-        # colormap methods, but skip ``_register_colormap``: it calls ``colormap.add_to``,
-        # which would emit branca's SVG colorbar. We render our own HTML legend instead.
-        self._colormaps.append(colormap)
-        self._add_html_colorbar(colors=color_list, vmin=vmin, vmax=vmax, legend_name=legend_name)
-        return colormap
+        return self._register_colorbar(colors=colors, vmin=vmin, vmax=vmax, caption=legend_name)
 
     @staticmethod
     def _format_legend_value(value: float) -> str:
@@ -1622,8 +1890,9 @@ class Map:
         Parameters
         ----------
         colors : list[str]
-            The resolved low→high color ramp. Always holds at least two colours
-            (branca's ``LinearColormap`` rejects fewer in :meth:`add_colorbar`).
+            The resolved low→high color ramp. Always holds at least two colours:
+            :meth:`_register_colorbar` builds the ``LinearColormap`` first, and
+            branca rejects fewer.
         vmin, vmax : float
             Color scale range, used for the five evenly spaced value ticks.
         legend_name : str | RawHTML
@@ -1632,9 +1901,7 @@ class Map:
             verbatim (e.g. ``<sub>``). This keeps untrusted text from becoming
             active markup, matching how tooltips/popups treat their text.
         """
-        # Escape plain strings so untrusted captions can't inject markup; ``RawHTML``
-        # (a ``str`` subclass) opts into verbatim rendering, mirroring tooltips/popups.
-        caption = legend_name if isinstance(legend_name, RawHTML) else html_escape(legend_name)
+        caption = escape_text(legend_name)
         # ``to top`` puts the first colour (low) at the bottom and the last (high) at the top,
         # so the vertical bar reads low→high bottom-up like Plotly's colorbar. Escape the
         # caller-supplied colours so a value with a quote can't break out of the ``style`` attribute.
@@ -1647,19 +1914,99 @@ class Map:
         ticks = "".join(f"<span>{self._format_legend_value(v)}</span>" for v in tick_values)
         # ``top:5%;bottom:5%`` makes the card span 90% of the map height (5% clear at each end)
         # regardless of map size; the bar row flex-fills whatever remains below the caption.
-        legend_html = (
-            '<div style="position:fixed;top:5%;bottom:5%;right:14px;'
-            "z-index:1000;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:6px;"
-            "box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px;"
-            'color:#333;pointer-events:none;display:flex;flex-direction:column;">'
+        self._add_legend_card(
+            "top:5%;bottom:5%;right:14px",
             f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{caption}</div>'
             '<div style="display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;">'
             f'<div style="width:14px;border-radius:2px;background:{gradient};"></div>'
             f'<div style="display:flex;flex-direction:column;justify-content:space-between;margin-left:6px;">{ticks}</div>'
-            "</div>"
-            "</div>"
+            "</div>",
+            extra_css="display:flex;flex-direction:column;",
         )
-        self._map.get_root().html.add_child(folium.Element(legend_html))  # ty: ignore[unresolved-attribute]
+
+    def _add_legend_card(self, position_css: str, body: str, extra_css: str = "", head: str = "") -> None:
+        """Track a legend card carrying the shared chrome at *position_css*.
+
+        *head* is emitted before the card, for a ``<style>`` block whose rules the body
+        refers to by class.
+
+        The markup is only tracked here; :meth:`_render_legends` puts it on the page at
+        render time. Injecting it straight into the figure would drop it on :meth:`__add__`,
+        which copies the Folium *map*'s children but not the figure's.
+        """
+        card = f'<div style="position:fixed;{position_css};{_LEGEND_CARD_CSS}{extra_css}">{body}</div>'
+        self._legends.append(f"{head}{card}")
+
+    def add_legend(
+        self,
+        entries: Sequence[tuple[str, str | RawHTML]],
+        title: str | RawHTML | None = None,
+        position: str = "bottomright",
+    ) -> Self:
+        """Add a categorical legend: a colour swatch and label per entry.
+
+        The counterpart to :meth:`add_colorbar` for data that falls into named
+        classes rather than onto a continuous scale (status, material, ownership).
+        Nothing links it to the features on the map, so the caller supplies the
+        same colours used to style them.
+
+        The legend is an HTML ``<div>`` pinned to a corner of the map. It does not
+        intercept mouse events, so panning and zooming still work over it.
+
+        Parameters
+        ----------
+        entries : Sequence[tuple[str, str | RawHTML]]
+            ``(color, label)`` pairs, rendered top to bottom in the given order.
+            ``color`` is any CSS colour string. Plain-string labels are
+            HTML-escaped and shown literally; wrap in
+            :class:`~mapyta.markdown.RawHTML` to render inline markup such as
+            ``<sub>``/``<sup>``.
+        title : str | RawHTML | None
+            Legend heading. ``None`` omits it. Escaped like the labels.
+        position : str
+            Map corner: ``"topleft"``, ``"topright"``, ``"bottomleft"`` or
+            ``"bottomright"``. Defaults to ``"bottomright"``, clear of the
+            top-centre :paramref:`title`, the top-right controls and the
+            bottom-left coordinate readout.
+
+        Returns
+        -------
+        Map
+
+        Raises
+        ------
+        ValueError
+            If ``entries`` is empty or ``position`` is not one of the four corners.
+
+        Examples
+        --------
+        >>> m = Map()
+        >>> m.add_legend([("#1a9850", "Approved"), ("#d73027", "Rejected")], title="Status")
+        """
+        if not entries:
+            raise ValueError("entries must not be empty")
+        corner = _LEGEND_CORNERS.get(position)
+        if corner is None:
+            valid = ", ".join(f'"{k}"' for k in _LEGEND_CORNERS)
+            raise ValueError(f"Unknown position {position!r}. Available positions: {valid}")
+
+        # A categorical choropleth draws one entry per unique value with no cap, so the row
+        # and swatch CSS goes in a class rather than being repeated inline on every row.
+        # Both carry their class explicitly: a ``RawHTML`` label may contain its own
+        # elements, which a descendant selector would style as rows or swatches.
+        row_cls = f"legend_{uuid.uuid4().hex[:15]}"
+        style_block = (
+            f"<style>.{row_cls}{{display:flex;flex-direction:row;align-items:center;margin-top:4px;}}"
+            f".{row_cls}s{{width:14px;height:14px;flex:none;border-radius:2px;"
+            f"border:1px solid rgba(0,0,0,0.25);margin-right:8px;}}</style>"
+        )
+        rows = "".join(
+            f'<div class="{row_cls}"><span class="{row_cls}s" style="background:{html_escape(color, quote=True)};"></span>{escape_text(label)}</div>'
+            for color, label in entries
+        )
+        heading = f'<div style="font-weight:bold;">{escape_text(title)}</div>' if title is not None else ""
+        self._add_legend_card(corner, f"{heading}{rows}", head=style_block)
+        return self
 
     def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
         self,
@@ -1710,7 +2057,8 @@ class Map:
         categorical : bool | None
             Force categorical mode (``True``), numeric mode (``False``), or auto-detect
             from values (``None``). In categorical mode, each unique value gets a
-            distinct color from the palette.
+            distinct color from the palette and the legend is a swatch per category
+            (see :meth:`add_legend`) rather than a colorbar.
 
         Returns
         -------
@@ -1757,6 +2105,11 @@ class Map:
                 vmax=max(len(categories) - 1, 1),
                 caption=caption,
             )
+            # Tracked like the numeric branch, but never ``add_to``-ed: branca would draw a
+            # step colorbar whose ticks are the category *indices*. A swatch legend names them.
+            self._colormaps.append(colormap)
+            if categories:
+                self.add_legend(entries=[(cat_color_map[cat], cat) for cat in categories], title=caption)
 
             _str_vals = {k: str(v) for k, v in values.items()}
             _cat_map = cat_color_map
@@ -1784,7 +2137,7 @@ class Map:
                 vmin = vmin if vmin is not None else min(num_vals)
                 vmax = vmax if vmax is not None else max(num_vals)
 
-            colormap = self._build_colormap(
+            colormap = self._register_colorbar(
                 colors=colors,
                 vmin=vmin if vmin is not None else 0,
                 vmax=vmax if vmax is not None else 1,
@@ -1812,7 +2165,6 @@ class Map:
             tooltip=tooltip,
         )
         layer.add_to(self._target())
-        self._register_colormap(colormap)
 
         try:
             layer_bounds = layer.get_bounds()
@@ -2164,7 +2516,7 @@ class Map:
         name: str | None = None,
         min_zoom: int | None = None,
         popup_style: PopupStyle | dict[str, Any] | None = None,
-        captions: list[str] | None = None,
+        captions: list[str | RawHTML] | None = None,
         caption_style: dict[str, str] | None = None,
         tooltip_style: TooltipStyle | dict[str, Any] | None = None,
         min_zoom_caption: int | None = None,
@@ -2189,8 +2541,9 @@ class Map:
             Minimum zoom level at which the cluster is visible.
         popup_style : PopupStyle | dict[str, Any] | None
             Popup dimensions.
-        captions : list[str] | None
-            Per-location text annotations placed below each marker.
+        captions : list[str | RawHTML] | None
+            Per-location text annotations placed below each marker, escaped as
+            on :meth:`add_point`.
         caption_style : dict[str, str] | None
             CSS property overrides for ``captions``.
         tooltip_style : TooltipStyle | dict[str, Any] | None
@@ -2228,17 +2581,9 @@ class Map:
             if txt is not None and track_captions:
                 caption_id = f"caption_{uuid.uuid4().hex[:15]}"
 
-            kind = classify_marker(label) if label else "icon_name"
-            if kind == "emoji":
-                assert label is not None  # guarded by classify_marker above
-                icon = build_text_marker(label, css, txt, cap_css, caption_id)
-            else:
-                icon_name = label or "arrow-down"
-                icon = build_icon_marker(icon_name, css, txt, cap_css, caption_id)
-
             folium.Marker(
                 location=[lat, lon],
-                icon=icon,
+                icon=build_marker(label, css, txt, cap_css, caption_id),
                 tooltip=self._make_tooltip(tip, tooltip_style),
                 popup=self._make_popup(popup, popup_style),
             ).add_to(cluster)
@@ -2246,7 +2591,7 @@ class Map:
                 pt,
                 {
                     "marker": label,
-                    "caption": txt,
+                    "caption": self._raw_text(txt),
                     "tooltip": tip,
                     "popup": popup,
                     "min_zoom": min_zoom,
@@ -2258,19 +2603,14 @@ class Map:
                 assert min_zoom_caption is not None  # guarded by track_captions above
                 self._zoom_controlled_captions.append(
                     {
-                        "caption_id": caption_id,
+                        "selector": f"#{caption_id}",
                         "min_zoom": min_zoom_caption,
                     }
                 )
 
         cluster.add_to(self._target())
         if min_zoom is not None and min_zoom > 0:
-            self._zoom_controlled_markers.append(
-                {
-                    "var_name": cluster.get_name(),
-                    "min_zoom": min_zoom,
-                }
-            )
+            self._register_zoom_layer(cluster, min_zoom)
         return self
 
     # ------------------------------------------------------------------
@@ -2353,12 +2693,7 @@ class Map:
             Point(lon, lat), {"text": text, "tooltip": self._raw_text(tooltip), "popup": self._raw_text(popup), "min_zoom": min_zoom}
         )
         if min_zoom is not None and min_zoom > 0:
-            self._zoom_controlled_markers.append(
-                {
-                    "var_name": marker.get_name(),
-                    "min_zoom": min_zoom,
-                }
-            )
+            self._register_zoom_layer(marker, min_zoom)
         return self
 
     # ------------------------------------------------------------------
@@ -2427,8 +2762,8 @@ class Map:
             raise ImportError("from_geodataframe() requires geopandas. Install it with:\n  pip install geopandas") from None
 
         # Reproject to WGS84 if needed
-        if gdf.crs and str(gdf.crs) != "EPSG:4326":
-            gdf = gdf.to_crs("EPSG:4326")
+        if gdf.crs and str(gdf.crs) != WGS84:
+            gdf = gdf.to_crs(WGS84)
 
         # Validate column references
         available = list(gdf.columns)
@@ -2456,13 +2791,12 @@ class Map:
             vals = gdf[color_column].dropna()
             if len(vals) > 0:
                 vmin, vmax = float(vals.min()), float(vals.max())
-                colormap = m._build_colormap(
+                colormap = m._register_colorbar(
                     colors=colors,
                     vmin=vmin,
                     vmax=vmax,
                     caption=legend_name or color_column,
                 )
-                m._register_colormap(colormap)
 
         # Iterate rows
         for idx, row in gdf.iterrows():
@@ -2592,6 +2926,62 @@ class Map:
             .replace("\u2029", "\\u2029")
         )
 
+    def _corner_control_script(self, position: str, label: str | None, setup_js: str, widget_js: str, tail_js: str = "") -> str:
+        """Wrap *widget_js* in the white corner control shared by the dropdown and the filter.
+
+        ``setup_js`` runs once the map is resolved and before the control is built,
+        ``widget_js`` fills the control's ``div``, and ``tail_js`` runs after it is added.
+
+        Written as a ``DOMContentLoaded`` script rather than a Folium child, so it resolves
+        the layers through ``window`` once every one of them is declared.  That is what lets
+        these controls be added after the layer control, which as Folium children they could
+        not: Folium emits children in the order they were added, and the layer control would
+        then reference a layer declared below it.
+
+        Parameters
+        ----------
+        position : str
+            Leaflet control position, e.g. ``"topleft"``.
+        label : str | None
+            Optional caption rendered above the widget.
+        setup_js, widget_js, tail_js : str
+            JavaScript for the three insertion points described above.
+
+        Returns
+        -------
+        str
+            A complete ``<script>`` element.
+        """
+        label_js = ""
+        if label:
+            label_js = (
+                "        var lbl = L.DomUtil.create('div', '', div);\n"
+                # ``textContent`` (not ``innerHTML``) so the label renders as literal text.
+                f"        lbl.textContent = {self._json_for_script(label)};\n"
+                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
+            )
+        return (
+            "<script>\n"
+            "document.addEventListener('DOMContentLoaded', function() {\n"
+            f"    var map = window['{self._map.get_name()}'];\n"
+            "    if (!map) return;\n"
+            f"{setup_js}"
+            # JSON-encode the position too so it can't break out of the JS string literal.
+            f"    var ctrl = L.control({{position: {self._json_for_script(position)}}});\n"
+            "    ctrl.onAdd = function() {\n"
+            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
+            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
+            f"{label_js}{widget_js}"
+            "        L.DomEvent.disableClickPropagation(div);\n"
+            "        L.DomEvent.disableScrollPropagation(div);\n"
+            "        return div;\n"
+            "    };\n"
+            "    ctrl.addTo(map);\n"
+            f"{tail_js}"
+            "});\n"
+            "</script>\n"
+        )
+
     def _inject_layer_dropdown(self) -> None:
         """Inject the single-select feature-group dropdown as a Leaflet control.
 
@@ -2617,29 +3007,9 @@ class Map:
         # so a name containing ``</script>`` must not close the script block.
         options_json = self._json_for_script(options)
 
-        map_var = self._map.get_name()
-        # JSON-encode the position too so it can't break out of the JS string literal.
-        position_json = self._json_for_script(cfg["position"])
-        label = cfg["label"]
-        if label:
-            label_js = (
-                "        var lbl = L.DomUtil.create('div', '', div);\n"
-                # ``textContent`` (not ``innerHTML``) so the label renders as literal text.
-                f"        lbl.textContent = {self._json_for_script(label)};\n"
-                "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
-            )
-        else:
-            label_js = ""
-
-        # DOMContentLoaded so the map and feature-group variables (declared at the
-        # top of Folium's synchronous script block) are defined, mirroring the
-        # export button. The groups are added to the map at creation, so the initial
-        # ``showOnly`` removes all but the first to enforce single-select.
-        script = (
-            "<script>\n"
-            "document.addEventListener('DOMContentLoaded', function() {\n"
-            f"    var map = window['{map_var}'];\n"
-            "    if (!map) return;\n"
+        # The groups are added to the map at creation, so the trailing ``showOnly`` removes
+        # all but the first to enforce single-select.
+        setup_js = (
             f"    var _ddOpts = {options_json};\n"
             "    var groups = _ddOpts.map(function(o) { return {name: o[0], layer: window[o[1]]}; })\n"
             "        .filter(function(g) { return g.layer; });\n"
@@ -2650,11 +3020,8 @@ class Map:
             "            else if (map.hasLayer(g.layer)) { map.removeLayer(g.layer); }\n"
             "        });\n"
             "    }\n"
-            f"    var ddControl = L.control({{position: {position_json}}});\n"
-            "    ddControl.onAdd = function() {\n"
-            "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
-            f"{label_js}"
+        )
+        widget_js = (
             "        var select = L.DomUtil.create('select', '', div);\n"
             "        select.style.cssText = 'border:none;background:#fff;font-size:13px;cursor:pointer;max-width:220px;';\n"
             "        groups.forEach(function(g) {\n"
@@ -2663,15 +3030,8 @@ class Map:
             "            select.appendChild(opt);\n"
             "        });\n"
             "        select.onchange = function() { showOnly(this.value); };\n"
-            "        L.DomEvent.disableClickPropagation(div);\n"
-            "        L.DomEvent.disableScrollPropagation(div);\n"
-            "        return div;\n"
-            "    };\n"
-            "    ddControl.addTo(map);\n"
-            "    showOnly(groups[0].name);\n"
-            "});\n"
-            "</script>\n"
         )
+        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js, "    showOnly(groups[0].name);\n")
         self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
 
     _SEARCH_LABEL_PRIORITY = ("caption", "label", "text", "name", "naam", "title")
@@ -2701,6 +3061,13 @@ class Map:
     def _build_hidden_search_layer(self, property_name: str | None) -> folium.GeoJson:
         """Build an invisible GeoJson layer with a ``_search_label`` property on each feature.
 
+        The layer exists only to be indexed: ``folium.plugins.Search`` reads its features and
+        nobody is meant to see it.  Two things are needed to keep it that way.  A point feature
+        with no ``marker`` of its own is drawn by Leaflet as its default blue pin, and the
+        ``style_function`` here cannot hide it — styling reaches paths, not marker icons — so
+        an empty ``DivIcon`` takes its place.  And ``control=False`` keeps a layer nobody named
+        out of the layer control, where it would otherwise sit as ``macro_element_<hash>``.
+
         Parameters
         ----------
         property_name : str | None
@@ -2727,8 +3094,10 @@ class Map:
         collection = {"type": "FeatureCollection", "features": features}
         return folium.GeoJson(
             collection,
+            marker=folium.Marker(icon=folium.DivIcon(html="", icon_size=(0, 0))),
             style_function=lambda _: {"opacity": 0, "fillOpacity": 0, "weight": 0},
             show=True,
+            control=False,
         )
 
     def add_search_control(
@@ -2806,6 +3175,105 @@ class Map:
         folium.plugins.Search(**search_kwargs).add_to(self._map)
         return self
 
+    def add_filter_control(
+        self,
+        placeholder: str = "Filter...",
+        position: str = "topleft",
+        label: str | None = None,
+    ) -> Self:
+        """Add a box that hides every marker not matching what the reader types.
+
+        Where :meth:`add_search_control` finds one feature and flies to it, leaving the map
+        as it was, this takes the map down to the markers that match: the rest are removed,
+        and a cluster bubble recounts to what is left of it.  That is the difference between
+        looking a sounding up by name and asking which of a thousand belong to one project.
+
+        Only the bulk layers of :meth:`add_points` are filtered.  A point is matched on its
+        ``search_texts`` entry, or on its caption where it has none, case-insensitively and
+        anywhere in the text.  Emptying the box brings every marker back.
+
+        Filtering does not survive a re-render into a second map, since the markers it hides
+        are hidden in the browser and nothing on the Python side knows a filter ran.
+
+        Parameters
+        ----------
+        placeholder : str
+            Text shown in the empty box.
+        position : str
+            Leaflet control position: ``"topleft"``, ``"topright"``, ``"bottomleft"``,
+            or ``"bottomright"``.
+        label : str | None
+            Optional caption rendered above the box.
+
+        Returns
+        -------
+        Map
+        """
+        self._filter_control_config = {"placeholder": placeholder, "position": position, "label": label}
+        return self
+
+    _FILTER_DEBOUNCE_MS = 150
+
+    def _inject_filter_control(self) -> None:
+        """Inject the marker filter as a Leaflet control.
+
+        Goes in under a fixed name, so rendering twice replaces the script rather than
+        stacking a second one, and a map that gained points since the last render filters
+        those too.
+        """
+        cfg = self._filter_control_config
+        assert cfg is not None
+        if not self._filterable_layers:
+            return
+        setup_js = (
+            f"    var _mfPairs = {self._json_for_script(self._filterable_layers)};\n"
+            "    var layers = _mfPairs.map(function(pair) {\n"
+            "        var markers = window[pair[0]], container = window[pair[1]];\n"
+            "        if (!markers || !container) { return null; }\n"
+            # Read once: the container is emptied on every keystroke, so asking it afterwards
+            # would only ever return what the previous filter left behind.
+            "        var all = markers.getLayers();\n"
+            "        return {container: container, all: all, terms: all.map(function(m) {\n"
+            "            var p = (m.feature && m.feature.properties) || {};\n"
+            "            return String(p.search || p.caption || '').toLowerCase();\n"
+            "        })};\n"
+            "    }).filter(Boolean);\n"
+            "    if (!layers.length) return;\n"
+            "    function apply(query) {\n"
+            "        var q = query.trim().toLowerCase();\n"
+            "        layers.forEach(function(l) {\n"
+            "            var keep = q ? l.all.filter(function(_, i) { return l.terms[i].indexOf(q) !== -1; }) : l.all;\n"
+            "            l.container.clearLayers();\n"
+            # A cluster takes the whole batch at once, which is what keeps a keystroke cheap at
+            # thousands of markers; a plain layer has no such method and is filled one by one.
+            "            if (l.container.addLayers) { l.container.addLayers(keep); }\n"
+            "            else { keep.forEach(function(m) { l.container.addLayer(m); }); }\n"
+            "        });\n"
+            # Re-adding a marker rebuilds its icon from scratch, losing the caption visibility the
+            # zoom script set; that script listens for zoomend, so this hands the job back to it.
+            "        map.fire('zoomend');\n"
+            "    }\n"
+        )
+        widget_js = (
+            "        var input = L.DomUtil.create('input', '', div);\n"
+            "        input.type = 'text';\n"
+            f"        input.placeholder = {self._json_for_script(cfg['placeholder'])};\n"
+            "        input.style.cssText = 'border:none;background:#fff;font-size:13px;width:150px;outline:none;';\n"
+            # Applying costs a full rebuild of every layer, so a typed word waits for the
+            # typing to stop instead of rebuilding once per character.
+            "        var pending;\n"
+            "        input.oninput = function() {\n"
+            "            var value = this.value;\n"
+            "            clearTimeout(pending);\n"
+            f"            pending = setTimeout(function() {{ apply(value); }}, {self._FILTER_DEBOUNCE_MS});\n"
+            "        };\n"
+            # The map keeps its own keyboard shortcuts on the container this box sits in, so
+            # arrow keys would pan the map away from under whoever is typing.
+            "        L.DomEvent.on(input, 'keydown keypress keyup', L.DomEvent.stopPropagation);\n"
+        )
+        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js)
+        self._map.get_root().html.add_child(folium.Element(script), name="mapyta_filter_control")  # ty: ignore[unresolved-attribute]
+
     def add_tile_layer(
         self,
         name: str,
@@ -2871,8 +3339,10 @@ class Map:
         result._bounds.extend(other._bounds)
         result._feature_groups.update(other._feature_groups)
         result._colormaps.extend(other._colormaps)
+        result._legends.extend(other._legends)
         result._zoom_controlled_markers.extend(other._zoom_controlled_markers)
         result._zoom_controlled_captions.extend(other._zoom_controlled_captions)
+        result._filterable_layers.extend(other._filterable_layers)
         return result
 
     # ------------------------------------------------------------------
@@ -2884,6 +3354,21 @@ class Map:
         """Access the underlying Folium Map for advanced customization."""
         return self._map
 
+    def _register_zoom_layer(self, layer: MacroElement, min_zoom: int) -> None:
+        """Track *layer* for zoom-driven visibility, together with the parent it was added to.
+
+        The parent matters because re-adding a layer straight to the map would tear it out of
+        its feature group, and the group is what the layer control switches on and off.
+
+        Parameters
+        ----------
+        layer : MacroElement
+            The Folium layer whose visibility follows the zoom level.
+        min_zoom : int
+            Zoom level from which *layer* is visible.
+        """
+        self._zoom_controlled_markers.append({"var_name": layer.get_name(), "min_zoom": min_zoom, "parent": self._target().get_name()})
+
     def _generate_zoom_javascript(self) -> str:
         """Generate JavaScript for zoom-dependent marker and caption visibility.
 
@@ -2893,16 +3378,13 @@ class Map:
             A ``<script>`` block that toggles marker and caption visibility
             based on the current zoom level.
         """
-        ids = ", ".join(f'"{m["var_name"]}"' for m in self._zoom_controlled_markers)
-        marker_config = ", ".join(f'{{id: "{m["var_name"]}", minZoom: {m["min_zoom"]}}}' for m in self._zoom_controlled_markers)
-        caption_config = ", ".join(f'{{id: "{c["caption_id"]}", minZoom: {c["min_zoom"]}}}' for c in self._zoom_controlled_captions)
+        marker_config = ", ".join(
+            f'{{id: "{m["var_name"]}", parentId: "{m["parent"]}", minZoom: {m["min_zoom"]}}}' for m in self._zoom_controlled_markers
+        )
+        caption_config = ", ".join(f'{{sel: "{c["selector"]}", minZoom: {c["min_zoom"]}}}' for c in self._zoom_controlled_captions)
         return (
             "<script>\n"
             "document.addEventListener('DOMContentLoaded', function() {\n"
-            # Build registry using window[id] — avoids eval and scope issues.
-            # By DOMContentLoaded all Folium layer vars (declared with `var` after </body>) are in window.
-            "    var registry = {};\n"
-            "    [" + ids + "].forEach(function(id) { registry[id] = window[id]; });\n"
             "    var checkInterval = setInterval(function() {\n"
             "        var mapContainer = document.querySelector('.folium-map');\n"
             # Folium names the map variable identically to the container id (e.g. map_abc123).
@@ -2912,22 +3394,61 @@ class Map:
             "            var map = window[mapContainer.id];\n"
             "            var configs = [" + marker_config + "];\n"
             "            var captions = [" + caption_config + "];\n"
+            # Resolve through window[id] rather than eval — avoids scope issues, and by now every
+            # Folium layer var (declared with `var` after </body>) is on window. A parent that is
+            # not — a top-level layer pulled in by ``Map.__add__`` — falls back to the map itself.
+            "            configs.forEach(function(c) {\n"
+            "                c.layer = window[c.id];\n"
+            "                c.parent = window[c.parentId] || map;\n"
+            "            });\n"
+            "            configs = configs.filter(function(c) { return c.layer; });\n"
+            # Layers the user switched off in the layer control, which zoom must not override.
+            "            var hidden = {};\n"
+            # Zoom has not run yet, so a layer already missing from the map was put away by the
+            # control (or started hidden), and re-adding it here would undo that.
+            "            configs.forEach(function(c) {\n"
+            "                if (c.parent === map && !map.hasLayer(c.layer)) { hidden[c.id] = true; }\n"
+            "            });\n"
+            # Set while ``update`` moves layers around, so the add/remove events it causes are
+            # not read back as the user clicking a checkbox.
+            "            var syncing = false;\n"
             "            function update() {\n"
             "                var z = map.getZoom();\n"
+            "                syncing = true;\n"
             "                configs.forEach(function(c) {\n"
-            "                    var el = registry[c.id];\n"
-            "                    if (!el) { return; }\n"
-            "                    if (z >= c.minZoom) { el.addTo(map); }\n"
-            "                    else { map.removeLayer(el); }\n"
+            # A group that is switched off already hides everything it holds; changing its
+            # membership here would only fight whatever put it away.
+            "                    if (c.parent !== map && !map.hasLayer(c.parent)) { return; }\n"
+            "                    if (z >= c.minZoom && !hidden[c.id]) { c.parent.addLayer(c.layer); }\n"
+            "                    else { c.parent.removeLayer(c.layer); }\n"
             "                });\n"
+            "                syncing = false;\n"
             # Re-query captions on each update — the DivIcon DOM is recreated when
             # a marker is re-added to the map, so any prior display toggle is lost.
+            # One selector serves both a single marker's caption (``#id``) and a whole bulk
+            # layer's (``.class``), which stays one config entry rather than one per point.
             "                captions.forEach(function(c) {\n"
-            "                    var el = document.getElementById(c.id);\n"
-            "                    if (!el) { return; }\n"
-            "                    el.style.display = z >= c.minZoom ? '' : 'none';\n"
+            "                    document.querySelectorAll(c.sel).forEach(function(el) {\n"
+            "                        el.style.display = z >= c.minZoom ? '' : 'none';\n"
+            "                    });\n"
             "                });\n"
             "            }\n"
+            # The checkbox control reports a toggle on the layer itself or on its group.
+            "            map.on('overlayadd overlayremove', function(e) {\n"
+            "                if (syncing) { return; }\n"
+            "                var off = e.type === 'overlayremove';\n"
+            "                configs.forEach(function(c) {\n"
+            "                    if (c.layer === e.layer || c.parent === e.layer) { hidden[c.id] = off; }\n"
+            "                });\n"
+            "                update();\n"
+            "            });\n"
+            # A group switched by the layer dropdown fires no overlay event, and adding a group
+            # back puts every child on the map at once. Its own layeradd is the cue to re-apply
+            # the zoom rules, and it arrives after the children, so one update settles them all.
+            "            map.on('layeradd layerremove', function(e) {\n"
+            "                if (syncing) { return; }\n"
+            "                if (configs.some(function(c) { return c.parent === e.layer; })) { update(); }\n"
+            "            });\n"
             "            map.on('zoomend', update);\n"
             "            update();\n"
             "        }\n"
@@ -2936,13 +3457,28 @@ class Map:
             "</script>"
         )
 
+    def _render_legends(self) -> None:
+        """Put every tracked legend on the page, replacing what an earlier render left.
+
+        Each card goes in under a name fixed by its position in :attr:`_legends`, and
+        Folium's ``add_child`` overwrites a repeated name.  Rendering a map twice is
+        therefore idempotent, while a map merged after being rendered still picks up the
+        legends that came from the right-hand side.
+        """
+        for i, legend_html in enumerate(self._legends):
+            self._map.get_root().html.add_child(folium.Element(legend_html), name=f"mapyta_legend_{i}")  # ty: ignore[unresolved-attribute]
+
     def _ensure_rendered(self) -> None:
-        """Fit bounds and inject zoom JS / draw plugin / layer dropdown / export button (idempotent)."""
+        """Fit bounds and inject legends / zoom JS / draw plugin / layer dropdown / export button (idempotent)."""
         if not self._center:
             self._fit_bounds()
-        if (self._zoom_controlled_markers or self._zoom_controlled_captions) and not self._zoom_js_injected:
-            self._map.get_root().html.add_child(folium.Element(self._generate_zoom_javascript()))  # ty: ignore[unresolved-attribute]
-            self._zoom_js_injected = True
+        self._render_legends()
+        if self._zoom_controlled_markers or self._zoom_controlled_captions:
+            # Named for the same reason as the legends: regenerated on every render, so a
+            # merge after a render still drives both maps' markers and captions.
+            self._map.get_root().html.add_child(  # ty: ignore[unresolved-attribute]
+                folium.Element(self._generate_zoom_javascript()), name="mapyta_zoom_js"
+            )
         if self._draw_config and not self._draw_injected:
             self._inject_draw_plugin()
         # Before the export button (irrelevant) but, crucially, before the final render:
@@ -2951,6 +3487,8 @@ class Map:
         if self._layer_dropdown_config and not self._layer_dropdown_injected:
             self._inject_layer_dropdown()
             self._layer_dropdown_injected = True
+        if self._filter_control_config:
+            self._inject_filter_control()
         if self._export_button_config and not self._export_button_injected:
             self._inject_export_button()
             self._export_button_injected = True
