@@ -130,7 +130,7 @@ Pass an emoji or a [Font Awesome 6](https://fontawesome.com/icons) icon name to 
 
 ```python
 m.add_point(Point(4.9, 52.37), marker="📍")         # emoji
-m.add_point(Point(4.9, 52.37), marker="location-dot")  # Font Awesome
+m.add_point(Point(4.9, 52.37), marker="fa-location-dot")  # Font Awesome
 ```
 
 ---
