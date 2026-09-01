@@ -92,8 +92,8 @@ VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "cir
 #: 3.3.7 is the last Bootstrap 3 release and carries the complete glyphicon set.
 GLYPHICONS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
 
-#: CSS offsets per corner for :meth:`Map.add_legend`, inset far enough to clear
-#: the Leaflet controls that live in the same corners.
+#: CSS offsets per corner for :meth:`Map.add_legend`: a flat inset that, unlike the
+#: colorbar's, does not step around controls sharing the corner.
 _LEGEND_CORNERS: dict[str, str] = {
     "topleft": "top:10px;left:10px",
     "topright": "top:10px;right:10px",
@@ -109,10 +109,9 @@ _LEGEND_CARD_CSS = (
     "color:#333;pointer-events:none;"
 )
 
-#: Height of one Leaflet control row: the 26px button plus the 10px margin above it, so a
-#: stack of ``n`` controls reaches ``n * 36px`` down from the corner. A legend pinned to an
-#: occupied corner starts one :data:`_CONTROL_STACK_GAP` below that.
+#: One Leaflet control row: the 26px button plus the 10px margin above it.
 _CONTROL_ROW_HEIGHT = 36
+#: Clearance between a control stack and a legend pinned below it in the same corner.
 _CONTROL_STACK_GAP = 10
 
 # Normalise the size of every corner control button. Leaflet renders the layer
@@ -1856,14 +1855,12 @@ class Map:
         for ``value``, so callers colour their own features consistently with
         the legend without rebuilding the scale.
 
-        The legend is a readable HTML ``<div>`` pinned to the right edge of the
-        map, spanning ~90% of its height (5% clear at top and bottom): a vertical
-        gradient bar with the ``legend_name`` above and evenly spaced value ticks
-        alongside, high at the top, rather than branca's default SVG colorbar. The
-        legend sits clear of the top-centre :paramref:`title` instead of
-        overlapping it. Where the top-right corner carries controls (``home_button``,
-        ``measure_control``) the legend starts below them rather than underneath; on a
-        map without those it keeps the full height.
+        The legend is a readable HTML ``<div>`` pinned to the right edge of the map:
+        a vertical gradient bar with the ``legend_name`` above and evenly spaced value
+        ticks alongside, high at the top, rather than branca's default SVG colorbar. It
+        runs to 5% above the bottom edge, and from 5% below the top — or from under the
+        ``home_button`` and ``measure_control`` when that corner carries them. It sits
+        clear of the top-centre :paramref:`title` instead of overlapping it.
 
         Parameters
         ----------
@@ -1893,18 +1890,9 @@ class Map:
         return f"{rounded:.2f}"
 
     def _colorbar_top_css(self) -> str:
-        """Resolve the colorbar's top edge, clearing the controls stacked in the same corner.
-
-        Returns
-        -------
-        str
-            CSS ``top`` value: below the top-right control stack when that corner is
-            occupied, else 5% of the map height like the bottom edge.
-        """
-        rows = sum([self._config.home_button, self._config.measure_control])
-        if not rows:
-            return "5%"
-        return f"{rows * _CONTROL_ROW_HEIGHT + _CONTROL_STACK_GAP}px"
+        """Return the colorbar's CSS ``top``: below the top-right control stack when occupied, else 5% like the bottom edge."""
+        rows = sum((self._config.home_button, self._config.measure_control))
+        return f"{rows * _CONTROL_ROW_HEIGHT + _CONTROL_STACK_GAP}px" if rows else "5%"
 
     def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str | RawHTML) -> None:
         """Render the HTML colorbar legend (gradient bar + caption + ticks) vertically on the right.
@@ -1934,9 +1922,8 @@ class Map:
         # Ticks run high→low top-to-bottom to line up with the bottom-up gradient.
         tick_values = [vmin + span * step / (tick_count - 1) for step in reversed(range(tick_count))]
         ticks = "".join(f"<span>{self._format_legend_value(v)}</span>" for v in tick_values)
-        # ``bottom:5%`` keeps the card clear of the bottom edge regardless of map size, and
-        # the top does the same unless the top-right controls are in the way; the bar row
-        # flex-fills whatever remains below the caption.
+        # ``bottom:5%`` keeps the card clear of the bottom edge regardless of map size;
+        # the bar row flex-fills whatever remains below the caption.
         self._add_legend_card(
             f"top:{self._colorbar_top_css()};bottom:5%;right:14px",
             f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{caption}</div>'
@@ -2709,12 +2696,14 @@ class Map:
             icon_anchor=(w // 2, h // 2),
             class_name="",
         )
+        tip = self._make_tooltip(tooltip, tooltip_style)
+        pop = self._make_popup(popup, popup_style)
         marker = folium.Marker(
             location=[lat, lon],
             icon=icon,
-            tooltip=self._make_tooltip(tooltip, tooltip_style),
-            popup=self._make_popup(popup, popup_style),
-            interactive=tooltip is not None or popup is not None,
+            tooltip=tip,
+            popup=pop,
+            interactive=tip is not None or pop is not None,
         )
         marker.add_to(self._target())
         self._record_feature(
@@ -2959,7 +2948,15 @@ class Map:
             .replace("\u2029", "\\u2029")
         )
 
-    def _corner_control_script(self, position: str, label: str | None, setup_js: str, widget_js: str, tail_js: str = "", inline: bool = False) -> str:
+    def _corner_control_script(
+        self,
+        position: str,
+        label: str | None,
+        setup_js: str,
+        widget_js: str,
+        tail_js: str = "",
+        inline: bool = False,
+    ) -> str:
         """Wrap *widget_js* in the white corner control shared by the dropdown and the filter.
 
         ``setup_js`` runs once the map is resolved and before the control is built,
@@ -2999,11 +2996,11 @@ class Map:
         # Leaflet lays a corner out as a column of cleared floats, so dropping the clear puts the
         # control beside its neighbour. The move is what makes that neighbour the corner's first
         # control: Leaflet appends, so without it the control lands beside whatever was added last.
-        inline_css = "clear:none;" if inline else ""
         inline_js = ""
         if inline:
             inline_js = (
                 "    var el = ctrl.getContainer();\n"
+                "    el.style.clear = 'none';\n"
                 "    var first = el.parentNode.firstElementChild;\n"
                 "    if (first && first !== el) { el.parentNode.insertBefore(el, first.nextSibling); }\n"
             )
@@ -3017,7 +3014,7 @@ class Map:
             f"    var ctrl = L.control({{position: {self._json_for_script(position)}}});\n"
             "    ctrl.onAdd = function() {\n"
             "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            f"        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;{inline_css}';\n"
+            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
             f"{label_js}{widget_js}"
             "        L.DomEvent.disableClickPropagation(div);\n"
             "        L.DomEvent.disableScrollPropagation(div);\n"

@@ -493,6 +493,23 @@ class TestTextAnnotation:
         # Assert - Then
         assert '"interactive": false' in m.get_standalone_html(), "a label with nothing to show must not take mouse events"
 
+    def test_empty_tooltip_counts_as_nothing_to_show(self) -> None:
+        """
+        Scenario: A label whose tooltip text is empty.
+
+        Given: An empty map
+        When: add_text is called with an empty tooltip string
+        Then: No tooltip is built, so the label stays out of the way like a plain one
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_text((52.37, 4.9), "1890", tooltip="")
+
+        # Assert - Then
+        assert '"interactive": false' in m.get_standalone_html(), "an empty tooltip builds nothing, so the label must not take mouse events"
+
     def test_label_with_its_own_hover_stays_interactive(self) -> None:
         """
         Scenario: A label that answers a hover of its own.

@@ -1098,7 +1098,7 @@ class TestFeatureGroups:
         html = m.get_standalone_html()
 
         # Assert - Then
-        assert "clear:none;" in html, "an inline control must drop the clear that stacks it below its neighbours"
+        assert "el.style.clear = 'none'" in html, "an inline control must drop the clear that stacks it below its neighbours"
         assert "el.parentNode.insertBefore(el, first.nextSibling)" in html, "an inline control must be moved behind the corner's first control"
 
     def test_add_layer_dropdown_stacks_below_by_default(self) -> None:
@@ -1119,8 +1119,8 @@ class TestFeatureGroups:
         html = m.get_standalone_html()
 
         # Assert - Then
-        assert "clear:none;" not in html, "the default dropdown must keep the cleared float that gives it its own row"
-        assert "insertBefore(el, first.nextSibling)" not in html, "the default dropdown must stay where Leaflet appended it"
+        assert "el.style.clear = 'none'" not in html, "the default dropdown must keep the cleared float that gives it its own row"
+        assert "el.parentNode.insertBefore(el, first.nextSibling)" not in html, "the default dropdown must stay where Leaflet appended it"
 
 
 # ===================================================================
@@ -6089,33 +6089,25 @@ class TestAddColorbar:
         assert "<script>alert(1)</script>" not in html, "a quote in a color stop must not break out into active markup"
         assert "&quot;" in html, "the quote in the color stop must be HTML-escaped"
 
-    def test_legend_starts_below_the_home_button(self) -> None:
+    @pytest.mark.parametrize(
+        ("config", "expected_top"),
+        [
+            (MapConfig(home_button=True), "top:46px"),
+            (MapConfig(home_button=True, measure_control=True), "top:82px"),
+        ],
+    )
+    def test_legend_clears_the_stacked_top_right_controls(self, config: MapConfig, expected_top: str) -> None:
         """
-        Scenario: A colorbar on a map that has a reset-view control clears it.
+        Scenario: The colorbar starts below whatever the top-right corner already holds.
 
-        Given: A map with home_button enabled and a colorbar
+        Given: A map with one or two top-right controls, and a colorbar
         When: The map is rendered
-        Then: The legend starts below the top-right control instead of behind it
+        Then: Each stacked control pushes the legend's top edge down another row
         """
-        m = Map(config=MapConfig(home_button=True))
+        m = Map(config=config)
         m.add_colorbar(colors=["#d73027", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
-        html = m.get_standalone_html()
 
-        assert "top:46px;bottom:5%;right:14px" in html, "one top-right control pushes the legend below it"
-
-    def test_legend_clears_every_stacked_top_right_control(self) -> None:
-        """
-        Scenario: Two controls stacked in the top-right corner push the colorbar down twice.
-
-        Given: A map with both the home button and the measure control, and a colorbar
-        When: The map is rendered
-        Then: The legend starts below the lower of the two controls
-        """
-        m = Map(config=MapConfig(home_button=True, measure_control=True))
-        m.add_colorbar(colors=["#d73027", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
-        html = m.get_standalone_html()
-
-        assert "top:82px;bottom:5%;right:14px" in html, "each stacked control adds a row to clear"
+        assert f"{expected_top};bottom:5%;right:14px" in m.get_standalone_html(), "each stacked control adds a row to clear"
 
 
 # ===================================================================
