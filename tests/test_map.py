@@ -7203,6 +7203,25 @@ class TestFilterControl:
         assert '"Zoek sondering"' in script
         assert '"Filter"' in script
 
+    def test_inline_puts_the_box_on_the_first_control_row(self) -> None:
+        """
+        Scenario: An inline filter shares its row with the corner's first control.
+
+        Given: A map with points to filter
+        When: add_filter_control is called with inline=True
+        Then: The control drops its clear and is moved up behind the corner's first control
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(3)).add_filter_control(inline=True)
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        assert "el.style.clear = 'none'" in script, "an inline control must drop the clear that stacks it below its neighbours"
+        assert "el.parentNode.insertBefore(el, first.nextSibling)" in script, "an inline control must be moved behind the corner's first control"
+
     def test_placeholder_cannot_close_the_script_block(self) -> None:
         """
         Scenario: A placeholder is text, not markup.

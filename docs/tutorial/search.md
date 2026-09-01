@@ -231,6 +231,7 @@ Matching is case-insensitive and substring-based, so a partial name narrows the 
 | `placeholder` | `"Filter..."` | Placeholder text in the empty box.                                            |
 | `position`    | `"topleft"`   | Control position: `"topleft"`, `"topright"`, `"bottomleft"`, `"bottomright"`. |
 | `label`       | `None`        | Optional caption rendered above the box.                                      |
+| `inline`      | `False`       | Put the box on the row of the corner's first control, not below it.           |
 
 ## Parameters
 

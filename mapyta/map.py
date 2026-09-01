@@ -3251,6 +3251,7 @@ class Map:
         placeholder: str = "Filter...",
         position: str = "topleft",
         label: str | None = None,
+        inline: bool = False,
     ) -> Self:
         """Add a box that hides every marker not matching what the reader types.
 
@@ -3275,12 +3276,16 @@ class Map:
             or ``"bottomright"``.
         label : str | None
             Optional caption rendered above the box.
+        inline : bool
+            Put the box on the row of the corner's first control — beside the zoom
+            buttons, on the default ``"topleft"`` — instead of below every control
+            already in that corner.
 
         Returns
         -------
         Map
         """
-        self._filter_control_config = {"placeholder": placeholder, "position": position, "label": label}
+        self._filter_control_config = {"placeholder": placeholder, "position": position, "label": label, "inline": inline}
         return self
 
     _FILTER_DEBOUNCE_MS = 150
@@ -3342,7 +3347,7 @@ class Map:
             # arrow keys would pan the map away from under whoever is typing.
             "        L.DomEvent.on(input, 'keydown keypress keyup', L.DomEvent.stopPropagation);\n"
         )
-        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js)
+        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js, inline=cfg["inline"])
         self._map.get_root().html.add_child(folium.Element(script), name="mapyta_filter_control")  # ty: ignore[unresolved-attribute]
 
     def add_tile_layer(
