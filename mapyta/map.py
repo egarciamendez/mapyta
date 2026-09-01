@@ -109,6 +109,12 @@ _LEGEND_CARD_CSS = (
     "color:#333;pointer-events:none;"
 )
 
+#: Height of one Leaflet control row: the 26px button plus the 10px margin above it, so a
+#: stack of ``n`` controls reaches ``n * 36px`` down from the corner. A legend pinned to an
+#: occupied corner starts one :data:`_CONTROL_STACK_GAP` below that.
+_CONTROL_ROW_HEIGHT = 36
+_CONTROL_STACK_GAP = 10
+
 # Normalise the size of every corner control button. Leaflet renders the layer
 # and measure toggles at 36px (44px on touch), while the zoom, draw, home and
 # fullscreen buttons sit at 26px (30px on touch). Shrink the two odd ones out so
@@ -1855,7 +1861,9 @@ class Map:
         gradient bar with the ``legend_name`` above and evenly spaced value ticks
         alongside, high at the top, rather than branca's default SVG colorbar. The
         legend sits clear of the top-centre :paramref:`title` instead of
-        overlapping it.
+        overlapping it. Where the top-right corner carries controls (``home_button``,
+        ``measure_control``) the legend starts below them rather than underneath; on a
+        map without those it keeps the full height.
 
         Parameters
         ----------
@@ -1883,6 +1891,20 @@ class Map:
         if rounded.is_integer():
             return f"{int(rounded)}"
         return f"{rounded:.2f}"
+
+    def _colorbar_top_css(self) -> str:
+        """Resolve the colorbar's top edge, clearing the controls stacked in the same corner.
+
+        Returns
+        -------
+        str
+            CSS ``top`` value: below the top-right control stack when that corner is
+            occupied, else 5% of the map height like the bottom edge.
+        """
+        rows = sum([self._config.home_button, self._config.measure_control])
+        if not rows:
+            return "5%"
+        return f"{rows * _CONTROL_ROW_HEIGHT + _CONTROL_STACK_GAP}px"
 
     def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str | RawHTML) -> None:
         """Render the HTML colorbar legend (gradient bar + caption + ticks) vertically on the right.
@@ -1912,10 +1934,11 @@ class Map:
         # Ticks run high→low top-to-bottom to line up with the bottom-up gradient.
         tick_values = [vmin + span * step / (tick_count - 1) for step in reversed(range(tick_count))]
         ticks = "".join(f"<span>{self._format_legend_value(v)}</span>" for v in tick_values)
-        # ``top:5%;bottom:5%`` makes the card span 90% of the map height (5% clear at each end)
-        # regardless of map size; the bar row flex-fills whatever remains below the caption.
+        # ``bottom:5%`` keeps the card clear of the bottom edge regardless of map size, and
+        # the top does the same unless the top-right controls are in the way; the bar row
+        # flex-fills whatever remains below the caption.
         self._add_legend_card(
-            "top:5%;bottom:5%;right:14px",
+            f"top:{self._colorbar_top_css()};bottom:5%;right:14px",
             f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{caption}</div>'
             '<div style="display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;">'
             f'<div style="width:14px;border-radius:2px;background:{gradient};"></div>'

@@ -266,7 +266,7 @@ from mapyta import RawHTML
 m.add_colorbar(colors="viridis", vmin=0, vmax=50, legend_name=RawHTML("R<sub>c;cal</sub>"))
 ```
 
-The legend is a vertical gradient bar pinned to the right edge of the map, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals. `add_choropleth` and `from_geodataframe` draw the same bar for their continuous scales, so every legend on a map matches — and because it is plain HTML rather than a Leaflet control, it survives `to_image()`, which hides the map controls by default.
+The legend is a vertical gradient bar pinned to the right edge of the map, starting below the top-right controls when the map has any, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals. `add_choropleth` and `from_geodataframe` draw the same bar for their continuous scales, so every legend on a map matches — and because it is plain HTML rather than a Leaflet control, it survives `to_image()`, which hides the map controls by default.
 
 !!! tip "Reuse the same scale everywhere"
 
