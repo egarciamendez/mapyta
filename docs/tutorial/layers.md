@@ -75,6 +75,8 @@ print(m.to_html()) # markdown-exec: hide
 
 **`label`** is an optional caption above the dropdown. **`position`** takes any Leaflet corner (`"topleft"`, `"topright"`, `"bottomleft"`, `"bottomright"`).
 
+**`inline`** puts the dropdown on the row of the corner's first control instead of below every control already there. On the default `"topleft"` that is beside the zoom buttons, which keeps the corner two rows tall rather than three and leaves more map visible down the left edge.
+
 On load, only the first group is shown. Selecting an option hides the others.
 
 !!! note "Mixing with `add_layer_control()`"

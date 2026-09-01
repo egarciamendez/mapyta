@@ -1080,6 +1080,48 @@ class TestFeatureGroups:
         assert "lbl.innerHTML" not in html, "the label must not be assigned via innerHTML"
         assert "<script>alert(1)</script>" not in html, "the label must not become active markup"
 
+    def test_add_layer_dropdown_inline_puts_it_on_the_first_control_row(self) -> None:
+        """
+        Scenario: An inline dropdown shares its row with the corner's first control.
+
+        Given: A map with a feature group
+        When: add_layer_dropdown is called with inline=True
+        Then: The control drops its clear and is moved up behind the corner's first control
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown(inline=True)
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "clear:none;" in html, "an inline control must drop the clear that stacks it below its neighbours"
+        assert "el.parentNode.insertBefore(el, first.nextSibling)" in html, "an inline control must be moved behind the corner's first control"
+
+    def test_add_layer_dropdown_stacks_below_by_default(self) -> None:
+        """
+        Scenario: Without inline, the dropdown keeps its own row.
+
+        Given: A map with a feature group
+        When: add_layer_dropdown is called without inline
+        Then: Neither the cleared float nor the position of the control is touched
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert "clear:none;" not in html, "the default dropdown must keep the cleared float that gives it its own row"
+        assert "insertBefore(el, first.nextSibling)" not in html, "the default dropdown must stay where Leaflet appended it"
+
 
 # ===================================================================
 # Scenarios for adding GeoJSON data layers.

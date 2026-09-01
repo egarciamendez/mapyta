@@ -2902,6 +2902,7 @@ class Map:
         names: list[str] | None = None,
         position: str = "topleft",
         label: str | None = None,
+        inline: bool = False,
     ) -> Self:
         """Add a single-select dropdown that switches between feature groups.
 
@@ -2927,12 +2928,16 @@ class Map:
             ``"bottomleft"``, or ``"bottomright"``.
         label : str | None
             Optional caption rendered above the dropdown.
+        inline : bool
+            Put the dropdown on the row of the corner's first control — beside the
+            zoom buttons, on the default ``"topleft"`` — instead of below every
+            control already in that corner.
 
         Returns
         -------
         Map
         """
-        self._layer_dropdown_config = {"names": names, "position": position, "label": label}
+        self._layer_dropdown_config = {"names": names, "position": position, "label": label, "inline": inline}
         self._layer_dropdown_injected = False
         return self
 
@@ -2954,7 +2959,7 @@ class Map:
             .replace("\u2029", "\\u2029")
         )
 
-    def _corner_control_script(self, position: str, label: str | None, setup_js: str, widget_js: str, tail_js: str = "") -> str:
+    def _corner_control_script(self, position: str, label: str | None, setup_js: str, widget_js: str, tail_js: str = "", inline: bool = False) -> str:
         """Wrap *widget_js* in the white corner control shared by the dropdown and the filter.
 
         ``setup_js`` runs once the map is resolved and before the control is built,
@@ -2974,6 +2979,9 @@ class Map:
             Optional caption rendered above the widget.
         setup_js, widget_js, tail_js : str
             JavaScript for the three insertion points described above.
+        inline : bool
+            Put the control on the row of the corner's first control instead of
+            below every control already in that corner.
 
         Returns
         -------
@@ -2988,6 +2996,17 @@ class Map:
                 f"        lbl.textContent = {self._json_for_script(label)};\n"
                 "        lbl.style.cssText = 'font-size:11px;font-weight:bold;margin-bottom:3px;color:#333;';\n"
             )
+        # Leaflet lays a corner out as a column of cleared floats, so dropping the clear puts the
+        # control beside its neighbour. The move is what makes that neighbour the corner's first
+        # control: Leaflet appends, so without it the control lands beside whatever was added last.
+        inline_css = "clear:none;" if inline else ""
+        inline_js = ""
+        if inline:
+            inline_js = (
+                "    var el = ctrl.getContainer();\n"
+                "    var first = el.parentNode.firstElementChild;\n"
+                "    if (first && first !== el) { el.parentNode.insertBefore(el, first.nextSibling); }\n"
+            )
         return (
             "<script>\n"
             "document.addEventListener('DOMContentLoaded', function() {\n"
@@ -2998,14 +3017,14 @@ class Map:
             f"    var ctrl = L.control({{position: {self._json_for_script(position)}}});\n"
             "    ctrl.onAdd = function() {\n"
             "        var div = L.DomUtil.create('div', 'leaflet-bar');\n"
-            "        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;';\n"
+            f"        div.style.cssText = 'background:#fff;padding:4px 6px;border-radius:5px;{inline_css}';\n"
             f"{label_js}{widget_js}"
             "        L.DomEvent.disableClickPropagation(div);\n"
             "        L.DomEvent.disableScrollPropagation(div);\n"
             "        return div;\n"
             "    };\n"
             "    ctrl.addTo(map);\n"
-            f"{tail_js}"
+            f"{inline_js}{tail_js}"
             "});\n"
             "</script>\n"
         )
@@ -3059,7 +3078,9 @@ class Map:
             "        });\n"
             "        select.onchange = function() { showOnly(this.value); };\n"
         )
-        script = self._corner_control_script(cfg["position"], cfg["label"], setup_js, widget_js, "    showOnly(groups[0].name);\n")
+        script = self._corner_control_script(
+            cfg["position"], cfg["label"], setup_js, widget_js, "    showOnly(groups[0].name);\n", inline=cfg["inline"]
+        )
         self._map.get_root().html.add_child(folium.Element(script))  # ty: ignore[unresolved-attribute]
 
     _SEARCH_LABEL_PRIORITY = ("caption", "label", "text", "name", "naam", "title")
