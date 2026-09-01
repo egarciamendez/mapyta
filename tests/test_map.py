@@ -6016,7 +6016,7 @@ class TestAddColorbar:
         html = m.get_standalone_html()
 
         assert "linear-gradient(to top" in html, "Legend should be a vertical CSS gradient bar"
-        assert "top:5%;bottom:5%;right:14px" in html, "an empty top-right corner keeps the legend spanning most of the map height"
+        assert "top:5%;bottom:5%;right:14px" in html, "the legend should hug the right edge, spanning most of the map height"
         assert "color_map_" not in html, "branca's SVG colorbar must not be emitted"
         assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
 
@@ -6089,25 +6089,23 @@ class TestAddColorbar:
         assert "<script>alert(1)</script>" not in html, "a quote in a color stop must not break out into active markup"
         assert "&quot;" in html, "the quote in the color stop must be HTML-escaped"
 
-    @pytest.mark.parametrize(
-        ("config", "expected_top"),
-        [
-            (MapConfig(home_button=True), "top:46px"),
-            (MapConfig(home_button=True, measure_control=True), "top:82px"),
-        ],
-    )
-    def test_legend_clears_the_stacked_top_right_controls(self, config: MapConfig, expected_top: str) -> None:
+    def test_legend_is_measured_against_the_top_right_corner(self) -> None:
         """
-        Scenario: The colorbar starts below whatever the top-right corner already holds.
+        Scenario: The colorbar leaves its clearance to the browser.
 
-        Given: A map with one or two top-right controls, and a colorbar
+        Given: A map with a colorbar
         When: The map is rendered
-        Then: Each stacked control pushes the legend's top edge down another row
+        Then: The card is marked for the top-right corner, and the script that measures that
+              corner raises the card's own inset rather than replacing it
         """
-        m = Map(config=config)
+        m = Map()
         m.add_colorbar(colors=["#d73027", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
 
-        assert f"{expected_top};bottom:5%;right:14px" in m.get_standalone_html(), "each stacked control adds a row to clear"
+        html = m.get_standalone_html()
+
+        assert 'data-mapyta-top="right"' in html, "the colorbar must be measured against the top-right corner"
+        assert "'.leaflet-top.leaflet-' + card.dataset.mapytaTop" in html, "the corner itself must be what is measured"
+        assert "card.style.top = 'max(" in html, "the card's own inset must stay the floor the measurement lifts"
 
 
 # ===================================================================
@@ -6203,9 +6201,42 @@ class TestAddLegend:
 
         assert expected_css in m.get_standalone_html()
 
+    @pytest.mark.parametrize(
+        ("position", "expected_marker"),
+        [
+            ("topleft", 'data-mapyta-top="left"'),
+            ("topright", 'data-mapyta-top="right"'),
+        ],
+    )
+    def test_a_top_corner_legend_clears_that_corner_controls(self, position: str, expected_marker: str) -> None:
+        """
+        Scenario: A legend sharing a top corner with the controls starts below them.
+
+        Given: A legend placed in one of the two top corners
+        When: The map is rendered to HTML
+        Then: The card is marked for that corner, so the clearance script measures it
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")], position=position)
+
+        assert expected_marker in m.get_standalone_html(), "a top-corner legend must clear that corner's controls"
+
+    def test_a_bottom_corner_legend_stays_on_the_edge(self) -> None:
+        """
+        Scenario: A legend at the bottom keeps its flat inset.
+
+        Given: A legend placed in a bottom corner
+        When: The map is rendered to HTML
+        Then: Nothing marks it for measurement, so the attribution line does not lift it off the edge
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")], position="bottomleft")
+
+        assert "data-mapyta-top" not in m.get_standalone_html(), "only a top-corner legend steps around controls"
+
     def test_defaults_to_bottom_right(self) -> None:
         """
-        Scenario: The default position stays clear of the title and the top-right controls.
+        Scenario: The default position stays clear of the title and the coordinate readout.
 
         Given: A legend added without an explicit position
         When: The map is rendered to HTML

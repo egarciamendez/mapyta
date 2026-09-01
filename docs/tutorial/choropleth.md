@@ -266,7 +266,7 @@ from mapyta import RawHTML
 m.add_colorbar(colors="viridis", vmin=0, vmax=50, legend_name=RawHTML("R<sub>c;cal</sub>"))
 ```
 
-The legend is a vertical gradient bar pinned to the right edge of the map, starting below the reset-view and measure controls when the map has them, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals. `add_choropleth` and `from_geodataframe` draw the same bar for their continuous scales, so every legend on a map matches — and because it is plain HTML rather than a Leaflet control, it survives `to_image()`, which hides the map controls by default.
+The legend is a vertical gradient bar pinned to the right edge of the map, starting below whatever controls sit in the top-right corner, with five evenly spaced ticks running high → low. Ticks show a plain integer when whole, otherwise two decimals. `add_choropleth` and `from_geodataframe` draw the same bar for their continuous scales, so every legend on a map matches — and because it is plain HTML rather than a Leaflet control, it survives `to_image()`, which hides the map controls by default and hands the legend the full height back.
 
 !!! tip "Reuse the same scale everywhere"
 
@@ -315,7 +315,7 @@ print(m.to_html())  # markdown-exec: hide
 
 **`title`** is the heading above the swatches, escaped the same way. Leave it out for an unlabelled legend.
 
-**`position`** pins the card to `"topleft"`, `"topright"`, `"bottomleft"` or `"bottomright"`. The default `"bottomright"` stays clear of the map title, the top-right controls and the bottom-left coordinate readout. The legend never intercepts mouse events, so panning and zooming still work over it.
+**`position`** pins the card to `"topleft"`, `"topright"`, `"bottomleft"` or `"bottomright"`. The default `"bottomright"` stays clear of the map title and the bottom-left coordinate readout; in a top corner the card starts below the controls that corner holds. The legend never intercepts mouse events, so panning and zooming still work over it.
 
 !!! tip "Filtering as well as explaining"
 

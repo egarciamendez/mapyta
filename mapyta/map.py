@@ -92,8 +92,9 @@ VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "cir
 #: 3.3.7 is the last Bootstrap 3 release and carries the complete glyphicon set.
 GLYPHICONS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
 
-#: CSS offsets per corner for :meth:`Map.add_legend`: a flat inset that, unlike the
-#: colorbar's, does not step around controls sharing the corner.
+#: CSS insets per corner for :meth:`Map.add_legend`. A card in a top corner is stepped past
+#: that corner's controls by :data:`_LEGEND_CLEARANCE_JS`; the bottom two keep the flat inset,
+#: where the only thing they meet is Leaflet's attribution line.
 _LEGEND_CORNERS: dict[str, str] = {
     "topleft": "top:10px;left:10px",
     "topright": "top:10px;right:10px",
@@ -109,10 +110,33 @@ _LEGEND_CARD_CSS = (
     "color:#333;pointer-events:none;"
 )
 
-#: One Leaflet control row: the 26px button plus the 10px margin above it.
-_CONTROL_ROW_HEIGHT = 36
-#: Clearance between a control stack and a legend pinned below it in the same corner.
-_CONTROL_STACK_GAP = 10
+#: Marks a legend card for :data:`_LEGEND_CLEARANCE_JS`, its value naming the top corner to
+#: measure. The script spells it twice more: as a selector, and as the ``dataset`` key that
+#: reads the corner back.
+_TOP_CLEARANCE_ATTR = "data-mapyta-top"
+
+#: Start a legend card pinned to a top corner below whatever Leaflet controls that corner
+#: holds. The corner's own height is the measurement, so it answers for every control at any
+#: button size, whichever call put one there and in whatever order. It collapses to nothing
+#: once :meth:`Map.to_image` hides the controls, where a figure worked out in Python would
+#: leave a hole. Read from a timeout because the dropdown, filter and export controls
+#: add themselves on ``DOMContentLoaded`` too, and no listener can see what a later one adds.
+_LEGEND_CLEARANCE_JS = (
+    "<script>\n"
+    "document.addEventListener('DOMContentLoaded', function() {\n"
+    "    setTimeout(function() {\n"
+    "        document.querySelectorAll('[data-mapyta-top]').forEach(function(card) {\n"
+    "            var stack = document.querySelector('.leaflet-top.leaflet-' + card.dataset.mapytaTop);\n"
+    "            var height = stack ? stack.offsetHeight : 0;\n"
+    # The corner already carries the 10px Leaflet leaves above its first control; the second
+    # 10px is the gap between the stack and the card. ``max`` keeps the card's own inset as a
+    # floor, so an empty corner leaves it exactly where the CSS put it.
+    "            if (height) { card.style.top = 'max(' + card.style.top + ', ' + (height + 10) + 'px)'; }\n"
+    "        });\n"
+    "    }, 0);\n"
+    "});\n"
+    "</script>"
+)
 
 # Normalise the size of every corner control button. Leaflet renders the layer
 # and measure toggles at 36px (44px on touch), while the zoom, draw, home and
@@ -1859,8 +1883,8 @@ class Map:
         a vertical gradient bar with the ``legend_name`` above and evenly spaced value
         ticks alongside, high at the top, rather than branca's default SVG colorbar. It
         runs to 5% above the bottom edge, and from 5% below the top — or from under the
-        ``home_button`` and ``measure_control`` when that corner carries them. It sits
-        clear of the top-centre :paramref:`title` instead of overlapping it.
+        controls in the top-right corner, whichever is lower. It sits clear of the
+        top-centre :paramref:`title` instead of overlapping it.
 
         Parameters
         ----------
@@ -1888,11 +1912,6 @@ class Map:
         if rounded.is_integer():
             return f"{int(rounded)}"
         return f"{rounded:.2f}"
-
-    def _colorbar_top_css(self) -> str:
-        """Return the colorbar's CSS ``top``: below the top-right control stack when occupied, else 5% like the bottom edge."""
-        rows = sum((self._config.home_button, self._config.measure_control))
-        return f"{rows * _CONTROL_ROW_HEIGHT + _CONTROL_STACK_GAP}px" if rows else "5%"
 
     def _add_html_colorbar(self, colors: list[str], vmin: float, vmax: float, legend_name: str | RawHTML) -> None:
         """Render the HTML colorbar legend (gradient bar + caption + ticks) vertically on the right.
@@ -1922,10 +1941,12 @@ class Map:
         # Ticks run high→low top-to-bottom to line up with the bottom-up gradient.
         tick_values = [vmin + span * step / (tick_count - 1) for step in reversed(range(tick_count))]
         ticks = "".join(f"<span>{self._format_legend_value(v)}</span>" for v in tick_values)
-        # ``bottom:5%`` keeps the card clear of the bottom edge regardless of map size;
-        # the bar row flex-fills whatever remains below the caption.
+        # ``top:5%;bottom:5%`` makes the card span 90% of the map height (5% clear at each end)
+        # regardless of map size; the bar row flex-fills whatever remains below the caption. A
+        # top-right control stack pushes the top edge further down in the browser.
         self._add_legend_card(
-            f"top:{self._colorbar_top_css()};bottom:5%;right:14px",
+            "topright",
+            "top:5%;bottom:5%;right:14px",
             f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{caption}</div>'
             '<div style="display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;">'
             f'<div style="width:14px;border-radius:2px;background:{gradient};"></div>'
@@ -1934,8 +1955,11 @@ class Map:
             extra_css="display:flex;flex-direction:column;",
         )
 
-    def _add_legend_card(self, position_css: str, body: str, extra_css: str = "", head: str = "") -> None:
-        """Track a legend card carrying the shared chrome at *position_css*.
+    def _add_legend_card(self, corner: str, position_css: str, body: str, extra_css: str = "", head: str = "") -> None:
+        """Track a legend card carrying the shared chrome at *position_css*, pinned to *corner*.
+
+        A card in one of the two top corners is marked for :data:`_LEGEND_CLEARANCE_JS`, which
+        starts it below that corner's controls rather than on top of them.
 
         *head* is emitted before the card, for a ``<style>`` block whose rules the body
         refers to by class.
@@ -1944,7 +1968,8 @@ class Map:
         render time. Injecting it straight into the figure would drop it on :meth:`__add__`,
         which copies the Folium *map*'s children but not the figure's.
         """
-        card = f'<div style="position:fixed;{position_css};{_LEGEND_CARD_CSS}{extra_css}">{body}</div>'
+        clears = f' {_TOP_CLEARANCE_ATTR}="{corner.removeprefix("top")}"' if corner.startswith("top") else ""
+        card = f'<div{clears} style="position:fixed;{position_css};{_LEGEND_CARD_CSS}{extra_css}">{body}</div>'
         self._legends.append(f"{head}{card}")
 
     def add_legend(
@@ -1960,8 +1985,9 @@ class Map:
         Nothing links it to the features on the map, so the caller supplies the
         same colours used to style them.
 
-        The legend is an HTML ``<div>`` pinned to a corner of the map. It does not
-        intercept mouse events, so panning and zooming still work over it.
+        The legend is an HTML ``<div>`` pinned to a corner of the map, below that corner's
+        controls where it shares a top corner with them. It does not intercept mouse events,
+        so panning and zooming still work over it.
 
         Parameters
         ----------
@@ -1976,8 +2002,7 @@ class Map:
         position : str
             Map corner: ``"topleft"``, ``"topright"``, ``"bottomleft"`` or
             ``"bottomright"``. Defaults to ``"bottomright"``, clear of the
-            top-centre :paramref:`title`, the top-right controls and the
-            bottom-left coordinate readout.
+            top-centre :paramref:`title` and the bottom-left coordinate readout.
 
         Returns
         -------
@@ -1995,8 +2020,8 @@ class Map:
         """
         if not entries:
             raise ValueError("entries must not be empty")
-        corner = _LEGEND_CORNERS.get(position)
-        if corner is None:
+        inset = _LEGEND_CORNERS.get(position)
+        if inset is None:
             valid = ", ".join(f'"{k}"' for k in _LEGEND_CORNERS)
             raise ValueError(f"Unknown position {position!r}. Available positions: {valid}")
 
@@ -2015,7 +2040,7 @@ class Map:
             for color, label in entries
         )
         heading = f'<div style="font-weight:bold;">{escape_text(title)}</div>' if title is not None else ""
-        self._add_legend_card(corner, f"{heading}{rows}", head=style_block)
+        self._add_legend_card(position, inset, f"{heading}{rows}", head=style_block)
         return self
 
     def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
@@ -3509,10 +3534,14 @@ class Map:
         Each card goes in under a name fixed by its position in :attr:`_legends`, and
         Folium's ``add_child`` overwrites a repeated name.  Rendering a map twice is
         therefore idempotent, while a map merged after being rendered still picks up the
-        legends that came from the right-hand side.
+        legends that came from the right-hand side.  The clearance script rides along under a
+        name of its own, so it also covers the cards a merge brought in, and stays off a map
+        whose legends all sit in a bottom corner.
         """
         for i, legend_html in enumerate(self._legends):
             self._map.get_root().html.add_child(folium.Element(legend_html), name=f"mapyta_legend_{i}")  # ty: ignore[unresolved-attribute]
+        if any(_TOP_CLEARANCE_ATTR in card for card in self._legends):
+            self._map.get_root().html.add_child(folium.Element(_LEGEND_CLEARANCE_JS), name="mapyta_legend_js")  # ty: ignore[unresolved-attribute]
 
     def _ensure_rendered(self) -> None:
         """Fit bounds and inject legends / zoom JS / draw plugin / layer dropdown / export button (idempotent)."""
@@ -3736,10 +3765,8 @@ class Map:
             tmp_path = tmp.name
         try:
             if hide_controls:
-                content = Path(tmp_path).read_text(encoding="utf-8")
-                hide_css = "<style>.leaflet-control{display:none !important;}</style>"
-                content = content.replace("</head>", f"{hide_css}\n</head>", 1)
-                Path(tmp_path).write_text(content, encoding="utf-8")
+                page = Path(tmp_path).read_text(encoding="utf-8")
+                Path(tmp_path).write_text(self._with_controls_hidden(page), encoding="utf-8")
             png_bytes = capture_screenshot(
                 html_path=tmp_path,
                 width=width,
@@ -3755,6 +3782,12 @@ class Map:
         out = Path(path)
         out.write_bytes(png_bytes)
         return out
+
+    @staticmethod
+    def _with_controls_hidden(html: str) -> str:
+        """Return *html* with every Leaflet control hidden, for an export of the map rather than the chrome around it."""
+        hide_css = "<style>.leaflet-control{display:none !important;}</style>"
+        return html.replace("</head>", f"{hide_css}\n</head>", 1)
 
     def to_bytesio(
         self,
