@@ -2653,6 +2653,10 @@ class Map:
     ) -> Self:
         """Add a text marker at a location.
 
+        A label with neither a ``tooltip`` nor a ``popup`` lets the mouse through: its icon
+        box is centred on the anchor and covers whatever sits there, which would otherwise
+        take that layer's hover and swallow a pan started on top of the label.
+
         Parameters
         ----------
         point : tuple[float, float] | Point
@@ -2710,6 +2714,7 @@ class Map:
             icon=icon,
             tooltip=self._make_tooltip(tooltip, tooltip_style),
             popup=self._make_popup(popup, popup_style),
+            interactive=tooltip is not None or popup is not None,
         )
         marker.add_to(self._target())
         self._record_feature(

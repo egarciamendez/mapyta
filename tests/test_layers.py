@@ -476,6 +476,40 @@ class TestTextAnnotation:
         # Assert - Then
         assert len(m._bounds) == 1, "One tuple adds one bound entry"
 
+    def test_plain_label_lets_the_mouse_through(self) -> None:
+        """
+        Scenario: A label sits on top of the circle it names.
+
+        Given: An empty map
+        When: add_text is called without a tooltip or a popup
+        Then: The label is not interactive, so the hover and the drag reach what is underneath
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_text((52.37, 4.9), "1890")
+
+        # Assert - Then
+        assert '"interactive": false' in m.get_standalone_html(), "a label with nothing to show must not take mouse events"
+
+    def test_label_with_its_own_hover_stays_interactive(self) -> None:
+        """
+        Scenario: A label that answers a hover of its own.
+
+        Given: An empty map
+        When: add_text is called with a tooltip
+        Then: The label keeps taking mouse events, or its tooltip could never open
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_text((52.37, 4.9), "1890", tooltip="R_c;cal;max: 1890 kN")
+
+        # Assert - Then
+        assert '"interactive": true' in m.get_standalone_html(), "a label with a tooltip must keep taking mouse events"
+
     def test_add_text_with_hover(self) -> None:
         """
         Scenario: A text marker with an additional tooltip tooltip.
