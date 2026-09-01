@@ -40,6 +40,11 @@ from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_ICON_CSS, DEFAULT_MARKER
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
+#: The two lines an inline corner control emits, asserted from both entry points into the
+#: one helper that generates them.
+INLINE_DROPS_THE_CLEAR = "el.style.clear = 'none'"
+INLINE_MOVES_TO_THE_FIRST_ROW = "el.parentNode.insertBefore(el, first.nextSibling)"
+
 # ===================================================================
 # Scenarios for creating and configuring a Map.
 # ===================================================================
@@ -1079,6 +1084,48 @@ class TestFeatureGroups:
         assert "lbl.textContent =" in html, "the label must be assigned via textContent, not innerHTML"
         assert "lbl.innerHTML" not in html, "the label must not be assigned via innerHTML"
         assert "<script>alert(1)</script>" not in html, "the label must not become active markup"
+
+    def test_add_layer_dropdown_inline_puts_it_on_the_first_control_row(self) -> None:
+        """
+        Scenario: An inline dropdown shares its row with the corner's first control.
+
+        Given: A map with a feature group
+        When: add_layer_dropdown is called with inline=True
+        Then: The control drops its clear and is moved up behind the corner's first control
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown(inline=True)
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert INLINE_DROPS_THE_CLEAR in html, "an inline control must drop the clear that stacks it below its neighbours"
+        assert INLINE_MOVES_TO_THE_FIRST_ROW in html, "an inline control must be moved behind the corner's first control"
+
+    def test_add_layer_dropdown_stacks_below_by_default(self) -> None:
+        """
+        Scenario: Without inline, the dropdown keeps its own row.
+
+        Given: A map with a feature group
+        When: add_layer_dropdown is called without inline
+        Then: Neither the cleared float nor the position of the control is touched
+        """
+        # Arrange - Given
+        m = Map()
+        m.create_feature_group("A").add_point(Point(4.9, 52.37))
+        m.reset_target()
+
+        # Act - When
+        m.add_layer_dropdown()
+        html = m.get_standalone_html()
+
+        # Assert - Then
+        assert INLINE_DROPS_THE_CLEAR not in html, "the default dropdown must keep the cleared float that gives it its own row"
+        assert INLINE_MOVES_TO_THE_FIRST_ROW not in html, "the default dropdown must stay where Leaflet appended it"
 
 
 # ===================================================================
@@ -5974,7 +6021,7 @@ class TestAddColorbar:
         html = m.get_standalone_html()
 
         assert "linear-gradient(to top" in html, "Legend should be a vertical CSS gradient bar"
-        assert "top:5%;bottom:5%;right:14px" in html, "Legend should hug the right edge, spanning most of the map height"
+        assert "top:5%;bottom:5%;right:14px" in html, "the legend should hug the right edge, spanning most of the map height"
         assert "color_map_" not in html, "branca's SVG colorbar must not be emitted"
         assert ".legend = L.control({position: 'topright'})" not in html, "no top-right colorbar control"
 
@@ -6046,6 +6093,24 @@ class TestAddColorbar:
 
         assert "<script>alert(1)</script>" not in html, "a quote in a color stop must not break out into active markup"
         assert "&quot;" in html, "the quote in the color stop must be HTML-escaped"
+
+    def test_legend_is_measured_against_the_top_right_corner(self) -> None:
+        """
+        Scenario: The colorbar leaves its clearance to the browser.
+
+        Given: A map with a colorbar
+        When: The map is rendered
+        Then: The card is marked for the top-right corner, and the script that measures that
+              corner raises the card's own inset rather than replacing it
+        """
+        m = Map()
+        m.add_colorbar(colors=["#d73027", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="Cap")
+
+        html = m.get_standalone_html()
+
+        assert 'data-mapyta-top="right"' in html, "the colorbar must be measured against the top-right corner"
+        assert "'.leaflet-top.leaflet-' + corner" in html, "the corner itself must be what is measured"
+        assert "card.style.top = 'max(" in html, "the card's own inset must stay the floor the measurement lifts"
 
 
 # ===================================================================
@@ -6141,9 +6206,42 @@ class TestAddLegend:
 
         assert expected_css in m.get_standalone_html()
 
+    @pytest.mark.parametrize(
+        ("position", "expected_marker"),
+        [
+            ("topleft", 'data-mapyta-top="left"'),
+            ("topright", 'data-mapyta-top="right"'),
+        ],
+    )
+    def test_a_top_corner_legend_clears_that_corner_controls(self, position: str, expected_marker: str) -> None:
+        """
+        Scenario: A legend sharing a top corner with the controls starts below them.
+
+        Given: A legend placed in one of the two top corners
+        When: The map is rendered to HTML
+        Then: The card is marked for that corner, so the clearance script measures it
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")], position=position)
+
+        assert expected_marker in m.get_standalone_html(), "a top-corner legend must clear that corner's controls"
+
+    def test_a_bottom_corner_legend_stays_on_the_edge(self) -> None:
+        """
+        Scenario: A legend at the bottom keeps its flat inset.
+
+        Given: A legend placed in a bottom corner
+        When: The map is rendered to HTML
+        Then: Nothing marks it for measurement, so the attribution line does not lift it off the edge
+        """
+        m = Map()
+        m.add_legend([("#1a9850", "Approved")], position="bottomleft")
+
+        assert "data-mapyta-top" not in m.get_standalone_html(), "only a top-corner legend steps around controls"
+
     def test_defaults_to_bottom_right(self) -> None:
         """
-        Scenario: The default position stays clear of the title and the top-right controls.
+        Scenario: The default position stays clear of the title and the coordinate readout.
 
         Given: A legend added without an explicit position
         When: The map is rendered to HTML
@@ -7109,6 +7207,25 @@ class TestFilterControl:
         # Assert - Then
         assert '"Zoek sondering"' in script
         assert '"Filter"' in script
+
+    def test_inline_puts_the_box_on_the_first_control_row(self) -> None:
+        """
+        Scenario: An inline filter shares its row with the corner's first control.
+
+        Given: A map with points to filter
+        When: add_filter_control is called with inline=True
+        Then: The control drops its clear and is moved up behind the corner's first control
+        """
+        # Arrange - Given
+        m = Map()
+
+        # Act - When
+        m.add_points(_rd_points(3)).add_filter_control(inline=True)
+        script = _filter_script(m.get_standalone_html())
+
+        # Assert - Then
+        assert INLINE_DROPS_THE_CLEAR in script, "an inline control must drop the clear that stacks it below its neighbours"
+        assert INLINE_MOVES_TO_THE_FIRST_ROW in script, "an inline control must be moved behind the corner's first control"
 
     def test_placeholder_cannot_close_the_script_block(self) -> None:
         """
