@@ -40,6 +40,11 @@ from mapyta.markers import DEFAULT_CAPTION_CSS, DEFAULT_ICON_CSS, DEFAULT_MARKER
 from mapyta.style import PALETTES, resolve_style
 from mapyta.tiles import TILE_PROVIDERS
 
+#: The two lines an inline corner control emits, asserted from both entry points into the
+#: one helper that generates them.
+INLINE_DROPS_THE_CLEAR = "el.style.clear = 'none'"
+INLINE_MOVES_TO_THE_FIRST_ROW = "el.parentNode.insertBefore(el, first.nextSibling)"
+
 # ===================================================================
 # Scenarios for creating and configuring a Map.
 # ===================================================================
@@ -1098,8 +1103,8 @@ class TestFeatureGroups:
         html = m.get_standalone_html()
 
         # Assert - Then
-        assert "el.style.clear = 'none'" in html, "an inline control must drop the clear that stacks it below its neighbours"
-        assert "el.parentNode.insertBefore(el, first.nextSibling)" in html, "an inline control must be moved behind the corner's first control"
+        assert INLINE_DROPS_THE_CLEAR in html, "an inline control must drop the clear that stacks it below its neighbours"
+        assert INLINE_MOVES_TO_THE_FIRST_ROW in html, "an inline control must be moved behind the corner's first control"
 
     def test_add_layer_dropdown_stacks_below_by_default(self) -> None:
         """
@@ -1119,8 +1124,8 @@ class TestFeatureGroups:
         html = m.get_standalone_html()
 
         # Assert - Then
-        assert "el.style.clear = 'none'" not in html, "the default dropdown must keep the cleared float that gives it its own row"
-        assert "el.parentNode.insertBefore(el, first.nextSibling)" not in html, "the default dropdown must stay where Leaflet appended it"
+        assert INLINE_DROPS_THE_CLEAR not in html, "the default dropdown must keep the cleared float that gives it its own row"
+        assert INLINE_MOVES_TO_THE_FIRST_ROW not in html, "the default dropdown must stay where Leaflet appended it"
 
 
 # ===================================================================
@@ -6104,7 +6109,7 @@ class TestAddColorbar:
         html = m.get_standalone_html()
 
         assert 'data-mapyta-top="right"' in html, "the colorbar must be measured against the top-right corner"
-        assert "'.leaflet-top.leaflet-' + card.dataset.mapytaTop" in html, "the corner itself must be what is measured"
+        assert "'.leaflet-top.leaflet-' + corner" in html, "the corner itself must be what is measured"
         assert "card.style.top = 'max(" in html, "the card's own inset must stay the floor the measurement lifts"
 
 
@@ -7219,8 +7224,8 @@ class TestFilterControl:
         script = _filter_script(m.get_standalone_html())
 
         # Assert - Then
-        assert "el.style.clear = 'none'" in script, "an inline control must drop the clear that stacks it below its neighbours"
-        assert "el.parentNode.insertBefore(el, first.nextSibling)" in script, "an inline control must be moved behind the corner's first control"
+        assert INLINE_DROPS_THE_CLEAR in script, "an inline control must drop the clear that stacks it below its neighbours"
+        assert INLINE_MOVES_TO_THE_FIRST_ROW in script, "an inline control must be moved behind the corner's first control"
 
     def test_placeholder_cannot_close_the_script_block(self) -> None:
         """

@@ -37,7 +37,7 @@ STACK_HEIGHT = "return document.querySelector('.leaflet-top.leaflet-right').offs
 
 def _colorbar_map(config: MapConfig | None = None) -> Map:
     """A map carrying the colorbar every scenario measures."""
-    m = Map(config=config) if config else Map()
+    m = Map(config=config)
     m.add_colorbar(colors=["#d73027", "#1a9850"], vmin=0.0, vmax=100.0, legend_name="R_c;net;d [kN]")
     return m
 

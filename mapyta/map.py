@@ -93,8 +93,7 @@ VALID_DRAW_TOOLS = frozenset({"marker", "polyline", "polygon", "rectangle", "cir
 GLYPHICONS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
 
 #: CSS insets per corner for :meth:`Map.add_legend`. A card in a top corner is stepped past
-#: that corner's controls by :data:`_LEGEND_CLEARANCE_JS`; the bottom two keep the flat inset,
-#: where the only thing they meet is Leaflet's attribution line.
+#: that corner's controls by :data:`_LEGEND_CLEARANCE_JS`; the bottom two keep the flat inset.
 _LEGEND_CORNERS: dict[str, str] = {
     "topleft": "top:10px;left:10px",
     "topright": "top:10px;right:10px",
@@ -110,27 +109,24 @@ _LEGEND_CARD_CSS = (
     "color:#333;pointer-events:none;"
 )
 
-#: Marks a legend card for :data:`_LEGEND_CLEARANCE_JS`, its value naming the top corner to
-#: measure. The script spells it twice more: as a selector, and as the ``dataset`` key that
-#: reads the corner back.
+#: Marks a legend card for :data:`_LEGEND_CLEARANCE_JS`, its value naming the top corner to measure.
 _TOP_CLEARANCE_ATTR = "data-mapyta-top"
 
-#: Start a legend card pinned to a top corner below whatever Leaflet controls that corner
-#: holds. The corner's own height is the measurement, so it answers for every control at any
-#: button size, whichever call put one there and in whatever order. It collapses to nothing
-#: once :meth:`Map.to_image` hides the controls, where a figure worked out in Python would
-#: leave a hole. Read from a timeout because the dropdown, filter and export controls
-#: add themselves on ``DOMContentLoaded`` too, and no listener can see what a later one adds.
+#: Start a legend card pinned to a top corner below whatever Leaflet controls that corner holds.
+#: Measuring the corner beats counting controls in Python: it answers for any button size and any
+#: order, and collapses to nothing once :meth:`Map.to_image` hides them. Read from a timeout
+#: because the dropdown, filter and export controls add themselves on ``DOMContentLoaded`` too,
+#: and no listener can see what a later one adds.
 _LEGEND_CLEARANCE_JS = (
     "<script>\n"
     "document.addEventListener('DOMContentLoaded', function() {\n"
     "    setTimeout(function() {\n"
-    "        document.querySelectorAll('[data-mapyta-top]').forEach(function(card) {\n"
-    "            var stack = document.querySelector('.leaflet-top.leaflet-' + card.dataset.mapytaTop);\n"
+    f"        document.querySelectorAll('[{_TOP_CLEARANCE_ATTR}]').forEach(function(card) {{\n"
+    f"            var corner = card.getAttribute('{_TOP_CLEARANCE_ATTR}');\n"
+    "            var stack = document.querySelector('.leaflet-top.leaflet-' + corner);\n"
     "            var height = stack ? stack.offsetHeight : 0;\n"
-    # The corner already carries the 10px Leaflet leaves above its first control; the second
-    # 10px is the gap between the stack and the card. ``max`` keeps the card's own inset as a
-    # floor, so an empty corner leaves it exactly where the CSS put it.
+    # Leaflet already leaves 10px above the corner's first control; the second is the gap between
+    # the stack and the card. ``max`` keeps the card's own inset as the floor.
     "            if (height) { card.style.top = 'max(' + card.style.top + ', ' + (height + 10) + 'px)'; }\n"
     "        });\n"
     "    }, 0);\n"
@@ -1882,9 +1878,9 @@ class Map:
         The legend is a readable HTML ``<div>`` pinned to the right edge of the map:
         a vertical gradient bar with the ``legend_name`` above and evenly spaced value
         ticks alongside, high at the top, rather than branca's default SVG colorbar. It
-        runs to 5% above the bottom edge, and from 5% below the top — or from under the
-        controls in the top-right corner, whichever is lower. It sits clear of the
-        top-centre :paramref:`title` instead of overlapping it.
+        spans 90% of the map height, starting below the top-right controls where they
+        reach further down, and sits clear of the top-centre :paramref:`title` instead
+        of overlapping it.
 
         Parameters
         ----------
@@ -1946,17 +1942,21 @@ class Map:
         # top-right control stack pushes the top edge further down in the browser.
         self._add_legend_card(
             "topright",
-            "top:5%;bottom:5%;right:14px",
             f'<div style="text-align:center;font-weight:bold;margin-bottom:6px;">{caption}</div>'
             '<div style="display:flex;flex-direction:row;align-items:stretch;flex:1;min-height:0;">'
             f'<div style="width:14px;border-radius:2px;background:{gradient};"></div>'
             f'<div style="display:flex;flex-direction:column;justify-content:space-between;margin-left:6px;">{ticks}</div>'
             "</div>",
+            position_css="top:5%;bottom:5%;right:14px",
             extra_css="display:flex;flex-direction:column;",
         )
 
-    def _add_legend_card(self, corner: str, position_css: str, body: str, extra_css: str = "", head: str = "") -> None:
-        """Track a legend card carrying the shared chrome at *position_css*, pinned to *corner*.
+    def _add_legend_card(self, corner: str, body: str, position_css: str | None = None, extra_css: str = "", head: str = "") -> None:
+        """Track a legend card carrying the shared chrome, pinned to *corner*.
+
+        The inset comes from :data:`_LEGEND_CORNERS` unless *position_css* overrides it, which
+        only the colorbar does; it must still anchor the same edges, since the clearance script
+        raises the ``top`` a top-corner card sets.
 
         A card in one of the two top corners is marked for :data:`_LEGEND_CLEARANCE_JS`, which
         starts it below that corner's controls rather than on top of them.
@@ -1969,7 +1969,8 @@ class Map:
         which copies the Folium *map*'s children but not the figure's.
         """
         clears = f' {_TOP_CLEARANCE_ATTR}="{corner.removeprefix("top")}"' if corner.startswith("top") else ""
-        card = f'<div{clears} style="position:fixed;{position_css};{_LEGEND_CARD_CSS}{extra_css}">{body}</div>'
+        inset = position_css or _LEGEND_CORNERS[corner]
+        card = f'<div{clears} style="position:fixed;{inset};{_LEGEND_CARD_CSS}{extra_css}">{body}</div>'
         self._legends.append(f"{head}{card}")
 
     def add_legend(
@@ -2020,8 +2021,7 @@ class Map:
         """
         if not entries:
             raise ValueError("entries must not be empty")
-        inset = _LEGEND_CORNERS.get(position)
-        if inset is None:
+        if position not in _LEGEND_CORNERS:
             valid = ", ".join(f'"{k}"' for k in _LEGEND_CORNERS)
             raise ValueError(f"Unknown position {position!r}. Available positions: {valid}")
 
@@ -2040,7 +2040,7 @@ class Map:
             for color, label in entries
         )
         heading = f'<div style="font-weight:bold;">{escape_text(title)}</div>' if title is not None else ""
-        self._add_legend_card(position, inset, f"{heading}{rows}", head=style_block)
+        self._add_legend_card(position, f"{heading}{rows}", head=style_block)
         return self
 
     def add_choropleth(  # noqa: C901, PLR0913, PLR0912, PLR0915
@@ -2943,9 +2943,8 @@ class Map:
         label : str | None
             Optional caption rendered above the dropdown.
         inline : bool
-            Put the dropdown on the row of the corner's first control — beside the
-            zoom buttons, on the default ``"topleft"`` — instead of below every
-            control already in that corner.
+            Put the dropdown beside the corner's first control — the zoom buttons, on
+            the default ``"topleft"`` — instead of on a row below it.
 
         Returns
         -------
@@ -3002,8 +3001,7 @@ class Map:
         setup_js, widget_js, tail_js : str
             JavaScript for the three insertion points described above.
         inline : bool
-            Put the control on the row of the corner's first control instead of
-            below every control already in that corner.
+            Put the control beside the corner's first one instead of on a row below it.
 
         Returns
         -------
@@ -3277,9 +3275,8 @@ class Map:
         label : str | None
             Optional caption rendered above the box.
         inline : bool
-            Put the box on the row of the corner's first control — beside the zoom
-            buttons, on the default ``"topleft"`` — instead of below every control
-            already in that corner.
+            Put the box beside the corner's first control — the zoom buttons, on the
+            default ``"topleft"`` — instead of on a row below it.
 
         Returns
         -------
@@ -3765,13 +3762,13 @@ class Map:
         RuntimeError
             If Chrome/chromedriver not found.
         """
+        page = self.get_standalone_html()
+        if hide_controls:
+            page = self._with_controls_hidden(page)
         with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as tmp:
-            self.to_html(tmp.name)
             tmp_path = tmp.name
         try:
-            if hide_controls:
-                page = Path(tmp_path).read_text(encoding="utf-8")
-                Path(tmp_path).write_text(self._with_controls_hidden(page), encoding="utf-8")
+            Path(tmp_path).write_text(page, encoding="utf-8")
             png_bytes = capture_screenshot(
                 html_path=tmp_path,
                 width=width,
