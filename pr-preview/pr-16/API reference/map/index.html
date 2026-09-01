@@ -2751,7 +2751,11 @@ and export to HTML, PNG, and SVG formats.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>mapyta/map.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">300</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
 <span class="normal">301</span>
 <span class="normal">302</span>
 <span class="normal">303</span>
@@ -2774,11 +2778,7 @@ and export to HTML, PNG, and SVG formats.</p>
 <span class="normal">320</span>
 <span class="normal">321</span>
 <span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">center</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3824,7 +3824,11 @@ distinct color from the palette and the legend is a swatch per category
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1326</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1322</span>
+<span class="normal">1323</span>
+<span class="normal">1324</span>
+<span class="normal">1325</span>
+<span class="normal">1326</span>
 <span class="normal">1327</span>
 <span class="normal">1328</span>
 <span class="normal">1329</span>
@@ -3887,11 +3891,7 @@ distinct color from the palette and the legend is a swatch per category
 <span class="normal">1386</span>
 <span class="normal">1387</span>
 <span class="normal">1388</span>
-<span class="normal">1389</span>
-<span class="normal">1390</span>
-<span class="normal">1391</span>
-<span class="normal">1392</span>
-<span class="normal">1393</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_circle</span><span class="p">(</span>
+<span class="normal">1389</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_circle</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">point</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3993,9 +3993,9 @@ the legend without rebuilding the scale.</p>
 <p>The legend is a readable HTML <code>&lt;div&gt;</code> pinned to the right edge of the map:
 a vertical gradient bar with the <code>legend_name</code> above and evenly spaced value
 ticks alongside, high at the top, rather than branca's default SVG colorbar. It
-runs to 5% above the bottom edge, and from 5% below the top — or from under the
-controls in the top-right corner, whichever is lower. It sits clear of the
-top-centre :paramref:<code>title</code> instead of overlapping it.</p>
+spans 90% of the map height, starting below the top-right controls where they
+reach further down, and sits clear of the top-centre :paramref:<code>title</code> instead
+of overlapping it.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4052,7 +4052,11 @@ in :class:<code>~mapyta.markdown.RawHTML</code> to render inline markup such as
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1866</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1862</span>
+<span class="normal">1863</span>
+<span class="normal">1864</span>
+<span class="normal">1865</span>
+<span class="normal">1866</span>
 <span class="normal">1867</span>
 <span class="normal">1868</span>
 <span class="normal">1869</span>
@@ -4088,11 +4092,7 @@ in :class:<code>~mapyta.markdown.RawHTML</code> to render inline markup such as
 <span class="normal">1899</span>
 <span class="normal">1900</span>
 <span class="normal">1901</span>
-<span class="normal">1902</span>
-<span class="normal">1903</span>
-<span class="normal">1904</span>
-<span class="normal">1905</span>
-<span class="normal">1906</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_colorbar</span><span class="p">(</span>
+<span class="normal">1902</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_colorbar</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">colors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">vmin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -4111,9 +4111,9 @@ in :class:<code>~mapyta.markdown.RawHTML</code> to render inline markup such as
 <span class="sd">    The legend is a readable HTML ``&lt;div&gt;`` pinned to the right edge of the map:</span>
 <span class="sd">    a vertical gradient bar with the ``legend_name`` above and evenly spaced value</span>
 <span class="sd">    ticks alongside, high at the top, rather than branca&#39;s default SVG colorbar. It</span>
-<span class="sd">    runs to 5% above the bottom edge, and from 5% below the top — or from under the</span>
-<span class="sd">    controls in the top-right corner, whichever is lower. It sits clear of the</span>
-<span class="sd">    top-centre :paramref:`title` instead of overlapping it.</span>
+<span class="sd">    spans 90% of the map height, starting below the top-right controls where they</span>
+<span class="sd">    reach further down, and sits clear of the top-centre :paramref:`title` instead</span>
+<span class="sd">    of overlapping it.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -4258,7 +4258,11 @@ All other columns become GeoJSON Feature properties and are accessible via <code
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1753</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1749</span>
+<span class="normal">1750</span>
+<span class="normal">1751</span>
+<span class="normal">1752</span>
+<span class="normal">1753</span>
 <span class="normal">1754</span>
 <span class="normal">1755</span>
 <span class="normal">1756</span>
@@ -4302,11 +4306,7 @@ All other columns become GeoJSON Feature properties and are accessible via <code
 <span class="normal">1794</span>
 <span class="normal">1795</span>
 <span class="normal">1796</span>
-<span class="normal">1797</span>
-<span class="normal">1798</span>
-<span class="normal">1799</span>
-<span class="normal">1800</span>
-<span class="normal">1801</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_dataframe</span><span class="p">(</span>
+<span class="normal">1797</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_dataframe</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>  <span class="c1"># noqa: ANN401</span>
     <span class="n">geometry_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;geometry&quot;</span><span class="p">,</span>
@@ -4433,7 +4433,10 @@ All other columns become GeoJSON Feature properties and are accessible via <code
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3646</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3643</span>
+<span class="normal">3644</span>
+<span class="normal">3645</span>
+<span class="normal">3646</span>
 <span class="normal">3647</span>
 <span class="normal">3648</span>
 <span class="normal">3649</span>
@@ -4456,10 +4459,7 @@ All other columns become GeoJSON Feature properties and are accessible via <code
 <span class="normal">3666</span>
 <span class="normal">3667</span>
 <span class="normal">3668</span>
-<span class="normal">3669</span>
-<span class="normal">3670</span>
-<span class="normal">3671</span>
-<span class="normal">3672</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_export_button</span><span class="p">(</span>
+<span class="normal">3669</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_export_button</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Download GeoJSON&quot;</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;export.geojson&quot;</span><span class="p">,</span>
@@ -4562,9 +4562,8 @@ or <code>"bottomright"</code>.</p>
 )
           –
           <div class="doc-md-description">
-            <p>Put the box on the row of the corner's first control — beside the zoom
-buttons, on the default <code>"topleft"</code> — instead of below every control
-already in that corner.</p>
+            <p>Put the box beside the corner's first control — the zoom buttons, on the
+default <code>"topleft"</code> — instead of on a row below it.</p>
           </div>
         </li>
     </ul>
@@ -4584,7 +4583,9 @@ already in that corner.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3249</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3247</span>
+<span class="normal">3248</span>
+<span class="normal">3249</span>
 <span class="normal">3250</span>
 <span class="normal">3251</span>
 <span class="normal">3252</span>
@@ -4621,10 +4622,7 @@ already in that corner.</p>
 <span class="normal">3283</span>
 <span class="normal">3284</span>
 <span class="normal">3285</span>
-<span class="normal">3286</span>
-<span class="normal">3287</span>
-<span class="normal">3288</span>
-<span class="normal">3289</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_filter_control</span><span class="p">(</span>
+<span class="normal">3286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_filter_control</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">placeholder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Filter...&quot;</span><span class="p">,</span>
     <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;topleft&quot;</span><span class="p">,</span>
@@ -4655,9 +4653,8 @@ already in that corner.</p>
 <span class="sd">    label : str | None</span>
 <span class="sd">        Optional caption rendered above the box.</span>
 <span class="sd">    inline : bool</span>
-<span class="sd">        Put the box on the row of the corner&#39;s first control — beside the zoom</span>
-<span class="sd">        buttons, on the default ``&quot;topleft&quot;`` — instead of below every control</span>
-<span class="sd">        already in that corner.</span>
+<span class="sd">        Put the box beside the corner&#39;s first control — the zoom buttons, on the</span>
+<span class="sd">        default ``&quot;topleft&quot;`` — instead of on a row below it.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -4749,7 +4746,11 @@ already in that corner.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1699</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1695</span>
+<span class="normal">1696</span>
+<span class="normal">1697</span>
+<span class="normal">1698</span>
+<span class="normal">1699</span>
 <span class="normal">1700</span>
 <span class="normal">1701</span>
 <span class="normal">1702</span>
@@ -4797,11 +4798,7 @@ already in that corner.</p>
 <span class="normal">1744</span>
 <span class="normal">1745</span>
 <span class="normal">1746</span>
-<span class="normal">1747</span>
-<span class="normal">1748</span>
-<span class="normal">1749</span>
-<span class="normal">1750</span>
-<span class="normal">1751</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geojson</span><span class="p">(</span>
+<span class="normal">1747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geojson</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">hover_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5016,7 +5013,11 @@ already in that corner.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1633</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1629</span>
+<span class="normal">1630</span>
+<span class="normal">1631</span>
+<span class="normal">1632</span>
+<span class="normal">1633</span>
 <span class="normal">1634</span>
 <span class="normal">1635</span>
 <span class="normal">1636</span>
@@ -5072,11 +5073,7 @@ already in that corner.</p>
 <span class="normal">1686</span>
 <span class="normal">1687</span>
 <span class="normal">1688</span>
-<span class="normal">1689</span>
-<span class="normal">1690</span>
-<span class="normal">1691</span>
-<span class="normal">1692</span>
-<span class="normal">1693</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geometry</span><span class="p">(</span>
+<span class="normal">1689</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geometry</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">geom</span><span class="p">:</span> <span class="n">BaseGeometry</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5833,9 +5830,8 @@ Unknown names are ignored; if none match, the call is a no-op.</p>
 )
           –
           <div class="doc-md-description">
-            <p>Put the dropdown on the row of the corner's first control — beside the
-zoom buttons, on the default <code>"topleft"</code> — instead of below every
-control already in that corner.</p>
+            <p>Put the dropdown beside the corner's first control — the zoom buttons, on
+the default <code>"topleft"</code> — instead of on a row below it.</p>
           </div>
         </li>
     </ul>
@@ -5896,8 +5892,7 @@ control already in that corner.</p>
 <span class="normal">2952</span>
 <span class="normal">2953</span>
 <span class="normal">2954</span>
-<span class="normal">2955</span>
-<span class="normal">2956</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_layer_dropdown</span><span class="p">(</span>
+<span class="normal">2955</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_layer_dropdown</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;topleft&quot;</span><span class="p">,</span>
@@ -5929,9 +5924,8 @@ control already in that corner.</p>
 <span class="sd">    label : str | None</span>
 <span class="sd">        Optional caption rendered above the dropdown.</span>
 <span class="sd">    inline : bool</span>
-<span class="sd">        Put the dropdown on the row of the corner&#39;s first control — beside the</span>
-<span class="sd">        zoom buttons, on the default ``&quot;topleft&quot;`` — instead of below every</span>
-<span class="sd">        control already in that corner.</span>
+<span class="sd">        Put the dropdown beside the corner&#39;s first control — the zoom buttons, on</span>
+<span class="sd">        the default ``&quot;topleft&quot;`` — instead of on a row below it.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -6044,8 +6038,7 @@ top-centre :paramref:<code>title</code> and the bottom-left coordinate readout.<
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1975</span>
-<span class="normal">1976</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1976</span>
 <span class="normal">1977</span>
 <span class="normal">1978</span>
 <span class="normal">1979</span>
@@ -6161,8 +6154,7 @@ top-centre :paramref:<code>title</code> and the bottom-left coordinate readout.<
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;entries must not be empty&quot;</span><span class="p">)</span>
-    <span class="n">inset</span> <span class="o">=</span> <span class="n">_LEGEND_CORNERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">inset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">position</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_LEGEND_CORNERS</span><span class="p">:</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_LEGEND_CORNERS</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown position </span><span class="si">{</span><span class="n">position</span><span class="si">!r}</span><span class="s2">. Available positions: </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -6181,7 +6173,7 @@ top-centre :paramref:<code>title</code> and the bottom-left coordinate readout.<
         <span class="k">for</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">entries</span>
     <span class="p">)</span>
     <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;font-weight:bold;&quot;&gt;</span><span class="si">{</span><span class="n">escape_text</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_add_legend_card</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">inset</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">heading</span><span class="si">}{</span><span class="n">rows</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="n">style_block</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_add_legend_card</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">heading</span><span class="si">}{</span><span class="n">rows</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="n">style_block</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -6300,7 +6292,11 @@ top-centre :paramref:<code>title</code> and the bottom-left coordinate readout.<
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1395</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1391</span>
+<span class="normal">1392</span>
+<span class="normal">1393</span>
+<span class="normal">1394</span>
+<span class="normal">1395</span>
 <span class="normal">1396</span>
 <span class="normal">1397</span>
 <span class="normal">1398</span>
@@ -6357,11 +6353,7 @@ top-centre :paramref:<code>title</code> and the bottom-left coordinate readout.<
 <span class="normal">1449</span>
 <span class="normal">1450</span>
 <span class="normal">1451</span>
-<span class="normal">1452</span>
-<span class="normal">1453</span>
-<span class="normal">1454</span>
-<span class="normal">1455</span>
-<span class="normal">1456</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_linestring</span><span class="p">(</span>
+<span class="normal">1452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_linestring</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">line</span><span class="p">:</span> <span class="n">LineString</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -6931,7 +6923,11 @@ does not reveal the caption at those zooms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1563</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1559</span>
+<span class="normal">1560</span>
+<span class="normal">1561</span>
+<span class="normal">1562</span>
+<span class="normal">1563</span>
 <span class="normal">1564</span>
 <span class="normal">1565</span>
 <span class="normal">1566</span>
@@ -6956,11 +6952,7 @@ does not reveal the caption at those zooms.</p>
 <span class="normal">1585</span>
 <span class="normal">1586</span>
 <span class="normal">1587</span>
-<span class="normal">1588</span>
-<span class="normal">1589</span>
-<span class="normal">1590</span>
-<span class="normal">1591</span>
-<span class="normal">1592</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_multilinestring</span><span class="p">(</span>
+<span class="normal">1588</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_multilinestring</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ml</span><span class="p">:</span> <span class="n">MultiLineString</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7118,7 +7110,11 @@ does not reveal the caption at those zooms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1594</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1590</span>
+<span class="normal">1591</span>
+<span class="normal">1592</span>
+<span class="normal">1593</span>
+<span class="normal">1594</span>
 <span class="normal">1595</span>
 <span class="normal">1596</span>
 <span class="normal">1597</span>
@@ -7151,11 +7147,7 @@ does not reveal the caption at those zooms.</p>
 <span class="normal">1624</span>
 <span class="normal">1625</span>
 <span class="normal">1626</span>
-<span class="normal">1627</span>
-<span class="normal">1628</span>
-<span class="normal">1629</span>
-<span class="normal">1630</span>
-<span class="normal">1631</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_multipoint</span><span class="p">(</span>
+<span class="normal">1627</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_multipoint</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">mp</span><span class="p">:</span> <span class="n">MultiPoint</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7321,7 +7313,11 @@ does not reveal the caption at those zooms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1531</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1527</span>
+<span class="normal">1528</span>
+<span class="normal">1529</span>
+<span class="normal">1530</span>
+<span class="normal">1531</span>
 <span class="normal">1532</span>
 <span class="normal">1533</span>
 <span class="normal">1534</span>
@@ -7347,11 +7343,7 @@ does not reveal the caption at those zooms.</p>
 <span class="normal">1554</span>
 <span class="normal">1555</span>
 <span class="normal">1556</span>
-<span class="normal">1557</span>
-<span class="normal">1558</span>
-<span class="normal">1559</span>
-<span class="normal">1560</span>
-<span class="normal">1561</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_multipolygon</span><span class="p">(</span>
+<span class="normal">1557</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_multipolygon</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">mp</span><span class="p">:</span> <span class="n">MultiPolygon</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7564,7 +7556,11 @@ than <code>min_zoom</code> does not reveal the caption at those zooms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1002</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 998</span>
+<span class="normal"> 999</span>
+<span class="normal">1000</span>
+<span class="normal">1001</span>
+<span class="normal">1002</span>
 <span class="normal">1003</span>
 <span class="normal">1004</span>
 <span class="normal">1005</span>
@@ -7667,11 +7663,7 @@ than <code>min_zoom</code> does not reveal the caption at those zooms.</p>
 <span class="normal">1102</span>
 <span class="normal">1103</span>
 <span class="normal">1104</span>
-<span class="normal">1105</span>
-<span class="normal">1106</span>
-<span class="normal">1107</span>
-<span class="normal">1108</span>
-<span class="normal">1109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_point</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
+<span class="normal">1105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_point</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">point</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span>
     <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8037,7 +8029,11 @@ given with a length other than <code>len(points)</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1111</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1107</span>
+<span class="normal">1108</span>
+<span class="normal">1109</span>
+<span class="normal">1110</span>
+<span class="normal">1111</span>
 <span class="normal">1112</span>
 <span class="normal">1113</span>
 <span class="normal">1114</span>
@@ -8227,11 +8223,7 @@ given with a length other than <code>len(points)</code>.</p>
 <span class="normal">1298</span>
 <span class="normal">1299</span>
 <span class="normal">1300</span>
-<span class="normal">1301</span>
-<span class="normal">1302</span>
-<span class="normal">1303</span>
-<span class="normal">1304</span>
-<span class="normal">1305</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_points</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
+<span class="normal">1301</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_points</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">points</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Point</span><span class="p">],</span>
     <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8554,7 +8546,11 @@ given with a length other than <code>len(points)</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1458</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1454</span>
+<span class="normal">1455</span>
+<span class="normal">1456</span>
+<span class="normal">1457</span>
+<span class="normal">1458</span>
 <span class="normal">1459</span>
 <span class="normal">1460</span>
 <span class="normal">1461</span>
@@ -8621,11 +8617,7 @@ given with a length other than <code>len(points)</code>.</p>
 <span class="normal">1522</span>
 <span class="normal">1523</span>
 <span class="normal">1524</span>
-<span class="normal">1525</span>
-<span class="normal">1526</span>
-<span class="normal">1527</span>
-<span class="normal">1528</span>
-<span class="normal">1529</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_polygon</span><span class="p">(</span>
+<span class="normal">1525</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_polygon</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">polygon</span><span class="p">:</span> <span class="n">Polygon</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawHTML</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8829,7 +8821,9 @@ Use <code>"Polygon"</code> when searching choropleth or polygon layers.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3174</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3172</span>
+<span class="normal">3173</span>
+<span class="normal">3174</span>
 <span class="normal">3175</span>
 <span class="normal">3176</span>
 <span class="normal">3177</span>
@@ -8900,9 +8894,7 @@ Use <code>"Polygon"</code> when searching choropleth or polygon layers.</p>
 <span class="normal">3242</span>
 <span class="normal">3243</span>
 <span class="normal">3244</span>
-<span class="normal">3245</span>
-<span class="normal">3246</span>
-<span class="normal">3247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_search_control</span><span class="p">(</span>
+<span class="normal">3245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_search_control</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">layer_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">property_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -9358,7 +9350,10 @@ take that layer's hover and swallow a pan started on top of the label.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3353</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3350</span>
+<span class="normal">3351</span>
+<span class="normal">3352</span>
+<span class="normal">3353</span>
 <span class="normal">3354</span>
 <span class="normal">3355</span>
 <span class="normal">3356</span>
@@ -9395,10 +9390,7 @@ take that layer's hover and swallow a pan started on top of the label.</p>
 <span class="normal">3387</span>
 <span class="normal">3388</span>
 <span class="normal">3389</span>
-<span class="normal">3390</span>
-<span class="normal">3391</span>
-<span class="normal">3392</span>
-<span class="normal">3393</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_tile_layer</span><span class="p">(</span>
+<span class="normal">3390</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_tile_layer</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">tiles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -9834,7 +9826,11 @@ once shown.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">531</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
 <span class="normal">532</span>
 <span class="normal">533</span>
 <span class="normal">534</span>
@@ -9853,11 +9849,7 @@ once shown.</p>
 <span class="normal">547</span>
 <span class="normal">548</span>
 <span class="normal">549</span>
-<span class="normal">550</span>
-<span class="normal">551</span>
-<span class="normal">552</span>
-<span class="normal">553</span>
-<span class="normal">554</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_feature_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="normal">550</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_feature_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a named feature group for layer toggling.</span>
 
 <span class="sd">    Subsequent ``add_*`` calls target this group until changed.</span>
@@ -10044,7 +10036,11 @@ clicking a shape stays inert.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">592</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
 <span class="normal">593</span>
 <span class="normal">594</span>
 <span class="normal">595</span>
@@ -10114,11 +10110,7 @@ clicking a shape stays inert.</p>
 <span class="normal">659</span>
 <span class="normal">660</span>
 <span class="normal">661</span>
-<span class="normal">662</span>
-<span class="normal">663</span>
-<span class="normal">664</span>
-<span class="normal">665</span>
-<span class="normal">666</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">enable_draw</span><span class="p">(</span>
+<span class="normal">662</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">enable_draw</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DrawTool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">on_submit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RawJS</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -10700,10 +10692,10 @@ Defaults to <code>"ylrd"</code> (yellow → red).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3581</span>
-<span class="normal">3582</span>
-<span class="normal">3583</span>
-<span class="normal">3584</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_standalone_html</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3578</span>
+<span class="normal">3579</span>
+<span class="normal">3580</span>
+<span class="normal">3581</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_standalone_html</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Render map to a full standalone HTML document.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_rendered</span><span class="p">()</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_root</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
@@ -10743,15 +10735,15 @@ Defaults to <code>"ylrd"</code> (yellow → red).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">578</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
 <span class="normal">579</span>
 <span class="normal">580</span>
 <span class="normal">581</span>
-<span class="normal">582</span>
-<span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span>
-<span class="normal">586</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reset_target</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reset_target</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset target to base map (no feature group).</span>
 
 <span class="sd">    Returns</span>
@@ -10822,7 +10814,11 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">494</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
 <span class="normal">495</span>
 <span class="normal">496</span>
 <span class="normal">497</span>
@@ -10849,11 +10845,7 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 <span class="normal">518</span>
 <span class="normal">519</span>
 <span class="normal">520</span>
-<span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">restrict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="normal">521</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">restrict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit map view to tracked bounds with optional padding and restriction.</span>
 
 <span class="sd">    Parameters</span>
@@ -10946,7 +10938,11 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">556</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
 <span class="normal">557</span>
 <span class="normal">558</span>
 <span class="normal">559</span>
@@ -10962,11 +10958,7 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 <span class="normal">569</span>
 <span class="normal">570</span>
 <span class="normal">571</span>
-<span class="normal">572</span>
-<span class="normal">573</span>
-<span class="normal">574</span>
-<span class="normal">575</span>
-<span class="normal">576</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_feature_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="normal">572</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_feature_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Activate an existing feature group.</span>
 
 <span class="sd">    Parameters</span>
@@ -11084,7 +11076,10 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3797</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3794</span>
+<span class="normal">3795</span>
+<span class="normal">3796</span>
+<span class="normal">3797</span>
 <span class="normal">3798</span>
 <span class="normal">3799</span>
 <span class="normal">3800</span>
@@ -11112,10 +11107,7 @@ data bounds (sets <code>maxBounds</code> and <code>maxBoundsViscosity</code>).</
 <span class="normal">3822</span>
 <span class="normal">3823</span>
 <span class="normal">3824</span>
-<span class="normal">3825</span>
-<span class="normal">3826</span>
-<span class="normal">3827</span>
-<span class="normal">3828</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bytesio</span><span class="p">(</span>
+<span class="normal">3825</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bytesio</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
@@ -11204,7 +11196,10 @@ resolved output :class:<code>~pathlib.Path</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3624</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3621</span>
+<span class="normal">3622</span>
+<span class="normal">3623</span>
+<span class="normal">3624</span>
 <span class="normal">3625</span>
 <span class="normal">3626</span>
 <span class="normal">3627</span>
@@ -11221,10 +11216,7 @@ resolved output :class:<code>~pathlib.Path</code>.</p>
 <span class="normal">3638</span>
 <span class="normal">3639</span>
 <span class="normal">3640</span>
-<span class="normal">3641</span>
-<span class="normal">3642</span>
-<span class="normal">3643</span>
-<span class="normal">3644</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">3641</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Export tracked features as a GeoJSON FeatureCollection.</span>
 
 <span class="sd">    Parameters</span>
@@ -11315,7 +11307,10 @@ output :class:<code>~pathlib.Path</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3592</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3589</span>
+<span class="normal">3590</span>
+<span class="normal">3591</span>
+<span class="normal">3592</span>
 <span class="normal">3593</span>
 <span class="normal">3594</span>
 <span class="normal">3595</span>
@@ -11336,10 +11331,7 @@ output :class:<code>~pathlib.Path</code>.</p>
 <span class="normal">3610</span>
 <span class="normal">3611</span>
 <span class="normal">3612</span>
-<span class="normal">3613</span>
-<span class="normal">3614</span>
-<span class="normal">3615</span>
-<span class="normal">3616</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">open_in_browser</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">3613</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">open_in_browser</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Export as standalone HTML.</span>
 
 <span class="sd">    Parameters</span>
@@ -11511,7 +11503,10 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3729</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3726</span>
+<span class="normal">3727</span>
+<span class="normal">3728</span>
+<span class="normal">3729</span>
 <span class="normal">3730</span>
 <span class="normal">3731</span>
 <span class="normal">3732</span>
@@ -11568,10 +11563,7 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 <span class="normal">3783</span>
 <span class="normal">3784</span>
 <span class="normal">3785</span>
-<span class="normal">3786</span>
-<span class="normal">3787</span>
-<span class="normal">3788</span>
-<span class="normal">3789</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_image</span><span class="p">(</span>
+<span class="normal">3786</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_image</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>
@@ -11610,13 +11602,13 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 <span class="sd">    RuntimeError</span>
 <span class="sd">        If Chrome/chromedriver not found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_standalone_html</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">hide_controls</span><span class="p">:</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_controls_hidden</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.html&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">name</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">hide_controls</span><span class="p">:</span>
-            <span class="n">page</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-            <span class="n">Path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_with_controls_hidden</span><span class="p">(</span><span class="n">page</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">png_bytes</span> <span class="o">=</span> <span class="n">capture_screenshot</span><span class="p">(</span>
             <span class="n">html_path</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">,</span>
             <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
@@ -11744,7 +11736,10 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>mapyta/map.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3830</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3827</span>
+<span class="normal">3828</span>
+<span class="normal">3829</span>
+<span class="normal">3830</span>
 <span class="normal">3831</span>
 <span class="normal">3832</span>
 <span class="normal">3833</span>
@@ -11772,10 +11767,7 @@ image at <code>width * 2</code> × <code>height * 2</code> pixels. Defaults to <
 <span class="normal">3855</span>
 <span class="normal">3856</span>
 <span class="normal">3857</span>
-<span class="normal">3858</span>
-<span class="normal">3859</span>
-<span class="normal">3860</span>
-<span class="normal">3861</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">to_image_async</span><span class="p">(</span>
+<span class="normal">3858</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">to_image_async</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span>
